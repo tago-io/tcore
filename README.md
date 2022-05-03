@@ -25,7 +25,7 @@ There are many ways in which you can participate in this project, for example:
 
 ## Feedback
 
-* Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/tcore)
+* Ask a question on [Our Community](https://help.tago.io/portal/en/community/tagoio/tagocore)
 * Upvote [popular feature requests](https://github.com/tago-io/tcore/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
 * [File an issue](https://github.com/tago-io/tcore/issues)
 
