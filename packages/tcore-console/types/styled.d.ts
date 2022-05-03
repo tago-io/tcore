@@ -1,0 +1,62 @@
+import "styled-components";
+
+declare module "styled-components" {
+  export interface DefaultTheme {
+    files: string;
+    settings: string;
+    action: string;
+    analysis: string;
+    bucket: string;
+    buttonDanger: string;
+    buttonDangerFont: string;
+    buttonDefault: string;
+    buttonDefaultFont: string;
+    buttonDisabled: string;
+    buttonDisabledFont: string;
+    buttonPrimary: string;
+    buttonPrimaryFont: string;
+    buttonSuccess: string;
+    connector: string;
+    device: string;
+    deviceInputOutput1Day: string;
+    deviceInputOutput3Days: string;
+    deviceInputOutput3Hours: string;
+    deviceInputOutput6Hours: string;
+    deviceInputOutputRest: string;
+    extension: string;
+    font: string;
+    font2: string;
+    font3: string;
+    formControlBackground: string;
+    formControlDisabled: string;
+    formControlFocus: string;
+    home: string;
+    navBar: string;
+    tabTitleBackground: string;
+    tabTitleSelected: string;
+    tabTitleHover: string;
+    tabTitleActive: string;
+    formControlFont: string;
+    buttonWarning: string;
+    buttonWarningText: string;
+    actionTriggerByVariable: string;
+    actionTriggerByMQTT: string;
+    actionTriggerByResource: string;
+    tableHeader: string;
+    tableOddRow: string;
+    formControlDisabledFont: string;
+    fieldsetBorder: string;
+    switchBigSelected: string;
+    switchBigUnselected: string;
+    link: string;
+    logs: string;
+    background1: string;
+    background2: string;
+    background3: string;
+    liveInspectorCircle: string;
+    errorStatusIcon: string;
+    errorStatus: string;
+    navBarButton: string;
+    navBarIcon: string;
+  }
+}

@@ -1,0 +1,142 @@
+import {
+  zActionListQuery,
+  IActionListQuery,
+  IActionEdit,
+  zActionEdit,
+  IActionCreate,
+  zActionCreate,
+} from "@tago-io/tcore-sdk/types";
+import { Application } from "express";
+import { z } from "zod";
+import {
+  createAction,
+  deleteAction,
+  editAction,
+  getActionInfo,
+  getActionList,
+  getActionTypes,
+  getActionTriggers,
+} from "../Services/Action";
+import APIController, { ISetupController, warm } from "./APIController";
+
+/**
+ * Configuration for ID in the URL.
+ */
+const zURLParamsID = z.object({
+  id: z.string(),
+});
+
+/**
+ * Lists all the action types.
+ */
+class ListActionTriggers extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [],
+  };
+
+  public async main() {
+    const response = getActionTriggers();
+    this.body = response;
+  }
+}
+
+/**
+ * Lists all the action types.
+ */
+class ListActionTypes extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [],
+  };
+
+  public async main() {
+    const response = getActionTypes();
+    this.body = response;
+  }
+}
+
+/**
+ * Lists all the actions.
+ */
+class ListActions extends APIController<void, IActionListQuery, void> {
+  setup: ISetupController = {
+    allowTokens: [],
+    zQueryStringParser: zActionListQuery,
+  };
+
+  public async main() {
+    const response = await getActionList(this.queryStringParams);
+    this.body = response;
+  }
+}
+
+/**
+ * Retrieves all the information of a single action.
+ */
+class GetActionInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+  setup: ISetupController = {
+    allowTokens: [],
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    const response = await getActionInfo(this.urlParams.id);
+    this.body = response;
+  }
+}
+
+/**
+ * Deletes a single action.
+ */
+class DeleteAction extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+  setup: ISetupController = {
+    allowTokens: [],
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    await deleteAction(this.urlParams.id);
+  }
+}
+
+/**
+ * Edits the information of a single action.
+ */
+class EditAction extends APIController<IActionEdit, void, z.infer<typeof zURLParamsID>> {
+  setup: ISetupController = {
+    allowTokens: [],
+    zBodyParser: zActionEdit,
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    await editAction(this.urlParams.id, this.bodyParams);
+  }
+}
+
+/**
+ * Creates a new action.
+ */
+class CreateAction extends APIController<IActionCreate, void, void> {
+  setup: ISetupController = {
+    allowTokens: [],
+    zBodyParser: zActionCreate,
+  };
+
+  public async main() {
+    const response = await createAction(this.bodyParams);
+    this.body = response;
+  }
+}
+
+/**
+ * Exports the routes of the action.
+ */
+export default (app: Application) => {
+  app.delete("/action/:id", warm(DeleteAction));
+  app.get("/action-types", warm(ListActionTypes));
+  app.get("/action-triggers", warm(ListActionTriggers));
+  app.get("/action", warm(ListActions));
+  app.get("/action/:id", warm(GetActionInfo));
+  app.post("/action", warm(CreateAction));
+  app.put("/action/:id", warm(EditAction));
+};

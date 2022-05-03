@@ -1,0 +1,13 @@
+{
+  "name": "@tago-io/tcore-shared",
+  "version": "0.3.3",
+  "private": true,
+  "main": "./build/index.js",
+  "scripts": {
+    "clean": "rm -rf node_modules; rm -rf package-lock.json",
+    "build": "rm -rf ./build; tsc"
+  },
+  "dependencies": {
+    "@tago-io/tcore-sdk": "*"
+  }
+}

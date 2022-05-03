@@ -1,0 +1,86 @@
+import { z } from "zod";
+import preprocessNumber from "../Helpers/preprocessNumber";
+import { generateResourceID } from "../../Shared/ResourceID";
+import { zTag } from "../Tag.types";
+import { parseSafe } from "../Helpers";
+import createQueryOrderBy from "../Helpers/createQueryOrderBy";
+
+/**
+ * Configuration to query a list.
+ */
+export const zQuery = z.object({
+  page: z
+    .preprocess(preprocessNumber, z.number())
+    .nullish()
+    .transform((x) => x ?? 1),
+  amount: z
+    .preprocess(preprocessNumber, z.number())
+    .nullish()
+    .transform((x) => x ?? 20),
+  fields: z
+    .array(z.string())
+    .nullish()
+    .transform((x) => x ?? []),
+  filter: z
+    .any()
+    .nullish()
+    .refine((x) => x === null || x === undefined || typeof x === "object", "Filter must be an object")
+    .transform((x) => parseSafe(x, {}))
+    .refine((x) => !Array.isArray(x), "Filter must be an object"),
+  orderBy: createQueryOrderBy(z.string()),
+});
+
+/**
+ * Configuration of a name field.
+ */
+export const zName = z.string().min(3).max(100);
+
+/**
+ * Configuration of an ID field.
+ */
+export const zObjectID = z.string();
+
+/**
+ * Configuration of an auto-generated id when parsed.
+ */
+export const zObjectIDAutoGen = z
+  .string()
+  .nullish()
+  .transform(() => generateResourceID());
+
+/**
+ * Configuration of a token field.
+ */
+export const zToken = z.string();
+
+/**
+ * For auto-generated date fields.
+ * This zod field will acquire the current date when parsed.
+ */
+export const zDateAutoGen = z
+  .date()
+  .nullish()
+  .transform(() => new Date()); // use transform instead of `default` because `default` doesn't apply to `null`.
+
+/**
+ * For `active` fields.
+ * This zod field will set `false` as default if the active is null or undefined.
+ */
+export const zActiveAutoGen = z
+  .boolean()
+  .nullish()
+  .transform((e) => e ?? true); // use transform instead of `default` because `default` doesn't apply to `null`.
+
+/**
+ * For `tags` fields.
+ * This zod field will set [] as default if the tags are null or undefined.
+ */
+export const zTagsAutoGen = z
+  .array(zTag)
+  .nullish()
+  .transform((e) => e ?? []); // use transform instead of `default` because `default` doesn't apply to `null`.
+
+export type TGenericID = string;
+export type TGenericToken = string;
+export type TDate = Date | number | null;
+export type IQuery = z.input<typeof zQuery>;

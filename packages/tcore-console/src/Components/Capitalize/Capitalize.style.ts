@@ -1,0 +1,5 @@
+import styled from "styled-components";
+
+export const Container = styled.span`
+  text-transform: capitalize;
+`;

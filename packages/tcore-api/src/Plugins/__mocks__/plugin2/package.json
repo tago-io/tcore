@@ -1,0 +1,11 @@
+{
+  "name": "@tago-io/mock-plugin-2",
+  "version": "0.0.1",
+  "private": true,
+  "tcore": {
+    "name": "Plugin 2",
+    "short_description": "Description of plugin2",
+    "permissions": ["device", "action", "analysis", "device-data"],
+    "types": ["service"]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "name": "@tago-io/tcore",
+  "version": "0.3.3",
+  "author": "Tago LLC",
+  "description": "TCore by TagoIO",
+  "license": "MIT",
+  "private": true,
+  "bin": "packages/tcore-cli/build/index.js",
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "workspaces": [
+    "packages/tcore-sdk",
+    "packages/tcore-shared",
+    "packages/tcore-console",
+    "packages/*"
+  ],
+  "keywords": [
+    "platform",
+    "iot",
+    "tagoio",
+    "tcore"
+  ],
+  "bugs": {
+    "url": "https://github.com/tago-io/tcore/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tago-io/tcore.git"
+  },
+  "scripts": {
+    "console:test": "npm run test -w @tago-io/tcore-console",
+    "console:watch": "npm run watch -w @tago-io/tcore-console",
+    "console:tsc": "npm run tsc:watch -w @tago-io/tcore-console",
+    "sdk:test": "npm run test -w @tago-io/tcore-sdk",
+    "sdk:watch": "npm run watch -w @tago-io/tcore-sdk",
+    "sdk:tsc": "npm run tsc:watch -w @tago-io/tcore-sdk",
+    "api:test": "npm run test -w @tago-io/tcore-api",
+    "api:watch": "npm run watch -w @tago-io/tcore-api",
+    "api:tsc": "npm run tsc:watch -w @tago-io/tcore-api",
+    "cli:tsc": "npm run tsc:watch -w @tago-io/tcore-cli",
+    "watch": "concurrently \"npm:*:watch\"",
+    "tsc": "concurrently \"npm:*:tsc\"",
+    "test": "npm run test -ws --if-present",
+    "linter": "npm run linter -ws --if-present",
+    "build": "npm run build -ws --if-present",
+    "clean": "npm run clean -ws --if-present"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "15.0.0",
+    "@commitlint/config-conventional": "15.0.0",
+    "@types/js-yaml": "4.0.3",
+    "aws-sdk": "2.1087.0",
+    "axios": "0.24.0",
+    "chalk": "4.1.2",
+    "concurrently": "7.1.0",
+    "husky": "7.0.4",
+    "lerna": "^4.0.0",
+    "luxon": "2.3.1",
+    "ora": "5.4.1",
+    "typescript": "4.4.3"
+  },
+  "dependencies": {
+    "js-yaml": "4.1.0"
+  }
+}

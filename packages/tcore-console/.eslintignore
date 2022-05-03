@@ -1,0 +1,4 @@
+esbuild/*
+build/*
+build-tsc/*
+*.js

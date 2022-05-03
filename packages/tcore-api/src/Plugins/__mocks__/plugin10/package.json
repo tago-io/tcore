@@ -1,0 +1,11 @@
+{
+  "name": "@tago-io/mock-plugin-10",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.js",
+  "tcore": {
+    "name": "Plugin 10",
+    "permissions": [],
+    "types": ["service"]
+  }
+}
