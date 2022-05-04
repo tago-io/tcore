@@ -3,7 +3,6 @@ import fs from "fs";
 import { ESocketRoom, ILog, TGenericID } from "@tago-io/tcore-sdk/types";
 import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
 import { io } from "../Socket/SocketServer";
-import { log, logError } from "../Helpers/log";
 import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis";
 import { getMainSettings } from "./Settings";
 
@@ -12,12 +11,6 @@ import { getMainSettings } from "./Settings";
  * event for all sockets attached with the `analysis:log` resource.
  */
 function addLog(error: boolean, id: TGenericID, message: string): void {
-  if (error) {
-    logError("api", `Analysis ${id}: ${message}`);
-  } else {
-    log("api", `Analysis ${id}: ${message}`);
-  }
-
   const data: ILog = {
     error,
     message,
@@ -45,8 +38,8 @@ export async function runAnalysis(id: string, data: any): Promise<void> {
       const message = `The analysis is deactivated and can't run. To run the analysis activate it.`;
       throw new Error(message);
     }
-    if (!analysis.binary_path || !fs.existsSync(analysis.binary_path)) {
-      const message = `Binary executable path is missing or doesn't exist`;
+    if (!analysis.binary_path) {
+      const message = `Binary executable path is missing`;
       throw new Error(message);
     }
     if (!analysis.file_path || !fs.existsSync(filePath)) {
@@ -68,6 +61,9 @@ export async function runAnalysis(id: string, data: any): Promise<void> {
         TAGOIO_API: localAddress,
         TAGO_API: localAddress,
       },
+    }).on("error", (err) => {
+      const ex = err?.message || err?.toString?.();
+      addLog(true, id, `Error while spawning the script: ${ex}`);
     });
 
     child.stdout.setEncoding("utf8");
