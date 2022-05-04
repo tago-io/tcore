@@ -1,0 +1,19 @@
+{
+  "name": "@tago-io/tcore-plugin-filesystem-local",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./build/index.js",
+  "tcore": {
+    "name": "TCore Local Disk Filesystem",
+    "types": ["filesystem"],
+    "permissions": []
+  },
+  "scripts": {
+    "tsc:watch": "tsc --watch --preserveWatchOutput",
+    "build": "rm -rf ./build; tsc"
+  },
+  "dependencies": {
+    "systeminformation": "5.9.7",
+    "@tago-io/tcore-sdk": "*"
+  }
+}
