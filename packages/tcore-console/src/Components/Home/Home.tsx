@@ -18,7 +18,11 @@ import Statistics from "./Statistics/Statistics";
  * This is the home page.
  */
 function Home() {
-  const { data: summary, mutate: mutateSummary } = useApiRequest<ISummary | null>("/summary");
+  const {
+    data: summary,
+    mutate: mutateSummary,
+    error: summaryError,
+  } = useApiRequest<ISummary | null>("/summary");
   const { data: os } = useApiRequest<IOSInfo | null>("/hardware/os");
   const { data: network } = useApiRequest<INetworkInfo[] | null>("/hardware/network");
   const { data: usages, mutate: mutateUsages } = useApiRequest<IComputerUsage[] | null>(
@@ -69,7 +73,7 @@ function Home() {
           </div>
         </div>
         <div className="content">
-          <Summary data={summary} />
+          <Summary error={summaryError} data={summary} />
         </div>
       </Style.Card>
     );

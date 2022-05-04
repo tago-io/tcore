@@ -4,6 +4,8 @@ import styled, { css } from "styled-components";
  * Main container.
  */
 export const Container = styled.div<{ $loading: boolean }>`
+  min-height: 85px;
+
   > .group {
     display: flex;
     flex-direction: row;

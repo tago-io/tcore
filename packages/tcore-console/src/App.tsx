@@ -7,6 +7,8 @@ import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { runInAction } from "mobx";
+import { useEffect } from "react";
 import imgFavicon from "../assets/images/favicon.png";
 import { lightTheme } from "./theme";
 import MainScreen from "./Components/MainScreen/MainScreen";
@@ -23,12 +25,23 @@ import BucketEdit from "./Components/Bucket/Edit/BucketEdit";
 import ActionEdit from "./Components/Action/Edit/ActionEdit";
 import AnalysisEdit from "./Components/Analysis/Edit/AnalysisEdit";
 import PluginEdit from "./Components/Plugins/Edit/PluginEdit";
+import useApiRequest from "./Helpers/useApiRequest";
+import store from "./System/Store";
 
 /**
  * Main component of the application.
  */
 function App() {
+  const { data: status } = useApiRequest<any>("/status");
   const themeObject = lightTheme;
+
+  useEffect(() => {
+    if (status) {
+      runInAction(() => {
+        store.version = status.version;
+      });
+    }
+  }, [status]);
 
   return (
     <>

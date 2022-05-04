@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import useSWR from "swr";
 
 const fetcher = async (url: string) => {
@@ -10,8 +10,8 @@ const fetcher = async (url: string) => {
  */
 function useApiRequest<T>(url: string): {
   data: T;
-  error?: Error;
-  revalidate: any;
+  error?: AxiosError;
+  revalidate: () => Promise<boolean>;
   mutate: any;
 } {
   const { data, error, revalidate, mutate } = useSWR<T>(url, fetcher, {
