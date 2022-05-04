@@ -76,6 +76,7 @@ interface IPaginatedTableProps<T> {
  */
 function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
   const [data, setData] = useState<T[]>([]);
+  const [error, setError] = useState("");
   const [filter, setFilter] = useState<IFilter>({});
   const [pageAmount, setPageAmount] = useState(0);
   const {
@@ -229,8 +230,15 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
 
     clearTimeout(filterTimeout.current as unknown as number);
     const idealAmount = getIdealAmountOfRows();
-    const result = await onGetData(page, idealAmount, filter);
-    setData(result);
+
+    try {
+      const result = await onGetData(page, idealAmount, filter);
+      setError("");
+      setData(result);
+    } catch (err: any) {
+      const errorMessage = err?.response?.data?.message || err?.toString?.();
+      setError(errorMessage);
+    }
   }, [page, filter, onGetData]);
 
   /**
@@ -292,7 +300,13 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
         <Style.InnerContent minWidth={minWidth}>
           <Style.Header>{columns.map(renderHeaderCell)}</Style.Header>
           <Style.Body>
-            {amountOfRecords === 0 ? renderEmptyMessage() : data.map(renderRow)}
+            {error ? (
+              <EmptyMessage icon={EIcon["exclamation-triangle"]} message={error} />
+            ) : amountOfRecords === 0 ? (
+              renderEmptyMessage()
+            ) : (
+              data.map(renderRow)
+            )}
           </Style.Body>
         </Style.InnerContent>
       </div>
