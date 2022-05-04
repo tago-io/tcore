@@ -1,9 +1,15 @@
+import path from "path";
 import { listPluginFolders } from "../Services/Plugins";
 import { oraLog, oraLogError } from "../Helpers/log";
 import { getMainSettings, getPluginSettings } from "../Services/Settings";
 import Plugin from "./Plugin/Plugin";
 import { generatePluginID } from "./PluginID";
 import { getPluginPackageJSON } from "./PluginPackage";
+
+/**
+ * List of plugins paths that are built-in but do not show up in the sidebar.
+ */
+export const HIDDEN_BUILT_IN_PLUGINS = [path.join(__dirname, "../../../tcore-plugin-filesystem-local")];
 
 /**
  * List of plugins paths that are built-in as soon as tcore boots up.

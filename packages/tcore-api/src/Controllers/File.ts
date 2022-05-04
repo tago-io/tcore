@@ -21,7 +21,7 @@ class GetFileList extends APIController<void, z.infer<typeof zQueryStringPath>, 
   };
 
   public async main() {
-    this.body = await getFileList(this.queryStringParams.path);
+    this.body = await getFileList(this.queryStringParams.path, this.queryStringParams.local_fs);
   }
 }
 

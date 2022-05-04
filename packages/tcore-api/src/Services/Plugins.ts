@@ -3,7 +3,7 @@ import path from "path";
 import { IPlugin, TGenericID, TPluginType, IPluginList } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import Module from "../Plugins/Module/Module";
-import { BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
+import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "./Settings";
 
@@ -30,7 +30,7 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
     const object = {
       buttons: buttons.length > 0 ? buttons : [],
       error: error,
-      hidden: plugin.package.tcore.hidden || false,
+      hidden: HIDDEN_BUILT_IN_PLUGINS.includes(plugin.folder),
       id: plugin.id,
       name: plugin.tcoreName,
       state: plugin.state,
@@ -60,6 +60,12 @@ export async function listPluginFolders(): Promise<string[]> {
   }
 
   for (const item of BUILT_IN_PLUGINS) {
+    if (!plugins.includes(item)) {
+      plugins.unshift(item);
+    }
+  }
+
+  for (const item of HIDDEN_BUILT_IN_PLUGINS) {
     if (!plugins.includes(item)) {
       plugins.unshift(item);
     }
@@ -253,24 +259,22 @@ export async function getMainDatabaseModule(): Promise<Module | undefined> {
 /**
  * TODO
  */
-export async function getMainFilesystemModule(): Promise<Module | undefined> {
+export async function getMainFilesystemModule(): Promise<Module | null | undefined> {
   const settings = await getMainSettings();
   const pluginID = String(settings.filesystem_plugin).split(":")?.[0];
   const moduleID = String(settings.filesystem_plugin).split(":")?.[1];
 
   if (pluginID && moduleID) {
-    // main database plugin was informed, we'll use that
-    const plugin = plugins.get(pluginID);
-    if (plugin) {
-      const module = plugin.modules.get(moduleID);
-      if (module) {
-        return module;
-      }
+    // main plugin was informed, we'll use that
+    const module = plugins.get(pluginID)?.modules?.get(moduleID);
+    if (module?.state === "started") {
+      return module;
+    } else {
+      return null;
     }
   }
 
-  const modules = getModuleList("filesystem");
-  return modules.find((x) => x.state === "started");
+  return undefined;
 }
 
 /**

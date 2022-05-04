@@ -53,9 +53,12 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
    * Gets a list of filesystem options based on the backend list.
    */
   const getFilesystemOptions = () => {
-    const options: ISelectOption[] = [{ label: "Local Disk", value: "" }];
+    const options: ISelectOption[] = [];
     for (const item of filesystemList || []) {
       options.push({ label: item.setupName, value: `${item.pluginID}:${item.setupID}` });
+    }
+    if (!filesystemList) {
+      options.unshift({ label: "-", value: "-" });
     }
     return options;
   };
