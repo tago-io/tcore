@@ -498,6 +498,16 @@ const zPluginSettings = z.object({
   modules: z.array(zPluginSettingsModule),
 });
 
+/**
+ * A Single resolved item of a filesystem.
+ */
+interface IPluginFilesystemItem {
+  name: string;
+  path: string;
+  is_folder: boolean;
+  children: IPluginFilesystemItem[];
+}
+
 export type IActionTriggerModuleSetup = z.infer<typeof zActionTriggerModuleSetup>;
 export type IActionTypeModuleSetup = z.infer<typeof zActionTypeModuleSetup>;
 export type IModuleMessageOptions = z.infer<typeof zModuleMessageOptions>;
@@ -531,6 +541,7 @@ export type IPluginStorageItem = z.infer<typeof zPluginStorageItem>;
 export type IPluginStorageItemSet = z.infer<typeof zPluginStorageItemSet>;
 export type TModuleMessageType = z.infer<typeof zModuleMessageType>;
 export type TModuleState = z.infer<typeof zModuleState>;
+export type TPluginPermission = z.infer<typeof zPluginPermission>;
 export type TPluginState = z.infer<typeof zPluginState>;
 export type TPluginType = z.infer<typeof zPluginType>;
-export type TPluginPermission = z.infer<typeof zPluginPermission>;
+export type { IPluginFilesystemItem };
