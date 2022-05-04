@@ -63,6 +63,7 @@ function InstallLocalPluginButton() {
           onConfirm={activateModalInstall}
           placeholder="/usr/local/plugin.tcore"
           title="Select a plugin to be installed"
+          useLocalFs
         />
       )}
 
