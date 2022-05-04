@@ -5,6 +5,8 @@ import useApiRequest from "../../../Helpers/useApiRequest";
 import { socket } from "../../../System/Socket";
 import store from "../../../System/Store";
 import TooltipText from "../../TooltipText/TooltipText";
+import EmptyMessage from "../../EmptyMessage/EmptyMessage";
+import { EIcon } from "../../Icon/Icon.types";
 import * as HomeStyle from "../Home.style";
 import RequestChart from "../RequestChart/RequestChart";
 
@@ -14,7 +16,7 @@ import RequestChart from "../RequestChart/RequestChart";
  */
 function Statistics() {
   const [statistics, setStatistics] = useState<IStatistic[] | null>(null);
-  const { data } = useApiRequest<IStatistic[] | null>("/statistics");
+  const { data, error } = useApiRequest<IStatistic[] | null>("/statistics");
   const interval = useRef<any>();
 
   /**
@@ -73,6 +75,8 @@ function Statistics() {
     }
   }, [data]);
 
+  const errorMessage = error?.response?.data?.message || error?.toString?.();
+
   return (
     <>
       {/* Input */}
@@ -83,7 +87,11 @@ function Statistics() {
           </TooltipText>
         </div>
         <div className="content">
-          <RequestChart statistics={statistics} id="post" type="input" />
+          {error ? (
+            <EmptyMessage icon={EIcon["exclamation-triangle"]} message={errorMessage} />
+          ) : (
+            <RequestChart statistics={statistics} id="post" type="input" />
+          )}
         </div>
       </HomeStyle.Card>
 
@@ -95,7 +103,11 @@ function Statistics() {
           </TooltipText>
         </div>
         <div className="content">
-          <RequestChart statistics={statistics} id="get" type="output" />
+          {error ? (
+            <EmptyMessage icon={EIcon["exclamation-triangle"]} message={errorMessage} />
+          ) : (
+            <RequestChart statistics={statistics} id="get" type="output" />
+          )}
         </div>
       </HomeStyle.Card>
     </>
