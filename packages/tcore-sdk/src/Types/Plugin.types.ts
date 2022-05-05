@@ -6,17 +6,18 @@ import { zIcon } from "./Common/Icon.types";
  * Types of plugins available.
  */
 export const zPluginType = z.enum([
-  "database",
-  "service",
-  "encoder",
-  "decoder",
   "action-trigger",
   "action-type",
-  "sidebar-button",
-  "page",
-  "navbar-button",
-  "hook",
+  "database",
+  "decoder",
+  "encoder",
   "filesystem",
+  "hook",
+  "navbar-button",
+  "page",
+  "service",
+  "sidebar-button",
+  "sidebar-footer-button",
 ]);
 
 /**
@@ -465,10 +466,40 @@ export const zModuleMessageOptions = z.object({
 export const zModuleMessageType = z.enum(["info", "error", "warning"]);
 
 /**
+ * Configuration of the action of a button module.
+ */
+const zPluginButtonModuleSetupAction = z.union([
+  z.object({
+    type: z.literal("open-url"),
+    url: z.string(),
+  }),
+  z.object({
+    type: z.literal("select-file"),
+    extension: z.string().optional(),
+    title: z.string().optional(),
+  }),
+]);
+
+/**
+ * Configuration of the option of a button module.
+ */
+const zPluginButtonModuleSetupOption = z.object({
+  icon: zIcon,
+  text: z.string().nullish(),
+  color: z.string().nullish(),
+  tooltip: z.string().nullish(),
+  action: zPluginButtonModuleSetupAction,
+});
+
+/**
  * Configuration of item in a plugin list.
  */
 const zPluginListItem = z.object({
-  buttons: z.array(zPluginListItemButton).nullish(),
+  buttons: z.object({
+    sidebar: z.array(zPluginButtonModuleSetupOption.extend({ position: z.number() })),
+    navbar: z.array(zPluginButtonModuleSetupOption),
+    sidebarFooter: z.array(zPluginButtonModuleSetupOption),
+  }),
   error: z.boolean().nullish(),
   hidden: z.boolean().nullish(),
   id: z.string(),
@@ -514,6 +545,8 @@ export type IModuleMessageOptions = z.infer<typeof zModuleMessageOptions>;
 export type IModuleSetup = z.infer<typeof zPluginSetup>;
 export type IModuleSetupWithoutType = Omit<IModuleSetup, "type">;
 export type IPlugin = z.infer<typeof zPlugin>;
+export type IPluginButtonModuleSetupAction = z.infer<typeof zPluginButtonModuleSetupAction>;
+export type IPluginButtonModuleSetupOption = z.infer<typeof zPluginButtonModuleSetupOption>;
 export type IPluginClassListItem = z.infer<typeof zPluginClassListItem>;
 export type IPluginConfigField = z.infer<typeof zPluginConfigField>;
 export type IPluginConfigFieldBoolean = z.infer<typeof zPluginConfigFieldBoolean>;

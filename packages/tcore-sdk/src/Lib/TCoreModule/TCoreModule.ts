@@ -38,12 +38,12 @@ abstract class TCoreModule<IConfigValues = any> {
     } else if (type === "error") {
       const color = "hsla(0, 100%, 44%, 0.1)";
       const iconColor = "hsl(0, 100%, 40%)";
-      const icon = "warning";
+      const icon = "exclamation-triangle";
       await this.showCustomMessage({ message, icon, iconColor, color });
     } else if (type === "warning") {
       const color = "hsla(44, 100%, 50%, 0.2)";
       const iconColor = "hsl(44, 100%, 21%)";
-      const icon = "warning";
+      const icon = "exclamation-triangle";
       await this.showCustomMessage({ message, icon, iconColor, color });
     }
   }

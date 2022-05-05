@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { IPlugin, TGenericID, TPluginType, IPluginList } from "@tago-io/tcore-sdk/types";
+import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import Module from "../Plugins/Module/Module";
 import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
@@ -8,33 +8,50 @@ import Plugin from "../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "./Settings";
 
 /**
+ * Filters and maps the button modules for the plugin list.
+ */
+function mapButtonModules(modules: Module[], type: TPluginType) {
+  return modules
+    .filter((x: any) => x.setup.type === type && x.setup.option)
+    .map((x) => {
+      const setup = x.setup as any;
+      return {
+        action: setup.option?.action,
+        color: setup.option?.color,
+        icon: setup.option?.icon,
+        text: setup.option?.text,
+        position: setup.option?.position,
+      };
+    });
+}
+
+/**
  * Lists all the plugins that are loaded.
  */
 export async function getLoadedPluginList(): Promise<IPluginList> {
+  const folders = await listPluginFolders();
   const result: IPluginList = [];
 
-  for (const plugin of plugins.values()) {
-    const buttonModules = [...plugin.modules.values()].filter(
-      (x) => x.setup.type === "sidebar-button" || x.setup.type === "navbar-button"
-    );
-    const error = !!plugin.error || [...plugin.modules.values()].some((x) => x.error);
+  for (const folder of folders) {
+    const pkg = await Plugin.getPackage(folder);
+    const id = Plugin.generatePluginID(pkg.name);
+    const plugin = plugins.get(id);
+    const modules = [...(plugin?.modules?.values?.() || [])];
 
-    const buttons = buttonModules.map((x: any) => ({
-      type: x.setup.type,
-      color: x.setup.color,
-      icon: x.setup.icon,
-      name: x.setup.name,
-      route: x.setup.route,
-    }));
+    const error = !!plugin?.error || modules.some((x) => x.error);
 
-    const object = {
-      buttons: buttons.length > 0 ? buttons : [],
+    const object: IPluginListItem = {
+      buttons: {
+        navbar: mapButtonModules(modules, "navbar-button"),
+        sidebar: mapButtonModules(modules, "sidebar-button"),
+        sidebarFooter: mapButtonModules(modules, "sidebar-footer-button"),
+      },
       error: error,
-      hidden: HIDDEN_BUILT_IN_PLUGINS.includes(plugin.folder),
-      id: plugin.id,
-      name: plugin.tcoreName,
-      state: plugin.state,
-      version: plugin.version,
+      hidden: HIDDEN_BUILT_IN_PLUGINS.includes(folder),
+      id: Plugin.generatePluginID(pkg.name),
+      name: pkg.tcore?.name || "",
+      state: plugin?.state || "stopped",
+      version: pkg.version,
     };
 
     result.push(object);

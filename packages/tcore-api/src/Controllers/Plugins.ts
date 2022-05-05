@@ -73,6 +73,7 @@ class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, 
       pluginName: x.plugin?.tcoreName,
       setupID: x.setup.id,
       setupName: x.setup.name,
+      setup: x.setup,
     }));
     this.body = response;
   }

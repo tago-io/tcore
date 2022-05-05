@@ -1,9 +1,12 @@
 import { useTheme } from "styled-components";
-import { ESocketResource, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
-import { useEffect, useState } from "react";
+import {
+  ESocketResource,
+  IPluginListItem,
+  IPluginButtonModuleSetupOption,
+} from "@tago-io/tcore-sdk/types";
+import { useEffect } from "react";
 import { observer } from "mobx-react";
 import { EIcon } from "../Icon/Icon.types";
-import useApiRequest from "../../Helpers/useApiRequest";
 import { socket } from "../../System/Socket";
 import store from "../../System/Store";
 import * as Style from "./Sidebar.style";
@@ -25,73 +28,74 @@ interface ISidebarProps {
  * This component shows a sidebar on the left side of the page.
  */
 function Sidebar(props: ISidebarProps) {
-  const { data } = useApiRequest<IPluginList>("/plugin");
-  const [plugins, setPlugins] = useState<IPluginList>([]);
   const theme = useTheme();
 
-  const buttons = [
-    [
-      {
-        color: theme.home,
-        icon: EIcon.home,
-        id: "home",
-        text: "Home",
+  const buttons: Array<IPluginButtonModuleSetupOption | null> = [
+    {
+      color: theme.home,
+      icon: EIcon.home,
+      text: "Home",
+      action: {
+        type: "open-url",
         url: "/console/",
       },
-    ],
-    [
-      {
-        color: theme.device,
-        icon: EIcon.device,
-        id: "devices",
-        text: "Devices",
+    },
+    null,
+    {
+      color: theme.device,
+      icon: EIcon.device,
+      text: "Devices",
+      action: {
+        type: "open-url",
         url: "/console/devices/",
       },
-      {
-        color: theme.bucket,
-        icon: EIcon.bucket,
-        id: "buckets",
-        text: "Buckets",
+    },
+    {
+      color: theme.bucket,
+      icon: EIcon.bucket,
+      text: "Buckets",
+      action: {
+        type: "open-url",
         url: "/console/buckets/",
       },
-    ],
-    [
-      {
-        text: "Analysis",
-        icon: EIcon.code,
-        id: "analysis",
+    },
+    {
+      text: "Analysis",
+      icon: EIcon.code,
+      color: theme.analysis,
+      action: {
+        type: "open-url",
         url: "/console/analysis/",
-        color: theme.analysis,
       },
-      {
-        text: "Actions",
-        icon: EIcon.bolt,
-        id: "actions",
+    },
+    {
+      text: "Actions",
+      icon: EIcon.bolt,
+      color: theme.action,
+      action: {
+        type: "open-url",
         url: "/console/actions/",
-        color: theme.action,
       },
-    ],
-    [
-      {
-        text: "Settings",
-        icon: EIcon.cog,
-        id: "settings",
+    },
+    null,
+    {
+      text: "Settings",
+      icon: EIcon.cog,
+      color: theme.settings,
+      action: {
+        type: "open-url",
         url: "/console/settings/",
-        color: theme.settings,
       },
-    ],
+    },
   ];
 
-  for (const plugin of data || []) {
-    for (const button of plugin.buttons || []) {
-      if (button.type === "sidebar-button") {
-        buttons[buttons.length - 1].unshift({
-          text: button.name,
-          icon: button.icon as EIcon,
-          url: `/console/${button.route}`,
-          id: button.name,
-          color: button.color,
-        });
+  for (const plugin of store.plugins) {
+    for (const button of plugin.buttons.sidebar || []) {
+      const item = buttons[button.position];
+      if (item === null) {
+        buttons.splice(button.position, 1, button);
+      } else {
+        buttons.splice(button.position, 0, button);
       }
     }
   }
@@ -108,43 +112,37 @@ function Sidebar(props: ISidebarProps) {
 
   /**
    */
-  const renderButton = (item: any) => {
+  const renderButton = (item: any, index: number) => {
+    if (!item) {
+      return <div key={index} className="new-line" />;
+    }
+
     return (
       <Item
+        action={item.action}
         color={item.color}
         icon={item.icon}
-        isVertical
         key={item.text}
-        testId={item.id}
+        testId={item.text + index}
         text={item.text}
-        url={item.url}
       />
     );
   };
-
-  /**
-   * Saves the data from the api request in a local state for easier manipulation.
-   */
-  useEffect(() => {
-    if (data) {
-      setPlugins([...data]);
-    }
-  }, [data]);
 
   /**
    */
   useEffect(() => {
     function onStatus(params: any) {
       if (params.deleted) {
-        setPlugins(plugins.filter((x) => x.id !== params.id));
+        store.plugins = store.plugins.filter((x) => x.id !== params.id);
         return;
       }
 
-      const plugin = plugins.find((x) => x.id === params.id);
+      const plugin = store.plugins.find((x) => x.id === params.id);
       if (plugin) {
         plugin.state = params.state;
         plugin.error = params.error;
-        setPlugins([...plugins]);
+        store.plugins = [...store.plugins];
       }
     }
 
@@ -159,29 +157,25 @@ function Sidebar(props: ISidebarProps) {
    */
   useEffect(() => {
     if (store.socketConnected) {
-      for (const plugin of plugins) {
+      for (const plugin of store.plugins) {
         socket.emit("attach", ESocketResource.plugin, plugin.id);
       }
       return () => {
-        for (const plugin of plugins) {
+        for (const plugin of store.plugins) {
           socket.emit("detach", ESocketResource.plugin, plugin.id);
         }
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store.socketConnected, plugins.length]);
+  }, [store.socketConnected, store.plugins.length]);
 
   return (
     <Style.Container data-testid="sidebar" open={props.open}>
-      {data && (
+      {store.plugins && (
         <>
           <div className="stretch">
-            {buttons.map((x, i) => (
-              <div className="row" key={i}>
-                {x.map(renderButton)}
-              </div>
-            ))}
-            <div style={{ marginTop: "6px" }}>{plugins?.map(renderPlugin)}</div>
+            <div className="buttons">{buttons.map(renderButton)}</div>
+            <div style={{ marginTop: "6px" }}>{store.plugins?.map(renderPlugin)}</div>
           </div>
 
           <InstallLocalPluginButton />

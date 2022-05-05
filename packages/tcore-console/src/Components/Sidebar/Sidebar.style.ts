@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
-import * as PluginImageStyle from "../PluginImage/PluginImage.style";
 
 /**
  * Style for the main sidebar container.
@@ -32,6 +31,15 @@ export const Container = styled.aside<{ open?: boolean }>`
     flex: 1;
   }
 
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+
+    .new-line {
+      width: 100%;
+    }
+  }
+
   .row {
     display: flex;
     width: 100%;
@@ -39,10 +47,9 @@ export const Container = styled.aside<{ open?: boolean }>`
 `;
 
 /**
- * Style for a single item in the sidebar.
+ * Single sidebar button.
  */
-export const Item = styled(Link)<{
-  $isVertical?: boolean;
+const buttonCSS = css<{
   color: string;
   selected?: boolean;
   disabled?: boolean;
@@ -59,6 +66,14 @@ export const Item = styled(Link)<{
   border-bottom: 1px solid transparent;
   position: relative;
   flex: 1;
+  min-width: calc(50% - 3px);
+
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 10px 7px;
+  min-height: 51px;
 
   .description {
     font-size: 0.73rem;
@@ -72,19 +87,11 @@ export const Item = styled(Link)<{
     opacity: 0.75;
   }
 
-  i {
-    margin-right: 10px;
-  }
-
   &:hover {
     *:not(.preserve) {
       color: ${(props) => props.color};
       fill: ${(props) => props.color};
     }
-  }
-
-  ${PluginImageStyle.Container} {
-    margin-right: 10px;
   }
 
   &:active {
@@ -102,21 +109,6 @@ export const Item = styled(Link)<{
     `}
 
   ${(props) =>
-    props.$isVertical &&
-    css`
-      flex-direction: column;
-      text-align: center;
-      justify-content: center;
-      align-items: center;
-      padding: 10px 10px 7px;
-      min-height: 51px;
-
-      i {
-        margin-right: 0;
-      }
-    `}
-
-  ${(props) =>
     props.disabled &&
     css`
       pointer-events: none;
@@ -126,4 +118,26 @@ export const Item = styled(Link)<{
         opacity: 0.5;
       }
     `}
+`;
+
+/**
+ * Div style for a single item in the sidebar.
+ */
+export const ItemDiv = styled.div<{
+  color: string;
+  selected?: boolean;
+  disabled?: boolean;
+}>`
+  ${buttonCSS}
+`;
+
+/**
+ * Link tyle for a single item in the sidebar.
+ */
+export const ItemLink = styled(Link)<{
+  color: string;
+  selected?: boolean;
+  disabled?: boolean;
+}>`
+  ${buttonCSS}
 `;

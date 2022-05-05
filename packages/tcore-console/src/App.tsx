@@ -9,6 +9,7 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { runInAction } from "mobx";
 import { useEffect } from "react";
+import { IPluginList } from "@tago-io/tcore-sdk/types";
 import imgFavicon from "../assets/images/favicon.png";
 import { lightTheme } from "./theme";
 import MainScreen from "./Components/MainScreen/MainScreen";
@@ -27,13 +28,23 @@ import AnalysisEdit from "./Components/Analysis/Edit/AnalysisEdit";
 import PluginEdit from "./Components/Plugins/Edit/PluginEdit";
 import useApiRequest from "./Helpers/useApiRequest";
 import store from "./System/Store";
+import PageIFrame from "./Components/PageIframe/PageIFrame";
 
 /**
  * Main component of the application.
  */
 function App() {
   const { data: status } = useApiRequest<any>("/status");
+  const { data: plugins } = useApiRequest<IPluginList>("/plugin");
   const themeObject = lightTheme;
+
+  useEffect(() => {
+    if (plugins) {
+      runInAction(() => {
+        store.plugins = plugins;
+      });
+    }
+  }, [plugins]);
 
   useEffect(() => {
     if (status) {
@@ -54,7 +65,7 @@ function App() {
 
         <BrowserRouter>
           <Switch>
-            <Route path="/console" component={renderMainScreen} />
+            <Route path="/console" component={WrapperMainScreen} />
             <Route component={() => null} />
           </Switch>
         </BrowserRouter>
@@ -66,7 +77,9 @@ function App() {
 /**
  * Renders the main admin screen, the main screen is the one that has the sidebar and navbar.
  */
-function renderMainScreen() {
+function WrapperMainScreen() {
+  const { data: pageModules } = useApiRequest<any[]>("/module?type=page");
+
   return (
     <MainScreen>
       <Switch>
@@ -81,6 +94,16 @@ function renderMainScreen() {
         <Route exact path="/console/logs" component={Logs} />
         <Route exact path="/console/plugin/:id" component={PluginEdit} />
         <Route exact path="/console/settings" component={Settings} />
+
+        {pageModules?.map((module) => (
+          <Route
+            exact
+            key={module.pluginID}
+            path={`/console${module.setup.route}`}
+            component={() => <PageIFrame title={module.name} />}
+          />
+        ))}
+
         <Route component={Home} />
       </Switch>
     </MainScreen>
