@@ -65,7 +65,7 @@ function ModalFileSelect(props: IModalFileSelect) {
   const [files, setFiles] = useState<IFile[]>([]);
   const [selected, setSelected] = useState("");
   const [isSelectedFolder, setIsSelectedFolder] = useState(false);
-  const { data } = useApiRequest<IFile[]>(
+  const { data, error } = useApiRequest<IFile[]>(
     `/file?local_fs=${props.useLocalFs ? "true" : ""}&path=${path}`
   );
   const theme = useTheme();
@@ -173,7 +173,8 @@ function ModalFileSelect(props: IModalFileSelect) {
       enabled = false;
     }
 
-    const showEmptyWarning = file.children.length === 0 && file.is_folder && isSelected && !loading;
+    const showEmptyWarning =
+      (!file.children || file.children.length === 0) && file.is_folder && isSelected && !loading;
 
     return (
       <React.Fragment key={file.path}>
@@ -190,7 +191,7 @@ function ModalFileSelect(props: IModalFileSelect) {
 
         {showEmptyWarning
           ? renderEmptyWarning()
-          : file.children.map((f) => renderSingleFile(f, indentation + 1))}
+          : file.children?.map((f) => renderSingleFile(f, indentation + 1))}
       </React.Fragment>
     );
   };
@@ -198,9 +199,12 @@ function ModalFileSelect(props: IModalFileSelect) {
   /**
    */
   const renderFiles = () => {
+    const errorMessage = error?.response?.data?.message || error?.toString?.();
     return (
       <Style.Files ref={refFilesContainer}>
-        {loading && files.length === 0 ? (
+        {error ? (
+          <EmptyMessage icon={EIcon["exclamation-triangle"]} message={errorMessage} />
+        ) : loading && files.length === 0 ? (
           <Loading />
         ) : !loading && files.length === 0 ? (
           <EmptyMessage icon={EIcon["file-alt"]} message="Something went wrong" />

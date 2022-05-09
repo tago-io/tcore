@@ -3,6 +3,25 @@ import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
 import { getModuleList } from "./Plugins";
 
 /**
+ * Sorts the file array by alphabetical order.
+ */
+function sortFiles(children: IPluginFilesystemItem[]) {
+  children.sort((a, b) => {
+    if (a.is_folder && !b.is_folder) {
+      return -1;
+    }
+    if (!a.is_folder && b.is_folder) {
+      return 1;
+    }
+    return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+  });
+
+  for (const item of children) {
+    sortFiles(item.children);
+  }
+}
+
+/**
  */
 export async function getFileList(folderPath: string, preferLocalFs?: boolean): Promise<IPluginFilesystemItem[]> {
   if (preferLocalFs) {
@@ -11,6 +30,7 @@ export async function getFileList(folderPath: string, preferLocalFs?: boolean): 
     return result as IPluginFilesystemItem[];
   } else {
     const result = await invokeFilesystemFunction("resolveFolder", folderPath);
+    sortFiles(result);
     return result;
   }
 }

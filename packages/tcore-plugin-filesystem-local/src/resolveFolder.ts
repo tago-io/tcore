@@ -5,19 +5,6 @@ import si from "systeminformation";
 import { IPluginFilesystemItem } from "@tago-io/tcore-sdk/types";
 
 /**
- * Sorts two files by alphabetical order.
- */
-function sortFiles(a: IPluginFilesystemItem, b: IPluginFilesystemItem): number {
-  if (a.is_folder && !b.is_folder) {
-    return -1;
-  }
-  if (!a.is_folder && b.is_folder) {
-    return 1;
-  }
-  return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-}
-
-/**
  * Checks if a file path is directory or not.
  */
 async function isDirectory(file: string): Promise<boolean> {
@@ -45,8 +32,6 @@ async function transformFiles(root: string, paths: string[]): Promise<IPluginFil
       children: [],
     });
   }
-
-  transformed.sort(sortFiles);
 
   return transformed;
 }
