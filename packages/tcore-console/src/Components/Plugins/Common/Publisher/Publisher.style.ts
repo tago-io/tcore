@@ -65,6 +65,7 @@ export const Tooltip = styled.div`
     font-weight: 500;
     display: flex;
     align-items: center;
+    margin-bottom: 0;
 
     span {
       margin-left: 10px;
