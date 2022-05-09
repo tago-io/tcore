@@ -1,5 +1,6 @@
 import { Chart } from "@antv/g2";
 import { IStatistic } from "@tago-io/tcore-sdk/types";
+import { Interval } from "luxon";
 import { useEffect, useRef } from "react";
 import { useTheme } from "styled-components";
 import Loading from "../../Loading/Loading";
@@ -146,11 +147,12 @@ function ResourceHistoryChart(props: IResourceHistoryChart) {
    */
   useEffect(() => {
     const data = [];
+    const now = new Date();
     let maximum = 0;
 
     for (let i = 0; i <= 15; i++) {
       const p = statistics?.find((x) => {
-        const diff = new Date().getMinutes() - new Date(x.time).getMinutes();
+        const diff = Math.floor(Interval.fromDateTimes(new Date(x.time), now).length("minute"));
         return i === diff;
       });
 

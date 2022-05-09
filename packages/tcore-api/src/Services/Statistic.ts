@@ -22,6 +22,6 @@ export const addStatistic = async (data: IStatisticCreate): Promise<void> => {
  */
 export async function getHourlyStatistics(): Promise<IStatistic[]> {
   const statistics = await invokeDatabaseFunction("getHourlyStatistics");
-  const parsed = z.array(zStatistic).parseAsync(statistics);
+  const parsed = await z.array(zStatistic).parseAsync(statistics);
   return parsed;
 }
