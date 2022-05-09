@@ -1,7 +1,7 @@
 import pm2, { ProcessDescription, StartOptions } from "pm2";
-import * as API from "@tago-io/tcore-api";
+import { getSystemName } from "@tago-io/tcore-shared";
 
-export const PM2_APP_NAME = API.getSystemName();
+export const PM2_APP_NAME = getSystemName();
 
 /**
  */

@@ -1,5 +1,6 @@
 jest.setMock("./RequestChart/RequestChart.tsx", "div");
 
+import { getSystemName } from "@tago-io/tcore-shared";
 import { render, screen } from "../../../utils/test-utils";
 import Home from "./Home";
 
@@ -10,7 +11,7 @@ test("renders without crashing", () => {
 
 test("sets document.title", () => {
   render(<Home />);
-  expect(document.title).toEqual("Home | TCore");
+  expect(document.title).toEqual(`Home | ${getSystemName()}`);
 });
 
 test("renders `Summary` card", () => {

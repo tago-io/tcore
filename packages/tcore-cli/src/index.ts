@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import * as API from "@tago-io/tcore-api";
+import { getSystemName } from "@tago-io/tcore-shared";
 // @ts-ignore
 import pkg from "../package.json";
 import { showLogs } from "./Commands/Logs";
@@ -14,7 +14,7 @@ import { addPluginCommands } from "./PluginCLI";
 function getBaseProgram() {
   const program = new Command();
 
-  const systemName = API.getSystemName();
+  const systemName = getSystemName();
 
   program.name("tcore").description(`${systemName} CLI v${pkg.version}`).version(pkg.version, "-v, --version");
 

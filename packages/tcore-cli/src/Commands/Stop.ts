@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import * as API from "@tago-io/tcore-api";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { pm2Connect, pm2Delete, pm2Disconnect, pm2GetApp } from "../Helpers/PM2";
 import { log } from "../Helpers/Log";
 
@@ -16,14 +16,14 @@ export async function stop() {
 
     const app = await pm2GetApp();
     if (app) {
-      log(`${API.getSystemName()} Server is started, stopping it...`);
+      log(`${getSystemName()} Server is started, stopping it...`);
     }
 
     await pm2Delete();
 
     log(chalk.green("Successfully stopped"));
   } catch (ex) {
-    log(`${API.getSystemName()} Server is`, chalk.yellow("already stopped"));
+    log(`${getSystemName()} Server is`, chalk.yellow("already stopped"));
   } finally {
     await pm2Disconnect();
   }

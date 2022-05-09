@@ -3,6 +3,7 @@ import path from "path";
 import * as API from "@tago-io/tcore-api";
 import chalk from "chalk";
 import { Tail } from "tail";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { pm2Connect, pm2Disconnect, pm2GetApp } from "../Helpers/PM2";
 import { log, oraLog } from "../Helpers/Log";
 
@@ -14,7 +15,7 @@ export async function showLogs() {
 
     const app = await pm2GetApp();
     if (!app) {
-      log(`TCore Server is ${chalk.yellow("not running in the background")}`);
+      log(`${getSystemName()} Server is ${chalk.yellow("not running in the background")}`);
       return;
     }
 

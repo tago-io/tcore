@@ -3,6 +3,7 @@ import fs from "fs";
 import { StartOptions } from "pm2";
 import * as API from "@tago-io/tcore-api";
 import chalk from "chalk";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { pm2Connect, pm2Delete, pm2Disconnect, pm2GetApp, pm2Start, PM2_APP_NAME } from "../Helpers/PM2";
 import { log } from "../Helpers/Log";
 
@@ -53,7 +54,7 @@ export async function start(opts: IStartOptions) {
  */
 async function startWithDaemon(opts: IStartOptions) {
   try {
-    const systemName = API.getSystemName();
+    const systemName = getSystemName();
     const exeName = path.basename(process.execPath);
 
     await pm2Connect();
@@ -71,7 +72,7 @@ async function startWithDaemon(opts: IStartOptions) {
         await pm2Delete();
       }
     } else {
-      log("${systemName} Server is stopped, starting it...");
+      log(`${systemName} Server is stopped, starting it...`);
       await pm2Delete().catch(() => null);
     }
 

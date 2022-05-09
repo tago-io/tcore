@@ -5,6 +5,8 @@
   "main": "./build/index.js",
   "scripts": {
     "clean": "rm -rf node_modules; rm -rf package-lock.json",
+    "tsc:watch": "npm run watch",
+    "watch": "tsc --watch --preserveWatchOutput",
     "build": "rm -rf ./build; tsc"
   },
   "dependencies": {

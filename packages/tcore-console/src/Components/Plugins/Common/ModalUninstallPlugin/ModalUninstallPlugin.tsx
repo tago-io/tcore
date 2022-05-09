@@ -1,3 +1,4 @@
+import { getSystemName } from "@tago-io/tcore-shared";
 import { KeyboardEvent, MouseEvent, useCallback, useState } from "react";
 import Checkbox from "../../../Checkbox/Checkbox";
 import FormGroup from "../../../FormGroup/FormGroup";
@@ -90,7 +91,9 @@ function ModalUninstallPlugin(props: IModalUninstallPluginProps) {
 
       <FormGroup addMarginBottom={false}>
         <Checkbox checked={keepData} onChange={(e) => setKeepData(e.target.checked)}>
-          <TooltipText tooltip="Checking this option prevents TCore from erasing settings related to this plugin">
+          <TooltipText
+            tooltip={`Checking this option prevents ${getSystemName()} from erasing settings related to this plugin`}
+          >
             Keep settings
           </TooltipText>
         </Checkbox>

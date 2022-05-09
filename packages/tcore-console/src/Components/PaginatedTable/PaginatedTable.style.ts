@@ -47,6 +47,11 @@ const rowCSS = css<{ $highlightColor?: string }>`
     flex: 1 1 0%;
     display: flex;
     align-items: center;
+
+    .inner-cell:not(.date) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   &:nth-of-type(even) {
@@ -102,7 +107,6 @@ export const Body = styled.div`
   .cell {
     /* overflow: hidden; */
     white-space: nowrap;
-    text-overflow: ellipsis;
     display: flex;
     min-width: 0;
   }

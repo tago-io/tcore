@@ -14,7 +14,7 @@
     "clean": "rm -rf node_modules; rm -rf package-lock.json",
     "build": "rm -rf ./build; node esbuild/build.js; npm run tsc",
     "linter": "eslint .",
-    "watch": "node esbuild/build.js --watch",
+    "watch": "rm -rf ./build; node esbuild/build.js --watch",
     "tsc:watch": "npm run watch",
     "test:watch": "TZ=UTC jest --watch",
     "test": "TZ=UTC jest",

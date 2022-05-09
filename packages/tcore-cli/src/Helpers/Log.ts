@@ -1,14 +1,14 @@
 import chalk from "chalk";
 import ora from "ora";
-import * as API from "@tago-io/tcore-api";
+import { getSystemName } from "@tago-io/tcore-shared";
 
 export function log(...args: any[]) {
-  console.log(chalk.cyan(`[${API.getSystemName()} CLI]`), ...args);
+  console.log(chalk.cyan(`[${getSystemName()} CLI]`), ...args);
 }
 
 export function oraLog(text: string) {
   const spinner = ora(text);
-  spinner.prefixText = chalk.cyan(`[${API.getSystemName()} CLI]`);
+  spinner.prefixText = chalk.cyan(`[${getSystemName()} CLI]`);
   spinner.start();
   return spinner;
 }

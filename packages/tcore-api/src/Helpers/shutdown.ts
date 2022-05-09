@@ -1,6 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 import { Server } from "http";
-import { getSystemName } from "../Services/System";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { plugins } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
 import { log } from "./log";

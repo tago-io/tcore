@@ -1,4 +1,5 @@
 import { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
+import { getSystemName } from "@tago-io/tcore-shared";
 import useApiRequest from "../../../../Helpers/useApiRequest";
 import Col from "../../../Col/Col";
 import FileSelect from "../../../FileSelect/FileSelect";
@@ -103,7 +104,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
           >
             <FileSelect
               error={errors?.plugin_folder}
-              modalMessage="Select a folder to be used as the plugins folder of TCore."
+              modalMessage={`Select a folder to be used as the plugins folder of ${getSystemName()}.`}
               onChange={(e) => props.onChange("plugin_folder", e)}
               onlyFolders
               placeholder="e.g. /users/tcore-plugins"
@@ -114,7 +115,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
           </FormGroup>
 
           <FormGroup
-            tooltip="The plugin that will be used as the main database for TCore."
+            tooltip={`The plugin that will be used as the main database for ${getSystemName()}.`}
             icon={EIcon.database}
             label="Database plugin"
           >
@@ -130,7 +131,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
           </FormGroup>
 
           <FormGroup
-            tooltip="The plugin that will be used as the main filesystem for TCore."
+            tooltip={`The plugin that will be used as the main filesystem for ${getSystemName()}.`}
             icon={EIcon.folder}
             label="Filesystem plugin"
           >

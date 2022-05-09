@@ -7,6 +7,7 @@ import chalk from "chalk";
 import ora from "ora";
 import compression from "compression";
 import method_override from "method-override";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { startAllPlugins } from "./Plugins/Host";
 import SystemController from "./Controllers/System";
 import DeviceController from "./Controllers/Device/Device";
@@ -27,7 +28,6 @@ import { shutdown } from "./Helpers/shutdown";
 import { getLocalIPs } from "./Services/Hardware";
 import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
-import { getSystemName } from "./Services/System";
 
 const app = express();
 const httpServer = createServer(app);

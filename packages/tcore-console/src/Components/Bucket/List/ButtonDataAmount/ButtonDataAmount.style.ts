@@ -13,6 +13,8 @@ export const Container = styled(Button)`
   background-color: transparent;
   width: 150px;
   position: absolute;
+  top: 50%;
+  transform: translate(0%, -50%);
 
   :hover {
     background-color: ${(props) => darken(0.04, props.theme.bucket)};

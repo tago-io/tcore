@@ -18,6 +18,7 @@
     "tail": "2.2.4",
     "@tago-io/tcore-api": "*",
     "@tago-io/tcore-sdk": "*",
+    "@tago-io/tcore-shared": "*",
     "chalk": "4.1.2",
     "commander": "^9.0.0",
     "esbuild": "^0.14.23",

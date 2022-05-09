@@ -1,7 +1,7 @@
 import { ESocketRoom } from "@tago-io/tcore-sdk/types";
 import chalk from "chalk";
 import ora from "ora";
-import { getSystemName } from "../Services/System";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { plugins } from "../Plugins/Host";
 import { io } from "../Socket/SocketServer";
 

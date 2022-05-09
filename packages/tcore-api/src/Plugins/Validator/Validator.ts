@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import semver from "semver";
 import { IModuleSetup, zPluginPackageTCore } from "@tago-io/tcore-sdk/types";
+import { getSystemName } from "@tago-io/tcore-shared";
 import Plugin from "../Plugin/Plugin";
 // @ts-ignore
 import pkg from "../../../package.json";
@@ -31,7 +32,7 @@ class Validator {
 
     const valid = this.validateEngine();
     if (!valid) {
-      throw new Error(`Not compatible with this TCore version, only compatible with ${pkg.engines.tcore}`);
+      throw new Error(`Not compatible with this ${getSystemName()} version, only compatible with ${pkg.engines.tcore}`);
     }
 
     try {

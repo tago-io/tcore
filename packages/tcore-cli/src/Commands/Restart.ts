@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import * as API from "@tago-io/tcore-api";
 import chalk from "chalk";
+import { getSystemName } from "@tago-io/tcore-shared";
 import { pm2Connect, pm2Disconnect, pm2Restart, pm2GetApp } from "../Helpers/PM2";
 import { log } from "../Helpers/Log";
 
@@ -23,14 +24,14 @@ export async function restart() {
 
       const newApp = await pm2GetApp();
       if (newApp) {
-        log(`${API.getSystemName()} Server was ${chalk.green("successfully restarted")} with PID`, newApp.pid);
+        log(`${getSystemName()} Server was ${chalk.green("successfully restarted")} with PID`, newApp.pid);
       } else {
-        log(`${API.getSystemName()} Server ${chalk.redBright("could not be started")}.`);
+        log(`${getSystemName()} Server ${chalk.redBright("could not be started")}.`);
         log(`You can check the logs by running ${chalk.cyan("tcore logs")}`);
       }
     } else {
-      log(`${API.getSystemName()} Server is ${chalk.redBright("not started")}`);
-      log(`To start ${API.getSystemName()}, run ${chalk.cyan("tcore start")}`);
+      log(`${getSystemName()} Server is ${chalk.redBright("not started")}`);
+      log(`To start ${getSystemName()}, run ${chalk.cyan("tcore start")}`);
     }
   } finally {
     await pm2Disconnect();

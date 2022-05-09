@@ -1,16 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const svgr = require("./svgr");
 const esbuild = require("esbuild");
-const fs = require("fs");
 const path = require("path");
 const buildPath = require("./buildPath");
 const version = require("../../../package.json").version;
-
-try {
-  fs.rmSync(buildPath, { recursive: true });
-} catch (ex) {
-  //
-}
 
 require("./icon");
 require("./generateIndex");

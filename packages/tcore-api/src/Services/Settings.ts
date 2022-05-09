@@ -2,10 +2,14 @@ import path from "path";
 import fs from "fs";
 import os from "os";
 import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
+import { getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
 import { plugins } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
 
-const folderName = os.platform() === "win32" ? "TCore" : ".tcore";
+/**
+ * Folder name to save the settings.
+ */
+const folderName = os.platform() === "win32" ? getSystemName() : `.${getSystemSlug()}`;
 
 /**
  * Retrieves the main settings folder.
@@ -39,23 +43,17 @@ export async function getPluginsFolder(): Promise<string> {
  */
 export async function getMainSettings(): Promise<ISettings> {
   const folder = await getMainSettingsFolder();
-  const data = await loadYml(path.join(folder, "tcore.yml"));
+  const data = await loadYml(path.join(folder, `${getSystemSlug()}.yml`));
 
   const filesystem_plugin = process.env.TCORE_FILESYSTEM_PLUGIN || data.filesystem_plugin || "";
   const database_plugin = process.env.TCORE_DATABASE_PLUGIN || data.database_plugin || "";
   const settings_folder = process.env.TCORE_SETTINGS_FOLDER || folder;
   const plugin_folder = process.env.TCORE_PLUGIN_FOLDER || data.plugin_folder || (await getPluginsFolder());
   const port = process.env.TCORE_PORT || data.port || "8888";
-  const plugin_auto_update_enable = data.plugin_auto_update_enable || false;
-  const plugin_auto_update_check_time = data.plugin_auto_update_check_time || "";
-  const plugin_auto_update_last_checked_time = data.plugin_auto_update_last_checked_time || "";
 
   const settings: ISettings = {
     filesystem_plugin,
     database_plugin,
-    plugin_auto_update_check_time,
-    plugin_auto_update_enable,
-    plugin_auto_update_last_checked_time,
     plugin_folder,
     port,
     settings_folder,
@@ -73,7 +71,7 @@ export async function getMainSettings(): Promise<ISettings> {
  */
 export async function setMainSettings(data: ISettings): Promise<void> {
   const folder = await getMainSettingsFolder();
-  await saveYml(data, path.join(folder, "tcore.yml"));
+  await saveYml(data, path.join(folder, `${getSystemSlug()}.yml`));
 }
 
 /**

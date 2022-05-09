@@ -31,6 +31,8 @@
   "scripts": {
     "plugin-filesystem-local:tsc": "npm run tsc:watch -w @tago-io/tcore-plugin-filesystem-local",
     "plugin-filesystem-local:watch": "npm run tsc:watch -w @tago-io/tcore-plugin-filesystem-local",
+    "shared:watch": "npm run watch -w @tago-io/tcore-shared",
+    "shared:tsc": "npm run tsc:watch -w @tago-io/tcore-shared",
     "console:test": "npm run test -w @tago-io/tcore-console",
     "console:watch": "npm run watch -w @tago-io/tcore-console",
     "console:tsc": "npm run tsc:watch -w @tago-io/tcore-console",

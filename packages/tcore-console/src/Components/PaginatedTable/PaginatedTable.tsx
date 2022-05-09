@@ -168,10 +168,11 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
   const renderRowCell = (item: T, column: IColumn<T>, rowIndex: number) => {
     const flex = column.flex || "1";
     const width = column.width || "auto";
+    const type = column.type || "text";
 
     return (
       <div key={column.id + rowIndex} className="cell" style={{ width, flex }}>
-        {column.onRender(item, rowIndex, column)}
+        <div className={`inner-cell ${type}`}>{column.onRender(item, rowIndex, column)}</div>
       </div>
     );
   };

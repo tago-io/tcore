@@ -9,7 +9,6 @@ export * from "./Helpers/Tar/Tar";
 export * from "./Helpers/Zip";
 export * from "./Services/Plugins";
 export * from "./Services/Settings";
-export * from "./Services/System";
 
 export {
   downloadFile,
