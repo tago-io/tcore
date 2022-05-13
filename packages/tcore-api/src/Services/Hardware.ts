@@ -50,6 +50,7 @@ export async function getOSInfo() {
   let hardware = "";
   let name = osInfo.distro || osInfo.codename;
   const arch = osInfo.arch;
+  const hostname = os.hostname();
 
   // debian
   // redhat
@@ -85,6 +86,7 @@ export async function getOSInfo() {
     name,
     code,
     hardware,
+    hostname,
     version,
   };
 }

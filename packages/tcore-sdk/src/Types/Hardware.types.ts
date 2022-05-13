@@ -9,6 +9,7 @@ export const zOSInfo = z.object({
   name: z.string(),
   code: z.enum(["windows", "mac", "linux", "raspberry-pi", "other"]),
   hardware: z.string(),
+  hostname: z.string(),
 });
 
 /**
