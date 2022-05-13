@@ -20,6 +20,16 @@ import { uninstallPlugin } from "./Uninstall";
 let lastProgress: number | undefined = 0;
 
 /**
+ */
+function emitInstallLog(data: any) {
+  io?.to(ESocketRoom.pluginInstall).emit("plugin::install", {
+    error: data?.error,
+    message: data?.message,
+    progress: data?.progress ?? lastProgress,
+  });
+}
+
+/**
  * Adds a log into the log buffer of the application and triggers the socket
  * event for all sockets attached with the `pluginInstall` resource.
  */
@@ -32,11 +42,7 @@ function addLog(opts: IPluginInstallOptions, error: boolean, message: string, pr
     }
   }
 
-  io?.to(ESocketRoom.pluginInstall).emit("plugin::install", {
-    error,
-    message,
-    progress: progress ?? lastProgress,
-  });
+  emitInstallLog({ error, message, progress });
 
   if (progress) {
     lastProgress = progress;
@@ -226,7 +232,7 @@ async function resolveSource(source: string, opts: IPluginInstallOptions = {}) {
  * Installs a plugin from a source.
  * @param {string} source Local path in the filesystem or a HTTP/HTTPS URL.
  */
-export async function installPlugin(source: string, opts: IPluginInstallOptions = {}) {
+async function installPlugin(source: string, opts: IPluginInstallOptions = {}) {
   addLog(opts, false, `Installing plugin`, 0);
 
   let pluginPath = "";
@@ -255,11 +261,15 @@ export async function installPlugin(source: string, opts: IPluginInstallOptions 
 
     addLog(opts, false, `Plugin successfully installed`, 99);
   } catch (ex: any) {
-    addLog(opts, true, `An error ocurred: ${ex.message}`);
+    const err = ex?.message || ex?.toString?.() || ex;
+    addLog(opts, true, `An error ocurred: ${err}`);
     addLog(opts, true, "The plugin was not installed");
 
-    await restoreBackup(backupFile, pluginID, opts);
-    throw ex;
+    if (opts?.restoreBackup) {
+      await restoreBackup(backupFile, pluginID, opts);
+    }
+
+    throw err;
   }
 
   if (opts?.start) {
@@ -270,12 +280,19 @@ export async function installPlugin(source: string, opts: IPluginInstallOptions 
 
       addLog(opts, false, `Done!`, 100);
     } catch (ex: any) {
-      addLog(opts, true, ex.message || String(ex));
+      const err = ex?.message || ex?.toString?.() || ex;
+      addLog(opts, true, err);
       addLog(opts, true, "The plugin was installed, but could not run");
-      await restoreBackup(backupFile, pluginID, opts);
-      throw ex;
+
+      if (opts?.restoreBackup) {
+        await restoreBackup(backupFile, pluginID, opts);
+      }
+
+      throw err;
     }
   } else {
     addLog(opts, false, `Done!`, 100);
   }
 }
+
+export { installPlugin, emitInstallLog };

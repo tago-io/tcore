@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { ESocketRoom } from "@tago-io/tcore-sdk/types";
 import { io } from "../Socket/SocketServer";
-import { getPluginSettingsFolder } from "../Services/Settings";
+import { getMainSettings, getPluginSettingsFolder } from "../Services/Settings";
 import { plugins } from "./Host";
 
 /**
@@ -10,24 +10,44 @@ import { plugins } from "./Host";
  */
 export async function uninstallPlugin(id: string, keepPluginData?: boolean) {
   const plugin = plugins.get(id);
+  let pluginFolder = "";
+
   if (plugin) {
+    // plugin is currently loaded, we will stop it and acquire its folder
+    // to delete it.
     await plugin.stop(false, 3000).catch(() => null);
-    await rmdir(plugin.folder);
+    pluginFolder = plugin.folder;
     plugins.delete(id);
-
-    if (!keepPluginData) {
-      const settingsFolder = await getPluginSettingsFolder(id);
-      await rmdir(settingsFolder);
-    }
-
-    const socketData = {
-      id: id,
-      deleted: true,
-    };
-
-    io?.to(`${ESocketRoom.plugin}#${id}`).emit("plugin:sidebar", socketData);
-    io?.to(`${ESocketRoom.plugin}#${id}`).emit("plugin:status", socketData);
   }
+
+  if (!pluginFolder) {
+    // plugin folder wasn't found in the loaded plugin, we will manually
+    // remove the folder from the plugin folder settings combined with the
+    // current plugin id.
+    const settings = await getMainSettings();
+    pluginFolder = path.join(settings.plugin_folder, id);
+  }
+
+  if (!pluginFolder) {
+    // somehow we still don't have a folder to delete, ignore it.
+    return;
+  }
+
+  // remove the plugin folder
+  await rmdir(pluginFolder);
+
+  if (!keepPluginData) {
+    const settingsFolder = await getPluginSettingsFolder(id);
+    await rmdir(settingsFolder);
+  }
+
+  const socketData = {
+    id: id,
+    deleted: true,
+  };
+
+  io?.to(`${ESocketRoom.plugin}#${id}`).emit("plugin:sidebar", socketData);
+  io?.to(`${ESocketRoom.plugin}#${id}`).emit("plugin:status", socketData);
 }
 
 /**
