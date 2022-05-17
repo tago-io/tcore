@@ -380,7 +380,7 @@ const zActionTypeModuleSetup = zPluginSetup.omit({ type: true }).extend({
   option: z.object({
     configs: z.array(zPluginConfigField).optional(),
     description: z.string().optional(),
-    icon: zIcon.optional(),
+    icon: z.string().optional(),
     name: z.string(),
   }),
 });
