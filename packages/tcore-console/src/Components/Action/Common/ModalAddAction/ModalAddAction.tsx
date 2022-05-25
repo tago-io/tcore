@@ -174,6 +174,7 @@ function ModalAddAction(props: IModalAddAction) {
           onChangeAction={setAction}
           action={action}
           optionsPosition="top"
+          triggerID={type}
         />
       </FormGroup>
     </Modal>

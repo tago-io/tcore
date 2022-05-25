@@ -29,6 +29,10 @@ interface IActionFields {
    * function to change the action object.
    */
   onChangeAction: (action: any) => void;
+  /**
+   * ID of the selected trigger.
+   */
+  triggerID?: string;
 }
 
 function ActionFields(props: IActionFields) {
@@ -100,7 +104,13 @@ function ActionFields(props: IActionFields) {
             <div style={{ flex: "none" }}>
               <Switch
                 value={action.http_post_fallback_enabled || false}
-                onChange={(e) => onChangeAction({ ...action, http_post_fallback_enabled: e })}
+                onChange={(e) =>
+                  onChangeAction({
+                    ...action,
+                    fallback_token: e ? action.fallback_token || "" : null,
+                    http_post_fallback_enabled: e,
+                  })
+                }
               >
                 Enabled
               </Switch>
@@ -176,6 +186,7 @@ function ActionFields(props: IActionFields) {
           optionsPosition={optionsPosition}
           value={actionType}
           error={errors?.type}
+          triggerID={props.triggerID}
         />
       </FormGroup>
 

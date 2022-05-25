@@ -25,6 +25,7 @@ import {
   IConditionData,
   IScheduleData,
   zFrontAction,
+  zFrontActionPost,
   zFrontActionScript,
   zFrontActionTagoIO,
   zFrontConditionDataMultiple,
@@ -109,6 +110,8 @@ function ActionEdit() {
         await zFrontActionScript.parseAsync(action);
       } else if (action?.type === "tagoio") {
         await zFrontActionTagoIO.parseAsync(action);
+      } else if (action?.type === "post") {
+        await zFrontActionPost.parseAsync(action);
       } else {
         const item = typeModules.find(
           (x) => `${x.pluginID}:${x.setup.id}` === (action.type?.id || action?.type)
@@ -132,6 +135,14 @@ function ActionEdit() {
       await z
         .object({ name: zName, tags: zTags })
         .parseAsync({ ...data, tags: normalizeTags(data.tags) });
+
+      if (conditionData) {
+        conditionData.conditions?.forEach((x) => {
+          if (x.is !== "*") {
+            x.value = x.value || undefined;
+          }
+        });
+      }
 
       if (scheduleData.type === "schedule") {
         await zFrontScheduleData.parseAsync(scheduleData);

@@ -24,7 +24,8 @@ const zFrontActionPost = z
     type: z.literal("post"),
     url: z.string().url().nonempty(),
     headers: z.any(),
-    fallback_token: z.string().uuid().optional(),
+    fallback_token: z.string().uuid().nullish(),
+    http_post_fallback_enabled: z.any(),
   })
   .transform((x) => {
     if (Array.isArray(x.headers)) {
@@ -42,7 +43,7 @@ const zFrontActionPost = z
  */
 const zFrontConditionDataCondition = z.object({
   variable: z.string().nonempty(),
-  value: z.string().nonempty(),
+  value: z.string(),
   second_value: z.string().optional(),
   is: z.enum(["<", ">", "=", "!", "><", "*"]).default("*"),
   value_type: z.enum(["string", "number", "boolean", "*"]).default("*"),

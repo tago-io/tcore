@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IPluginConfigField, IPluginModuleList } from "@tago-io/tcore-sdk/types";
 import Icon from "../../../Icon/Icon";
 import { EIcon } from "../../../Icon/Icon.types";
@@ -59,16 +59,22 @@ interface IActionTypePicker {
    * Position of the options container. Default is `bottom`.
    */
   optionsPosition?: "top" | "bottom";
+  /**
+   * ID of the selected trigger.
+   */
+  triggerID?: string;
 }
 
 /**
  * Picker for the type of action.
  */
 function ActionTypePicker(props: IActionTypePicker) {
-  const { data: options } = useApiRequest<IPluginModuleList>("/module?type=action-type");
+  const { data: actionTypes } = useApiRequest<IPluginModuleList>("/module?type=action-type");
   const { error, optionsPosition } = props;
+  const isSchedule = props.triggerID === "schedule" || props.triggerID === "interval";
+  const [options] = useState([...defaultOptions]);
 
-  const mappedPluginOptions: IOption[] = options?.map((x) => ({
+  const mappedPluginOptions: IOption[] = actionTypes?.map((x) => ({
     configs: x.setup.option?.configs || [],
     description: x.setup.option?.description,
     icon: x.setup.option?.icon,
@@ -113,11 +119,11 @@ function ActionTypePicker(props: IActionTypePicker) {
    */
   const resolveOptionByID = useCallback(
     async (id: string | number) => {
-      const allOptions = [...defaultOptions, ...mappedPluginOptions];
+      const allOptions = [...options, ...mappedPluginOptions];
       const response = allOptions.find((x) => x.id === id);
       return response;
     },
-    [mappedPluginOptions]
+    [options, mappedPluginOptions]
   );
 
   /**
@@ -129,7 +135,12 @@ function ActionTypePicker(props: IActionTypePicker) {
         return [];
       }
 
-      const allOptions = [...defaultOptions, ...mappedPluginOptions];
+      const allOptions = [...options, ...mappedPluginOptions];
+
+      if (isSchedule) {
+        allOptions.splice(2, 1);
+      }
+
       return allOptions.filter((x) => {
         return (
           String(x.description).toLowerCase().includes(query) ||
@@ -137,8 +148,15 @@ function ActionTypePicker(props: IActionTypePicker) {
         );
       });
     },
-    [mappedPluginOptions]
+    [isSchedule, options, mappedPluginOptions]
   );
+
+  useEffect(() => {
+    if (isSchedule && props.value?.id === "tagoio") {
+      props.onChange(null as any);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value, isSchedule]);
 
   return (
     <OptionsPicker<IOption>

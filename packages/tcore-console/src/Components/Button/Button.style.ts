@@ -6,7 +6,7 @@ import { EButton } from "./Button.types";
 /**
  * Props for the container.
  */
-interface IContainerProps {
+export interface IButtonContainerProps {
   buttonType?: EButton;
   theme: DefaultTheme;
   color?: string;
@@ -16,7 +16,7 @@ interface IContainerProps {
 /**
  * Main style for the button component.
  */
-export const Container = styled.button<IContainerProps>`
+export const Container = styled.button<IButtonContainerProps>`
   display: inline-flex;
   padding: 8px 20px;
   border-radius: 3px;
@@ -54,7 +54,7 @@ export const Container = styled.button<IContainerProps>`
 /**
  * Returns the css for the button colors.
  */
-function applyTypeCss(props: IContainerProps) {
+function applyTypeCss(props: IButtonContainerProps) {
   let color = props.theme.buttonDefaultFont;
 
   let background = props.theme.buttonDefault;

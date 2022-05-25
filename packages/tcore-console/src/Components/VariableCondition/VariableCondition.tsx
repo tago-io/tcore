@@ -71,7 +71,7 @@ function VariableCondition(props: IVariableCondition) {
             { label: "Less than", value: "<" },
             { label: "Greater than", value: ">" },
             { label: "Equal to", value: "=" },
-            { label: "Different from", value: "<>" },
+            { label: "Different from", value: "!" },
             { label: "Anything", value: "*" },
           ]}
         />

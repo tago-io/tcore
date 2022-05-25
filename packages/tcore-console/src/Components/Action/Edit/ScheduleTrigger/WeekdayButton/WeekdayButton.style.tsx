@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 import * as ButtonStyle from "../../../../Button/Button.style";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { IButtonContainerProps } from "../../../../Button/Button.style";
 
 const Container = styled(ButtonStyle.Container)<{ pressed?: boolean }>`
   border: 1px solid rgba(0, 0, 0, 0.1);

@@ -44,6 +44,8 @@ export const zActionTypePluginModule = z.object({ type: zPluginModuleIDCombo }).
 const zActionType2 = z.any().transform((x) => {
   if (!x) {
     return x;
+  } else if (Object.keys(x).length === 0) {
+    return x; // pre 0.4.0 actions could be empty
   } else if (x.type === "script") {
     return zActionTypeScript.parse(x);
   } else if (x.type === "post") {

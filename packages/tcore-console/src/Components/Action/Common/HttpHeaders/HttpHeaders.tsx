@@ -19,7 +19,7 @@ interface IHttpHeaders {
 
 function HttpHeaders(props: IHttpHeaders) {
   const { onChange } = props;
-  const value = props.value || [];
+  const value = Array.isArray(props.value) ? props.value : [];
 
   const firstItem = value[0];
   if (firstItem?.name !== "TagoIO-Retries") {

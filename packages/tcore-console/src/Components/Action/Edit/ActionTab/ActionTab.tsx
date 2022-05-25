@@ -33,16 +33,16 @@ interface IActionTab {
  */
 function ActionTab(props: IActionTab) {
   const {
-    pluginTriggerData,
-    onChangePluginTriggerData,
-    customTrigger,
-    errors,
-    data,
     action,
-    onChangeAction,
-    scheduleData,
-    onChangeScheduleData,
+    customTrigger,
+    data,
+    errors,
     onChange,
+    onChangeAction,
+    onChangePluginTriggerData,
+    onChangeScheduleData,
+    pluginTriggerData,
+    scheduleData,
   } = props;
 
   /**
@@ -97,7 +97,12 @@ function ActionTab(props: IActionTab) {
           </FormGroup>
         </div>
 
-        <ActionFields errors={errors?.action} action={action} onChangeAction={onChangeAction} />
+        <ActionFields
+          triggerID={data?.type}
+          errors={errors?.action}
+          action={action}
+          onChangeAction={onChangeAction}
+        />
       </>
     );
   };
