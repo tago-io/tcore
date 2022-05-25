@@ -1,6 +1,7 @@
 /* eslint-disable no-async-promise-executor */
 import { Server } from "http";
 import { getSystemName } from "@tago-io/tcore-shared";
+import { stopActionScheduleTimer } from "../Services/ActionScheduler";
 import { plugins } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
 import { log } from "./log";
@@ -11,6 +12,8 @@ let shutdownTries = 0;
  * Shuts down the server, all plugins, and then the application.
  */
 export async function shutdown(httpServer: Server) {
+  stopActionScheduleTimer();
+
   log("api", `Shutting down ${getSystemName()} (${shutdownTries + 1}/3 tries)`);
 
   // increase the shutdown tries

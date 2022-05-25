@@ -1,5 +1,5 @@
-import { IActionOption } from "@tago-io/tcore-sdk/types";
 import { useTheme } from "styled-components";
+import { IPluginModuleList } from "@tago-io/tcore-sdk/types";
 import { EIcon } from "../../../Icon/Icon.types";
 import IconRadio from "../../../IconRadio/IconRadio";
 import Icon from "../../../Icon/Icon";
@@ -8,7 +8,7 @@ import useApiRequest from "../../../../Helpers/useApiRequest";
 /**
  * Props.
  */
-interface ITypeRadioProps {
+interface ITriggerRadioProps {
   /**
    * The selected value.
    */
@@ -20,11 +20,11 @@ interface ITypeRadioProps {
 }
 
 /**
- * Shows a list of possible action types.
+ * Shows a list of possible action triggers.
  * This shows the default list and all the plugin options too.
  */
-function TypeRadio(props: ITypeRadioProps) {
-  const { data } = useApiRequest<IActionOption[]>("/action-triggers");
+function TriggerRadio(props: ITriggerRadioProps) {
+  const { data } = useApiRequest<IPluginModuleList>("/module?type=action-trigger");
   const { value, onChange } = props;
   const theme = useTheme();
 
@@ -34,21 +34,29 @@ function TypeRadio(props: ITypeRadioProps) {
   const renderOptions = () => {
     const options = [
       {
-        color: value === "variable" ? theme.action : theme.font,
+        color: value === "condition" ? theme.bucket : theme.font,
         description: "Triggered when the selected variables meet certain conditions.",
         icon: EIcon.database,
         label: "Variable",
-        value: "variable",
+        value: "condition",
+      },
+      {
+        color: value === "interval" ? theme.action : theme.font,
+        description: "Triggered based on the selected time interval",
+        icon: EIcon.clock,
+        label: "Schedule",
+        value: "interval",
       },
     ];
 
     for (const item of data || []) {
+      const id = `${item.pluginID}:${item.setup.id}`;
       options.push({
-        color: value === item.id ? theme.action : theme.font,
-        description: item.description as string,
+        color: value === id ? theme.action : theme.font,
+        description: item.setup.option?.description as string,
         icon: EIcon.cog,
-        label: item.name,
-        value: item.id,
+        label: item.setup.option?.name,
+        value: id,
       });
     }
 
@@ -67,4 +75,4 @@ function TypeRadio(props: ITypeRadioProps) {
   );
 }
 
-export default TypeRadio;
+export default TriggerRadio;

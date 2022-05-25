@@ -6,8 +6,8 @@ import {
   IActionListQuery,
   IActionOption,
   IActionTriggerModuleSetup,
-  IActionType,
   IActionTypeModuleSetup,
+  IDevice,
   IDeviceData,
   TGenericID,
   zAction,
@@ -39,19 +39,18 @@ export async function validateActionID(id: TGenericID): Promise<void> {
 /**
  * Lists all the action triggers.
  */
-export function getActionTriggers(): IActionType[] {
-  const options: IActionType[] = [];
+export function getActionTriggers(): any[] {
+  const options: any[] = [];
   const modules = getModuleList("action-trigger");
 
   for (const module of modules) {
     const option = (module.setup as unknown as IActionTriggerModuleSetup).option;
 
-    const type: IActionType = {
+    const type: any = {
       configs: option.configs || [],
       description: option.description,
       id: `${module.plugin.id}:${module.setup.id}`,
       name: option.name,
-      showDeviceSelector: !!option.showDeviceSelector,
     };
 
     options.push(type);
@@ -99,25 +98,23 @@ export async function getActionInfo(id: TGenericID): Promise<IAction> {
 
 /**
  */
-export function shouldNativeActionTrigger(action: Partial<IAction>, data: IDeviceData[]): boolean {
-  const conditions = action.trigger?.conditions || [];
-  for (const item of data) {
-    for (const trigger of conditions) {
-      const itemValue = Number(item.value);
+export function getConditionTriggerMatchingData(action: IAction, device: IDevice, data: IDeviceData): boolean {
+  const conditions = Array.isArray(action.trigger) ? action.trigger : [];
+  for (const trigger of conditions) {
+    const itemValue = Number(data.value);
 
-      const triggerValue = Number(trigger.value);
-      const triggerSecondValue = Number(trigger.second_value);
+    const triggerValue = Number(trigger.value);
+    const triggerSecondValue = Number(trigger.second_value);
 
-      if (item.variable === trigger.variable) {
-        if (trigger.is === "=" && itemValue === triggerValue) return true;
-        if (trigger.is === "<>" && itemValue !== triggerValue) return true;
-        if ((!trigger.is || trigger.is === "<") && itemValue < triggerValue) return true;
-        if (trigger.is === ">" && itemValue > triggerValue) return true;
-        if (trigger.is === "><" && itemValue > triggerValue && itemValue < triggerSecondValue) return true;
-        if (trigger.is === "*") return true;
-      }
+    const hasTagsMatch = device.tags.some((x) => x.key === trigger.tag_key && x.value === trigger.tag_value);
 
-      return false;
+    if ((device.id === trigger.device || hasTagsMatch) && data.variable === trigger.variable) {
+      if (trigger.is === "=" && itemValue === triggerValue) return true;
+      if (trigger.is === "<>" && itemValue !== triggerValue) return true;
+      if (trigger.is === "<" && itemValue < triggerValue) return true;
+      if (trigger.is === ">" && itemValue > triggerValue) return true;
+      if (trigger.is === "><" && itemValue > triggerValue && itemValue < triggerSecondValue) return true;
+      if (trigger.is === "*") return true;
     }
   }
 
@@ -128,8 +125,6 @@ export function shouldNativeActionTrigger(action: Partial<IAction>, data: IDevic
  * Triggers an action.
  */
 export async function triggerAction(id: TGenericID, data?: any): Promise<void> {
-  await validateActionID(id);
-
   const action = await getActionInfo(id);
   const actionObject = action.action;
 
@@ -148,7 +143,7 @@ export async function triggerAction(id: TGenericID, data?: any): Promise<void> {
     triggerActionTagoIOType(action, data);
   }
 
-  editAction(id, { last_triggered: new Date() });
+  await editAction(id, { last_triggered: new Date() });
 }
 
 /**
@@ -203,13 +198,13 @@ async function triggerActionPostType(action: IAction, data: any): Promise<void> 
 }
 
 /**
- * Triggers an action that runs analyses.
+ * Triggers an action that runs scripts.
  * @param {IAction} action The action to be triggered.
- * @param {any} data The data to be passed as parameter to the analyses.
+ * @param {any} data The data to be passed as parameter to the script.
  */
 async function triggerActionScriptType(action: IAction, data: any): Promise<void> {
-  const analyses = action?.action?.analyses;
-  for (const analysis of analyses) {
+  const script = action?.action?.script || [];
+  for (const analysis of script) {
     runAnalysis(analysis, data);
   }
 }

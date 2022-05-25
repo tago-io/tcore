@@ -1,13 +1,13 @@
 import { useTheme } from "styled-components";
 import { IDevice, ITag } from "@tago-io/tcore-sdk/types";
-import Col from "../../../Col/Col";
-import DevicePicker from "../../../Device/Common/DevicePicker/DevicePicker";
-import FlexRow from "../../../FlexRow/FlexRow";
-import FormGroup from "../../../FormGroup/FormGroup";
-import { EIcon } from "../../../Icon/Icon.types";
-import IconRadio from "../../../IconRadio/IconRadio";
-import Input from "../../../Input/Input";
-import Row from "../../../Row/Row";
+import Col from "../../../../Col/Col";
+import DevicePicker from "../../../../Device/Common/DevicePicker/DevicePicker";
+import FlexRow from "../../../../FlexRow/FlexRow";
+import FormGroup from "../../../../FormGroup/FormGroup";
+import { EIcon } from "../../../../Icon/Icon.types";
+import IconRadio from "../../../../IconRadio/IconRadio";
+import Input from "../../../../Input/Input";
+import Row from "../../../../Row/Row";
 
 /**
  * Props.
@@ -40,14 +40,15 @@ interface IDeviceRadioProps {
   /**
    * Indicates if this device radio has an error.
    */
-  error?: boolean;
+  errors?: any;
 }
 
 /**
  * An input radio to select types of devices.
  */
 function DeviceRadio(props: IDeviceRadioProps) {
-  const { deviceType, error, device, tag, onChangeDeviceType, onChangeTag, onChangeDevice } = props;
+  const { deviceType, errors, device, tag, onChangeDeviceType, onChangeTag, onChangeDevice } =
+    props;
 
   const theme = useTheme();
 
@@ -85,7 +86,7 @@ function DeviceRadio(props: IDeviceRadioProps) {
             label="Select the device"
             tooltip="Only the variables of this device will be watched."
           >
-            <DevicePicker error={error} value={device} onChange={onChangeDevice} />
+            <DevicePicker error={errors?.device} value={device} onChange={onChangeDevice} />
           </FormGroup>
         ) : (
           <FormGroup
@@ -98,13 +99,13 @@ function DeviceRadio(props: IDeviceRadioProps) {
                 value={tag?.key || ""}
                 onChange={(e) => onChangeTag({ key: e.target.value, value: tag?.value || "" })}
                 placeholder="Enter a tag key"
-                error={error}
+                error={errors?.tag}
               />
               <Input
                 value={tag?.value || ""}
                 onChange={(e) => onChangeTag({ key: tag?.key || "", value: e.target.value })}
                 placeholder="Tag value"
-                error={error}
+                error={errors?.tag}
               />
             </FlexRow>
           </FormGroup>

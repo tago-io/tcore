@@ -1,31 +1,74 @@
 import { z } from "zod";
-import { generateResourceID } from "../Shared/ResourceID";
-import { zPluginConfigField, IPluginConfigField } from "./Plugin.types";
-import { zQuery, zName, zObjectID, zActiveAutoGen, zTagsAutoGen } from "./Common/Common.types";
-import { zTags } from "./Tag.types";
-import preprocessBoolean from "./Helpers/preprocessBoolean";
-import preprocessObject from "./Helpers/preprocessObject";
-import removeNullValues from "./Helpers/removeNullValues";
+import { generateResourceID } from "../../Shared/ResourceID";
+import { IPluginConfigField, zPluginModuleIDCombo } from "../Plugin.types";
+import { zQuery, zName, zObjectID, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types";
+import { zTags } from "../Tag.types";
+import preprocessBoolean from "../Helpers/preprocessBoolean";
+import preprocessObject from "../Helpers/preprocessObject";
+import removeNullValues from "../Helpers/removeNullValues";
+
+/**
+ * Validation for a "script" action type.
+ */
+export const zActionTypeScript = z.object({
+  type: z.literal("script"),
+  script: z.union([zObjectID, z.array(zObjectID)]),
+});
+
+/**
+ * Validation for a "post" action type.
+ */
+export const zActionTypePost = z.object({
+  type: z.literal("post"),
+  url: z.string().url(),
+  headers: z.record(z.string()).optional(),
+  fallback_token: z.string().uuid("Invalid fallback token").nullable().optional(),
+});
+
+/**
+ * Validation for a "tagoio" action type.
+ */
+export const zActionTypeTagoIO = z.object({
+  type: z.literal("tagoio"),
+  token: z.string().uuid(),
+});
+
+/**
+ * Validation for an action type that uses a plugin module.
+ */
+export const zActionTypePluginModule = z.object({ type: zPluginModuleIDCombo }).passthrough();
+
+/**
+ * Validation for the `action` object of an action.
+ */
+const zActionType2 = z.any().transform((x) => {
+  if (!x) {
+    return x;
+  } else if (x.type === "script") {
+    return zActionTypeScript.parse(x);
+  } else if (x.type === "post") {
+    return zActionTypePost.parse(x);
+  } else if (x.type === "tagoio") {
+    return zActionTypeTagoIO.parse(x);
+  } else {
+    return zActionTypePluginModule.parse(x);
+  }
+});
 
 /**
  * Base configuration of an action.
  */
 export const zAction = z.object({
-  action: z.any(),
+  action: zActionType2,
   active: z.boolean(),
   created_at: z.date(),
   description: z.string().nullish(),
-  device_info: z
-    .object({ id: zObjectID })
-    .or(z.object({ tag_key: z.string().nonempty(), tag_value: z.string().nonempty() }))
-    .optional()
-    .nullish(),
   id: zObjectID,
   last_triggered: z.date().nullish(),
   name: zName,
   tags: zTags,
   trigger: z.any().optional(),
-  type: z.string(),
+  type: z.enum(["condition", "interval", "schedule"]).or(zPluginModuleIDCombo),
   updated_at: z.date().nullish(),
 });
 
@@ -89,7 +132,6 @@ const zActionListQueryFields = z.enum([
   "created_at",
   "updated_at",
   "type",
-  "device_info",
   "*",
 ]);
 
@@ -126,23 +168,14 @@ export const zActionListQuery = zQuery.extend({
     .transform((x) => x ?? ["name", "asc"]),
 });
 
-/**
- * Action types from plugins.
- */
-export const zActionType = z.object({
-  configs: z.array(zPluginConfigField),
-  description: z.string(),
-  id: z.string(),
-  name: z.string(),
-  showDeviceSelector: z.boolean(),
-});
-
 export type IAction = z.infer<typeof zAction>;
 export type IActionCreate = z.infer<typeof zActionCreate>;
 export type IActionEdit = z.infer<typeof zActionEdit>;
-export type IActionType = z.infer<typeof zActionType>;
 export type IActionList = z.infer<typeof zActionList>;
 export type IActionListQuery = z.input<typeof zActionListQuery>;
+export type IActionTypeScript = z.infer<typeof zActionTypeScript>;
+export type IActionTypeTagoIO = z.infer<typeof zActionTypeTagoIO>;
+export type IActionTypePost = z.infer<typeof zActionTypePost>;
 
 export interface IActionOption {
   description?: string;

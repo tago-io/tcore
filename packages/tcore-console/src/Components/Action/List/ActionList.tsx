@@ -1,6 +1,6 @@
 import { useTheme } from "styled-components";
 import { useState } from "react";
-import { IAction, IActionOption } from "@tago-io/tcore-sdk/types";
+import { IAction, IPluginModuleList } from "@tago-io/tcore-sdk/types";
 import BooleanStatus from "../../BooleanStatus/BooleanStatus";
 import Button from "../../Button/Button";
 import { EButton } from "../../Button/Button.types";
@@ -11,23 +11,54 @@ import RelativeDate from "../../RelativeDate/RelativeDate";
 import ModalAddAction from "../Common/ModalAddAction/ModalAddAction";
 import useApiRequest from "../../../Helpers/useApiRequest";
 import getActionList from "../../../Requests/getActionList";
+import * as Style from "./ActionList.style";
 
 /**
  * The device edit page.
  */
 function ActionList() {
-  const { data } = useApiRequest<IActionOption[]>("/action-types");
+  const { data: types } = useApiRequest<IPluginModuleList>("/module?type-action-type");
+  const { data: triggers } = useApiRequest<IPluginModuleList>("/module?type-action-trigger");
   const [modal, setModal] = useState(false);
   const theme = useTheme();
 
   /**
-   * Renders the action type.
+   * Renders an icon and a text.
+   */
+  const renderIcon = (color: string, icon: EIcon, text: string) => {
+    return (
+      <Style.Icon>
+        <Icon color={color} icon={icon} />
+        <span style={{ color }}> {text}</span>
+      </Style.Icon>
+    );
+  };
+
+  /**
+   * Renders the trigger.
+   */
+  const renderTriggerType = (item: IAction) => {
+    const isCustom = String(item.type).includes(":");
+    if (isCustom) {
+      const type = triggers?.find((x) => `${x.pluginID}:${x.setup.id}` === item.type);
+      return renderIcon(theme.extension, EIcon["puzzle-piece"], type?.setup?.name || "Unknown");
+    } else if (item.type === "condition") {
+      return renderIcon(theme.bucket, EIcon.database, "Variable");
+    } else if (item.type === "interval" || item.type === "schedule") {
+      return renderIcon(theme.action, EIcon.clock, "Schedule");
+    } else {
+      return "Unknown";
+    }
+  };
+
+  /**
+   * Renders the action.
    */
   const renderActionType = (item: IAction) => {
     const isCustom = String(item.action?.type).includes(":");
     if (isCustom) {
-      const type = data?.find((x) => x.id === item.action?.type);
-      return type?.name || "Unknown";
+      const type = types?.find((x) => `${x.pluginID}:${x.setup.id}` === item.action?.type);
+      return type?.setup?.name || "Unknown";
     } else if (item.action?.type === "script") {
       return "Run Analysis";
     } else if (item.action?.type === "post") {
@@ -35,7 +66,7 @@ function ActionList() {
     } else if (item.action?.type === "tagoio") {
       return "Insert data into TagoIO";
     } else {
-      return "None";
+      return "Unknown";
     }
   };
 
@@ -58,10 +89,18 @@ function ActionList() {
             type: "text",
           },
           {
+            id: "trigger",
+            label: "Trigger By",
+            onRender: renderTriggerType,
+            type: "text",
+            filterDisabled: true,
+          },
+          {
             id: "action",
             label: "Action",
             onRender: renderActionType,
             type: "text",
+            filterDisabled: true,
           },
           {
             flex: "none",

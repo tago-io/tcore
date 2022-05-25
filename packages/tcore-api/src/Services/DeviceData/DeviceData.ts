@@ -9,6 +9,7 @@ import {
   generateResourceID,
   IDeviceAddDataOptions,
   zDeviceDataUpdate,
+  IAction,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -16,11 +17,12 @@ import removeNullValues from "../../Helpers/removeNullValues";
 import splitColon from "../../Helpers/splitColon";
 import { plugins } from "../../Plugins/Host";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { getActionList, shouldNativeActionTrigger, triggerAction } from "../Action";
+import { getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
 import { editDevice, getDeviceInfo } from "../Device";
 import { addStatistic } from "../Statistic";
 import { runPayloadParser } from "../PayloadParserCodeExecution";
 import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector";
+import { triggerHooks } from "../Plugins";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
@@ -48,40 +50,13 @@ export const getDeviceDataAmount = async (deviceID: TGenericID): Promise<number>
  */
 export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]): Promise<void> => {
   const device = await getDeviceInfo(deviceID);
-  const actions = await getActionList({ fields: ["trigger", "type", "device_info"], amount: 999999 });
+  const actions = await getActionList({ filter: { type: "condition" }, fields: ["trigger"], amount: 999999 });
 
   for (const action of actions) {
-    const { device_info } = action as any;
-
-    const deviceMatchesAction =
-      device_info &&
-      (device_info.id === deviceID ||
-        device.tags.find((x) => x.key === device_info.tag_key && x.value === device_info.tag_value));
-
-    if (deviceMatchesAction) {
-      const usesPluginType = String(action.type).includes(":");
-      if (usesPluginType) {
-        // using a custom plugin type for the action
-        const [pluginID, moduleID] = splitColon(action.type as string);
-        const plugin = plugins.get(pluginID);
-        const module = plugin?.modules.get(moduleID);
-        const values = { ...action.trigger };
-
-        const shouldTrigger = await module
-          ?.invokeOnCall(action.id, values, data)
-          .then(() => true)
-          .catch(() => false);
-
-        if (shouldTrigger) {
-          triggerAction(action.id, data);
-        }
-      } else {
-        // using a built-in native type for the action
-        const shouldTrigger = shouldNativeActionTrigger(action, data);
-        if (shouldTrigger) {
-          triggerAction(action.id, data);
-        }
-      }
+    // using a built-in native type for the action
+    const dataItem = data.find((x) => getConditionTriggerMatchingData(action as IAction, device, x));
+    if (dataItem) {
+      triggerAction(action.id, data);
     }
   }
 };
@@ -185,6 +160,8 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
   await triggerActions(device.id, items);
   await addStatistic({ input: items.length });
   await editDevice(device.id, { updated_at: now, last_input: now });
+
+  triggerHooks("onAfterInsertDeviceData", device.id, data);
 
   return `${items.length} items added`;
 };

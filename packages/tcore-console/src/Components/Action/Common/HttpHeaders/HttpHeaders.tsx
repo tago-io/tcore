@@ -2,17 +2,24 @@ import Input from "../../../Input/Input";
 import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable";
 
 /**
- * Props.
+ * Single item.
  */
-interface IHttpHeaders {
-  value: any[];
-  onChange: (data: any[]) => void;
+interface IHttpHeaderItem {
+  name: string;
+  value: string;
 }
 
 /**
+ * Props.
  */
+interface IHttpHeaders {
+  value: IHttpHeaderItem[];
+  onChange: (data: IHttpHeaderItem[]) => void;
+}
+
 function HttpHeaders(props: IHttpHeaders) {
-  const { value, onChange } = props;
+  const { onChange } = props;
+  const value = props.value || [];
 
   const firstItem = value[0];
   if (firstItem?.name !== "TagoIO-Retries") {
@@ -22,9 +29,7 @@ function HttpHeaders(props: IHttpHeaders) {
     value.push({ name: "", value: "" });
   }
 
-  /**
-   */
-  const onChangeField = (field: keyof any, v: string, rowIndex: number) => {
+  const onChangeField = (field: keyof IHttpHeaderItem, v: string, rowIndex: number) => {
     if (!value[rowIndex]) {
       value[rowIndex] = { name: "", value: "" }; // create the item if it doesn't exist
     }
@@ -32,9 +37,7 @@ function HttpHeaders(props: IHttpHeaders) {
     onChange([...value]);
   };
 
-  /**
-   */
-  const renderKey = (item: any, index: number) => {
+  const renderKey = (item: IHttpHeaderItem, index: number) => {
     return (
       <Input
         value={item.name}
@@ -45,9 +48,7 @@ function HttpHeaders(props: IHttpHeaders) {
     );
   };
 
-  /**
-   */
-  const renderValue = (item: any, index: number) => {
+  const renderValue = (item: IHttpHeaderItem, index: number) => {
     return (
       <Input
         value={item.value}
@@ -58,22 +59,18 @@ function HttpHeaders(props: IHttpHeaders) {
     );
   };
 
-  /**
-   */
   const addItem = () => {
     props.value.push({ name: "", value: "" });
     onChange([...props.value]);
   };
 
-  /**
-   */
   const removeItem = (index: number) => {
     props.value.splice(index, 1);
     onChange([...props.value]);
   };
 
   return (
-    <RowManipulatorTable<any>
+    <RowManipulatorTable<IHttpHeaderItem>
       data={value}
       onAddItem={addItem}
       onRemoveItem={removeItem}

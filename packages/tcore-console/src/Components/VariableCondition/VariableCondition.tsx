@@ -10,13 +10,14 @@ interface IVariableCondition {
   data: any;
   name?: string;
   useTextInput?: string;
+  errors?: any;
   onChange: (data: any) => void;
 }
 
 /**
  */
 function VariableCondition(props: IVariableCondition) {
-  const { data, onChange } = props;
+  const { errors, data, onChange } = props;
 
   /**
    */
@@ -41,24 +42,31 @@ function VariableCondition(props: IVariableCondition) {
 
   /**
    */
-  const renderInput = (item: any) => {
+  const renderInput = (item: any, index: number) => {
+    item.variable = item.variable || "";
+    const error = errors?.[index];
     return (
       <Input
         value={item.variable}
         onChange={(e) => onChangeItem(item, "variable", e.target.value)}
         placeholder="type the variable here"
+        error={error?.variable}
       />
     );
   };
 
   /**
    */
-  const renderCondition = (item: any) => {
+  const renderCondition = (item: any, index: number) => {
+    item.is = item.is || "<";
+    item.value = item.value || "";
+    const error = errors?.[index];
     return (
       <>
         <Select
           value={item.is}
           onChange={(e) => onChangeItem(item, "is", e.target.value)}
+          error={error?.is}
           options={[
             { label: "Less than", value: "<" },
             { label: "Greater than", value: ">" },
@@ -68,7 +76,11 @@ function VariableCondition(props: IVariableCondition) {
           ]}
         />
         {item.is !== "*" && (
-          <Input value={item.value} onChange={(e) => onChangeItem(item, "value", e.target.value)} />
+          <Input
+            value={item.value || ""}
+            onChange={(e) => onChangeItem(item, "value", e.target.value)}
+            error={error?.value}
+          />
         )}
       </>
     );
@@ -76,16 +88,16 @@ function VariableCondition(props: IVariableCondition) {
 
   /**
    */
-  const renderItem = (item: any) => {
+  const renderItem = (item: any, index: number) => {
     return (
       <>
         <span className="text">If</span>
         <div className="space" />
-        <div className="input-container">{renderInput(item)}</div>
+        <div className="input-container">{renderInput(item, index)}</div>
         <div className="space" />
         <span className="text">is</span>
         <div className="space" />
-        <div className="condition-container">{renderCondition(item)}</div>
+        <div className="condition-container">{renderCondition(item, index)}</div>
         <div className="space" />
       </>
     );

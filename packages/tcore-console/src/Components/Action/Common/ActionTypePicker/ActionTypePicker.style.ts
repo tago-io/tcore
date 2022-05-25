@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-/**
- */
 export const Item = styled.div`
   margin: 3px 0px;
 

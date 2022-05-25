@@ -8,6 +8,7 @@
  */
 enum EIcon {
   "apple" = "apple",
+  "arrow-up" = "arrow-up",
   "ban" = "ban",
   "bars" = "bars",
   "battery-full" = "battery-full",
@@ -15,6 +16,7 @@ enum EIcon {
   "brush" = "brush",
   "bucket" = "bucket",
   "bullhorn" = "bullhorn",
+  "calendar-alt" = "calendar-alt",
   "caret-down" = "caret-down",
   "caret-right" = "caret-right",
   "caret-up" = "caret-up",
@@ -47,6 +49,7 @@ enum EIcon {
   "eye" = "eye",
   "file-alt" = "file-alt",
   "file-import" = "file-import",
+  "flag" = "flag",
   "folder" = "folder",
   "github" = "github",
   "globe-americas" = "globe-americas",
@@ -102,6 +105,7 @@ enum EIcon {
 
 const icons = {
   "apple": require("../../../assets/icons/apple.svg"),
+  "arrow-up": require("../../../assets/icons/arrow-up.svg"),
   "ban": require("../../../assets/icons/ban.svg"),
   "bars": require("../../../assets/icons/bars.svg"),
   "battery-full": require("../../../assets/icons/battery-full.svg"),
@@ -109,6 +113,7 @@ const icons = {
   "brush": require("../../../assets/icons/brush.svg"),
   "bucket": require("../../../assets/icons/bucket.svg"),
   "bullhorn": require("../../../assets/icons/bullhorn.svg"),
+  "calendar-alt": require("../../../assets/icons/calendar-alt.svg"),
   "caret-down": require("../../../assets/icons/caret-down.svg"),
   "caret-right": require("../../../assets/icons/caret-right.svg"),
   "caret-up": require("../../../assets/icons/caret-up.svg"),
@@ -141,6 +146,7 @@ const icons = {
   "eye": require("../../../assets/icons/eye.svg"),
   "file-alt": require("../../../assets/icons/file-alt.svg"),
   "file-import": require("../../../assets/icons/file-import.svg"),
+  "flag": require("../../../assets/icons/flag.svg"),
   "folder": require("../../../assets/icons/folder.svg"),
   "github": require("../../../assets/icons/github.svg"),
   "globe-americas": require("../../../assets/icons/globe-americas.svg"),

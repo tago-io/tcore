@@ -1,19 +1,30 @@
-import { IActionOption, zName } from "@tago-io/tcore-sdk/types";
+import {
+  IAction,
+  IActionCreate,
+  IPluginConfigField,
+  IPluginModuleList,
+  zName,
+} from "@tago-io/tcore-sdk/types";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useTheme } from "styled-components";
-import useApiRequest from "../../../../Helpers/useApiRequest";
+import { useApiRequest } from "../../../..";
+import validateConfigFields from "../../../../Helpers/validateConfigFields";
 import createAction from "../../../../Requests/createAction/createAction";
+import buildZodError from "../../../../Validation/buildZodError";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
 import Input from "../../../Input/Input";
 import Modal from "../../../Modal/Modal";
-import normalizeOption from "../../Helpers/normalizeType";
+import {
+  zFrontAction,
+  zFrontActionTagoIO,
+  zFrontActionPost,
+  zFrontActionScript,
+} from "../../Action.types";
 import ActionFields from "../ActionFields/ActionFields";
-import TypeRadio from "../TypeRadio/TypeRadio";
+import TriggerRadio from "../TriggerRadio/TriggerRadio";
 
-/**
- */
 interface IModalAddAction {
   onClose: () => void;
 }
@@ -24,50 +35,92 @@ interface IModalAddAction {
 function ModalAddAction(props: IModalAddAction) {
   const theme = useTheme();
   const [name, setName] = useState("");
-  const [type, setType] = useState("variable");
+  const [type, setType] = useState("condition");
   const [newID, setNewID] = useState("");
-  const [option, setOption] = useState<IActionOption | null>(null);
-  const [optionFields, setOptionFields] = useState({});
-  const [errors, setErrors] = useState<any>({});
-  const { data: additionalTriggers } = useApiRequest<IActionOption[]>("/action-types");
+  const [action, setAction] = useState<any>({});
+  const [errors, setErrors] = useState<any>();
   const history = useHistory();
   const { onClose } = props;
+  const { data: typeModules } = useApiRequest<IPluginModuleList>("/module?type=action-type");
+
+  /**
+   */
+  const validateType = useCallback(async () => {
+    try {
+      if (!action?.type) {
+        await zFrontAction.parseAsync(action);
+      } else if (action?.type === "script") {
+        await zFrontActionScript.parseAsync(action);
+      } else if (action?.type === "post") {
+        await zFrontActionPost.parseAsync(action);
+      } else if (action?.type === "tagoio") {
+        await zFrontActionTagoIO.parseAsync(action);
+      } else {
+        const item = typeModules.find(
+          (x) => `${x.pluginID}:${x.setup.id}` === (action.type?.id || action?.type)
+        );
+        if (item) {
+          const err = validateConfigFields(
+            item.setup?.option?.configs as IPluginConfigField[],
+            action
+          );
+          if (err) {
+            return err;
+          }
+        }
+      }
+    } catch (ex: any) {
+      const err = buildZodError(ex.issues);
+      return err;
+    }
+  }, [action, typeModules]);
 
   /**
    * Validates the data of the action.
    */
   const validate = useCallback(async () => {
-    const err: any = {
-      // option: !option,
-      name: await zName
-        .parseAsync(name)
-        .then(() => false)
-        .catch(() => true),
+    const typeError = await validateType();
+    const err = {
+      ...typeError,
+      type: !action?.type,
+      name: !zName.safeParse(name).success,
     };
-    if (err.name) {
-      setErrors(err);
+
+    setErrors(err);
+
+    if (typeError || err.name || err.type) {
       return false;
     }
 
     return true;
-  }, [name]);
+  }, [validateType, action, name]);
 
   /**
    * Creates the action.
    */
   const doRequest = useCallback(async () => {
-    const data = {
-      action: { type: option?.id, ...normalizeOption(option, optionFields) },
+    const data: Partial<IAction> = {
       name: name,
       type,
       active: true,
       tags: [],
     };
 
-    const response = await createAction(data);
+    if (action?.type === "script") {
+      data.action = zFrontActionScript.parse(action);
+      data.action.script = data.action.script.map((x: any) => x.id || x);
+    } else if (action?.type === "tagoio") {
+      data.action = zFrontActionTagoIO.parse(action);
+    } else if (action?.type === "post") {
+      data.action = zFrontActionPost.parse(action);
+    } else {
+      data.action = action;
+    }
+
+    const response = await createAction(data as IActionCreate);
 
     setNewID(response);
-  }, [type, option, optionFields, name]);
+  }, [action, type, name]);
 
   /**
    * Called when the confirm button is pressed.
@@ -112,16 +165,14 @@ function ModalAddAction(props: IModalAddAction) {
       </FormGroup>
 
       <FormGroup>
-        <TypeRadio value={type} onChange={setType} />
+        <TriggerRadio value={type} onChange={setType} />
       </FormGroup>
 
       <FormGroup addMarginBottom={false}>
         <ActionFields
-          onChangeOption={setOption}
-          onChangeOptionFields={setOptionFields}
-          option={option}
-          optionFields={optionFields}
-          options={additionalTriggers}
+          errors={errors}
+          onChangeAction={setAction}
+          action={action}
           optionsPosition="top"
         />
       </FormGroup>
