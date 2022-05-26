@@ -25,11 +25,11 @@ function ActionList() {
   /**
    * Renders an icon and a text.
    */
-  const renderIcon = (color: string, icon: EIcon, text: string) => {
+  const renderIcon = (iconColor: string, textColor: string, icon: EIcon, text: string) => {
     return (
       <Style.Icon>
-        <Icon color={color} icon={icon} />
-        <span style={{ color }}> {text}</span>
+        <Icon color={iconColor} icon={icon} />
+        <span style={{ color: textColor }}> {text}</span>
       </Style.Icon>
     );
   };
@@ -41,11 +41,16 @@ function ActionList() {
     const isCustom = String(item.type).includes(":");
     if (isCustom) {
       const type = triggers?.find((x) => `${x.pluginID}:${x.setup.id}` === item.type);
-      return renderIcon(theme.extension, EIcon["puzzle-piece"], type?.setup?.name || "Unknown");
+      return renderIcon(
+        theme.extension,
+        theme.extension,
+        EIcon["puzzle-piece"],
+        type?.setup?.name || "Unknown"
+      );
     } else if (item.type === "condition") {
-      return renderIcon(theme.bucket, EIcon.database, "Variable");
+      return renderIcon(theme.bucket, theme.bucket, EIcon.database, "Variable");
     } else if (item.type === "interval" || item.type === "schedule") {
-      return renderIcon(theme.action, EIcon.clock, "Schedule");
+      return renderIcon(theme.action, theme.action, EIcon.clock, "Schedule");
     } else {
       return "Unknown";
     }
@@ -67,6 +72,17 @@ function ActionList() {
       return "Insert data into TagoIO";
     } else {
       return "Unknown";
+    }
+  };
+
+  /**
+   * Renders the lock.
+   */
+  const renderLock = (item: IAction) => {
+    if (item.lock) {
+      return renderIcon(theme.buttonDanger, "", EIcon.lock, "Locked");
+    } else {
+      return renderIcon("green", "", EIcon["lock-open"], "Unlocked");
     }
   };
 
@@ -100,6 +116,8 @@ function ActionList() {
             label: "Action",
             onRender: renderActionType,
             type: "text",
+            width: 240,
+            flex: "none",
             filterDisabled: true,
           },
           {
@@ -109,6 +127,13 @@ function ActionList() {
             onRender: (item) => <BooleanStatus value={item.active} />,
             type: "boolean",
             width: 100,
+          },
+          {
+            id: "lock",
+            label: "Locked",
+            onRender: renderLock,
+            type: "text",
+            filterDisabled: true,
           },
           {
             id: "last_triggered",

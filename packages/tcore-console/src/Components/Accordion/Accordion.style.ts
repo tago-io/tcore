@@ -69,6 +69,7 @@ export const TitleBar = styled.div<{ isAlwaysOpen?: boolean; open?: boolean }>`
   }
 
   > .right-side {
+    display: flex;
     flex: none;
   }
 

@@ -59,7 +59,19 @@ function convertActionFromAPI(action: IAction): IResult {
     }
   } else if (action.type === "condition") {
     const first = action.trigger?.[0];
-    conditionData.conditions = cloneDeep(Array.isArray(action.trigger) ? action.trigger : []);
+    const trigger = cloneDeep(Array.isArray(action.trigger) ? action.trigger : []);
+    conditionData.conditions = [];
+    conditionData.unlockConditions = [];
+    conditionData.lock = action.lock || false;
+
+    for (const item of trigger) {
+      if (item.unlock) {
+        conditionData.unlockConditions.push(item);
+      } else {
+        conditionData.conditions.push(item);
+      }
+    }
+
     if (first && "tag_key" in first) {
       conditionData.type = "multiple";
       conditionData.type = first?.tag_key ? "multiple" : "single";

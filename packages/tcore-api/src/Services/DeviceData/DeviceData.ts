@@ -9,7 +9,6 @@ import {
   generateResourceID,
   IDeviceAddDataOptions,
   zDeviceDataUpdate,
-  IAction,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -17,7 +16,7 @@ import removeNullValues from "../../Helpers/removeNullValues";
 import splitColon from "../../Helpers/splitColon";
 import { plugins } from "../../Plugins/Host";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
+import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
 import { editDevice, getDeviceInfo } from "../Device";
 import { addStatistic } from "../Statistic";
 import { runPayloadParser } from "../PayloadParserCodeExecution";
@@ -50,13 +49,31 @@ export const getDeviceDataAmount = async (deviceID: TGenericID): Promise<number>
  */
 export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]): Promise<void> => {
   const device = await getDeviceInfo(deviceID);
-  const actions = await getActionList({ filter: { type: "condition" }, fields: ["trigger"], amount: 999999 });
+  const actions = await getActionList({ filter: { type: "condition" }, fields: ["lock", "trigger"], amount: 999999 });
 
   for (const action of actions) {
-    // using a built-in native type for the action
-    const dataItem = data.find((x) => getConditionTriggerMatchingData(action as IAction, device, x));
-    if (dataItem) {
-      triggerAction(action.id, data);
+    const triggers = Array.isArray(action.trigger) ? action.trigger : [];
+    const hasLocker = triggers.some?.((x) => x.unlock);
+    action.lock = hasLocker ? action.lock : false; // ? set false when action doesn't have any rule for unlock.
+
+    const conditionsLock = triggers.filter((x) => !x.unlock);
+    const conditionsUnlock = triggers.filter((x) => x.unlock);
+
+    if (action.lock) {
+      // action is locked, meaning we need to find a condition which can
+      // release/unlock the action
+      const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsUnlock, device, x));
+      if (dataItem) {
+        editAction(action.id, { lock: false });
+      }
+    } else {
+      // action is unlocked, meaning we need to find a condition
+      // which can trigger the action
+      const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsLock, device, x));
+      if (dataItem) {
+        triggerAction(action.id, data);
+        editAction(action.id, { lock: hasLocker });
+      }
     }
   }
 };

@@ -65,6 +65,7 @@ const zFrontConditionDataSingle = z.object({
   type: z.literal("single"),
   device: zObjectID.or(z.object({ id: zObjectID })),
   conditions: z.array(zFrontConditionDataCondition).min(1),
+  unlockConditions: z.array(zFrontConditionDataCondition),
 });
 
 /**
@@ -74,6 +75,7 @@ const zFrontConditionDataMultiple = z.object({
   type: z.literal("multiple"),
   tag: z.object({ key: z.string().nonempty(), value: z.string().nonempty() }),
   conditions: z.array(zFrontConditionDataCondition).min(1),
+  unlockConditions: z.array(zFrontConditionDataCondition),
 });
 
 /**
@@ -143,6 +145,8 @@ interface IConditionData {
   device?: any;
   tag?: ITag;
   conditions?: any[];
+  unlockConditions?: any[];
+  lock?: boolean;
 }
 
 /**

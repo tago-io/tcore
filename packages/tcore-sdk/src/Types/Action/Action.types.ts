@@ -72,6 +72,10 @@ export const zAction = z.object({
   trigger: z.any().optional(),
   type: z.enum(["condition", "interval", "schedule"]).or(zPluginModuleIDCombo),
   updated_at: z.date().nullish(),
+  lock: z
+    .boolean()
+    .nullish()
+    .transform((x) => x || false),
 });
 
 /**
@@ -134,6 +138,7 @@ const zActionListQueryFields = z.enum([
   "created_at",
   "updated_at",
   "type",
+  "lock",
   "*",
 ]);
 

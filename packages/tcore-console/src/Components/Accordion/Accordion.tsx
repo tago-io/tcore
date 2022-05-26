@@ -37,6 +37,10 @@ interface IAccordion {
    * If this is set to `false` this component will always be open and will not be clickable.
    */
   isAlwaysOpen?: boolean;
+  /**
+   * Component to render on the right side of the accordion title.
+   */
+  onRenderRightSide?: () => ReactNode;
 }
 
 /**
@@ -44,7 +48,7 @@ interface IAccordion {
  * When this component is expanded its children will be rendered.
  */
 function Accordion(props: IAccordion) {
-  const { icon, isAlwaysOpen, title, children, description } = props;
+  const { icon, isAlwaysOpen, title, children, description, onRenderRightSide } = props;
   const open = props.open || isAlwaysOpen;
 
   /**
@@ -86,8 +90,11 @@ function Accordion(props: IAccordion) {
           {renderTitle()}
         </div>
 
-        {!isAlwaysOpen && (
+        {isAlwaysOpen ? (
+          <div className="right-side">{onRenderRightSide?.()}</div>
+        ) : (
           <div className="right-side">
+            {onRenderRightSide?.()}
             <Icon icon={open ? EIcon["caret-up"] : EIcon["caret-down"]} size={"16px"} />
           </div>
         )}

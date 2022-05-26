@@ -27,7 +27,6 @@ function convertActionToAPI(
   };
 
   if (result.type === "interval" || result.type === "schedule") {
-    // ----
     // Schedule type
     result.type = scheduleData.type;
 
@@ -40,10 +39,10 @@ function convertActionToAPI(
       result.trigger = [{ cron, timezone }];
     }
   } else if (result.type === "condition") {
-    // ----
     // Condition type
     result.type = "condition";
     result.trigger = [];
+    result.lock = conditionData.lock || false;
 
     for (const condition of conditionData.conditions || []) {
       if (conditionData.type === "single") {
@@ -57,8 +56,21 @@ function convertActionToAPI(
       }
       result.trigger.push(condition);
     }
+
+    for (const condition of conditionData.unlockConditions || []) {
+      if (conditionData.type === "single") {
+        condition.device = conditionData.device?.id || conditionData.device;
+        delete condition.tag_key;
+        delete condition.tag_value;
+      } else {
+        delete condition.device;
+        condition.tag_key = conditionData.tag?.key;
+        condition.tag_value = conditionData.tag?.value;
+      }
+      condition.unlock = true;
+      result.trigger.push(condition);
+    }
   } else {
-    // ----
     // Plugin type
     result.trigger = pluginTriggerData;
   }

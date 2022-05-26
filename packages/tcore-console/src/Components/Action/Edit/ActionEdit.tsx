@@ -137,6 +137,17 @@ function ActionEdit() {
         .parseAsync({ ...data, tags: normalizeTags(data.tags) });
 
       if (conditionData) {
+        const oneUnlock =
+          conditionData.unlockConditions?.some((x) => x.variable || x.value) || false;
+        if (!oneUnlock) {
+          conditionData.unlockConditions = [];
+        } else {
+          conditionData.unlockConditions?.forEach((x) => {
+            if (x.is !== "*") {
+              x.value = x.value || undefined;
+            }
+          });
+        }
         conditionData.conditions?.forEach((x) => {
           if (x.is !== "*") {
             x.value = x.value || undefined;

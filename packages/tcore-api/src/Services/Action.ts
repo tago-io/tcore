@@ -26,6 +26,14 @@ import { addDeviceData } from "./DeviceData/DeviceData";
 import { getDeviceByToken } from "./Device";
 import { getModuleList } from "./Plugins";
 
+function fixConditionTriggerValue(type, rawValue) {
+  let value;
+  if (type === "number") value = Number(rawValue) || 0;
+  else if (type === "boolean") value = rawValue && rawValue !== "false" && rawValue !== "0";
+  else value = String(rawValue);
+  return value;
+}
+
 /**
  * Validates an action ID, throws an error if it doesn't exist.
  */
@@ -98,13 +106,12 @@ export async function getActionInfo(id: TGenericID): Promise<IAction> {
 
 /**
  */
-export function getConditionTriggerMatchingData(action: IAction, device: IDevice, data: IDeviceData): boolean {
-  const conditions = Array.isArray(action.trigger) ? action.trigger : [];
-  for (const trigger of conditions) {
-    const itemValue = Number(data.value);
+export function getConditionTriggerMatchingData(triggers: any[], device: IDevice, data: IDeviceData): boolean {
+  for (const trigger of triggers) {
+    const itemValue = data.value as any;
 
-    const triggerValue = Number(trigger.value);
-    const triggerSecondValue = Number(trigger.second_value);
+    const triggerValue = fixConditionTriggerValue(trigger.value_type, trigger.value);
+    const triggerSecondValue = fixConditionTriggerValue(trigger.value_type, trigger.second_value);
 
     const hasTagsMatch = device.tags.some((x) => x.key === trigger.tag_key && x.value === trigger.tag_value);
 
