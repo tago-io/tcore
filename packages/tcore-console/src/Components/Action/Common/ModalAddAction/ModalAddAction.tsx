@@ -82,7 +82,7 @@ function ModalAddAction(props: IModalAddAction) {
     const typeError = await validateType();
     const err = {
       ...typeError,
-      type: !action?.type,
+      type: !action?.type || action?.id || action,
       name: !zName.safeParse(name).success,
     };
 

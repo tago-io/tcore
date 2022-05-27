@@ -43,7 +43,7 @@ function Tags(props: ITagsProps) {
         error={error}
         onChange={(e) => onChange("key", e.target.value, index)}
         placeholder="Enter the tag key (unique)"
-        value={item.key}
+        value={item.key || ""}
         disabled={disabled}
       />
     );
@@ -57,7 +57,7 @@ function Tags(props: ITagsProps) {
       <Input
         onChange={(e) => onChange("value", e.target.value, index)}
         placeholder="Enter the tag value"
-        value={item.value}
+        value={item.value || ""}
         error={error}
         disabled={disabled}
       />

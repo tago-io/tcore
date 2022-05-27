@@ -117,7 +117,7 @@ export function getConditionTriggerMatchingData(triggers: any[], device: IDevice
 
     if ((device.id === trigger.device || hasTagsMatch) && data.variable === trigger.variable) {
       if (trigger.is === "=" && itemValue === triggerValue) return true;
-      if (trigger.is === "<>" && itemValue !== triggerValue) return true;
+      if (trigger.is === "!" && itemValue !== triggerValue) return true;
       if (trigger.is === "<" && itemValue < triggerValue) return true;
       if (trigger.is === ">" && itemValue > triggerValue) return true;
       if (trigger.is === "><" && itemValue > triggerValue && itemValue < triggerSecondValue) return true;

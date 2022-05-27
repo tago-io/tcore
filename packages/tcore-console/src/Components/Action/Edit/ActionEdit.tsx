@@ -132,6 +132,11 @@ function ActionEdit() {
     }
 
     try {
+      for (const tag of data.tags || []) {
+        (tag as any).key = tag.key || null;
+        (tag as any).value = tag.key ? tag.value || null : null;
+      }
+
       await z
         .object({ name: zName, tags: zTags })
         .parseAsync({ ...data, tags: normalizeTags(data.tags) });
@@ -175,6 +180,9 @@ function ActionEdit() {
     } catch (ex: any) {
       const err = buildZodError(ex.issues);
       error = { ...error, ...err };
+      if (err?.tags) {
+        setTabIndex(1);
+      }
     }
 
     if (Object.keys(error).length > 0) {
