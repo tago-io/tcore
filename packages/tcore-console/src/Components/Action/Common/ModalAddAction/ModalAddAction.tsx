@@ -21,7 +21,7 @@ import {
   zFrontActionTagoIO,
   zFrontActionPost,
   zFrontActionScript,
-} from "../../Action.types";
+} from "../../Action.interface";
 import ActionFields from "../ActionFields/ActionFields";
 import TriggerRadio from "../TriggerRadio/TriggerRadio";
 
@@ -43,8 +43,6 @@ function ModalAddAction(props: IModalAddAction) {
   const { onClose } = props;
   const { data: typeModules } = useApiRequest<IPluginModuleList>("/module?type=action-type");
 
-  /**
-   */
   const validateType = useCallback(async () => {
     try {
       if (!action?.type) {
@@ -82,7 +80,7 @@ function ModalAddAction(props: IModalAddAction) {
     const typeError = await validateType();
     const err = {
       ...typeError,
-      type: !action?.type || action?.id || action,
+      type: !action?.type,
       name: !zName.safeParse(name).success,
     };
 

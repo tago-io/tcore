@@ -32,7 +32,7 @@ import {
   zFrontConditionDataSingle,
   zFrontIntervalData,
   zFrontScheduleData,
-} from "../Action.types";
+} from "../Action.interface";
 import ActionTab from "./ActionTab/ActionTab";
 import MoreTab from "./MoreTab/MoreTab";
 import { convertActionFromAPI } from "./Logic/convertActionFromAPI";
@@ -70,6 +70,23 @@ function ActionEdit() {
   const customTrigger = triggerModules?.find((x) => `${x.pluginID}:${x.setup.id}` === data.type);
 
   /**
+   * Returns a boolean to indicate if the trigger is invalid or not.
+   */
+  const hasInvalidTrigger = useCallback(() => {
+    if (data.type.includes(":") && !customTrigger) {
+      return true;
+    } else if (customTrigger) {
+      return false;
+    } else if (data.type === "interval" || data.type === "schedule") {
+      return false;
+    } else if (data.type === "condition") {
+      return false;
+    } else {
+      return true;
+    }
+  }, [customTrigger, data.type]);
+
+  /**
    * Should return if the initial data is different from the current data.
    */
   const checkIfDataChanged = useCallback(() => {
@@ -86,6 +103,11 @@ function ActionEdit() {
       device: conditionData?.device?.id || conditionData.device,
     };
 
+    if (hasInvalidTrigger()) {
+      // if the trigger is invalid, we cannot save this action
+      return false;
+    }
+
     return (
       JSON.stringify(initialDataNorm) !== JSON.stringify(currentDataNorm) ||
       JSON.stringify(initialAction.current) !== JSON.stringify(action) ||
@@ -93,7 +115,7 @@ function ActionEdit() {
       JSON.stringify(initialConditionData.current) !== JSON.stringify(conditionDataNorm) ||
       JSON.stringify(initialScheduleData.current) !== JSON.stringify(scheduleData)
     );
-  }, [action, pluginTriggerData, scheduleData, conditionData, data]);
+  }, [hasInvalidTrigger, action, pluginTriggerData, scheduleData, conditionData, data]);
   const [errors, setErrors] = useState<any>({});
 
   /**
@@ -148,12 +170,18 @@ function ActionEdit() {
           conditionData.unlockConditions = [];
         } else {
           conditionData.unlockConditions?.forEach((x) => {
+            if (x.is !== "><") {
+              x.second_value = undefined;
+            }
             if (x.is !== "*") {
               x.value = x.value || undefined;
             }
           });
         }
         conditionData.conditions?.forEach((x) => {
+          if (x.is !== "><") {
+            x.second_value = undefined;
+          }
           if (x.is !== "*") {
             x.value = x.value || undefined;
           }
@@ -264,18 +292,18 @@ function ActionEdit() {
   const renderActionTab = () => {
     return (
       <ActionTab
-        customTrigger={customTrigger}
-        pluginTriggerData={pluginTriggerData}
-        onChangePluginTriggerData={setPluginTriggerData}
-        errors={errors}
-        scheduleData={scheduleData}
-        onChangeScheduleData={setScheduleData}
         action={action}
-        onChangeAction={setAction}
         conditionData={conditionData}
-        onChangeConditionData={setConditionData}
+        customTrigger={customTrigger}
         data={data}
+        errors={errors}
         onChange={onChangeData}
+        onChangeAction={setAction}
+        onChangeConditionData={setConditionData}
+        onChangePluginTriggerData={setPluginTriggerData}
+        onChangeScheduleData={setScheduleData}
+        pluginTriggerData={pluginTriggerData}
+        scheduleData={scheduleData}
       />
     );
   };

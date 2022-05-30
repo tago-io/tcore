@@ -132,7 +132,7 @@ class InstallPlugin extends APIController<any, void, void> {
   };
 
   public async main() {
-    await installPlugin(this.bodyParams.source, { log: true, start: true });
+    await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
   }
 }
 

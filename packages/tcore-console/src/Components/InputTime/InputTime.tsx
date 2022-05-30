@@ -3,16 +3,12 @@ import { useRef, useState, useEffect } from "react";
 import Select from "../Select/Select";
 import * as Style from "./InputTime.style";
 
-/**
- */
 interface IInputTime {
   value?: moment.MomentInput;
   timeFormat?: "12" | "24";
   onChange: (time: string) => void;
 }
 
-/**
- */
 function InputTime(props: IInputTime) {
   const firstRender = useRef(true);
   const usesAmPmFormat = props.timeFormat === "12";
@@ -55,7 +51,6 @@ function InputTime(props: IInputTime) {
       triggerChange();
     }
     firstRender.current = false;
-    // TODO(buildUpdate) Remove disabled rule and test with the correct deps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hour, minute, format]);
 

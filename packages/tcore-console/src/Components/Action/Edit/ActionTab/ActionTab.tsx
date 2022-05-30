@@ -7,7 +7,7 @@ import ActionFields from "../../Common/ActionFields/ActionFields";
 import ConditionTrigger from "../ConditionTrigger/ConditionTrigger";
 import ScheduleTrigger from "../ScheduleTrigger/ScheduleTrigger";
 import MessageTriggerNotFound from "../ScheduleTrigger/MessageTriggerNotFound/MessageTriggerNotFound";
-import { IConditionData, IScheduleData } from "../../Action.types";
+import { IConditionData, IScheduleData } from "../../Action.interface";
 import * as Style from "./ActionTab.style";
 
 /**
@@ -50,7 +50,8 @@ function ActionTab(props: IActionTab) {
    */
   const renderLeftSectionContent = () => {
     if (data.type.includes(":") && !customTrigger) {
-      return <MessageTriggerNotFound type={data.type} />;
+      const triggerName = data.type.split(":")[1];
+      return <MessageTriggerNotFound isPlugin triggerName={triggerName} />;
     } else if (customTrigger) {
       return (
         <PluginConfigFields
@@ -68,7 +69,7 @@ function ActionTab(props: IActionTab) {
           scheduleData={scheduleData}
         />
       );
-    } else {
+    } else if (data.type === "condition") {
       return (
         <ConditionTrigger
           conditionData={props.conditionData}
@@ -76,6 +77,8 @@ function ActionTab(props: IActionTab) {
           onChangeConditionData={props.onChangeConditionData}
         />
       );
+    } else {
+      return <MessageTriggerNotFound triggerName={data.type} />;
     }
   };
 

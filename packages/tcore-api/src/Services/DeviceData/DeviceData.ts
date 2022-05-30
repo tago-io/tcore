@@ -49,7 +49,11 @@ export const getDeviceDataAmount = async (deviceID: TGenericID): Promise<number>
  */
 export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]): Promise<void> => {
   const device = await getDeviceInfo(deviceID);
-  const actions = await getActionList({ filter: { type: "condition" }, fields: ["lock", "trigger"], amount: 999999 });
+  const actions = await getActionList({
+    filter: { active: true, type: "condition" },
+    fields: ["lock", "trigger"],
+    amount: 999999,
+  });
 
   for (const action of actions) {
     const triggers = Array.isArray(action.trigger) ? action.trigger : [];

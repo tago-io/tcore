@@ -32,17 +32,24 @@ export const Container = styled.div<{ error?: boolean }>`
     flex: 1;
     display: flex;
     position: relative;
+    align-items: center;
 
     select {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0;
       height: 33px;
       margin-right: -1px;
+      min-width: 100px;
     }
 
     input {
       border-bottom-left-radius: 0;
       border-top-left-radius: 0;
+      min-width: 70px;
+
+      &:nth-of-type(2) {
+        min-width: 120px;
+      }
     }
   }
 `;

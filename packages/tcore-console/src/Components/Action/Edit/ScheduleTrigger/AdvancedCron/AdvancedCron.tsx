@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { EIcon, FormGroup } from "../../../../..";
-import { IScheduleData } from "../../../Action.types";
+import { IScheduleData } from "../../../Action.interface";
 import { spreadCronToScheduleData } from "../../Logic/spreadCronToScheduleData";
 import * as Style from "./AdvancedCron.style";
 

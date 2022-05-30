@@ -9,7 +9,7 @@ import * as Style from "../RecurrenceOptions.style";
 import WeekdayButton from "../WeekdayButton/WeekdayButton";
 import { getCronFromScheduleData } from "../../Logic/getCronFromScheduleData";
 import CronTooComplexMessage from "../MessageCronTooComplex/MessageCronTooComplex";
-import { IScheduleData } from "../../../Action.types";
+import { IScheduleData } from "../../../Action.interface";
 
 /**
  * Props.

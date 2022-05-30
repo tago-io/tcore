@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Accordion, EIcon, Switch } from "../../../..";
 import VariableCondition from "../../../VariableCondition/VariableCondition";
 import TooltipText from "../../../TooltipText/TooltipText";
-import { IConditionData } from "../../Action.types";
+import { IConditionData } from "../../Action.interface";
 import DeviceRadio from "./DeviceRadio/DeviceRadio";
 
 /**
@@ -78,6 +78,7 @@ function ConditionTrigger(props: IConditionTrigger) {
           icon={EIcon.lock}
           description="Unlocks are conditions that enable the action to be triggered again."
           title="Trigger Unlock"
+          subTitle="(optional)"
           onRenderRightSide={renderLockSwitch}
           open={unlockOpen}
           onChangeOpen={setUnlockOpen}

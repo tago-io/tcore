@@ -3,7 +3,8 @@ import EmptyMessage from "../../../../EmptyMessage/EmptyMessage";
 import * as Style from "./MessageTriggerNotFound.style";
 
 interface IMessageTriggerNotFound {
-  type: string;
+  triggerName: string;
+  isPlugin?: boolean;
 }
 
 /**
@@ -11,8 +12,7 @@ interface IMessageTriggerNotFound {
  * Used to show the user that the trigger can't be used/found.
  */
 function MessageTriggerNotFound(props: IMessageTriggerNotFound) {
-  const { type } = props;
-  const moduleName = type.split(":")[1];
+  const { triggerName } = props;
   return (
     <Style.Container>
       <EmptyMessage
@@ -20,10 +20,10 @@ function MessageTriggerNotFound(props: IMessageTriggerNotFound) {
         message={
           <>
             <span>
-              Trigger <b>{moduleName}</b> was not found.
+              Trigger <b>{triggerName}</b> was not found.
             </span>
             <br />
-            <span>Check if you have the plugin installed and the module is started.</span>
+            <span>This action cannot be edited and it will never be triggered.</span>
           </>
         }
       />

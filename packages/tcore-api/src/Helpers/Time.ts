@@ -21,15 +21,11 @@ const durationLabelsStandard = {
   yy: "years",
 };
 
-/**
- */
 function fixDurationMoment(duration: string) {
   duration = String(duration || "").trim();
   return durationLabelsStandard[duration] || duration;
 }
 
-/**
- */
 function parseRelativeDate(expireTime: string | undefined, operation: "plus" | "minus", fromDate = new Date()) {
   if (!expireTime) {
     return;

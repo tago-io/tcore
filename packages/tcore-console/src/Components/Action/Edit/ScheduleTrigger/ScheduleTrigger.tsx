@@ -5,7 +5,7 @@ import FormDivision from "../../../FormDivision/FormDivision";
 import Select from "../../../Select/Select";
 import TimezonePicker from "../../../TimezonePicker/TimezonePicker";
 import { getCronFromScheduleData } from "../Logic/getCronFromScheduleData";
-import { IScheduleData } from "../../Action.types";
+import { IScheduleData } from "../../Action.interface";
 import AdvancedCron from "./AdvancedCron/AdvancedCron";
 import BasicCron from "./BasicCron/BasicCron";
 import MinimumScheduleMessage from "./MinimumScheduleMessage";

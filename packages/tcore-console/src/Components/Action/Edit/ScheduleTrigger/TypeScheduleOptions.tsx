@@ -3,7 +3,11 @@ import { useTheme } from "styled-components";
 import { Col, EIcon, FormGroup, Input, Row } from "../../../..";
 import IconRadio from "../../../IconRadio/IconRadio";
 import Select from "../../../Select/Select";
-import { IScheduleData, TScheduleDataIntervalUnit, TScheduleDataType } from "../../Action.types";
+import {
+  IScheduleData,
+  TScheduleDataIntervalUnit,
+  TScheduleDataType,
+} from "../../Action.interface";
 import MinimumScheduleMessage from "./MinimumScheduleMessage";
 import * as Style from "./TypeScheduleOptions.style";
 

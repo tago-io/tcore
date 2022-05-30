@@ -26,8 +26,11 @@ import { addDeviceData } from "./DeviceData/DeviceData";
 import { getDeviceByToken } from "./Device";
 import { getModuleList } from "./Plugins";
 
-function fixConditionTriggerValue(type, rawValue) {
-  let value;
+/**
+ * Fixes a value's type before evaluating it.
+ */
+function fixConditionTriggerValue(type: string, rawValue: any) {
+  let value: any;
   if (type === "number") value = Number(rawValue) || 0;
   else if (type === "boolean") value = rawValue && rawValue !== "false" && rawValue !== "0";
   else value = String(rawValue);

@@ -96,7 +96,7 @@ async function triggerActionScheduleCheck() {
       const lastRunTime = getLastRunTime(item);
 
       try {
-        const timezone = DateTime.now().zoneName; // TODO
+        const timezone = DateTime.now().zoneName;
         const lastTime = DateTime.fromJSDate(lastRunTime).setZone(timezone);
         const cron = cronParser.parseExpression(item.cron, { tz: timezone });
         const cronPrev = cron.prev();

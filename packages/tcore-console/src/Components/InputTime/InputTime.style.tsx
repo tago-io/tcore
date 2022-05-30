@@ -1,7 +1,5 @@
 import styled, { css } from "styled-components";
 
-/**
- */
 const Container = styled.div<{ hasFormat?: boolean }>`
   display: flex;
   position: relative;
@@ -15,7 +13,6 @@ const Container = styled.div<{ hasFormat?: boolean }>`
   ${(props) =>
     props.hasFormat &&
     css`
-      /* TODO(buildUpdate) Remove disabled rule and fix it */
       /* stylelint-disable no-duplicate-selectors */
       select:nth-child(2) {
         border-radius: 0;

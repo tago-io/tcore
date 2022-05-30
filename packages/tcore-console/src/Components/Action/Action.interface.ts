@@ -44,9 +44,9 @@ const zFrontActionPost = z
 const zFrontConditionDataCondition = z.object({
   variable: z.string().nonempty(),
   value: z.string(),
-  second_value: z.string().optional(),
+  second_value: z.string().nonempty().optional(),
   is: z.enum(["<", ">", "=", "!", "><", "*"]).default("*"),
-  value_type: z.enum(["string", "number", "boolean", "*"]).default("*"),
+  value_type: z.enum(["string", "number", "boolean"]).default("string"),
   unlock: z.boolean().optional(),
 });
 

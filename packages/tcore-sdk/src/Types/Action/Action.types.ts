@@ -41,18 +41,14 @@ export const zActionTypePluginModule = z.object({ type: zPluginModuleIDCombo }).
 /**
  * Validation for the `action` object of an action.
  */
-const zActionType2 = z.any().transform((x) => {
-  if (!x) {
-    return x;
-  } else if (Object.keys(x).length === 0) {
-    return x; // pre 0.4.0 actions could be empty
-  } else if (x.type === "script") {
+const zActionType = z.any().transform((x) => {
+  if (x?.type === "script") {
     return zActionTypeScript.parse(x);
-  } else if (x.type === "post") {
+  } else if (x?.type === "post") {
     return zActionTypePost.parse(x);
-  } else if (x.type === "tagoio") {
+  } else if (x?.type === "tagoio") {
     return zActionTypeTagoIO.parse(x);
-  } else {
+  } else if (x) {
     return zActionTypePluginModule.parse(x);
   }
 });
@@ -61,7 +57,7 @@ const zActionType2 = z.any().transform((x) => {
  * Base configuration of an action.
  */
 export const zAction = z.object({
-  action: zActionType2,
+  action: z.any(),
   active: z.boolean(),
   created_at: z.date(),
   description: z.string().nullish(),
@@ -70,7 +66,7 @@ export const zAction = z.object({
   name: zName,
   tags: zTags,
   trigger: z.any().optional(),
-  type: z.enum(["condition", "interval", "schedule"]).or(zPluginModuleIDCombo),
+  type: z.string(),
   updated_at: z.date().nullish(),
   lock: z
     .boolean()
@@ -89,6 +85,8 @@ export const zActionCreate = zAction
     updated_at: true,
   })
   .extend({
+    type: z.enum(["condition", "interval", "schedule"]).or(zPluginModuleIDCombo),
+    action: zActionType,
     active: zActiveAutoGen,
     tags: zTagsAutoGen,
   })

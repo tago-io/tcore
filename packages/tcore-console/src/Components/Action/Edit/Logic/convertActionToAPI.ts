@@ -6,7 +6,7 @@ import {
   zFrontActionScript,
   zFrontActionTagoIO,
   zFrontActionPost,
-} from "../../Action.types";
+} from "../../Action.interface";
 
 /**
  * Receives separate data structures and joins them into a single action object.

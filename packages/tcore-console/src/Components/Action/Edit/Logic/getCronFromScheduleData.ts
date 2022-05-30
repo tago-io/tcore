@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { IScheduleData } from "../../Action.types";
+import { IScheduleData } from "../../Action.interface";
 
 function getCronFromScheduleData(scheduleData: IScheduleData) {
   const cron = ["*", "*", "*", "*", "*"];

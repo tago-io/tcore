@@ -1,4 +1,4 @@
-import { IScheduleData } from "../../Action.types";
+import { IScheduleData } from "../../Action.interface";
 
 function spreadCronToScheduleData(cron: string, scheduleData: IScheduleData): void {
   if (!cron) {

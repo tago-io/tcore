@@ -8,27 +8,40 @@ import * as Style from "./VariableCondition.style";
 /**
  * Props.
  */
-interface IVariableCondition {
-  data: any;
-  name?: string;
-  useTextInput?: string;
-  errors?: any;
-  onChange: (data: any) => void;
+interface ICondition {
+  variable?: string;
+  value?: string;
+  second_value?: string;
+  is?: "<" | ">" | "=" | "!" | "><" | "*";
+  value_type?: "string" | "number" | "boolean";
 }
 
 /**
+ * Props.
+ */
+interface IVariableCondition {
+  data: ICondition[];
+  name?: string;
+  errors?: any;
+  onChange: (data: ICondition[]) => void;
+}
+
+/**
+ * Renders the conditions of variables.
  */
 function VariableCondition(props: IVariableCondition) {
   const { errors, data, onChange } = props;
 
   /**
+   * Changes a condition's value.
    */
-  const onChangeItem = (item: any, field: any, value: any) => {
+  const onChangeItem = (item: ICondition, field: keyof ICondition, value: any) => {
     item[field] = value;
     onChange([...data]);
   };
 
   /**
+   * Adds a condition.
    */
   const addItem = () => {
     data.push({});
@@ -36,6 +49,7 @@ function VariableCondition(props: IVariableCondition) {
   };
 
   /**
+   * Removes a condition.
    */
   const removeItem = (index: number) => {
     data.splice(index, 1);
@@ -44,7 +58,7 @@ function VariableCondition(props: IVariableCondition) {
 
   /**
    */
-  const renderInput = (item: any, index: number) => {
+  const renderInput = (item: ICondition, index: number) => {
     item.variable = item.variable || "";
     const error = errors?.[index];
     return (
@@ -58,39 +72,46 @@ function VariableCondition(props: IVariableCondition) {
   };
 
   /**
+   * Renders a value field (value or second value)
    */
-  const renderCondition = (item: any, index: number) => {
-    item.is = item.is || "<";
-    item.value = item.value || "";
-    const error = errors?.[index];
+  const renderValue = (item: ICondition, field: keyof ICondition, error: any) => {
     return (
-      <>
-        <Select
-          value={item.is}
-          onChange={(e) => onChangeItem(item, "is", e.target.value)}
-          error={error?.is}
-          options={[
-            { label: "Less than", value: "<" },
-            { label: "Greater than", value: ">" },
-            { label: "Equal to", value: "=" },
-            { label: "Different from", value: "!" },
-            { label: "Anything", value: "*" },
-          ]}
-        />
-        {item.is !== "*" && (
-          <Input
-            value={item.value || ""}
-            onChange={(e) => onChangeItem(item, "value", e.target.value)}
-            error={error?.value}
-          />
-        )}
-      </>
+      <Input
+        value={item[field] || ""}
+        onChange={(e) => onChangeItem(item, field, e.target.value)}
+        error={error?.[field]}
+      />
     );
   };
 
   /**
+   * Renders the select for the condition.
    */
-  const onClickFieldType = (item: any) => {
+  const renderCondition = (item: ICondition, index: number) => {
+    item.is = item.is || "<";
+    item.value = item.value || "";
+    const error = errors?.[index];
+    return (
+      <Select
+        value={item.is}
+        onChange={(e) => onChangeItem(item, "is", e.target.value)}
+        error={error?.is}
+        options={[
+          { label: "Less than", value: "<" },
+          { label: "Greater than", value: ">" },
+          { label: "Equal to", value: "=" },
+          { label: "Different from", value: "!" },
+          { label: "Between", value: "><" },
+          { label: "Anything", value: "*" },
+        ]}
+      />
+    );
+  };
+
+  /**
+   * Changes the value type of the condition.
+   */
+  const onClickFieldType = (item: ICondition) => {
     if (item.value_type === "boolean") {
       onChangeItem(item, "value_type", "string");
     } else if (item.value_type === "string") {
@@ -101,8 +122,9 @@ function VariableCondition(props: IVariableCondition) {
   };
 
   /**
+   * Renders the value type.
    */
-  const renderValueType = (item: any) => {
+  const renderValueType = (item: ICondition) => {
     const fieldTypeNames = {
       string: "str",
       number: "num",
@@ -129,8 +151,9 @@ function VariableCondition(props: IVariableCondition) {
   };
 
   /**
+   * Renders the whole line.
    */
-  const renderItem = (item: any, index: number) => {
+  const renderItem = (item: ICondition, index: number) => {
     return (
       <>
         <div className="input-container">{renderInput(item, index)}</div>
@@ -139,7 +162,16 @@ function VariableCondition(props: IVariableCondition) {
         <div className="space" />
         <div className="condition-container">
           {renderCondition(item, index)}
-          {renderValueType(item)}
+          {item.is !== "*" && renderValue(item, "value", errors?.[index])}
+          {item.is === "><" && (
+            <>
+              <div className="space" />
+              <span className="text">and</span>
+              <div className="space" />
+              {renderValue(item, "second_value", errors?.[index])}
+            </>
+          )}
+          {item.is !== "*" && renderValueType(item)}
         </div>
         <div className="space" />
       </>

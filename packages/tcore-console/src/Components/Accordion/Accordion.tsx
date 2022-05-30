@@ -41,6 +41,10 @@ interface IAccordion {
    * Component to render on the right side of the accordion title.
    */
   onRenderRightSide?: () => ReactNode;
+  /**
+   * Sub-title by the side of the title.
+   */
+  subTitle?: string;
 }
 
 /**
@@ -48,7 +52,7 @@ interface IAccordion {
  * When this component is expanded its children will be rendered.
  */
 function Accordion(props: IAccordion) {
-  const { icon, isAlwaysOpen, title, children, description, onRenderRightSide } = props;
+  const { icon, isAlwaysOpen, subTitle, title, children, description, onRenderRightSide } = props;
   const open = props.open || isAlwaysOpen;
 
   /**
@@ -57,7 +61,12 @@ function Accordion(props: IAccordion) {
   function renderTitle() {
     return (
       <div className="title">
-        {title && <h3>{title}</h3>}
+        {title && (
+          <div className="title-text">
+            <h3>{title}</h3>
+            <span>{subTitle}</span>
+          </div>
+        )}
         {description && <div className="description">{description}</div>}
       </div>
     );
