@@ -113,6 +113,7 @@ function ModalAddAction(props: IModalAddAction) {
       data.action = zFrontActionPost.parse(action);
     } else {
       data.action = action;
+      data.action.type = data.action?.type?.id || data.action?.type;
     }
 
     const response = await createAction(data as IActionCreate);
