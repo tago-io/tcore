@@ -311,3 +311,13 @@ export function getModuleList(type?: TPluginType | null): Module[] {
 
   return result;
 }
+
+/**
+ * Triggers all hook modules with a certain event.
+ */
+export function triggerHooks(event: string, ...args: any[]) {
+  const hooks = getModuleList("hook");
+  for (const mod of hooks) {
+    mod.invoke(event, ...args);
+  }
+}

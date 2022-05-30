@@ -1,9 +1,45 @@
 import { z } from "zod";
+import { DateTime } from "luxon";
+import cronParser from "cron-parser";
 import preprocessNumber from "../Helpers/preprocessNumber";
 import { generateResourceID } from "../../Shared/ResourceID";
 import { zTag } from "../Tag.types";
 import { parseSafe } from "../Helpers";
 import createQueryOrderBy from "../Helpers/createQueryOrderBy";
+import { parseRelativeDate } from "../Helpers/parseRelativeDate";
+
+/**
+ * Validation for relative date intervals, such as "1 minute", or "30 hours".
+ * The minimum allowed value is 1 minute.
+ */
+export const zInterval = z.string().refine((value) => {
+  try {
+    const currentDate = new Date();
+    const time = parseRelativeDate(value, "plus", currentDate);
+    if (!time) {
+      return false;
+    }
+    const diff = DateTime.now().diff(DateTime.fromJSDate(new Date(time)), "minutes").minutes;
+    if (diff < 1) {
+      return false;
+    }
+  } catch (ex) {
+    return false;
+  }
+  return true;
+}, "Invalid interval");
+
+/**
+ * Validation for a cron field, such as "* * * * *".
+ */
+export const zCron = z.string().refine((value) => {
+  try {
+    cronParser.parseExpression(value);
+    return true;
+  } catch {
+    return false;
+  }
+}, "Invalid cron code");
 
 /**
  * Configuration to query a list.
@@ -34,6 +70,11 @@ export const zQuery = z.object({
  * Configuration of a name field.
  */
 export const zName = z.string().min(3).max(100);
+
+/**
+ * MD5 hash of the plugin name.
+ */
+export const zPluginID = z.string();
 
 /**
  * Configuration of an ID field.

@@ -269,19 +269,12 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
   }, [refetchID]);
 
   /**
-   * Sets the "first render" variable in order to prevent useless requests.
-   */
-  useEffect(() => {
-    firstRender.current = false;
-  }, []);
-
-  /**
    * Calculates the amount of pages based on the amount of records inside
    * of the table. The amount of pages will be set in a state for future use in
    * the footer component.
    */
   useEffect(() => {
-    if (!infinitePages) {
+    if (!firstRender.current && !infinitePages) {
       const idealAmount = getIdealAmountOfRows();
       const total = Math.ceil(amountOfRecords / idealAmount);
       setPageAmount(total);
@@ -289,6 +282,13 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amountOfRecords]);
+
+  /**
+   * Sets the "first render" variable in order to prevent useless requests.
+   */
+  useEffect(() => {
+    firstRender.current = false;
+  }, []);
 
   let minWidth = 0;
   for (const column of columns) {

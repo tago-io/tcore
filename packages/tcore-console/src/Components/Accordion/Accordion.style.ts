@@ -15,6 +15,7 @@ export const Container = styled.div<{ error?: boolean }>`
 
   > .content {
     padding: 10px;
+    overflow: auto;
   }
 `;
 
@@ -56,7 +57,18 @@ export const TitleBar = styled.div<{ isAlwaysOpen?: boolean; open?: boolean }>`
       flex-direction: column;
       margin-left: 10px;
 
-      > h3 {
+      .title-text {
+        display: flex;
+        align-items: center;
+
+        span {
+          color: hsl(0, 0%, 55%);
+          display: block;
+          margin-left: 5px;
+        }
+      }
+
+      h3 {
         font-size: 1.1rem;
       }
 
@@ -69,6 +81,7 @@ export const TitleBar = styled.div<{ isAlwaysOpen?: boolean; open?: boolean }>`
   }
 
   > .right-side {
+    display: flex;
     flex: none;
   }
 

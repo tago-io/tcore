@@ -65,6 +65,12 @@ class Module {
     if (this.plugin.state === "stopped" || this.plugin.state === "disabled") {
       throw new Error("Plugin is stopped");
     }
+
+    if (this.state === "started") {
+      // already started, we must stop the module first
+      await this.stop();
+    }
+
     try {
       this.error = null;
       this.state = "starting";

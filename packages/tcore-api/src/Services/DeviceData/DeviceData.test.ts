@@ -10,7 +10,6 @@ const invokeDatabaseFunction = jest.fn<any, any>((method: string) => {
 jest.mock("../../Plugins/invokeDatabaseFunction", () => ({ invokeDatabaseFunction }));
 
 import {
-  IAction,
   IDevice,
   IDeviceAddDataOptions,
   IDeviceData,
@@ -20,7 +19,6 @@ import {
 import Module from "../../Plugins/Module/Module";
 import * as Device from "../Device";
 import * as Statistic from "../Statistic";
-import * as Action from "../Action";
 import * as LiveInspector from "../LiveInspector";
 import * as PayloadParser from "../PayloadParserCodeExecution";
 import { plugins } from "../../Plugins/Host";
@@ -43,15 +41,6 @@ afterAll(() => {
 const inactiveDevice: any = {
   id: "123",
   name: "Hello world",
-};
-
-const action: IAction = {
-  id: "456",
-  type: "post",
-  active: true,
-  created_at: new Date(),
-  tags: [],
-  name: "Action #1",
 };
 
 const activeDevice: IDevice = {
@@ -788,190 +777,5 @@ describe("getDeviceData", () => {
     const mock = jest.spyOn(Statistic, "addStatistic");
     await DeviceData.getDeviceData("123");
     expect(mock).toHaveBeenCalledWith({ input: 0, output: 1 });
-  });
-});
-
-describe("triggerActions", () => {
-  test("gets all actions", async () => {
-    const mock = jest.spyOn(Action, "getActionList").mockResolvedValue([]);
-    await DeviceData.triggerActions("123", []);
-    expect(mock.mock.calls[0][0].amount).toBeGreaterThanOrEqual(999999);
-  });
-
-  test("triggers basic action", async () => {
-    const data = { ...mockData, value: 100 };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = { id: "123" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).toHaveBeenCalled();
-  });
-
-  test("triggers if device tag key and value match", async () => {
-    const data = { ...mockData, value: 100 };
-    const device = { ...activeDevice, tags: [{ key: "hello", value: "world" }] };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = { tag_key: "hello", tag_value: "world" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    const mock3 = jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(device);
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).toHaveBeenCalled();
-    expect(mock3).toHaveBeenCalled();
-  });
-
-  test("doesn't trigger if device id doesn't match", async () => {
-    const data = { ...mockData, value: 100 };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = { id: "456" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-  });
-
-  test("doesn't trigger if device_info doesn't match", async () => {
-    const data = { ...mockData, value: 100 };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = null;
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-  });
-
-  test("doesn't trigger if device tag is not found", async () => {
-    const data = { ...mockData, value: 100 };
-    const device = { ...activeDevice, tags: [] };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = { tag_key: "hello", tag_value: "world" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    const mock3 = jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(device);
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-    expect(mock3).toHaveBeenCalled();
-  });
-
-  test("doesn't trigger if device tag key is not match", async () => {
-    const data = { ...mockData, value: 100 };
-    const device: any = { ...activeDevice, tags: [{ value: "world" }] };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = { tag_key: "hello", tag_value: "world" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    const mock3 = jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(device);
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-    expect(mock3).toHaveBeenCalled();
-  });
-
-  test("doesn't trigger if device tag value is not match", async () => {
-    const data = { ...mockData, value: 100 };
-    const device: any = { ...activeDevice, tags: [{ key: "hello" }] };
-    const conditions = [{ variable: "temperature", is: "<", value: "150" }];
-    action.device_info = { tag_key: "hello", tag_value: "world" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    const mock3 = jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(device);
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-    expect(mock3).toHaveBeenCalled();
-  });
-
-  test("doesn't trigger with invalid condition", async () => {
-    const data = { ...mockData, value: 200 };
-    const conditions = [{ variable: "temperature", is: "<", value: "100" }];
-    action.device_info = { id: "123" };
-    action.trigger = { conditions };
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    await DeviceData.triggerActions("123", [data]);
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-  });
-
-  test("triggers custom plugin action type", async () => {
-    action.device_info = { id: "123" };
-    action.type = "plugin1:module1";
-
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    const mock3 = jest.fn().mockResolvedValue(true);
-
-    const plugin: any = { modules: new Map() };
-    plugin.modules.set("module1", new Module(plugin, {} as any));
-    plugin.modules.get("module1").invokeOnCall = mock3;
-    plugins.set("plugin1", plugin);
-
-    await DeviceData.triggerActions("123", [mockData]);
-
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).toHaveBeenCalled();
-    expect(mock3).toHaveBeenCalledWith(action.id, { ...action.trigger }, [mockData]);
-  });
-
-  test("doesn't trigger custom plugin action type if an error is thrown", async () => {
-    action.device_info = { id: "123" };
-    action.type = "plugin1:module1";
-
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-    const mock3 = jest.fn().mockRejectedValue(null);
-
-    const plugin: any = { modules: new Map() };
-    plugin.modules.set("module1", new Module(plugin, {} as any));
-    plugin.modules.get("module1").invokeOnCall = mock3;
-    plugins.set("plugin1", plugin);
-
-    await DeviceData.triggerActions("123", [mockData]);
-
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-    expect(mock3).toHaveBeenCalledWith(action.id, { ...action.trigger }, [mockData]);
-  });
-
-  test("doesn't trigger custom plugin action type if plugin is not found", async () => {
-    action.device_info = { id: "123" };
-    action.type = "plugin1:module1";
-
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-
-    await DeviceData.triggerActions("123", [mockData]);
-
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
-  });
-
-  test("doesn't trigger custom plugin action type if module is not found", async () => {
-    action.device_info = { id: "123" };
-    action.type = "plugin1:module1";
-
-    const mock1 = jest.spyOn(Action, "getActionList").mockResolvedValue([action]);
-    const mock2 = jest.spyOn(Action, "triggerAction").mockResolvedValue();
-
-    const plugin: any = { modules: new Map() };
-    plugins.set("plugin1", plugin);
-
-    await DeviceData.triggerActions("123", [mockData]);
-
-    expect(mock1).toHaveBeenCalled();
-    expect(mock2).not.toHaveBeenCalled();
   });
 });

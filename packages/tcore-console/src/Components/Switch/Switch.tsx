@@ -25,11 +25,6 @@ interface ISwitchProps {
    */
   disabled?: boolean;
   /**
-   * If set to `true` the switch will get a `flex: 1` style and stretch
-   * to fill the remaining size of the parent.
-   */
-  stretch?: boolean;
-  /**
    * Optional text to be rendered inside of the switch when it is selected.
    * By default this value is equal to `✓`.
    */

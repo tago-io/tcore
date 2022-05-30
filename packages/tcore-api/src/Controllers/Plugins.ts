@@ -68,7 +68,8 @@ class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, 
   };
 
   public async main() {
-    const response = getModuleList(this.queryStringParams.type).map((x) => ({
+    const modules = getModuleList(this.queryStringParams.type);
+    const response = modules.map((x) => ({
       pluginID: x.plugin?.id,
       pluginName: x.plugin?.tcoreName,
       setupID: x.setup.id,
@@ -131,7 +132,7 @@ class InstallPlugin extends APIController<any, void, void> {
   };
 
   public async main() {
-    await installPlugin(this.bodyParams.source, { log: true, start: true });
+    await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
   }
 }
 

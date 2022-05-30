@@ -1,36 +1,23 @@
-import { useCallback } from "react";
-import { IActionOption } from "@tago-io/tcore-sdk/types";
+import { useCallback, useEffect, useState } from "react";
+import { IPluginConfigField, IPluginModuleList } from "@tago-io/tcore-sdk/types";
 import Icon from "../../../Icon/Icon";
 import { EIcon } from "../../../Icon/Icon.types";
 import OptionsPicker from "../../../OptionsPicker/OptionsPicker";
+import { useApiRequest } from "../../../..";
 import * as Style from "./ActionTypePicker.style";
 
-/**
- * Props.
- */
-interface IActionTypePicker {
-  /**
-   * Device object.
-   */
-  value?: IActionOption;
-  /**
-   * Called when a new device gets picked.
-   */
-  onChange: (value: IActionOption) => void;
-  /**
-   * Additional options provided by plugins.
-   */
-  options?: IActionOption[];
-  /**
-   * Position of the options container. Default is `bottom`.
-   */
-  optionsPosition?: "top" | "bottom";
+interface IOption {
+  description?: string;
+  icon?: string;
+  name?: string;
+  configs?: IPluginConfigField[];
+  id: string;
 }
 
 /**
  * Options to be displayed in the component.
  */
-const defaultOptions: IActionOption[] = [
+const defaultOptions: IOption[] = [
   {
     description: "Run an analysis whenever this action is triggered",
     icon: EIcon.code,
@@ -52,31 +39,69 @@ const defaultOptions: IActionOption[] = [
 ];
 
 /**
+ * Props.
+ */
+interface IActionTypePicker {
+  /**
+   * Option object.
+   */
+  value?: IOption;
+  /**
+   * Called when a new option gets picked.
+   */
+  onChange: (value: IOption) => void;
+  /**
+   * Indicates if this component has invalid data.
+   * If this is set to `true`, this component will get a red border.
+   */
+  error?: boolean;
+  /**
+   * Position of the options container. Default is `bottom`.
+   */
+  optionsPosition?: "top" | "bottom";
+  /**
+   * ID of the selected trigger.
+   */
+  triggerID?: string;
+}
+
+/**
  * Picker for the type of action.
  */
 function ActionTypePicker(props: IActionTypePicker) {
-  const { options, optionsPosition } = props;
+  const { data: actionTypes } = useApiRequest<IPluginModuleList>("/module?type=action-type");
+  const { error, optionsPosition } = props;
+  const isSchedule = props.triggerID === "schedule" || props.triggerID === "interval";
+  const [options] = useState([...defaultOptions]);
+
+  const mappedPluginOptions: IOption[] = actionTypes?.map((x) => ({
+    configs: x.setup.option?.configs || [],
+    description: x.setup.option?.description,
+    icon: x.setup.option?.icon,
+    id: `${x.pluginID}:${x.setup.id}`,
+    name: x.setup.name,
+  }));
 
   /**
    * Renders a single row.
    */
-  const renderPluginImage = (item: IActionOption) => {
+  const renderPluginImage = (item: IOption) => {
     const idSplit = item.id.split(":");
     const pluginMd5 = idSplit[0];
-    const pluginID = idSplit[1];
-    return <img src={`/images/${pluginMd5}/action/${pluginID}`} />;
+    const moduleID = idSplit[1];
+    return <img src={`/images/${pluginMd5}/action/${moduleID}`} />;
   };
 
   /**
    * Renders a single row.
    */
-  const renderOption = (item: IActionOption) => {
-    const isCustom = options?.includes(item);
+  const renderOption = (item: IOption) => {
+    const isModule = item.id.includes(":");
     return (
       <Style.Item>
         <div className="content">
           <div className="icon-container">
-            {isCustom ? renderPluginImage(item) : <Icon icon={item.icon as any} size="25px" />}
+            {isModule ? renderPluginImage(item) : <Icon icon={item.icon as EIcon} size="25px" />}
           </div>
 
           <div className="info">
@@ -94,11 +119,11 @@ function ActionTypePicker(props: IActionTypePicker) {
    */
   const resolveOptionByID = useCallback(
     async (id: string | number) => {
-      const allOptions = [...defaultOptions, ...(options || [])];
+      const allOptions = [...options, ...mappedPluginOptions];
       const response = allOptions.find((x) => x.id === id);
       return response;
     },
-    [options]
+    [options, mappedPluginOptions]
   );
 
   /**
@@ -110,7 +135,12 @@ function ActionTypePicker(props: IActionTypePicker) {
         return [];
       }
 
-      const allOptions = [...defaultOptions, ...(options || [])];
+      const allOptions = [...options, ...mappedPluginOptions];
+
+      if (isSchedule) {
+        allOptions.splice(2, 1);
+      }
+
       return allOptions.filter((x) => {
         return (
           String(x.description).toLowerCase().includes(query) ||
@@ -118,11 +148,18 @@ function ActionTypePicker(props: IActionTypePicker) {
         );
       });
     },
-    [options]
+    [isSchedule, options, mappedPluginOptions]
   );
 
+  useEffect(() => {
+    if (isSchedule && props.value?.id === "tagoio") {
+      props.onChange(null as any);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.value, isSchedule]);
+
   return (
-    <OptionsPicker<IActionOption>
+    <OptionsPicker<IOption>
       doesRequest
       labelField="name"
       onChange={props.onChange}
@@ -131,6 +168,7 @@ function ActionTypePicker(props: IActionTypePicker) {
       onResolveOption={resolveOptionByID}
       optionsPosition={optionsPosition}
       value={props.value}
+      error={error}
     />
   );
 }

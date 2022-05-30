@@ -16,11 +16,12 @@ import removeNullValues from "../../Helpers/removeNullValues";
 import splitColon from "../../Helpers/splitColon";
 import { plugins } from "../../Plugins/Host";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { getActionList, shouldNativeActionTrigger, triggerAction } from "../Action";
+import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
 import { editDevice, getDeviceInfo } from "../Device";
 import { addStatistic } from "../Statistic";
 import { runPayloadParser } from "../PayloadParserCodeExecution";
 import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector";
+import { triggerHooks } from "../Plugins";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
@@ -48,39 +49,34 @@ export const getDeviceDataAmount = async (deviceID: TGenericID): Promise<number>
  */
 export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]): Promise<void> => {
   const device = await getDeviceInfo(deviceID);
-  const actions = await getActionList({ fields: ["trigger", "type", "device_info"], amount: 999999 });
+  const actions = await getActionList({
+    filter: { active: true, type: "condition" },
+    fields: ["lock", "trigger"],
+    amount: 999999,
+  });
 
   for (const action of actions) {
-    const { device_info } = action as any;
+    const triggers = Array.isArray(action.trigger) ? action.trigger : [];
+    const hasLocker = triggers.some?.((x) => x.unlock);
+    action.lock = hasLocker ? action.lock : false; // ? set false when action doesn't have any rule for unlock.
 
-    const deviceMatchesAction =
-      device_info &&
-      (device_info.id === deviceID ||
-        device.tags.find((x) => x.key === device_info.tag_key && x.value === device_info.tag_value));
+    const conditionsLock = triggers.filter((x) => !x.unlock);
+    const conditionsUnlock = triggers.filter((x) => x.unlock);
 
-    if (deviceMatchesAction) {
-      const usesPluginType = String(action.type).includes(":");
-      if (usesPluginType) {
-        // using a custom plugin type for the action
-        const [pluginID, moduleID] = splitColon(action.type as string);
-        const plugin = plugins.get(pluginID);
-        const module = plugin?.modules.get(moduleID);
-        const values = { ...action.trigger };
-
-        const shouldTrigger = await module
-          ?.invokeOnCall(action.id, values, data)
-          .then(() => true)
-          .catch(() => false);
-
-        if (shouldTrigger) {
-          triggerAction(action.id, data);
-        }
-      } else {
-        // using a built-in native type for the action
-        const shouldTrigger = shouldNativeActionTrigger(action, data);
-        if (shouldTrigger) {
-          triggerAction(action.id, data);
-        }
+    if (action.lock) {
+      // action is locked, meaning we need to find a condition which can
+      // release/unlock the action
+      const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsUnlock, device, x));
+      if (dataItem) {
+        editAction(action.id, { lock: false });
+      }
+    } else {
+      // action is unlocked, meaning we need to find a condition
+      // which can trigger the action
+      const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsLock, device, x));
+      if (dataItem) {
+        triggerAction(action.id, data);
+        editAction(action.id, { lock: hasLocker });
       }
     }
   }
@@ -185,6 +181,8 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
   await triggerActions(device.id, items);
   await addStatistic({ input: items.length });
   await editDevice(device.id, { updated_at: now, last_input: now });
+
+  triggerHooks("onAfterInsertDeviceData", device.id, data);
 
   return `${items.length} items added`;
 };

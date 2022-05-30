@@ -1,4 +1,4 @@
-import { IActionOption } from "@tago-io/tcore-sdk/types";
+import { useEffect, useState } from "react";
 import FlexRow from "../../../FlexRow/FlexRow";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
@@ -14,34 +14,33 @@ import PluginConfigFields from "../../../Plugins/Common/PluginConfigFields/Plugi
  */
 interface IActionFields {
   /**
-   * Additional options provided by plugins.
+   * Error of the fields.
    */
-  options?: IActionOption[];
-  option: any;
-  onChangeOption: any;
-  optionFields: any;
-  onChangeOptionFields: any;
-  /**
-   * Position of the options container. Default is `bottom`.
-   */
-  optionsPosition?: "top" | "bottom";
   errors?: any;
+  /**
+   * Where to render the position of the picker.
+   */
+  optionsPosition?: "bottom" | "top";
+  /**
+   * .action object of the action.
+   */
+  action: any;
+  /**
+   * function to change the action object.
+   */
+  onChangeAction: (action: any) => void;
+  /**
+   * ID of the selected trigger.
+   */
+  triggerID?: string;
 }
 
-/**
- */
 function ActionFields(props: IActionFields) {
-  const {
-    option,
-    optionsPosition,
-    onChangeOption,
-    optionFields,
-    onChangeOptionFields,
-    errors,
-    options,
-  } = props;
+  const { errors, optionsPosition, action, onChangeAction } = props;
+  const [actionType, setActionType] = useState<any>(action?.type);
 
   /**
+   * Renders the TagoIO configuration.
    */
   const renderTagoIO = () => {
     return (
@@ -53,10 +52,11 @@ function ActionFields(props: IActionFields) {
         >
           <Input
             autoComplete="new-password"
-            onChange={(e) => onChangeOptionFields({ ...optionFields, token: e.target.value })}
+            onChange={(e) => onChangeAction({ ...action, token: e.target.value })}
             placeholder="enter a device's token"
             type="password"
-            value={optionFields?.token || ""}
+            value={action?.token || ""}
+            error={errors?.token}
           />
         </FormGroup>
       </>
@@ -64,24 +64,24 @@ function ActionFields(props: IActionFields) {
   };
 
   /**
+   * Renders the post configuration.
    */
   const renderPost = () => {
     return (
       <>
         <FormGroup label="HTTP Post End-point">
           <Input
-            onChange={(e) => onChangeOptionFields({ ...optionFields, url: e.target.value })}
+            onChange={(e) => onChangeAction({ ...action, url: e.target.value })}
             placeholder="enter the url address"
-            value={optionFields?.url || ""}
+            value={action?.url || ""}
+            error={errors?.url}
           />
         </FormGroup>
 
         <FormGroup label="HTTP Headers">
           <HttpHeaders
-            value={optionFields.headers || []}
-            onChange={(headers) => {
-              onChangeOptionFields({ ...optionFields, headers });
-            }}
+            value={action.headers || {}}
+            onChange={(headers) => onChangeAction({ ...action, headers })}
           />
         </FormGroup>
 
@@ -93,20 +93,23 @@ function ActionFields(props: IActionFields) {
           <FlexRow>
             <div style={{ marginRight: "10px", flex: 1 }}>
               <Input
-                value={optionFields.fallback_token ?? ""}
-                onChange={(e) =>
-                  onChangeOptionFields({ ...optionFields, fallback_token: e.target.value })
-                }
-                disabled={!optionFields.http_post_fallback_enabled}
+                value={action.fallback_token ?? ""}
+                onChange={(e) => onChangeAction({ ...action, fallback_token: e.target.value })}
+                disabled={!action.http_post_fallback_enabled}
                 placeholder="Fallback device token"
+                error={errors?.fallback_token}
               />
             </div>
 
             <div style={{ flex: "none" }}>
               <Switch
-                value={optionFields.http_post_fallback_enabled || false}
+                value={action.http_post_fallback_enabled || false}
                 onChange={(e) =>
-                  onChangeOptionFields({ ...optionFields, http_post_fallback_enabled: e })
+                  onChangeAction({
+                    ...action,
+                    fallback_token: e ? action.fallback_token || "" : null,
+                    http_post_fallback_enabled: e,
+                  })
                 }
               >
                 Enabled
@@ -119,45 +122,57 @@ function ActionFields(props: IActionFields) {
   };
 
   /**
+   * Renders the analysis option.
    */
   const renderAnalysis = () => {
+    const data: any = action.script || [{}];
     return (
       <MultipleAnalysis
-        data={optionFields.analyses || [{}]}
-        onChange={(e) => onChangeOptionFields({ ...optionFields, analyses: e })}
-        errors={errors?.analyses}
+        data={data}
+        onChange={(e) => onChangeAction({ ...action, script: e })}
         optionsPosition={optionsPosition}
+        errors={errors?.script ? data.map((x: any) => !x?.id) : []}
       />
     );
   };
 
   /**
+   * Renders the plugin configuration.
    */
   const renderCustomOption = () => {
     return (
       <PluginConfigFields
-        data={option.configs || []}
-        values={optionFields}
-        onChangeValues={onChangeOptionFields}
+        data={actionType.configs || []}
+        values={action}
+        onChangeValues={(values) => onChangeAction({ ...values, type: actionType })}
         errors={errors}
       />
     );
   };
 
   /**
+   * Renders the action fields.
    */
   const renderContent = () => {
-    if (option?.id === "script") {
+    if (actionType?.id === "script") {
       return renderAnalysis();
-    } else if (option?.id === "post") {
+    } else if (actionType?.id === "post") {
       return renderPost();
-    } else if (option?.id === "tagoio") {
+    } else if (actionType?.id === "tagoio") {
       return renderTagoIO();
-    } else if (option?.id) {
+    } else if (actionType?.id) {
       return renderCustomOption();
     }
     return null;
   };
+
+  /**
+   * Sets the type into the action.
+   */
+  useEffect(() => {
+    onChangeAction({ ...action, type: actionType?.id || actionType });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionType]);
 
   return (
     <>
@@ -167,10 +182,11 @@ function ActionFields(props: IActionFields) {
         label="Type"
       >
         <ActionTypePicker
-          onChange={onChangeOption}
-          options={options}
+          onChange={setActionType}
           optionsPosition={optionsPosition}
-          value={option}
+          value={actionType}
+          error={errors?.type}
+          triggerID={props.triggerID}
         />
       </FormGroup>
 

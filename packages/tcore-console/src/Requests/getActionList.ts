@@ -13,7 +13,7 @@ async function getActionList(page: number, amount: number, filter: any): Promise
       name: filter.name ? `*${filter.name}*` : undefined,
       tags: filter.tags,
     },
-    fields: ["name", "active", "action", "last_triggered", "created_at"],
+    fields: ["name", "active", "lock", "type", "action", "last_triggered", "created_at"],
   };
 
   const response = await axios.get("/action", { params });

@@ -3,11 +3,22 @@ import AnalysisPicker from "../../../Analysis/Common/AnalysisPicker/AnalysisPick
 import RowManipulator from "../../../RowManipulator/RowManipulator";
 
 /**
+ * Single item in the list.
+ */
+type IAnalysisItem = IAnalysis | null;
+
+/**
  * Props.
  */
 interface IMultipleAnalysis {
-  data: (IAnalysis | null)[];
-  onChange: (data: (IAnalysis | null)[]) => void;
+  /**
+   * Value for the list.
+   */
+  data: IAnalysisItem[];
+  /**
+   * Called when a list item changes.
+   */
+  onChange: (data: IAnalysisItem[]) => void;
   /**
    * Error of the fields.
    */
@@ -18,32 +29,24 @@ interface IMultipleAnalysis {
   optionsPosition?: "top" | "bottom";
 }
 
-/**
- */
 function MultipleAnalysis(props: IMultipleAnalysis) {
   const { data, errors, optionsPosition, onChange } = props;
 
-  /**
-   */
   const addItem = () => {
     data.push(null);
     onChange([...data]);
   };
 
-  /**
-   */
   const removeItem = (index: number) => {
     data.splice(index, 1);
     onChange([...data]);
   };
 
-  /**
-   */
-  const renderItem = (item: any, index: number) => {
+  const renderItem = (item: IAnalysisItem, index: number) => {
     return (
       <div style={{ flex: "1", marginRight: "10px" }}>
         <AnalysisPicker
-          value={item}
+          value={item as IAnalysis}
           error={errors?.[index]}
           optionsPosition={optionsPosition}
           onChange={(e: IAnalysis) => {

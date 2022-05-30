@@ -3,6 +3,21 @@ import { z } from "zod";
 import { zIcon } from "./Common/Icon.types";
 
 /**
+ * Validation for a combo of PluginID and ModuleID, such as:
+ * `0810916b6ca256fb25afbe19b4f83b23:sample-action`
+ */
+export const zPluginModuleIDCombo = z
+  .string()
+  .refine((x) => {
+    const split = x.split(":");
+    return split[0].length === 32;
+  }, "Invalid Plugin ID")
+  .refine((x) => {
+    const split = x.split(":");
+    return split[1];
+  }, "Invalid Module ID");
+
+/**
  * Types of plugins available.
  */
 export const zPluginType = z.enum([
@@ -369,7 +384,6 @@ const zActionTriggerModuleSetup = zPluginSetup.omit({ type: true }).extend({
     configs: z.array(zPluginConfigField).optional(),
     description: z.string(),
     name: z.string(),
-    showDeviceSelector: z.boolean().optional(),
   }),
 });
 
@@ -530,6 +544,20 @@ const zPluginSettings = z.object({
 });
 
 /**
+ * Single item in a list of modules.
+ */
+export const zPluginModuleListItem = z.object({
+  pluginID: z.string(),
+  pluginName: z.string(),
+  setup: zActionTypeModuleSetup,
+});
+
+/**
+ * List of modules.
+ */
+export const zPluginModuleList = z.array(zPluginModuleListItem);
+
+/**
  * A Single resolved item of a filesystem.
  */
 interface IPluginFilesystemItem {
@@ -539,6 +567,8 @@ interface IPluginFilesystemItem {
   children: IPluginFilesystemItem[];
 }
 
+export type IPluginModuleList = z.infer<typeof zPluginModuleList>;
+export type IPluginModuleListItem = z.infer<typeof zPluginModuleListItem>;
 export type IActionTriggerModuleSetup = z.infer<typeof zActionTriggerModuleSetup>;
 export type IActionTypeModuleSetup = z.infer<typeof zActionTypeModuleSetup>;
 export type IModuleMessageOptions = z.infer<typeof zModuleMessageOptions>;

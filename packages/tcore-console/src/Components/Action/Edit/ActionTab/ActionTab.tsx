@@ -1,151 +1,85 @@
-import { IAction, IActionOption, IActionType } from "@tago-io/tcore-sdk/types";
-import Accordion from "../../../Accordion/Accordion";
+import { IAction, IPluginModuleListItem } from "@tago-io/tcore-sdk/types";
+import { Input } from "../../../..";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import VariableCondition from "../../../VariableCondition/VariableCondition";
-import ActionFields from "../../Common/ActionFields/ActionFields";
 import PluginConfigFields from "../../../Plugins/Common/PluginConfigFields/PluginConfigFields";
-import DeviceRadio from "../../Common/DeviceRadio/DeviceRadio";
+import ActionFields from "../../Common/ActionFields/ActionFields";
+import ConditionTrigger from "../ConditionTrigger/ConditionTrigger";
+import ScheduleTrigger from "../ScheduleTrigger/ScheduleTrigger";
+import MessageTriggerNotFound from "../ScheduleTrigger/MessageTriggerNotFound/MessageTriggerNotFound";
+import { IConditionData, IScheduleData } from "../../Action.interface";
 import * as Style from "./ActionTab.style";
 
 /**
  * Props.
  */
-interface IActionTabProps {
-  /**
-   * Action's form data.
-   */
+interface IActionTab {
+  action: any;
+  conditionData: IConditionData;
+  customTrigger?: IPluginModuleListItem;
   data: IAction;
-  /**
-   */
-  trigger: any;
-  /**
-   * Called when a field is changed.
-   */
-  onChange: (field: keyof IAction, value: IAction[keyof IAction]) => void;
-  /**
-   */
-  onChangeTrigger: (trigger: any) => void;
-  /**
-   * Additional options provided by plugins.
-   */
-  options?: IActionOption[];
-  option: any;
-  onChangeOption: any;
-  optionFields: any;
-  onChangeOptionFields: any;
-  device?: any;
-  tag?: any;
-  deviceType?: any;
-  onChangeDevice: any;
-  onChangeTag: any;
-  onChangeDeviceType: any;
-  types?: any;
   errors: any;
-  /**
-   * Custom type selected.
-   */
-  customType: IActionType;
+  onChange: (field: keyof IAction, value: IAction[keyof IAction]) => void;
+  onChangeAction: (action: any) => void;
+  onChangeConditionData: (conditionData: IConditionData) => void;
+  onChangePluginTriggerData: (pluginTriggerData: any) => void;
+  onChangeScheduleData: (action: IScheduleData) => void;
+  pluginTriggerData: any;
+  scheduleData: IScheduleData;
 }
 
 /**
  * The action's `Action` tab.
  */
-function ActionTab(props: IActionTabProps) {
+function ActionTab(props: IActionTab) {
   const {
-    option,
-    onChangeOption,
-    optionFields,
-    onChangeOptionFields,
-    onChangeTag,
-    onChangeDeviceType,
-    onChangeDevice,
-    tag,
-    deviceType,
-    device,
+    action,
+    customTrigger,
     data,
-    options,
-    trigger,
     errors,
-    customType,
-    onChangeTrigger,
     onChange,
+    onChangeAction,
+    onChangePluginTriggerData,
+    onChangeScheduleData,
+    pluginTriggerData,
+    scheduleData,
   } = props;
-
-  const isCustomType = !!customType;
-
-  /**
-   * Renders a section's title.
-   */
-  const renderSectionTitle = (title: string) => {
-    return <div className="title">{title}</div>;
-  };
-
-  /**
-   */
-  const renderCustomLeftSectionContent = () => {
-    const configs = customType?.configs || [];
-    return (
-      <>
-        {customType?.showDeviceSelector && (
-          <DeviceRadio
-            device={device}
-            deviceType={deviceType}
-            error={errors.device_info}
-            onChangeDevice={onChangeDevice}
-            onChangeDeviceType={onChangeDeviceType}
-            onChangeTag={onChangeTag}
-            tag={tag}
-          />
-        )}
-
-        <PluginConfigFields
-          errors={errors?.trigger}
-          data={configs}
-          values={trigger}
-          onChangeValues={onChangeTrigger}
-        />
-      </>
-    );
-  };
 
   /**
    * Renders the left section (`Triggers`) of the screen.
    */
   const renderLeftSectionContent = () => {
-    if (isCustomType) {
-      return renderCustomLeftSectionContent();
-    }
-
-    return (
-      <>
-        <DeviceRadio
-          device={device}
-          deviceType={deviceType}
-          error={errors.device_info}
-          onChangeDevice={onChangeDevice}
-          onChangeDeviceType={onChangeDeviceType}
-          onChangeTag={onChangeTag}
-          tag={tag}
+    if (data.type.includes(":") && !customTrigger) {
+      const triggerName = data.type.split(":")[1];
+      return <MessageTriggerNotFound isPlugin triggerName={triggerName} />;
+    } else if (customTrigger) {
+      return (
+        <PluginConfigFields
+          data={customTrigger?.setup?.option?.configs || []}
+          errors={errors?.trigger}
+          onChangeValues={onChangePluginTriggerData}
+          values={pluginTriggerData}
         />
-
-        <div>
-          <Accordion
-            icon={EIcon.cog}
-            description="If one of the conditions match, the action will be triggered."
-            title="Trigger"
-            isAlwaysOpen
-          >
-            <VariableCondition
-              name="Trigger"
-              data={trigger?.conditions || []}
-              onChange={(e) => onChangeTrigger({ ...trigger, conditions: e })}
-            />
-          </Accordion>
-        </div>
-      </>
-    );
+      );
+    } else if (data.type === "interval" || data.type === "schedule") {
+      return (
+        <ScheduleTrigger
+          errors={errors}
+          onChangeScheduleData={onChangeScheduleData}
+          scheduleData={scheduleData}
+        />
+      );
+    } else if (data.type === "condition") {
+      return (
+        <ConditionTrigger
+          conditionData={props.conditionData}
+          errors={errors}
+          onChangeConditionData={props.onChangeConditionData}
+        />
+      );
+    } else {
+      return <MessageTriggerNotFound triggerName={data.type} />;
+    }
   };
 
   /**
@@ -157,22 +91,20 @@ function ActionTab(props: IActionTabProps) {
         <div>
           <FormGroup icon={EIcon["pencil-alt"]} label="Name">
             <Input
-              value={data.name}
+              error={errors?.name}
+              errorMessage="This field requires at least 3 characters"
               onChange={(e) => onChange("name", e.target.value)}
               placeholder="Enter a name that describes the purpose of your action"
-              error={errors.name}
-              errorMessage="This field requires at least 3 characters"
+              value={data.name}
             />
           </FormGroup>
         </div>
 
         <ActionFields
-          errors={errors.option}
-          onChangeOption={onChangeOption}
-          onChangeOptionFields={onChangeOptionFields}
-          option={option}
-          optionFields={optionFields}
-          options={options}
+          triggerID={data?.type}
+          errors={errors?.action}
+          action={action}
+          onChangeAction={onChangeAction}
         />
       </>
     );
@@ -181,12 +113,12 @@ function ActionTab(props: IActionTabProps) {
   return (
     <Style.Container>
       <Style.LeftSection>
-        {renderSectionTitle("Trigger")}
+        <div className="title">Trigger</div>
         {renderLeftSectionContent()}
       </Style.LeftSection>
 
       <Style.RightSection>
-        {renderSectionTitle("Action")}
+        <div className="title">Action</div>
         {renderRightSectionContent()}
       </Style.RightSection>
     </Style.Container>

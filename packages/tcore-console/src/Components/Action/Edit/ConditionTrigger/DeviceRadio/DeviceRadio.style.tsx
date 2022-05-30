@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-/**
- */
 export const Container = styled.div<{ type?: string }>`
   display: flex;
   flex: 1;
@@ -23,8 +21,6 @@ export const Container = styled.div<{ type?: string }>`
   }
 `;
 
-/**
- */
 export const LeftSection = styled.section`
   display: flex;
   flex-direction: column;
@@ -36,8 +32,6 @@ export const LeftSection = styled.section`
   position: relative;
 `;
 
-/**
- */
 export const RightSection = styled.section`
   display: flex;
   flex-direction: column;

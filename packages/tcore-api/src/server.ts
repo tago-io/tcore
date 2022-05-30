@@ -28,6 +28,7 @@ import { shutdown } from "./Helpers/shutdown";
 import { getLocalIPs } from "./Services/Hardware";
 import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
+import { startActionScheduleTimer } from "./Services/ActionScheduler";
 
 const app = express();
 const httpServer = createServer(app);
@@ -173,6 +174,7 @@ export async function startServer() {
   await setupPluginPages();
 
   await listenOnApplicationPort();
+  startActionScheduleTimer();
 
   process.on("SIGTERM", () => shutdown(httpServer));
   process.on("SIGINT", () => shutdown(httpServer));
