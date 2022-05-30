@@ -179,12 +179,7 @@ async function triggerActionPostType(action: IAction, data: any): Promise<void> 
     return;
   }
 
-  const headers = Array.isArray(action.action.headers) ? action.action.headers : [];
-  const headersObj = {};
-
-  for (const headerItem of headers) {
-    headersObj[headerItem.name] = headerItem.value;
-  }
+  const headersObj = action.action.headers || {};
 
   for (let i = 0; i < 10; i++) {
     try {
