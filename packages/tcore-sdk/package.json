@@ -47,6 +47,7 @@
     "watch": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
+    "cron-parser": "4.4.0",
     "commander": "9.1.0",
     "luxon": "2.3.0",
     "ora": "5.4.1",

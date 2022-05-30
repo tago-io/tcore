@@ -21,6 +21,7 @@
     "tsc": "rm -rf ./build-tsc; tsc -p tsconfig-tsc.json"
   },
   "dependencies": {
+    "cronstrue": "2.5.0",
     "semver": "7.3.5",
     "@antv/g2": "4.1.23",
     "@tago-io/tcore-sdk": "*",

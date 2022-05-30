@@ -1,10 +1,10 @@
-import moment from "moment";
+import { DateTime } from "luxon";
 import { useRef, useState, useEffect } from "react";
 import Select from "../Select/Select";
 import * as Style from "./InputTime.style";
 
 interface IInputTime {
-  value?: moment.MomentInput;
+  value?: string;
   timeFormat?: "12" | "24";
   onChange: (time: string) => void;
 }
@@ -12,16 +12,17 @@ interface IInputTime {
 function InputTime(props: IInputTime) {
   const firstRender = useRef(true);
   const usesAmPmFormat = props.timeFormat === "12";
+  const defaultValue = `2010-01-01 ${props.value || ""}`;
   const [hour, setHour] = useState(() =>
-    moment(`2010-01-01 ${props.value || ""}`).format(usesAmPmFormat ? "hh" : "HH")
+    DateTime.fromFormat(defaultValue, "yyyy-LL-dd HH:mm").toFormat(usesAmPmFormat ? "hh" : "HH")
   );
   const [minute, setMinute] = useState(() =>
-    moment(`2010-01-01 ${props.value || ""}`).format("mm")
+    DateTime.fromFormat(defaultValue, "yyyy-LL-dd HH:mm").toFormat("mm")
   );
-  const [format, setFormat] = useState(() => moment(`2010-01-01 ${props.value || ""}`).format("a"));
+  const [format, setFormat] = useState(() =>
+    DateTime.fromFormat(defaultValue, "yyyy-LL-dd HH:mm").toFormat("a").toLowerCase()
+  );
 
-  /**
-   */
   function getOptionsOfSelect(amount: number) {
     const hideZero = amount === 12;
     return new Array(amount).fill("").map((x, i) => {

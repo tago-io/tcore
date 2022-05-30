@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import moment from "moment";
 import { DateTime } from "luxon";
 import { EIcon, FormGroup, Input } from "../../../../..";
 import Select from "../../../../Select/Select";
@@ -161,8 +160,10 @@ function BasicCron(props: IBasicCron) {
       <Style.Field width="250px">
         <FormGroup icon={EIcon.clock} label="Repeat at">
           <InputTime
-            onChange={(e) => onChange("repeat_hour", moment(e, ["h:mm A"]).format("HH:mm"))}
-            value={repeat_hour}
+            onChange={(e) => {
+              onChange("repeat_hour", DateTime.fromFormat(e, "hh:mm a").toFormat("HH:mm"));
+            }}
+            value={repeat_hour || ""}
             timeFormat="12"
           />
         </FormGroup>

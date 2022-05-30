@@ -20,6 +20,7 @@
     "watch": "nodemon"
   },
   "dependencies": {
+    "cron-parser": "4.4.0",
     "nodemon": "2.0.15",
     "extract-zip": "2.0.1",
     "@tago-io/tcore-sdk": "*",

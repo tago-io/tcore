@@ -130,7 +130,7 @@ interface IScheduleData {
   repeat_unit?: string | number;
   repeat_type?: string | number;
   repeat_date?: string | number;
-  repeat_hour?: string | number;
+  repeat_hour?: string;
   repeat_weekdays?: IScheduleDataWeekdays;
   timezone?: any;
   cron?: string;
