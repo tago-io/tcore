@@ -96,12 +96,15 @@ export async function getOSInfo() {
  */
 export async function getRAMUsage(): Promise<IComputerUsage> {
   const data = await si.mem();
+  const total = data.total;
+  const used = data.active;
+
   return {
-    description: `${formatBytes(data.used)} / ${formatBytes(data.total)}`,
+    description: `${formatBytes(used)} / ${formatBytes(total)}`,
     title: "RAM usage",
-    total: data.total,
+    total: total,
     type: "memory",
-    used: data.used,
+    used: used,
   };
 }
 
