@@ -1,10 +1,12 @@
 import { TGenericID } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
+import store from "../System/Store";
 
 /**
  */
 async function stopPluginModule(id: TGenericID, moduleID: any) {
-  await axios.post(`/plugin/${id}/${moduleID}/stop`);
+  const headers = { token: store.token };
+  await axios.post(`/plugin/${id}/${moduleID}/stop`, {}, { headers });
 }
 
 export default stopPluginModule;

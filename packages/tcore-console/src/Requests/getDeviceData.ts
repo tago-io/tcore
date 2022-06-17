@@ -1,5 +1,6 @@
 import { IDeviceData } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
+import store from "../System/Store";
 
 /**
  * Retrieves data from a device.
@@ -25,7 +26,10 @@ async function getDeviceData(
     end_date: endDate || undefined,
   };
 
-  const response = await axios.get(`/device/${deviceID}/data`, { params });
+  const response = await axios.get(`/device/${deviceID}/data`, {
+    params,
+    headers: { token: store.token },
+  });
   const { data } = response;
 
   return data.result || [];

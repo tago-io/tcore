@@ -1,12 +1,14 @@
+import { Account } from "@tago-io/sdk";
+import { DeviceCreateInfo } from "@tago-io/sdk/out/modules/Account/devices.types";
 import { ICreateDeviceResponse, IDeviceCreate } from "@tago-io/tcore-sdk/types";
-import axios from "axios";
+import store from "../System/Store";
 
 /**
  */
-async function createDevice(device: IDeviceCreate): Promise<ICreateDeviceResponse> {
-  const response = await axios.post("/device", device);
-  const { data } = response;
-  return data.result;
+async function createDevice(data: IDeviceCreate): Promise<ICreateDeviceResponse> {
+  const account = new Account({ token: store.token });
+  const result = await account.devices.create(data as DeviceCreateInfo);
+  return result;
 }
 
 export default createDevice;

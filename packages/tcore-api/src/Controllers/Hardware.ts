@@ -8,7 +8,7 @@ import APIController, { ISetupController, warm } from "./APIController";
  */
 class GetOSInfo extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
@@ -22,7 +22,7 @@ class GetOSInfo extends APIController<void, void, void> {
  */
 class GetNetworkInfo extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
@@ -36,7 +36,7 @@ class GetNetworkInfo extends APIController<void, void, void> {
  */
 class GetPlatformInfo extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
@@ -50,7 +50,7 @@ class GetPlatformInfo extends APIController<void, void, void> {
  */
 class GetUsageInfo extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {

@@ -1,7 +1,7 @@
 import { IDevice } from "@tago-io/tcore-sdk/types";
-import axios from "axios";
 import { useState } from "react";
 import { formatDataAmount } from "../../../../Helpers/formatDataAmount";
+import getDeviceDataAmount from "../../../../Requests/getDeviceDataAmount";
 import Icon from "../../../Icon/Icon";
 import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./ButtonDataAmount.style";
@@ -31,8 +31,8 @@ function ButtonDataAmount(props: IButtonDataAmountProps) {
   async function fetchAmount() {
     try {
       setLoading(true);
-      const response = await axios.get(`/device/${device.id}/data_amount`);
-      setValue(response.data?.result);
+      const response = await getDeviceDataAmount(device.id);
+      setValue(response);
     } finally {
       setLoading(false);
     }

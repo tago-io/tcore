@@ -16,7 +16,7 @@ const zQueryStringPath = z.object({
  */
 class GetFileList extends APIController<void, z.infer<typeof zQueryStringPath>, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zQueryStringPath,
   };
 

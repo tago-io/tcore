@@ -15,7 +15,7 @@ const zURLParamsID = z.object({
  */
 class GetLogChannelInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -30,7 +30,7 @@ class GetLogChannelInfo extends APIController<void, void, z.infer<typeof zURLPar
  */
 class ListLogChannels extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {

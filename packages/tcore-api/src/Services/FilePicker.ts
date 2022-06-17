@@ -27,6 +27,7 @@ export async function getFileList(folderPath: string, preferLocalFs?: boolean): 
   if (preferLocalFs) {
     const localFilesystem = getModuleList("filesystem")[0];
     const result = await localFilesystem.invoke("resolveFolder", folderPath);
+    sortFiles(result as IPluginFilesystemItem[]);
     return result as IPluginFilesystemItem[];
   } else {
     const result = await invokeFilesystemFunction("resolveFolder", folderPath);

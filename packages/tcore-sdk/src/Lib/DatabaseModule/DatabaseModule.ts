@@ -34,6 +34,13 @@ import {
   TGenericToken,
   TDeviceType,
   IDatabaseDeviceDataEdit,
+  IAccountToken,
+  IAccount,
+  IAccountList,
+  IDatabaseCreateAccountData,
+  IDatabaseAccountListQuery,
+  IDatabaseAccountCreateTokenData,
+  IDeviceToken,
 } from "../../Types";
 import TCoreModule from "../TCoreModule/TCoreModule";
 
@@ -328,6 +335,13 @@ class DatabaseModule extends TCoreModule {
   }
 
   /**
+   * Retrieves the token info of a particular uuid.
+   */
+  public async getDeviceToken(token: TGenericToken): Promise<IDeviceToken | null> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
    * Retrieves a list of actions.
    */
   public async getActionList(query: IDatabaseActionListQuery): Promise<IActionList> {
@@ -464,6 +478,62 @@ class DatabaseModule extends TCoreModule {
    * Retrieves all statistics from the last hour.
    */
   public async getHourlyStatistics(): Promise<IStatistic[]> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Generates and retrieves a new account token.
+   */
+  public async createAccountToken(accountID: TGenericID, data: IDatabaseAccountCreateTokenData): Promise<void> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Retrieves all the information of a single account.
+   */
+  public async getAccountInfo(id: string): Promise<IAccount | null> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Retrieves all the information of a single account via its token.
+   */
+  public async getAccountByToken(token: string): Promise<IAccount | null> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Retrieves all the information of a single account via its username.
+   */
+  public async getAccountByUsername(username: string): Promise<IAccount | null> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Creates a new account.
+   */
+  public async createAccount(data: IDatabaseCreateAccountData): Promise<void> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Retrieves a list of accounts.
+   */
+  public async getAccountList(query: IDatabaseAccountListQuery): Promise<IAccountList> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Retrieves the token info of a particular uuid.
+   */
+  public async getAccountToken(token: TGenericToken): Promise<IAccountToken | null> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Retrieves the amount of accounts registered.
+   */
+  public async getAccountAmount(): Promise<number> {
     throw new Error("Method not implemented");
   }
 }

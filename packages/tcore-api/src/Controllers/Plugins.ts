@@ -47,7 +47,7 @@ type IURLParamsID = z.infer<typeof zURLParamsID>;
  */
 class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQueryString>, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
     zQueryStringParser: zUninstallQueryString,
   };
@@ -63,7 +63,7 @@ class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQuery
  */
 class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zQueryStringType,
   };
 
@@ -85,7 +85,7 @@ class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, 
  */
 class ListPlugins extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
@@ -99,7 +99,7 @@ class ListPlugins extends APIController<void, void, void> {
  */
 class StartPluginModule extends APIController<void, void, any> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: z.any(),
   };
 
@@ -113,7 +113,7 @@ class StartPluginModule extends APIController<void, void, any> {
  */
 class StopPluginModule extends APIController<void, void, any> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: z.any(),
   };
 
@@ -127,7 +127,7 @@ class StopPluginModule extends APIController<void, void, any> {
  */
 class InstallPlugin extends APIController<any, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: z.any(),
   };
 
@@ -141,7 +141,7 @@ class InstallPlugin extends APIController<any, void, void> {
  */
 class EnablePlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -155,7 +155,7 @@ class EnablePlugin extends APIController<any, void, IURLParamsID> {
  */
 class DisablePlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -169,7 +169,7 @@ class DisablePlugin extends APIController<any, void, IURLParamsID> {
  */
 class StartPlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -183,7 +183,7 @@ class StartPlugin extends APIController<any, void, IURLParamsID> {
  */
 class StopPlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -197,7 +197,7 @@ class StopPlugin extends APIController<any, void, IURLParamsID> {
  */
 class EditPluginSettings extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
     zBodyParser: z.any(),
   };
@@ -225,7 +225,7 @@ class EditPluginSettings extends APIController<any, void, IURLParamsID> {
  */
 class GetPluginInfo extends APIController<void, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 

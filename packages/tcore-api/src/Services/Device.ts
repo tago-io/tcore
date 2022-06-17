@@ -19,6 +19,7 @@ import {
   zDeviceListQuery,
   zDeviceParameter,
   zDeviceParameterCreate,
+  zDeviceToken,
   zDeviceTokenCreate,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
@@ -33,6 +34,21 @@ export const validateDeviceID = async (deviceID: TGenericID): Promise<void> => {
     throw new Error("Invalid Device ID");
   }
 };
+
+/**
+ * Retrieves a device token.
+ */
+export async function getDeviceToken(token: string): Promise<IDeviceToken | null> {
+  if (!token) {
+    throw new Error("Invalid Device Token");
+  }
+  const tokenData = await invokeDatabaseFunction("getDeviceToken", token);
+  if (tokenData) {
+    const parsed = await zDeviceToken.parseAsync(tokenData);
+    return parsed;
+  }
+  return null;
+}
 
 /**
  * Deletes a device's param.

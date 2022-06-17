@@ -10,7 +10,7 @@ import APIController, { ISetupController, warm } from "./APIController";
  */
 class GetStatus extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "any", resource: "anonymous" }],
   };
 
   public async main() {
@@ -24,7 +24,7 @@ class GetStatus extends APIController<void, void, void> {
  */
 class GetChangelog extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "any", resource: "anonymous" }],
   };
 
   public async main() {

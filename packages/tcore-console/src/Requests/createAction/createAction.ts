@@ -1,12 +1,14 @@
+import { Account } from "@tago-io/sdk";
+import { ActionCreateInfo } from "@tago-io/sdk/out/modules/Account/actions.types";
 import { IActionCreate, TGenericID } from "@tago-io/tcore-sdk/types";
-import axios from "axios";
+import store from "../../System/Store";
 
 /**
  */
-async function createAction(action: Omit<IActionCreate, "id" | "created_at">): Promise<TGenericID> {
-  const response = await axios.post("/action", action);
-  const { data } = response;
-  return data.result;
+async function createAction(data: Omit<IActionCreate, "id" | "created_at">): Promise<TGenericID> {
+  const account = new Account({ token: store.token });
+  const result = await account.actions.create(data as ActionCreateInfo);
+  return result.action;
 }
 
 export default createAction;

@@ -18,6 +18,9 @@ import {
   zDeviceTokenListQuery,
   zPluginStorageItemSet,
   zDeviceDataUpdate,
+  zAccountTokenCreate,
+  zAccountCreate,
+  zAccountListQuery,
 } from "..";
 
 /**
@@ -114,3 +117,18 @@ export type IDatabaseCreateDeviceTokenData = Omit<z.infer<typeof zDeviceTokenCre
  * Type parameter of the `getTagKeys` function.
  */
 export type TDatabaseGetTagKeysType = "action" | "analysis" | "device";
+
+/**
+ * Data parameter of the `createAccountToken` function.
+ */
+export type IDatabaseAccountCreateTokenData = z.infer<typeof zAccountTokenCreate>;
+
+/**
+ * Data parameter of the `createAccount` function.
+ */
+export type IDatabaseCreateAccountData = z.infer<typeof zAccountCreate>;
+
+/**
+ * Data parameter of the `getAccountList` function.
+ */
+export type IDatabaseAccountListQuery = z.infer<typeof zAccountListQuery>;

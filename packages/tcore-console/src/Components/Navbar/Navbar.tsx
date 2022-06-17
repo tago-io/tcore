@@ -1,9 +1,13 @@
+import { useCallback } from "react";
+import { useHistory } from "react-router";
 import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { EIcon } from "../Icon/Icon.types";
 import Logo from "../../../assets/images/logo-black.svg";
 import { EButton } from "../Button/Button.types";
 import Link from "../Link/Link";
+import { setLocalStorage } from "../../Helpers/localStorage";
+import store from "../../System/Store";
 import * as Style from "./Navbar.style";
 
 /**
@@ -32,6 +36,17 @@ function Navbar(props: INavbarProps) {
   // const theme = useTheme();
   // const updateTheme = useContext(ThemeUpdateContext);
   const { logoWidth, onSidebarToggle } = props;
+  const history = useHistory();
+
+  /**
+   * Removes the account, token, and goes back to the /console/login route.
+   */
+  const signOut = useCallback(() => {
+    store.account = undefined;
+    store.token = "";
+    setLocalStorage("token", "");
+    history.push("/console/login");
+  }, [history]);
 
   return (
     <Style.Container logoWidth={logoWidth || 120} data-testid="navbar">
@@ -60,6 +75,10 @@ function Navbar(props: INavbarProps) {
             <Icon size="17px" icon={EIcon.scroll} />
           </Button>
         </Link>
+
+        <Button onClick={signOut} type={EButton.primary}>
+          <Icon size="17px" icon={EIcon["sign-out-alt"]} />
+        </Button>
       </Style.RightSection>
     </Style.Container>
   );

@@ -7,7 +7,7 @@ import APIController, { ISetupController, warm } from "./APIController";
  */
 class GetSummaryInfo extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
