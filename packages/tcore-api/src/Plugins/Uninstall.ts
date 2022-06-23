@@ -25,7 +25,7 @@ export async function uninstallPlugin(id: string, keepPluginData?: boolean) {
     // remove the folder from the plugin folder settings combined with the
     // current plugin id.
     const settings = await getMainSettings();
-    pluginFolder = path.join(settings.plugin_folder, id);
+    pluginFolder = path.join(settings.plugin_folder || "", id);
   }
 
   if (!pluginFolder) {
