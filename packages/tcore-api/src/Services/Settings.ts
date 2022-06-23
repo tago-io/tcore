@@ -2,9 +2,13 @@ import path from "path";
 import fs from "fs";
 import os from "os";
 import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
-import { getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
+import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
 import { plugins } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
+import { rmdir } from "../Helpers/Files";
+import { encryptAccountPassword } from "./Account/AccountPassword";
+import { terminateAllPlugins } from "./Plugins";
+import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
 
 /**
  * Folder name to save the settings.
@@ -50,6 +54,7 @@ export async function getMainSettings(): Promise<ISettings> {
   const settings_folder = process.env.TCORE_SETTINGS_FOLDER || folder;
   const plugin_folder = process.env.TCORE_PLUGIN_FOLDER || data.plugin_folder || (await getPluginsFolder());
   const port = process.env.TCORE_PORT || data.port || "8888";
+  const master_password = data.master_password || "";
 
   const settings: ISettings = {
     filesystem_plugin,
@@ -57,13 +62,23 @@ export async function getMainSettings(): Promise<ISettings> {
     plugin_folder,
     port,
     settings_folder,
+    master_password,
   };
 
-  if (!fs.existsSync(settings.plugin_folder)) {
-    fs.promises.mkdir(settings.plugin_folder, { recursive: true });
+  if (!fs.existsSync(settings.plugin_folder || "")) {
+    fs.promises.mkdir(settings.plugin_folder || "", { recursive: true });
   }
 
   return settings;
+}
+
+/**
+ * Terminate all non-built in plugins and removes the settings folder.
+ */
+export async function doFactoryReset(): Promise<void> {
+  const folder = await getMainSettingsFolder();
+  await terminateAllPlugins();
+  await rmdir(folder);
 }
 
 /**
@@ -75,6 +90,15 @@ export async function setMainSettings(data: ISettings): Promise<void> {
 }
 
 /**
+ * Sets the master password.
+ */
+export async function setMasterPassword(password: string): Promise<void> {
+  const settings = await getMainSettings();
+  settings.master_password = await encryptAccountPassword(password);
+  await setMainSettings(settings);
+}
+
+/**
  * Retrieves the settings of a plugin.
  */
 export async function getPluginSettings(id: string): Promise<IPluginSettings> {
@@ -82,12 +106,12 @@ export async function getPluginSettings(id: string): Promise<IPluginSettings> {
   const filePath = path.join(root, "settings.yml");
   const fileData = (await loadYml(filePath, {})) as IPluginSettings;
 
-  if (Array.isArray(fileData)) {
-    // structure before 0.3.2
-    return {
-      disabled: false,
-      modules: fileData.map((x) => ({ id: x.setupID, values: x.configValues })),
-    };
+  for (const item of fileData.modules || []) {
+    for (const key in item.values) {
+      if (item.values[key]?.type === "password") {
+        item.values[key] = decryptPluginConfigPassword(item.values[key].value);
+      }
+    }
   }
 
   return fileData;
@@ -103,6 +127,18 @@ export async function setPluginModulesSettings(id: string, values: any) {
   const modules: IPluginSettingsModule[] = [];
 
   for (const item of values) {
+    const module = plugin?.modules?.get(item.moduleID);
+    const configs = flattenConfigFields(module?.setup.configs || []);
+    const field = configs.find((x) => "field" in x && x.field === item.field);
+    const isPassword = field?.type === "password";
+
+    if (isPassword) {
+      item.value = {
+        type: "password",
+        value: encryptPluginConfigPassword(item.value),
+      };
+    }
+
     const group = modules.find((x) => x.id === item.moduleID);
     if (group) {
       group.values[item.field] = item.value;

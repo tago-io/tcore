@@ -10,6 +10,7 @@ import M from "../Module/Module";
 import Validator from "../Validator/Validator";
 import Worker from "../Worker/Worker";
 import { generatePluginID } from "../PluginID";
+import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS } from "../Host";
 
 /**
  */
@@ -17,6 +18,7 @@ class Plugin {
   public package: any;
   public permissions: string[];
   public types: TPluginType[];
+  public builtIn: boolean = false;
 
   public readonly version: string;
   public readonly id: string;
@@ -59,6 +61,8 @@ class Plugin {
     this.publisher = this.package.tcore.publisher;
     this.tcoreName = this.package.tcore.name;
     this.version = this.package.version;
+
+    this.builtIn = HIDDEN_BUILT_IN_PLUGINS.includes(folder) || BUILT_IN_PLUGINS.includes(folder);
 
     this.loadFullDescription();
   }

@@ -1,7 +1,12 @@
 import { ISettings, zSettings } from "@tago-io/tcore-sdk/types";
 import { Application } from "express";
-import { getMainSettings, setMainSettings } from "../Services/Settings";
+import { z } from "zod";
+import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings";
 import APIController, { ISetupController, warm } from "./APIController";
+
+const zPassword = z.object({
+  password: z.string().nonempty(),
+});
 
 /**
  * Edits the settings.
@@ -13,7 +18,56 @@ class EditSettings extends APIController<ISettings, void, void> {
   };
 
   public async main() {
-    await setMainSettings(this.bodyParams);
+    delete this.bodyParams.master_password;
+    const settings = await getMainSettings();
+    const data = { ...settings, ...this.bodyParams };
+    await setMainSettings(data);
+  }
+}
+
+/**
+ * Sets the master password.
+ */
+class SetMasterPassword extends APIController<z.infer<typeof zPassword>, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "any", resource: "anonymous" }],
+    zBodyParser: zPassword,
+  };
+
+  public async main() {
+    const settings = await getMainSettings();
+    if (settings.master_password) {
+      throw new Error("Master password is already set");
+    }
+    await setMasterPassword(this.bodyParams.password);
+  }
+}
+
+/**
+ * Checks to see if the master password is valid or not.
+ */
+class CheckMasterPassword extends APIController<any, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+    zBodyParser: z.any(),
+  };
+
+  public async main() {
+    this.body = true;
+  }
+}
+
+/**
+ * Performs a factory reset.
+ */
+class DoFactoryReset extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+  };
+
+  public async main() {
+    await doFactoryReset();
+    this.body = "Factory reset was successful";
   }
 }
 
@@ -44,4 +98,7 @@ class GetSettingsInfo extends APIController<void, void, void> {
 export default (app: Application) => {
   app.put("/settings", warm(EditSettings));
   app.get("/settings", warm(GetSettingsInfo));
+  app.post("/check-master-password", warm(CheckMasterPassword));
+  app.post("/settings/master/password", warm(SetMasterPassword));
+  app.post("/settings/reset", warm(DoFactoryReset));
 };

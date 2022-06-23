@@ -2,7 +2,7 @@ import path from "path";
 import { Request, Response, Application } from "express";
 import { z } from "zod";
 import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
-import { setPluginModulesSettings } from "../Services/Settings";
+import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
 import { plugins } from "../Plugins/Host";
 import {
   getPluginInfo,
@@ -14,6 +14,7 @@ import {
   disablePlugin,
   startPlugin,
   stopPlugin,
+  reloadPlugin,
 } from "../Services/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
@@ -132,7 +133,8 @@ class InstallPlugin extends APIController<any, void, void> {
   };
 
   public async main() {
-    await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
+    const response = await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
+    this.body = response;
   }
 }
 
@@ -221,6 +223,20 @@ class EditPluginSettings extends APIController<any, void, IURLParamsID> {
 }
 
 /**
+ */
+class ReloadPlugin extends APIController<void, void, IURLParamsID> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    const response = await reloadPlugin(this.urlParams.id);
+    this.body = response;
+  }
+}
+
+/**
  * Lists all the plugins.
  */
 class GetPluginInfo extends APIController<void, void, IURLParamsID> {
@@ -231,6 +247,22 @@ class GetPluginInfo extends APIController<void, void, IURLParamsID> {
 
   public async main() {
     const response = await getPluginInfo(this.urlParams.id);
+    this.body = response;
+  }
+}
+
+/**
+ * Gets the info of the main database plugin (if it is set).
+ */
+class GetDatabasePluginInfo extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+  };
+
+  public async main() {
+    const settings = await getMainSettings();
+    const pluginID = String(settings.database_plugin).split(":")[0];
+    const response = await getPluginInfo(pluginID);
     this.body = response;
   }
 }
@@ -289,7 +321,9 @@ export default (app: Application) => {
   app.get("/module", warm(ListModules));
   app.get("/plugin-uninstall/:id", warm(UninstallPlugin));
   app.get("/plugin", warm(ListPlugins));
+  app.get("/plugin/database", warm(GetDatabasePluginInfo));
   app.get("/plugin/:id", warm(GetPluginInfo));
+  app.post("/plugin/:id/reload", warm(ReloadPlugin));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));
   app.post("/plugin/:pluginID/:moduleID/stop", warm(StopPluginModule));
   app.post("/install-plugin", warm(InstallPlugin));

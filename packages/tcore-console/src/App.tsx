@@ -34,6 +34,8 @@ import PageIFrame from "./Components/PageIframe/PageIFrame";
 import Login from "./Components/Login/Login";
 import { getLocalStorage, setLocalStorage } from "./Helpers/localStorage";
 import getAccountByToken from "./Requests/getAccountByToken";
+import Setup from "./Components/Setup/Setup";
+import StepDatabaseError from "./Components/Setup/StepDatabaseError/StepDatabaseError";
 
 /**
  * Main component of the application.
@@ -62,7 +64,7 @@ function App() {
  * Wrapper that does all the authentication logic.
  */
 const StoreWrapper = observer(() => {
-  const { data: status } = useApiRequest<any>("/status", { skip: !store.token });
+  const { data: status } = useApiRequest<any>("/status");
   const { data: plugins } = useApiRequest<IPluginList>("/plugin", { skip: !store.token });
   const [readyToRender, setReadyToRender] = useState(false);
   const [token] = useState(() => getLocalStorage("token", ""));
@@ -107,18 +109,29 @@ const StoreWrapper = observer(() => {
    */
   useEffect(() => {
     if (status) {
+      if (status.database?.error) {
+        // database has error
+        setReadyToRender(true);
+        history.push("/console/database/error");
+      } else if (!status.account || !status.database?.configured || !status.master_password) {
+        // not configured, go to setup
+        setReadyToRender(true);
+        history.push("/console/setup");
+      } else {
+        // configured, validate token
+        validateAuth();
+      }
+
       runInAction(() => {
         store.version = status.version;
+        store.databaseConfigured = status.database.configured;
+        store.databaseError = status.database.error;
+        store.masterPasswordConfigured = status.master_password;
+        store.accountConfigured = status.account;
       });
     }
-  }, [status]);
-
-  /**
-   */
-  useEffect(() => {
-    validateAuth();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+  }, [status]);
 
   if (!readyToRender) {
     return null;
@@ -126,6 +139,8 @@ const StoreWrapper = observer(() => {
 
   return (
     <Switch>
+      <Route exact path="/console/database/error" component={StepDatabaseError} />
+      <Route exact path="/console/setup" component={Setup} />
       <Route exact path="/console/login" component={Login} />
       <Route path="/console" component={MainScreenWrapper} />
       <Route component={() => null} />

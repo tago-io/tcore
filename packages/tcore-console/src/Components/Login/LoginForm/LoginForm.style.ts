@@ -12,6 +12,7 @@ const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   min-height: 560px;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
 
   h1 {
     font-size: 30px;

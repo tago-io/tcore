@@ -1,12 +1,18 @@
 import { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
+import { observer } from "mobx-react";
+import { useState } from "react";
+import { Button, EButton } from "../../../..";
 import useApiRequest from "../../../../Helpers/useApiRequest";
+import store from "../../../../System/Store";
 import Col from "../../../Col/Col";
 import FileSelect from "../../../FileSelect/FileSelect";
 import FormDivision from "../../../FormDivision/FormDivision";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
 import Input from "../../../Input/Input";
+import ModalFactoryReset from "../../../Plugins/Common/ModalFactoryReset/ModalFactoryReset";
+import ModalMasterPassword from "../../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
 import Row from "../../../Row/Row";
 import Select, { ISelectOption } from "../../../Select/Select";
 
@@ -35,6 +41,7 @@ interface IGeneralInformationTabProps {
  * The settings' `General Information` tab.
  */
 function GeneralInformationTab(props: IGeneralInformationTabProps) {
+  const [resetting, setResetting] = useState(false);
   const { data: databaseList } = useApiRequest<any[]>("/module?type=database");
   const { data: filesystemList } = useApiRequest<any[]>("/module?type=filesystem");
   const { data, metadata, errors } = props;
@@ -108,7 +115,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
               onChange={(e) => props.onChange("plugin_folder", e)}
               onlyFolders
               placeholder="e.g. /users/tcore-plugins"
-              value={data.plugin_folder}
+              value={data.plugin_folder || ""}
               disabled={metadata?.plugin_folder_disabled}
               useLocalFs
             />
@@ -119,15 +126,24 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
             icon={EIcon.database}
             label="Database plugin"
           >
-            <Select
-              onChange={(e) => props.onChange("database_plugin", e.target.value)}
-              placeholder="Select the default database plugin"
-              value={data.database_plugin}
-              error={errors?.database_plugin}
-              errorMessage="This field is required"
-              options={getDatabaseOptions()}
-              disabled={metadata?.database_plugin_disabled}
-            />
+            <div style={{ display: "flex", flex: 1 }}>
+              <Select
+                onChange={(e) => props.onChange("database_plugin", e.target.value)}
+                placeholder="Select the default database plugin"
+                value={data.database_plugin}
+                error={errors?.database_plugin}
+                errorMessage="This field is required"
+                options={getDatabaseOptions()}
+                disabled
+              />
+              <Button
+                onClick={() => setResetting(true)}
+                type={EButton.primary}
+                style={{ flex: "none", marginLeft: "10px" }}
+              >
+                Factory reset
+              </Button>
+            </div>
           </FormGroup>
 
           <FormGroup
@@ -146,8 +162,16 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
           </FormGroup>
         </Col>
       </Row>
+
+      {resetting && store.masterPassword && (
+        <ModalFactoryReset onClose={() => setResetting(false)} />
+      )}
+
+      {resetting && !store.masterPassword && (
+        <ModalMasterPassword onClose={() => setResetting(false)} />
+      )}
     </div>
   );
 }
 
-export default GeneralInformationTab;
+export default observer(GeneralInformationTab);

@@ -462,6 +462,8 @@ export const zPlugin = z.object({
   modules: z.array(zPluginModule),
   version: z.string(),
   error: z.string().nullish(),
+  allow_disable: z.boolean().nullish(),
+  allow_uninstall: z.boolean().nullish(),
 });
 
 /**
@@ -516,6 +518,8 @@ const zPluginListItem = z.object({
   }),
   error: z.boolean().nullish(),
   hidden: z.boolean().nullish(),
+  allow_disable: z.boolean().nullish(),
+  allow_uninstall: z.boolean().nullish(),
   id: z.string(),
   name: z.string(),
   version: z.string(),

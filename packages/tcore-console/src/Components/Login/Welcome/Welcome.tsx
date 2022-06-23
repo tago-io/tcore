@@ -25,20 +25,6 @@ function Welcome() {
         <Icon icon={EIcon.lightbulb} />
         Tip: {tip}
       </section>
-
-      {/* <div className="trusted-by">
-        <div className="msg">
-          <div />
-          <span>Trusted by</span>
-          <div />
-        </div>
-
-        <div className="logos">
-          <B />
-          <C />
-          <D />
-        </div>
-      </div> */}
     </Style.Container>
   );
 }

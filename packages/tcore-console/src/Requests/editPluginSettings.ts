@@ -5,7 +5,8 @@ import store from "../System/Store";
 /**
  */
 async function editPluginSettings(id: TGenericID, data: any) {
-  await axios.put(`/plugin/${id}`, data, { headers: { token: store.token } });
+  const headers = { token: store.token, masterPassword: store.masterPassword };
+  await axios.put(`/plugin/${id}`, data, { headers });
 }
 
 export default editPluginSettings;

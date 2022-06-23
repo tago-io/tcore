@@ -4,8 +4,9 @@ import store from "../System/Store";
 
 /**
  */
-async function editSettings(data: ISettings): Promise<void> {
-  await axios.put("/settings", data, { headers: { token: store.token } });
+async function editSettings(data: Partial<ISettings>): Promise<void> {
+  const headers = { token: store.token, masterPassword: store.masterPassword };
+  await axios.put("/settings", data, { headers });
 }
 
 export default editSettings;

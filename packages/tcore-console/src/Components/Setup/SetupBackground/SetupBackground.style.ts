@@ -1,21 +1,14 @@
 import styled from "styled-components";
 
-const Container = styled.div<any>`
+const BUILDING_BLOCK_COLOR = "rgb(230, 230, 230)";
+
+const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
   max-width: 100%;
-  background: rgb(15, 15, 15);
+  background: rgb(240, 240, 240);
   position: fixed;
-
-  .gradient {
-    position: fixed;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    width: 800px;
-    background: linear-gradient(to left, black, black, transparent);
-  }
 
   .inner {
     display: flex;
@@ -23,7 +16,6 @@ const Container = styled.div<any>`
     width: 1650px;
     margin-left: -150px;
     margin-top: -110px;
-    /* background: blue; */
   }
 
   .row {
@@ -39,46 +31,42 @@ const Container = styled.div<any>`
     flex-direction: column;
     flex: none;
   }
+
+  i svg {
+    fill: black;
+    opacity: 0.04;
+  }
 `;
 
 const Device = styled.div`
   width: 600px;
   height: 600px;
-  background: linear-gradient(black, transparent);
+  background: ${() => `linear-gradient(${BUILDING_BLOCK_COLOR}, transparent)`};
   opacity: 0.8;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 20px;
-
-  i svg {
-    fill: white;
-    opacity: 0.04;
-  }
 `;
 
 const Small = styled.div`
   width: 150px;
   height: 150px;
-  background: linear-gradient(transparent, black);
+  background: ${() => `linear-gradient(transparent, ${BUILDING_BLOCK_COLOR})`};
   opacity: 0.8;
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-left: 20px;
-
-  i svg {
-    fill: white;
-    opacity: 0.04;
-  }
 `;
 
-const Bucket = styled.div`
+const Bucket2 = styled.div`
   width: 1000px;
   height: 1000px;
-  background: linear-gradient(black, black, transparent);
+  background: ${() =>
+    `linear-gradient(${BUILDING_BLOCK_COLOR}, ${BUILDING_BLOCK_COLOR}, transparent)`};
   opacity: 0.8;
   border-radius: 20px;
   display: flex;
@@ -86,11 +74,14 @@ const Bucket = styled.div`
   justify-content: center;
   margin-left: 20px;
   flex: none;
-
-  i svg {
-    fill: white;
-    opacity: 0.04;
-  }
 `;
 
-export { Bucket, Small, Container, Device };
+const Bucket1 = styled(Bucket2)`
+  position: absolute;
+  transform: translateY(-100%);
+  top: -20px;
+  background: ${() =>
+    `linear-gradient(transparent, ${BUILDING_BLOCK_COLOR}, ${BUILDING_BLOCK_COLOR})`};
+`;
+
+export { Bucket1, Bucket2, Small, Container, Device };

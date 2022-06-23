@@ -7,6 +7,11 @@ interface IStore {
   version: string;
   account?: IAccount;
   token: string;
+  masterPasswordConfigured?: boolean;
+  accountConfigured?: boolean;
+  databaseConfigured?: boolean;
+  databaseError?: boolean;
+  masterPassword: string;
 }
 
 const store: IStore = {
@@ -15,6 +20,11 @@ const store: IStore = {
   version: "",
   account: undefined,
   token: "",
+  masterPasswordConfigured: false,
+  accountConfigured: false,
+  databaseConfigured: false,
+  databaseError: false,
+  masterPassword: "",
 };
 
 makeObservable(store, {
@@ -23,6 +33,11 @@ makeObservable(store, {
   version: observable,
   account: observable,
   token: observable,
+  masterPasswordConfigured: observable,
+  accountConfigured: observable,
+  databaseConfigured: observable,
+  databaseError: observable,
+  masterPassword: observable,
 });
 
 export default store;

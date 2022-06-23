@@ -1,8 +1,20 @@
-import { IAccountTokenCreate, IAccountListQuery, zAccount, IAccount, zAccountTokenCreate, zAccountList, IAccountList,
-  IAccountCreate, zAccountCreate, TGenericID, IAccountToken, zAccountToken } from "@tago-io/tcore-sdk/types";
+import {
+  IAccountTokenCreate,
+  IAccountListQuery,
+  zAccount,
+  IAccount,
+  zAccountTokenCreate,
+  zAccountList,
+  IAccountList,
+  IAccountCreate,
+  zAccountCreate,
+  TGenericID,
+  IAccountToken,
+  zAccountToken,
+} from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { comparePasswordHash, genPasswordHash } from "./PasswordCrypto";
+import { compareAccountPasswordHash, encryptAccountPassword } from "./AccountPassword";
 
 /**
  * Logs into account and returns a token.
@@ -13,7 +25,7 @@ export async function login(username: string, password: string) {
     throw new Error("Invalid credentials");
   }
 
-  const passwordMatches = await comparePasswordHash(password, account.password);
+  const passwordMatches = await compareAccountPasswordHash(password, account.password);
   if (!passwordMatches) {
     if (account.password_hint) {
       throw new Error(`Invalid password. Your password hint is: ${account.password_hint}`);
@@ -43,12 +55,12 @@ export async function getAccountByUsername(username: string): Promise<IAccount |
  */
 export async function createAccount(data: IAccountCreate) {
   const exists = await getAccountByUsername(data.username);
-  if (!!exists) {
+  if (exists) {
     throw new Error("Username already exists");
   }
 
   const parsed = await zAccountCreate.parseAsync(data);
-  parsed.password = await genPasswordHash(parsed.password);
+  parsed.password = await encryptAccountPassword(parsed.password);
 
   await invokeDatabaseFunction("createAccount", parsed);
 

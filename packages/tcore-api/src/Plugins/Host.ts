@@ -9,12 +9,12 @@ import { getPluginPackageJSON } from "./PluginPackage";
 /**
  * List of plugins paths that are built-in but do not show up in the sidebar.
  */
-export const HIDDEN_BUILT_IN_PLUGINS = [path.join(__dirname, "../../../tcore-plugin-filesystem-local")];
+export const HIDDEN_BUILT_IN_PLUGINS: string[] = [path.join(__dirname, "../../../tcore-plugin-filesystem-local")];
 
 /**
  * List of plugins paths that are built-in as soon as tcore boots up.
  */
-export const BUILT_IN_PLUGINS = [];
+export const BUILT_IN_PLUGINS: string[] = [];
 
 /**
  * Map containing the a key with the name of a plugin and the value

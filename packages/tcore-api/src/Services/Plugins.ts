@@ -2,10 +2,12 @@ import fs from "fs";
 import path from "path";
 import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
+import semver from "semver";
 import Module from "../Plugins/Module/Module";
 import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "./Settings";
+import { getVersion } from "./System";
 
 /**
  * Filters and maps the button modules for the plugin list.
@@ -30,7 +32,10 @@ function mapButtonModules(modules: Module[], type: TPluginType) {
  */
 export async function getLoadedPluginList(): Promise<IPluginList> {
   const folders = await listPluginFolders();
+  const settings = await getMainSettings();
   const result: IPluginList = [];
+
+  const dbPluginID = String(settings.database_plugin).split(":")[0];
 
   for (const folder of folders) {
     const pkg = await Plugin.getPackage(folder);
@@ -40,12 +45,17 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
 
     const error = !!plugin?.error || modules.some((x) => x.error);
 
+    const allow_disable = dbPluginID !== id;
+    const allow_uninstall = dbPluginID !== id;
+
     const object: IPluginListItem = {
       buttons: {
         navbar: mapButtonModules(modules, "navbar-button"),
         sidebar: mapButtonModules(modules, "sidebar-button"),
         sidebarFooter: mapButtonModules(modules, "sidebar-footer-button"),
       },
+      allow_disable,
+      allow_uninstall,
       error: error,
       hidden: HIDDEN_BUILT_IN_PLUGINS.includes(folder),
       id: Plugin.generatePluginID(pkg.name),
@@ -116,6 +126,27 @@ export async function getPluginList(): Promise<any> {
   return result;
 }
 
+/**
+ * Indicates if there is at least one COMPATIBLE database plugin installed.
+ */
+export async function hasDBPluginInstalled(): Promise<boolean> {
+  const folders = await listPluginFolders();
+
+  for (const folder of folders) {
+    const pkg = await Plugin.getPackageAsync(folder).catch(() => null);
+    if (pkg) {
+      const pluginEngineVersion = pkg?.engines?.tcore || "*";
+      const isDatabase = pkg?.tcore?.types?.includes("database");
+      const compatible = semver.satisfies(getVersion(), pluginEngineVersion);
+      if (isDatabase && compatible) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 export async function showModuleMessage(pluginID: string, moduleID: string, message?: any) {
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);
@@ -142,6 +173,23 @@ export async function startPluginModule(pluginID: string, moduleID: string) {
   const module = plugin?.modules.get(moduleID);
   if (module) {
     await module.start();
+  }
+}
+
+/**
+ */
+export async function reloadPlugin(id: string) {
+  const plugin = plugins.get(id);
+
+  if (plugin) {
+    if (plugin.state !== "started") {
+      await plugin.start();
+    }
+
+    const modules = [...plugin.modules.values()];
+    for (const mod of modules) {
+      await startPluginModule(id, mod.id);
+    }
   }
 }
 
@@ -205,6 +253,7 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     throw new Error("Invalid Plugin ID");
   }
 
+  const mainSettings = await getMainSettings();
   const settings = await getPluginSettings(id);
 
   const modules = [...plugin.modules.values()].map((module) => {
@@ -232,6 +281,10 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     };
   });
 
+  const dbPluginID = String(mainSettings.database_plugin).split(":")[0];
+  const allow_disable = dbPluginID !== id;
+  const allow_uninstall = dbPluginID !== id;
+
   const data: IPlugin = {
     id: plugin.id,
     error: plugin.error,
@@ -245,6 +298,8 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     },
     modules,
     version: plugin.version,
+    allow_disable,
+    allow_uninstall,
   };
 
   return data;
@@ -270,7 +325,7 @@ export async function getMainDatabaseModule(): Promise<Module | undefined> {
   }
 
   const modules = getModuleList("database");
-  return modules.find((x) => x.state === "started");
+  return modules[0];
 }
 
 /**
@@ -319,5 +374,33 @@ export function triggerHooks(event: string, ...args: any[]) {
   const hooks = getModuleList("hook");
   for (const mod of hooks) {
     mod.invoke(event, ...args);
+  }
+}
+
+/**
+ * Terminates all running plugins.
+ */
+export async function terminateAllPlugins(ignoreBuiltIns = true) {
+  const result: Plugin[] = [];
+
+  for (const plugin of plugins.values()) {
+    if (plugin.types.includes("database")) {
+      result.unshift(plugin);
+    } else {
+      result.push(plugin);
+    }
+  }
+
+  for (const plugin of result) {
+    if (ignoreBuiltIns && plugin.builtIn) {
+      continue;
+    }
+
+    // eslint-disable-next-line no-async-promise-executor
+    await new Promise<void>(async (resolve) => {
+      await plugin.stop(false, 3000).catch(() => null);
+      plugins.delete(plugin.id);
+      resolve();
+    });
   }
 }

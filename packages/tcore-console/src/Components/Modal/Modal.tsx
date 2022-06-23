@@ -107,7 +107,9 @@ function Modal(props: IModalProps) {
           setShouldClose(true);
         }
       } finally {
-        setButtonsDisabled(false);
+        if (!e.defaultPrevented) {
+          setButtonsDisabled(false);
+        }
       }
     },
     [onConfirm]

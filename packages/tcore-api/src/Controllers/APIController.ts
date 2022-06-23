@@ -1,9 +1,11 @@
 import { IncomingHttpHeaders } from "http";
 import express, { Request, Response } from "express";
 import { ZodTypeAny } from "zod";
+import { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
 import { getDeviceByToken, getDeviceToken } from "../Services/Device";
 import { getAccountToken } from "../Services/Account/Account";
-import { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
+import { getMainSettings } from "../Services/Settings";
+import { compareAccountPasswordHash } from "../Services/Account/AccountPassword";
 
 type TResourceType = "device" | "account";
 type TPermission = "full" | "write" | "read";
@@ -18,11 +20,16 @@ interface ISetupTokenAnonymous {
   permission: "any";
 }
 
+interface ISetupMasterPassword {
+  resource: "master-password";
+  permission: "any";
+}
+
 interface ISetupController {
   zBodyParser?: ZodTypeAny;
   zQueryStringParser?: ZodTypeAny;
   zURLParamsParser?: ZodTypeAny;
-  allowTokens: (ISetupToken | ISetupTokenAnonymous)[];
+  allowTokens: (ISetupToken | ISetupTokenAnonymous | ISetupMasterPassword)[];
 }
 
 /**
@@ -98,9 +105,9 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
    */
   private async init() {
     try {
-      await this.resolveToken();
+      await this.resolveAuth();
     } catch (ex: any) {
-      this.body = String(ex.message);
+      this.body = ex?.message || undefined;
       this.res.statusCode = 401;
       this.res.json({ status: false, result: this.body });
       return;
@@ -167,9 +174,9 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
   /**
    * Validates and resolves account and device tokens.
    */
-  private async resolveToken() {
-    let accountToken : IAccountToken | null = null;
-    let deviceToken  : IDeviceToken | null = null;
+  private async resolveAuth() {
+    let accountToken: IAccountToken | null = null;
+    let deviceToken: IDeviceToken | null = null;
 
     const containAnonymousToken = this.setup.allowTokens.some((x) => x.resource === "anonymous");
     if (containAnonymousToken) {
@@ -185,6 +192,16 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
         if (accountToken?.permission === "full" || accountToken?.permission === allowed.permission) {
           // valid permission
           return;
+        }
+        if (this.req.headers.masterpassword) {
+          const settings = await getMainSettings();
+          const matches = await compareAccountPasswordHash(
+            this.req.headers.masterpassword as string,
+            settings.master_password || ""
+          );
+          if (matches) {
+            return;
+          }
         }
       }
       if (allowed.resource === "device") {

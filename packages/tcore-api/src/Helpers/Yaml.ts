@@ -8,6 +8,7 @@ import yaml from "js-yaml";
 export async function saveYml(json: any, filePath: string): Promise<void> {
   try {
     const file = yaml.dump(json);
+
     const folder = path.join(filePath, "..");
     await fs.mkdir(folder, { recursive: true });
     await fs.writeFile(filePath, file);

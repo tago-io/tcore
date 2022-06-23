@@ -18,7 +18,7 @@ interface IModalInstallPlugin {
   /**
    * Called when the modal is closed.
    */
-  onClose: () => void;
+  onClose: (pluginData: any) => void;
   /**
    * The file path for the plugin that will be installed.
    */
@@ -35,9 +35,10 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [pluginData, setPluginData] = useState<any>(null);
   const [progress, setProgress] = useState(0);
   const theme = useTheme();
-  const { source } = props;
+  const { source, onClose } = props;
 
   /**
    * Sends the install request to the back-end.
@@ -45,7 +46,8 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
   const sendInstallRequest = useCallback(async () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
     try {
-      await installPlugin(source);
+      const data = await installPlugin(source);
+      setPluginData(data);
       setProgress(100); // just to make sure it shows the bar complete
     } catch (e) {
       setError(true);
@@ -62,7 +64,7 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
   const confirm = async (e: MouseEvent) => {
     setButtonDisabled(true);
     e.preventDefault();
-    window.location.reload();
+    onClose(pluginData);
   };
 
   /**
@@ -119,7 +121,9 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
     <Modal
       color={theme.buttonPrimary}
       icon={EIcon["puzzle-piece"]}
-      onClose={() => window.location.reload()}
+      onClose={() => {
+        /**/
+      }}
       onConfirm={confirm}
       confirmButtonText="Close"
       title="Installing Plugin"

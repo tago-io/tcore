@@ -86,7 +86,9 @@ function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
         filterWithTags.tags = tagValues.current;
       }
 
-      const usingFilter = Object.keys(filterWithTags).some((x) => filterWithTags[x] !== undefined && filterWithTags[x] !== "");
+      const usingFilter = Object.keys(filterWithTags).some(
+        (x) => filterWithTags[x] !== undefined && filterWithTags[x] !== ""
+      );
       const data = await onGetData(pg + 1, idealAmountOfRows, filterWithTags);
 
       setAmountOfRecords(data.length);

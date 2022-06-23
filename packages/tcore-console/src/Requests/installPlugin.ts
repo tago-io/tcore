@@ -3,8 +3,8 @@ import store from "../System/Store";
 
 /**
  */
-async function installPlugin(source: string): Promise<void> {
-  const headers = { token: store.token };
+async function installPlugin(source: string): Promise<any> {
+  const headers = { token: store.token, masterPassword: store.masterPassword };
   const response = await axios.post("/install-plugin", { source }, { headers });
   const { data } = response;
   return data.result;
