@@ -151,6 +151,15 @@ function StepDatabaseError() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [action, store.masterPassword]);
 
+  /**
+   * Cleans up the master password after the screen ends.
+   */
+  useEffect(() => {
+    return () => {
+      store.masterPassword = "";
+    };
+  }, []);
+
   return (
     <>
       <SetupBackground />

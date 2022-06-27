@@ -7,6 +7,13 @@ export const Content = styled.div`
   flex-direction: column;
   height: 100%;
 
+  > .info {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    width: 500px;
+    text-align: center;
+  }
+
   > div {
     width: 430px;
   }

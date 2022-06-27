@@ -1,6 +1,6 @@
 import axios from "axios";
 import { observer } from "mobx-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { EButton, EIcon, FormGroup, Input } from "../../..";
 import store from "../../../System/Store";
 import ErrorMessage from "../../ErrorMessage/ErrorMessage";
@@ -76,6 +76,15 @@ function StepSignUp(props: any) {
         setLoading(false);
       });
   }, [validateSignUp, onNext, data]);
+
+  /**
+   * Cleans up the master password after the screen ends.
+   */
+  useEffect(() => {
+    return () => {
+      store.masterPassword = "";
+    };
+  }, []);
 
   return (
     <>

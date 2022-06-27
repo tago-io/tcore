@@ -1,10 +1,12 @@
 import axios, { AxiosError } from "axios";
 import useSWR from "swr";
+import store from "../System/Store";
 import { getLocalStorage } from "./localStorage";
 
 const fetcher = async (url: string) => {
   const token = getLocalStorage("token", "") as string;
-  const headers = { token };
+  const masterPassword = store.masterPassword;
+  const headers = { token, masterPassword };
   return axios.get(url, { headers }).then((r) => r.data);
 };
 

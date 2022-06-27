@@ -107,7 +107,7 @@ function Modal(props: IModalProps) {
           setShouldClose(true);
         }
       } finally {
-        if (!e.defaultPrevented) {
+        if (e.defaultPrevented) {
           setButtonsDisabled(false);
         }
       }

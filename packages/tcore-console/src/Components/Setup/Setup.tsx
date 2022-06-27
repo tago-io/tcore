@@ -80,7 +80,16 @@ function Setup() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!readyToRender) {
+  /**
+   */
+  useEffect(() => {
+    if (!SetupComponent) {
+      history.push("/console");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [SetupComponent]);
+
+  if (!readyToRender || !SetupComponent) {
     return null;
   }
 

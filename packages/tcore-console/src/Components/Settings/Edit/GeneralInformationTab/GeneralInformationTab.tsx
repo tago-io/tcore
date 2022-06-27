@@ -2,7 +2,7 @@ import { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
 import { observer } from "mobx-react";
 import { useState } from "react";
-import { Button, EButton } from "../../../..";
+import { Button, EButton, Icon } from "../../../..";
 import useApiRequest from "../../../../Helpers/useApiRequest";
 import store from "../../../../System/Store";
 import Col from "../../../Col/Col";
@@ -15,6 +15,7 @@ import ModalFactoryReset from "../../../Plugins/Common/ModalFactoryReset/ModalFa
 import ModalMasterPassword from "../../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
 import Row from "../../../Row/Row";
 import Select, { ISelectOption } from "../../../Select/Select";
+import * as Style from "./GeneralInformationTab.style";
 
 /**
  * Props.
@@ -99,6 +100,26 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
               value={data.port || ""}
             />
           </FormGroup>
+
+          <fieldset>
+            <legend>
+              <Icon icon={EIcon["exclamation-triangle"]} />
+              <span>Danger zone</span>
+            </legend>
+
+            <FormGroup>
+              <Style.DangerZone>
+                <div className="info">
+                  <b>Perform a factory reset</b>
+                  <span>A Factory reset will remove settings, plugins, and plugin files.</span>
+                </div>
+
+                <Button onClick={() => setResetting(true)} type={EButton.danger}>
+                  Factory reset
+                </Button>
+              </Style.DangerZone>
+            </FormGroup>
+          </fieldset>
         </Col>
 
         <Col size="6">
@@ -126,24 +147,15 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
             icon={EIcon.database}
             label="Database plugin"
           >
-            <div style={{ display: "flex", flex: 1 }}>
-              <Select
-                onChange={(e) => props.onChange("database_plugin", e.target.value)}
-                placeholder="Select the default database plugin"
-                value={data.database_plugin}
-                error={errors?.database_plugin}
-                errorMessage="This field is required"
-                options={getDatabaseOptions()}
-                disabled
-              />
-              <Button
-                onClick={() => setResetting(true)}
-                type={EButton.primary}
-                style={{ flex: "none", marginLeft: "10px" }}
-              >
-                Factory reset
-              </Button>
-            </div>
+            <Select
+              onChange={(e) => props.onChange("database_plugin", e.target.value)}
+              placeholder="Select the default database plugin"
+              value={data.database_plugin}
+              error={errors?.database_plugin}
+              errorMessage="This field is required"
+              options={getDatabaseOptions()}
+              disabled
+            />
           </FormGroup>
 
           <FormGroup

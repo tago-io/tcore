@@ -45,6 +45,14 @@ function ModalFactoryReset(props: IModalFactoryResetProps) {
   );
 
   /**
+   * Closes the modal.
+   */
+  const close = useCallback(() => {
+    store.masterPassword = "";
+    onClose();
+  }, [onClose]);
+
+  /**
    * Lowers the timer.
    */
   useEffect(() => {
@@ -58,8 +66,8 @@ function ModalFactoryReset(props: IModalFactoryResetProps) {
       confirmButtonText={timer ? `Please wait (${timer}s)` : "Yes, perform a factory reset"}
       isCancelButtonDisabled={buttonDisabled}
       isConfirmButtonDisabled={buttonDisabled || timer > 0}
-      onCancel={onClose}
-      onClose={onClose}
+      onCancel={close}
+      onClose={close}
       onConfirm={confirm}
       title="Factory reset"
       width="600px"
