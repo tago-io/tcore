@@ -11,7 +11,7 @@ import Modal from "../../../Modal/Modal";
  * Props.
  */
 interface IModalMasterPasswordProps {
-  onClose: () => void;
+  onClose?: () => void;
   onConfirm?: () => void;
 }
 

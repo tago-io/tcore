@@ -50,6 +50,7 @@
     "TCORE",
     "tcoreignore",
     "testid",
-    "tinycolor"
+    "tinycolor",
+    "unattach"
   ],
 }

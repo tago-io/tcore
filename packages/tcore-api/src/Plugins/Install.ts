@@ -281,15 +281,7 @@ async function installPlugin(source: string, opts: IPluginInstallOptions = {}) {
       addLog(opts, false, `Done!`, 100);
 
       if (plugin) {
-        return {
-          id: plugin.id,
-          name: plugin.tcoreName,
-          modules: [...plugin.modules.values()].map((x) => ({
-            id: x.id,
-            name: x.name,
-            configs: x.setup.configs,
-          })),
-        };
+        return plugin.id;
       }
     } catch (ex: any) {
       const err = ex?.message || ex?.toString?.() || ex;

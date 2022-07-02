@@ -176,7 +176,12 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
       </Row>
 
       {resetting && store.masterPassword && (
-        <ModalFactoryReset onClose={() => setResetting(false)} />
+        <ModalFactoryReset
+          onClose={() => {
+            store.masterPassword = "";
+            setResetting(false);
+          }}
+        />
       )}
 
       {resetting && !store.masterPassword && (

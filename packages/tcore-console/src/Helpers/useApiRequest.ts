@@ -1,13 +1,31 @@
-import axios, { AxiosError } from "axios";
+import axios, { Method, AxiosError } from "axios";
 import useSWR from "swr";
 import store from "../System/Store";
 import { getLocalStorage } from "./localStorage";
 
-const fetcher = async (url: string) => {
+/**
+ * Options.
+ */
+interface IApiRequestOptions {
+  skip?: boolean;
+  method?: Method;
+  data?: any;
+}
+
+/**
+ * Fetcher function for the hook call.
+ */
+const fetcher = async (url: string, options?: IApiRequestOptions) => {
   const token = getLocalStorage("token", "") as string;
   const masterPassword = store.masterPassword;
   const headers = { token, masterPassword };
-  return axios.get(url, { headers }).then((r) => r.data);
+  const method = options?.method || "get";
+  return axios({
+    method,
+    url,
+    data: options?.data,
+    headers,
+  }).then((r) => r.data);
 };
 
 /**
@@ -15,7 +33,7 @@ const fetcher = async (url: string) => {
  */
 function useApiRequest<T>(
   url: string,
-  options?: any
+  options?: IApiRequestOptions
 ): {
   data: T;
   error?: AxiosError;
@@ -24,10 +42,15 @@ function useApiRequest<T>(
 } {
   const skip = options?.skip;
 
-  const { data, error, revalidate, mutate } = useSWR<T>(skip ? null : url, fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-  });
+  const { data, error, revalidate, mutate } = useSWR<T>(
+    skip ? null : url,
+    () => fetcher(url, options),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
+  );
 
   if ((data as any)?.result !== undefined) {
     return { data: (data as any).result, error, revalidate, mutate };

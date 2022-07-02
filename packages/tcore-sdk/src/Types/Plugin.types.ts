@@ -36,6 +36,14 @@ export const zPluginType = z.enum([
 ]);
 
 /**
+ * Publisher information of a plugin.
+ */
+export const zPluginPublisher = z.object({
+  name: z.string(),
+  domain: z.string().nullish(),
+});
+
+/**
  * Configuration for when installing plugins.
  */
 export const zPluginInstallOptions = z.object({
@@ -449,10 +457,7 @@ export const zPluginModule = zPluginSetup.extend({
 /**
  */
 export const zPlugin = z.object({
-  publisher: z.object({
-    name: z.string(),
-    domain: z.string().nullish(),
-  }),
+  publisher: zPluginPublisher,
   slug: z.string(),
   state: zPluginState,
   id: z.string(),
@@ -511,6 +516,7 @@ const zPluginButtonModuleSetupOption = z.object({
  * Configuration of item in a plugin list.
  */
 const zPluginListItem = z.object({
+  publisher: zPluginPublisher.nullish(),
   buttons: z.object({
     sidebar: z.array(zPluginButtonModuleSetupOption.extend({ position: z.number() })),
     navbar: z.array(zPluginButtonModuleSetupOption),
@@ -524,6 +530,8 @@ const zPluginListItem = z.object({
   name: z.string(),
   version: z.string(),
   state: zPluginState,
+  types: z.array(zPluginType),
+  description: z.string().nullish(),
 });
 
 /**
@@ -571,8 +579,7 @@ interface IPluginFilesystemItem {
   children: IPluginFilesystemItem[];
 }
 
-export type IPluginModuleList = z.infer<typeof zPluginModuleList>;
-export type IPluginModuleListItem = z.infer<typeof zPluginModuleListItem>;
+export type { IPluginFilesystemItem };
 export type IActionTriggerModuleSetup = z.infer<typeof zActionTriggerModuleSetup>;
 export type IActionTypeModuleSetup = z.infer<typeof zActionTypeModuleSetup>;
 export type IModuleMessageOptions = z.infer<typeof zModuleMessageOptions>;
@@ -601,7 +608,10 @@ export type IPluginListItem = z.infer<typeof zPluginListItem>;
 export type IPluginLogChannel = z.infer<typeof zPluginLogChannel>;
 export type IPluginMessage = z.infer<typeof zPluginMessage>;
 export type IPluginModule = z.infer<typeof zPluginModule>;
+export type IPluginModuleList = z.infer<typeof zPluginModuleList>;
+export type IPluginModuleListItem = z.infer<typeof zPluginModuleListItem>;
 export type IPluginPayloadEncoderList = {};
+export type IPluginPublisher = z.infer<typeof zPluginPublisher>;
 export type IPluginSettings = z.infer<typeof zPluginSettings>;
 export type IPluginSettingsModule = z.infer<typeof zPluginSettingsModule>;
 export type IPluginStorageItem = z.infer<typeof zPluginStorageItem>;
@@ -611,4 +621,3 @@ export type TModuleState = z.infer<typeof zModuleState>;
 export type TPluginPermission = z.infer<typeof zPluginPermission>;
 export type TPluginState = z.infer<typeof zPluginState>;
 export type TPluginType = z.infer<typeof zPluginType>;
-export type { IPluginFilesystemItem };

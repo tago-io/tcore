@@ -36,6 +36,7 @@ import { getLocalStorage, setLocalStorage } from "./Helpers/localStorage";
 import getAccountByToken from "./Requests/getAccountByToken";
 import Setup from "./Components/Setup/Setup";
 import StepDatabaseError from "./Components/Setup/StepDatabaseError/StepDatabaseError";
+import { startSocket } from "./System/Socket";
 
 /**
  * Main component of the application.
@@ -132,6 +133,16 @@ const StoreWrapper = observer(() => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
+
+  /**
+   * Starts the socket connection.
+   */
+  useEffect(() => {
+    if (store.masterPassword || store.token) {
+      startSocket();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.masterPassword, store.token]);
 
   if (!readyToRender) {
     return null;

@@ -6,7 +6,7 @@ import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcor
 import { plugins } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
 import { rmdir } from "../Helpers/Files";
-import { encryptAccountPassword } from "./Account/AccountPassword";
+import { compareAccountPasswordHash, encryptAccountPassword } from "./Account/AccountPassword";
 import { terminateAllPlugins } from "./Plugins";
 import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
 
@@ -14,6 +14,16 @@ import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plug
  * Folder name to save the settings.
  */
 const folderName = os.platform() === "win32" ? getSystemName() : `.${getSystemSlug()}`;
+
+/**
+ * Checks if the master password is correct.
+ * @returns {boolean} True for correct, false for incorrect.
+ */
+export async function checkMasterPassword(masterPassword: string): Promise<boolean> {
+  const settings = await getMainSettings();
+  const matches = await compareAccountPasswordHash(masterPassword, settings.master_password || "");
+  return matches;
+}
 
 /**
  * Retrieves the main settings folder.

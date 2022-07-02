@@ -20,7 +20,7 @@ async function addPluginCommands(program: Command) {
   const list = await API.getPluginList();
 
   for (const item of list) {
-    const commands = item.manifest?.cli_commands || [];
+    const commands = item.manifest?.cli?.commands || [];
 
     for (const pluginCommand of commands) {
       if (!pluginCommand || !pluginCommand.name) {

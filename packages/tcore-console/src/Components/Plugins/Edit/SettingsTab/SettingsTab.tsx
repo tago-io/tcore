@@ -157,8 +157,8 @@ function SettingsTab(props: ISettingsTab) {
           <div className="main-info-container">
             <FormDivision title="Main Information" />
             <MainInformation
-              publisherName={String(data.slug).startsWith("@tago-io") ? "TagoIO" : "Unknown"}
-              publisherDomain={String(data.slug).startsWith("@tago-io") ? "tago.io" : ""}
+              publisherName={data.publisher?.name || "Unknown"}
+              publisherDomain={data.publisher?.domain}
               version={data.version}
               state={data.state}
             />

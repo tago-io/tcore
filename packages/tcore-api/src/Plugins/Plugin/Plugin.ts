@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import path from "path";
 import fs from "fs";
-import { ESocketRoom, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
+import { ESocketRoom, IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log";
 import { setPluginDisabledSettings } from "../../Services/Settings";
@@ -24,7 +24,7 @@ class Plugin {
   public readonly id: string;
   public readonly packageName: string;
   public readonly tcoreName: string;
-  public readonly publisher: string;
+  public readonly publisher: IPluginPublisher;
   public readonly description: string;
   public fullDescription: string | null = null;
 

@@ -1,7 +1,9 @@
 import path from "path";
+import os from "os";
 import { Request, Response, Application } from "express";
 import { z } from "zod";
 import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
+import multer from "multer";
 import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
 import { plugins } from "../Plugins/Host";
 import {
@@ -15,6 +17,7 @@ import {
   startPlugin,
   stopPlugin,
   reloadPlugin,
+  invokeOnCallModule,
 } from "../Services/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
@@ -96,6 +99,22 @@ class ListPlugins extends APIController<void, void, void> {
 }
 
 /**
+ * Invokes a module's onCall function.
+ */
+class InvokeOnCallModule extends APIController<void, void, any> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+    zURLParamsParser: z.any(),
+    zBodyParser: z.any(),
+  };
+
+  public async main() {
+    const response = await invokeOnCallModule(this.urlParams.pluginID, this.urlParams.moduleID, this.bodyParams);
+    this.body = response;
+  }
+}
+
+/**
  * Starts/restarts a plugin module.
  */
 class StartPluginModule extends APIController<void, void, any> {
@@ -120,6 +139,24 @@ class StopPluginModule extends APIController<void, void, any> {
 
   public async main() {
     await stopPluginModule(this.urlParams.pluginID, this.urlParams.moduleID);
+  }
+}
+
+/**
+ * Uploads a plugin .tcore file.
+ */
+class UploadPlugin extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+  };
+
+  public async main() {
+    const file = this.req.file;
+    const valid = !!file?.path;
+    if (!valid) {
+      throw new Error("Unknown error");
+    }
+    this.body = file.path;
   }
 }
 
@@ -318,12 +355,16 @@ export async function resolvePluginImage2(req: Request, res: Response) {
  * Exports the plugin routes.
  */
 export default (app: Application) => {
+  const upload = multer({ dest: path.join(os.tmpdir(), "tcore-plugin-download") });
+  app.post("/plugin/upload", upload.single("plugin"), warm(UploadPlugin));
+
   app.get("/module", warm(ListModules));
   app.get("/plugin-uninstall/:id", warm(UninstallPlugin));
   app.get("/plugin", warm(ListPlugins));
   app.get("/plugin/database", warm(GetDatabasePluginInfo));
   app.get("/plugin/:id", warm(GetPluginInfo));
   app.post("/plugin/:id/reload", warm(ReloadPlugin));
+  app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));
   app.post("/plugin/:pluginID/:moduleID/stop", warm(StopPluginModule));
   app.post("/install-plugin", warm(InstallPlugin));

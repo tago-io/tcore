@@ -2,13 +2,13 @@ import { ESocketResource, IStatistic } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { memo, useEffect, useRef, useState } from "react";
 import useApiRequest from "../../../Helpers/useApiRequest";
-import { socket } from "../../../System/Socket";
 import store from "../../../System/Store";
 import TooltipText from "../../TooltipText/TooltipText";
 import EmptyMessage from "../../EmptyMessage/EmptyMessage";
 import { EIcon } from "../../Icon/Icon.types";
 import * as HomeStyle from "../Home.style";
 import RequestChart from "../RequestChart/RequestChart";
+import { getSocket } from "../../../System/Socket";
 
 /**
  * Statistics section of the home page.
@@ -34,20 +34,20 @@ function Statistics() {
       setStatistics([...(statistics as IStatistic[])]);
     }
 
-    socket.on(`statistic::hourly`, onNewStatistic);
+    getSocket().on(`statistic::hourly`, onNewStatistic);
     return () => {
-      socket.off(`statistic::hourly`, onNewStatistic);
+      getSocket().off(`statistic::hourly`, onNewStatistic);
     };
   });
 
   /**
-   * Attaches and detaches the socket to get the statistic updates in realtime.
+   * Attaches and unattaches the socket to get the statistic updates in realtime.
    */
   useEffect(() => {
     if (store.socketConnected) {
-      socket.emit("attach", ESocketResource.statistic);
+      getSocket().emit("attach", ESocketResource.statistic);
       return () => {
-        socket.emit("detach", ESocketResource.statistic);
+        getSocket().emit("unattach", ESocketResource.statistic);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

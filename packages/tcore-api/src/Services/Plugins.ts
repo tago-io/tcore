@@ -62,6 +62,9 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
       name: pkg.tcore?.name || "",
       state: plugin?.state || "stopped",
       version: pkg.version,
+      types: plugin?.types || [],
+      description: plugin?.description,
+      publisher: plugin?.publisher,
     };
 
     result.push(object);
@@ -293,9 +296,7 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     name: plugin.tcoreName,
     state: plugin.state,
     slug: plugin.packageName,
-    publisher: {
-      name: plugin.publisher,
-    },
+    publisher: plugin.publisher,
     modules,
     version: plugin.version,
     allow_disable,
@@ -365,6 +366,18 @@ export function getModuleList(type?: TPluginType | null): Module[] {
   }
 
   return result;
+}
+
+/**
+ * Invokes a plugin module's onCall function.
+ */
+export async function invokeOnCallModule(pluginID: string, moduleID: string, data?: any) {
+  const plugin = plugins.get(pluginID);
+  const module = plugin?.modules.get(moduleID);
+  if (!module) {
+    throw new Error("Plugin or module not found");
+  }
+  return await module.invokeOnCall(data);
 }
 
 /**

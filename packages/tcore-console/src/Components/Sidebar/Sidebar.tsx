@@ -7,8 +7,8 @@ import {
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import { EIcon } from "../Icon/Icon.types";
-import { socket } from "../../System/Socket";
 import store from "../../System/Store";
+import { getSocket } from "../../System/Socket";
 import * as Style from "./Sidebar.style";
 import Item from "./Item";
 import InstallLocalPluginButton from "./InstalLocalPluginButton/InstalLocalPluginButton";
@@ -146,9 +146,9 @@ function Sidebar(props: ISidebarProps) {
       }
     }
 
-    socket.on("plugin:sidebar", onStatus);
+    getSocket().on("plugin:sidebar", onStatus);
     return () => {
-      socket.off("plugin:sidebar", onStatus);
+      getSocket().off("plugin:sidebar", onStatus);
     };
   });
 
@@ -158,11 +158,11 @@ function Sidebar(props: ISidebarProps) {
   useEffect(() => {
     if (store.socketConnected) {
       for (const plugin of store.plugins) {
-        socket.emit("attach", ESocketResource.plugin, plugin.id);
+        getSocket().emit("attach", ESocketResource.plugin, plugin.id);
       }
       return () => {
         for (const plugin of store.plugins) {
-          socket.emit("detach", ESocketResource.plugin, plugin.id);
+          getSocket().emit("unattach", ESocketResource.plugin, plugin.id);
         }
       };
     }

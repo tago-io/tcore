@@ -11,7 +11,7 @@ import { EIcon } from "../Icon/Icon.types";
 import InnerNav from "../InnerNav/InnerNav";
 import Select, { ISelectOption } from "../Select/Select";
 import Loading from "../Loading/Loading";
-import { socket } from "../../System/Socket";
+import { getSocket } from "../../System/Socket";
 import * as Style from "./Logs.style";
 
 /**
@@ -141,9 +141,9 @@ function Logs() {
       setLogs((x) => [...x, params]);
     }
 
-    socket.on(`log::${selectedChannel}`, onLog);
+    getSocket().on(`log::${selectedChannel}`, onLog);
     return () => {
-      socket.off(`log::${selectedChannel}`, onLog);
+      getSocket().off(`log::${selectedChannel}`, onLog);
     };
   });
 
@@ -151,9 +151,9 @@ function Logs() {
    * Attaches and detaches the plugin to get the logs in realtime.
    */
   useEffect(() => {
-    socket.emit("attach", ESocketResource.log);
+    getSocket().emit("attach", ESocketResource.log);
     return () => {
-      socket.emit("detach", ESocketResource.log);
+      getSocket().emit("unattach", ESocketResource.log);
     };
   }, []);
 

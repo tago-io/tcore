@@ -1,10 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-
 import { useHistory } from "react-router";
 import { observer } from "mobx-react";
 import setDocumentTitle from "../../Helpers/setDocumentTitle";
 import store from "../../System/Store";
-import StepDatabase from "./StepDatabase/StepDatabase";
+import StepDatabaseWrapper from "./StepDatabaseWrapper/StepDatabaseWrapper";
 import StepWelcome from "./StepWelcome/StepWelcome";
 import SetupBackground from "./SetupBackground/SetupBackground";
 import StepSignUp from "./StepSignUp/StepSignUp";
@@ -16,7 +15,7 @@ import StepPluginConfig from "./StepPluginConfig/StepPluginConfig";
  */
 function Setup() {
   const [step, setStep] = useState(0);
-  const [pluginData, setPluginData] = useState<any>(null);
+  const [pluginID, setPluginID] = useState<any>(null);
   const [readyToRender, setReadyToRender] = useState(false);
   const history = useHistory();
 
@@ -28,9 +27,9 @@ function Setup() {
     steps.push(StepMasterPassword);
   }
   if (!store.databaseConfigured) {
-    steps.push(StepDatabase);
+    steps.push(StepDatabaseWrapper);
   }
-  if (pluginData) {
+  if (pluginID) {
     steps.push(StepPluginConfig);
   }
   if (!store.accountConfigured) {
@@ -46,8 +45,8 @@ function Setup() {
       if (SetupComponent === StepMasterPassword) {
         store.masterPasswordConfigured = true;
         store.masterPassword = param as string;
-      } else if (SetupComponent === StepDatabase) {
-        setPluginData(param);
+      } else if (SetupComponent === StepDatabaseWrapper) {
+        setPluginID(param as string);
         setStep(step + 1);
       } else if (step === steps.length - 1) {
         history.push("/console/login");
@@ -96,7 +95,12 @@ function Setup() {
   return (
     <>
       <SetupBackground />
-      <SetupComponent onBack={back} onNext={next} pluginID={pluginData?.id} />
+      <SetupComponent
+        onBack={back}
+        onNext={next}
+        pluginID={pluginID} // for SetupDatabaseWrapper
+        mustBeDatabasePlugin // for StepPluginConfig
+      />
     </>
   );
 }

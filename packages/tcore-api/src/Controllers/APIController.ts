@@ -4,8 +4,7 @@ import { ZodTypeAny } from "zod";
 import { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
 import { getDeviceByToken, getDeviceToken } from "../Services/Device";
 import { getAccountToken } from "../Services/Account/Account";
-import { getMainSettings } from "../Services/Settings";
-import { compareAccountPasswordHash } from "../Services/Account/AccountPassword";
+import { checkMasterPassword } from "../Services/Settings";
 
 type TResourceType = "device" | "account";
 type TPermission = "full" | "write" | "read";
@@ -194,11 +193,7 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
           return;
         }
         if (this.req.headers.masterpassword) {
-          const settings = await getMainSettings();
-          const matches = await compareAccountPasswordHash(
-            this.req.headers.masterpassword as string,
-            settings.master_password || ""
-          );
+          const matches = await checkMasterPassword(this.req.headers.masterpassword as string);
           if (matches) {
             return;
           }

@@ -12,7 +12,7 @@ interface IPublisherProps {
   /**
    * Domain of the publisher (will only be true when `verified` = true).
    */
-  domain?: string;
+  domain?: string | null;
   /**
    * Name of the publisher.
    */
@@ -81,10 +81,10 @@ function Publisher(props: IPublisherProps) {
   return (
     <Style.Container onMouseDown={(e) => e.stopPropagation()} onClick={activateTooltip}>
       <Style.Name clickable={!!(clickable && domain)} style={{ fontSize: getFontSize() }}>
-        {name}
+        {name || "Unknown"}
       </Style.Name>
 
-      {domain ? (
+      {name && domain ? (
         <>
           <Style.IconContainer clickable={clickable} size={size as string}>
             <Icon color={theme.link} icon={EIcon.certificate} size={getIconSize()} />

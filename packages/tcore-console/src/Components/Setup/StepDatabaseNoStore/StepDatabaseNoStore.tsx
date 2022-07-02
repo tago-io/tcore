@@ -1,29 +1,37 @@
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
 import { Button, EButton, EIcon, Icon } from "../../..";
+import selectPluginFile from "../../../Helpers/selectPluginFile";
 import store from "../../../System/Store";
-import ModalFileSelect from "../../ModalFileSelect/ModalFileSelect";
 import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL";
 import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
 import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
+import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
 import SetupForm from "../SetupForm/SetupForm";
-import * as Style from "./StepDatabase.style";
+import * as Style from "./StepDatabaseNoStore.style";
 
 /**
+ * Database step without the Plugin store. It contains two buttons:
+ * - load local plugin
+ * - load from url
  */
-function StepDatabase(props: any) {
+function StepDatabaseNoStore(props: any) {
   const { onBack, onNext } = props;
   const [action, setAction] = useState("");
   const [modalInstall, setModalInstall] = useState(false);
   const [modalURL, setModalURL] = useState(false);
-  const [modalFile, setModalFile] = useState(false);
+  const [modalUpload, setModalUpload] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File>();
   const [source, setSource] = useState("");
 
   /**
    * Opens the file selector modal.
    */
-  const activateModalFile = () => {
-    setModalFile(true);
+  const activateModalUpload = () => {
+    selectPluginFile((f) => {
+      setUploadedFile(f);
+      setModalUpload(true);
+    });
   };
 
   /**
@@ -43,15 +51,15 @@ function StepDatabase(props: any) {
   /**
    * Closes the file selector modal.
    */
-  const deactivateModalFile = () => {
-    setModalFile(false);
+  const deactivateModalUpload = () => {
+    setModalUpload(false);
   };
 
   /**
    * Opens the install modal.
    */
   const activateModalInstall = (path: string) => {
-    setModalFile(false);
+    setModalUpload(false);
     setModalURL(false);
     setSource(path);
     setModalInstall(true);
@@ -60,10 +68,10 @@ function StepDatabase(props: any) {
   /**
    * Closes the install modal.
    */
-  const deactivateModalInstall = (data: any) => {
+  const deactivateModalInstall = (pluginID: string) => {
     setModalInstall(false);
-    if (data) {
-      onNext(data);
+    if (pluginID) {
+      onNext(pluginID);
     }
   };
 
@@ -72,7 +80,7 @@ function StepDatabase(props: any) {
   const doAction = () => {
     switch (action) {
       case "local-file":
-        activateModalFile();
+        activateModalUpload();
         break;
       case "download-url":
         activateModalURL();
@@ -116,15 +124,11 @@ function StepDatabase(props: any) {
         </Style.Content>
       </SetupForm>
 
-      {modalFile && (
-        <ModalFileSelect
-          accept=".tcore"
-          message="Select a .tcore plugin file."
-          onClose={deactivateModalFile}
-          onConfirm={activateModalInstall}
-          placeholder="/usr/local/plugin.tcore"
-          title="Select a plugin to be installed"
-          useLocalFs
+      {modalUpload && (
+        <ModalUploadPlugin
+          file={uploadedFile as File}
+          onClose={deactivateModalUpload}
+          onUpload={activateModalInstall}
         />
       )}
 
@@ -139,4 +143,4 @@ function StepDatabase(props: any) {
   );
 }
 
-export default observer(StepDatabase);
+export default observer(StepDatabaseNoStore);

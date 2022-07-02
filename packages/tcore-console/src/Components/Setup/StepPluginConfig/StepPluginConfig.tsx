@@ -1,7 +1,7 @@
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { useCallback, useEffect, useState } from "react";
 import { IPlugin } from "@tago-io/tcore-sdk/types";
-import { EButton, EIcon, FormGroup } from "../../..";
+import { EButton, EIcon, EmptyMessage, FormGroup, Loading } from "../../..";
 import editPluginSettings from "../../../Requests/editPluginSettings";
 import editSettings from "../../../Requests/editSettings";
 import SuccessMessage from "../SuccessMessage/SuccessMessage";
@@ -15,18 +15,19 @@ import validateConfigFields from "../../../Helpers/validateConfigFields";
 /**
  */
 interface IStepPluginConfigProps {
+  backButton?: any;
+  description?: string;
+  mustBeDatabasePlugin?: boolean;
+  onBack?: () => void;
   plugin?: IPlugin;
   pluginID?: string;
   title?: string;
-  description?: string;
-  backButton?: any;
-  onBack?: () => void;
 }
 
 /**
  */
 function StepPluginConfig(props: IStepPluginConfigProps) {
-  const { pluginID, onBack, title, backButton, description } = props;
+  const { mustBeDatabasePlugin, pluginID, onBack, title, backButton, description } = props;
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -159,6 +160,9 @@ function StepPluginConfig(props: IStepPluginConfigProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pluginID]);
 
+  const hasDatabaseModule =
+    plugin && plugin.modules && plugin.modules.some((x) => x.type === "database");
+
   return (
     <SetupForm
       title={title ?? `Plugin Configuration`}
@@ -169,10 +173,20 @@ function StepPluginConfig(props: IStepPluginConfigProps) {
         backButton
           ? { ...backButton, disabled: load }
           : { label: "Back", disabled: load, onClick: onBack },
-        { label: "Save", disabled: load, onClick: save, type: EButton.primary },
+        {
+          label: "Save",
+          disabled: load || (mustBeDatabasePlugin && plugin && !hasDatabaseModule),
+          onClick: save,
+          type: EButton.primary,
+        },
       ]}
     >
-      {plugin && (
+      {mustBeDatabasePlugin && plugin && !hasDatabaseModule ? (
+        <EmptyMessage
+          icon={EIcon["exclamation-triangle"]}
+          message="The selected plugin doesn't contain a database module"
+        />
+      ) : plugin ? (
         <>
           {renderErrorStatus()}
           <PluginConfigFields
@@ -182,6 +196,8 @@ function StepPluginConfig(props: IStepPluginConfigProps) {
             values={values}
           />
         </>
+      ) : (
+        <Loading />
       )}
     </SetupForm>
   );

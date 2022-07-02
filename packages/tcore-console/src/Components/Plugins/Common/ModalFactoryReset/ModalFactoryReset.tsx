@@ -48,7 +48,6 @@ function ModalFactoryReset(props: IModalFactoryResetProps) {
    * Closes the modal.
    */
   const close = useCallback(() => {
-    store.masterPassword = "";
     onClose();
   }, [onClose]);
 

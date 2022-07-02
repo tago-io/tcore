@@ -1,7 +1,9 @@
 import { Server } from "http";
-import { Server as SocketServer } from "socket.io";
+import { Server as SocketServer, Socket } from "socket.io";
 import { ESocketResource, ESocketRoom, TGenericID } from "@tago-io/tcore-sdk/types";
 import { editDevice } from "../Services/Device";
+import { checkMasterPassword } from "../";
+import { getAccountToken } from "../Services/Account/Account";
 
 /**
  * Socket server instance.
@@ -9,12 +11,36 @@ import { editDevice } from "../Services/Device";
 export let io: SocketServer;
 
 /**
+ * Validates the token.
+ * @returns {boolean} True for valid, false for invalid.
+ */
+async function validateToken(socket: Socket): Promise<boolean> {
+  if (socket.handshake.query.masterPassword) {
+    const valid = await checkMasterPassword(socket.handshake.query.masterPassword as string);
+    return valid;
+  }
+  if (socket.handshake.query.token) {
+    const token = await getAccountToken(socket.handshake.query.token as string).catch(() => null);
+    const valid = !!token;
+    return valid;
+  }
+
+  return false;
+}
+
+/**
  * Sets up the socket server.
  */
 export async function setupSocketServer(httpServer: Server) {
   io = new SocketServer(httpServer, { cors: { origin: "*" } });
 
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
+    const valid = await validateToken(socket);
+    if (!valid) {
+      socket.disconnect();
+      return;
+    }
+
     socket.on("attach", (resourceType: ESocketResource, resourceID?: TGenericID) => {
       if (resourceType === ESocketResource.pluginInstall) {
         socket.join(ESocketRoom.pluginInstall);
@@ -40,7 +66,7 @@ export async function setupSocketServer(httpServer: Server) {
       }
     });
 
-    socket.on("detach", (resourceType: ESocketResource, resourceID?: string) => {
+    socket.on("unattach", (resourceType: ESocketResource, resourceID?: string) => {
       if (resourceType === ESocketResource.pluginInstall) {
         socket.leave(ESocketRoom.pluginInstall);
       }

@@ -2,8 +2,8 @@ import { TGenericID, IModuleSetupWithoutType, IDeviceData } from "../../Types";
 import TCoreModule from "../TCoreModule/TCoreModule";
 
 /**
- * This module allows the creation of listener events when certain situations
- * happen in the application.
+ * This module allows the creation of listener functions that are triggered
+ * when certain events happen in the application.
  */
 class HookModule extends TCoreModule {
   constructor(protected setup: IModuleSetupWithoutType) {

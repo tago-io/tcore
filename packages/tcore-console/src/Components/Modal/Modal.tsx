@@ -15,7 +15,7 @@ interface IModalProps {
   /**
    * Called when the modal is closed by the user.
    */
-  onClose: () => void;
+  onClose?: () => void;
   /**
    */
   onCancel?: () => Promise<void> | void;
@@ -119,7 +119,7 @@ function Modal(props: IModalProps) {
    */
   const cancel = useCallback(async () => {
     if (!onCancel) {
-      onClose();
+      onClose?.();
       return;
     }
 
@@ -210,7 +210,7 @@ function Modal(props: IModalProps) {
 
   useEffect(() => {
     if (shouldClose) {
-      onClose();
+      onClose?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldClose]);
