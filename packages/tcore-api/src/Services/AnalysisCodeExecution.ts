@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 import fs from "fs";
-import { ESocketRoom, ILog, TGenericID } from "@tago-io/tcore-sdk/types";
+import { ILog, TGenericID } from "@tago-io/tcore-sdk/types";
 import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
 import { io } from "../Socket/SocketServer";
 import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis";
@@ -8,7 +8,7 @@ import { getMainSettings } from "./Settings";
 
 /**
  * Adds a log into the log buffer of the application and triggers the socket
- * event for all sockets attached with the `analysis:log` resource.
+ * event for all sockets attached with the `analysis:ID` resource.
  */
 function addLog(error: boolean, id: TGenericID, message: string): void {
   const data: ILog = {
@@ -17,7 +17,7 @@ function addLog(error: boolean, id: TGenericID, message: string): void {
     timestamp: new Date(),
   };
 
-  io.to(ESocketRoom.analysis).emit(`analysis:log:${id}`, data);
+  io.to(`analysis#${id}`).emit(`analysis::console`, data);
 
   addAnalysisLog(id, data);
 }

@@ -41,7 +41,7 @@ export async function setupSocketServer(httpServer: Server) {
       return;
     }
 
-    socket.on("attach", (resourceType: ESocketResource, resourceID?: TGenericID) => {
+    socket.on("attach", (resourceType: any, resourceID?: TGenericID) => {
       if (resourceType === ESocketResource.pluginInstall) {
         socket.join(ESocketRoom.pluginInstall);
       }
@@ -51,8 +51,8 @@ export async function setupSocketServer(httpServer: Server) {
       if (resourceType === ESocketResource.statistic) {
         socket.join(ESocketRoom.statistic);
       }
-      if (resourceType === ESocketResource.analysis) {
-        socket.join(ESocketRoom.analysis);
+      if (resourceType === "analysis" && resourceID) {
+        socket.join(`analysis#${resourceID}`);
       }
       if (resourceType === ESocketResource.module && resourceID) {
         socket.join(`${ESocketRoom.module}#${resourceID}`);
@@ -60,13 +60,13 @@ export async function setupSocketServer(httpServer: Server) {
       if (resourceType === ESocketResource.plugin && resourceID) {
         socket.join(`${ESocketRoom.plugin}#${resourceID}`);
       }
-      if (resourceType === ESocketResource.deviceInspection && resourceID) {
+      if (resourceType === "device" && resourceID) {
         editDevice(resourceID, { inspected_at: new Date() }).catch(() => false);
-        socket.join(`${ESocketRoom.deviceInspection}#${resourceID}`);
+        socket.join(`device#${resourceID}`);
       }
     });
 
-    socket.on("unattach", (resourceType: ESocketResource, resourceID?: string) => {
+    socket.on("unattach", (resourceType: any, resourceID?: string) => {
       if (resourceType === ESocketResource.pluginInstall) {
         socket.leave(ESocketRoom.pluginInstall);
       }
@@ -76,14 +76,14 @@ export async function setupSocketServer(httpServer: Server) {
       if (resourceType === ESocketResource.statistic) {
         socket.leave(ESocketRoom.statistic);
       }
-      if (resourceType === ESocketResource.analysis) {
-        socket.leave(ESocketRoom.analysis);
+      if (resourceType === "analysis") {
+        socket.leave(`analysis#${resourceID}`);
       }
       if (resourceType === ESocketResource.module) {
         socket.leave(`${ESocketRoom.module}#${resourceID}`);
       }
-      if (resourceType === ESocketResource.deviceInspection) {
-        socket.leave(`${ESocketRoom.deviceInspection}#${resourceID}`);
+      if (resourceType === "device") {
+        socket.leave(`device#${resourceID}`);
       }
       if (resourceType === ESocketResource.plugin) {
         socket.leave(`${ESocketRoom.plugin}#${resourceID}`);

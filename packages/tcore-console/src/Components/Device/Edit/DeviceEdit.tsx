@@ -1,5 +1,4 @@
 import {
-  ESocketResource,
   IDevice,
   ILiveInspectorMessage,
   IDeviceParameter,
@@ -167,7 +166,7 @@ function DeviceEdit() {
    * Stops the live inspector.
    */
   const stopInspector = useCallback(() => {
-    getSocket().emit("unattach", ESocketResource.deviceInspection, id);
+    getSocket().emit("unattach", "device", id);
     getSocket().off("device::inspection");
     clearInterval(intervalInspectorAttach.current);
   }, [id]);
@@ -376,7 +375,7 @@ function DeviceEdit() {
         getSocket().emit("attach", "device", id);
       }, 30000); // 30 seconds
 
-      getSocket().emit("attach", ESocketResource.deviceInspection, id);
+      getSocket().emit("attach", "device", id);
       getSocket().off("device::inspection");
       getSocket().on("device::inspection", onInspectorMessage);
     } else {

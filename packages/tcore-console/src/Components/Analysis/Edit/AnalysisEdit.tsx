@@ -1,4 +1,4 @@
-import { ESocketResource, IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
+import { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
 import cloneDeep from "lodash.clonedeep";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router";
@@ -214,9 +214,9 @@ function AnalysisEdit() {
       setLogs((x) => [params, ...x]);
     }
 
-    getSocket().on(`analysis:log:${id}`, onLog);
+    getSocket().on(`analysis::console`, onLog);
     return () => {
-      getSocket().off(`analysis:log:${id}`, onLog);
+      getSocket().off(`analysis::console`, onLog);
     };
   });
 
@@ -224,9 +224,9 @@ function AnalysisEdit() {
    */
   useEffect(() => {
     if (store.socketConnected) {
-      getSocket().emit("attach", ESocketResource.analysis);
+      getSocket().emit("attach", "analysis", id);
       return () => {
-        getSocket().emit("unattach", ESocketResource.analysis);
+        getSocket().emit("unattach", "analysis", id);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

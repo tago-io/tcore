@@ -152,8 +152,7 @@ class UploadPlugin extends APIController<void, void, void> {
 
   public async main() {
     const file = this.req.file;
-    const valid = !!file?.path;
-    if (!valid) {
+    if (!file || !file.path) {
       throw new Error("Unknown error");
     }
     this.body = file.path;
