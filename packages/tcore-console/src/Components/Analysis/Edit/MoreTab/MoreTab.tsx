@@ -72,7 +72,7 @@ function MoreTab(props: IMoreTabProps) {
 
       <Row>
         <Col size="6">
-          <FormGroup icon={EIcon.save} label="Analysis ID">
+          <FormGroup icon={EIcon["floppy-disk"]} label="Analysis ID">
             <Input disabled readOnly value={data.id} />
           </FormGroup>
         </Col>

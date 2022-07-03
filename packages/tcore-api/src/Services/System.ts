@@ -12,6 +12,10 @@ export function getVersion() {
 }
 
 /**
+ * Retrieves the status of the application:
+ * - is the database configured?
+ * - is at least one account registered?
+ * - is the master password set?
  */
 export async function getStatus() {
   const settings = await getMainSettings();
@@ -30,4 +34,11 @@ export async function getStatus() {
   }
 
   return output;
+}
+
+/**
+ * Exits the application.
+ */
+export async function exitSystem(code: number) {
+  process.exit(code);
 }

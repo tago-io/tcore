@@ -1,4 +1,6 @@
+import { readableColor } from "polished";
 import styled from "styled-components";
+import { SETUP_BUILDING_BLOCK_COLOR } from "../../Setup/SetupBackground/SetupBackground.style";
 
 const Container = styled.div`
   color: black;
@@ -13,20 +15,23 @@ const Container = styled.div`
   margin: 20px 0px;
 
   * {
-    color: black;
+    color: ${readableColor(SETUP_BUILDING_BLOCK_COLOR, "black", "white")};
   }
 
   > span {
     font-size: 20px;
-    color: rgba(0, 0, 0, 0.6);
+    opacity: 0.6;
   }
 
   section {
     margin-top: 30px;
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;
+
+    span {
+      opacity: 0.6;
+      font-size: 16px;
+    }
 
     i {
       margin-right: 5px;
@@ -36,7 +41,7 @@ const Container = styled.div`
 
     svg {
       opacity: 1;
-      fill: black !important;
+      fill: ${readableColor(SETUP_BUILDING_BLOCK_COLOR, "black", "white")};
     }
   }
 

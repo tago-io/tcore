@@ -545,6 +545,7 @@ const zPluginList = z.array(zPluginListItem);
 const zPluginSettingsModule = z.object({
   id: z.string(),
   values: z.any(),
+  disabled: z.boolean().optional(),
 });
 
 /**

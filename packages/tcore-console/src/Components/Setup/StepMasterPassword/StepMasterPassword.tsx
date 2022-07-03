@@ -8,12 +8,14 @@ import SetupForm from "../SetupForm/SetupForm";
 import * as Style from "./StepMasterPassword.style";
 
 /**
+ * Step to set the master password of the application.
  */
 function StepMasterPassword(props: any) {
   const { onBack, onNext } = props;
   const [value, setValue] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  const [loading, setLoading] = useState(false);
   const confirmationRef = useRef<HTMLInputElement>(null);
 
   /**
@@ -27,8 +29,14 @@ function StepMasterPassword(props: any) {
       return;
     }
 
-    await axios.post("/settings/master/password", { password: value });
-    onNext(value);
+    try {
+      setLoading(true);
+      await axios.post("/settings/master/password", { password: value });
+
+      onNext(value);
+    } catch {
+      setLoading(false);
+    }
   }, [onNext, value]);
 
   /**
@@ -52,7 +60,7 @@ function StepMasterPassword(props: any) {
     [next]
   );
 
-  const nextDisabled = value !== confirmation || !value;
+  const nextDisabled = value !== confirmation || !value || loading;
 
   return (
     <SetupForm
@@ -79,6 +87,7 @@ function StepMasterPassword(props: any) {
             onKeyDown={onPasswordKeyDown}
             value={value}
             error={!!errorMsg}
+            disabled={loading}
           />
         </FormGroup>
 
@@ -90,6 +99,7 @@ function StepMasterPassword(props: any) {
             onKeyDown={onConfirmationKeyDown}
             value={confirmation}
             error={!!errorMsg}
+            disabled={loading}
           />
         </FormGroup>
 

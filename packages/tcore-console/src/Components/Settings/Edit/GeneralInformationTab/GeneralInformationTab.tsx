@@ -136,7 +136,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
               onChange={(e) => props.onChange("plugin_folder", e)}
               onlyFolders
               placeholder="e.g. /users/tcore-plugins"
-              value={data.plugin_folder || ""}
+              value={data.plugin_folder}
               disabled={metadata?.plugin_folder_disabled}
               useLocalFs
             />

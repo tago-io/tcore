@@ -76,6 +76,44 @@ async function sortFoldersByPriority(folders: string[]): Promise<string[]> {
 }
 
 /**
+ * Starts a single plugin from a folder and handle its errors.
+ * If there is an error, it will be logged to the terminal.
+ * If no errors are present in the plugin, it will say that the plugin is good to go.
+ */
+async function startPluginAndHandleErrors(folder: string) {
+  try {
+    const plugin = await startPlugin(folder);
+
+    const modules = [...plugin.modules.values()];
+    const errors = modules.filter((x) => x.error);
+
+    if (errors.length === 1 && errors[0].error) {
+      // only one module threw an error, show a single line of error
+      throw new Error(errors[0].error);
+    } else if (errors.length > 1) {
+      // multiple modules threw errors, show multiline of errors, one for
+      // each module that threw an error
+      const msgs = errors.map((x) => `  - ${x.name}: ${x.error}`);
+      const join = msgs.join("\n");
+      throw new Error(`\n${join}`);
+    }
+
+    if (plugin.state === "started") {
+      oraLog("api", `Started Plugin: ${plugin.tcoreName}`);
+    } else if (plugin.state === "disabled") {
+      oraLog("api", `Skipped Disabled Plugin: ${plugin.tcoreName}`);
+    }
+  } catch (ex: any) {
+    const err = ex.message || ex;
+
+    const pluginPkg = Plugin.getPackage(folder);
+    const pluginName = pluginPkg.tcore?.name || pluginPkg.name;
+
+    oraLogError("api", `Failed to start Plugin ${pluginName || ""}: ${err}`);
+  }
+}
+
+/**
  * Initializes all the plugins.
  */
 export async function startAllPlugins() {
@@ -83,35 +121,6 @@ export async function startAllPlugins() {
   const sorted = await sortFoldersByPriority(folders);
 
   for (const folder of sorted) {
-    try {
-      const plugin = await startPlugin(folder);
-
-      const modules = [...plugin.modules.values()];
-      const errors = modules.filter((x) => x.error);
-
-      if (errors.length === 1 && errors[0].error) {
-        // only one module threw an error, show a single line of error
-        throw new Error(errors[0].error);
-      } else if (errors.length > 1) {
-        // multiple modules threw errors, show multiline of errors, one for
-        // each module that threw an error
-        const msgs = errors.map((x) => `  - ${x.name}: ${x.error}`);
-        const join = msgs.join("\n");
-        throw new Error(`\n${join}`);
-      }
-
-      if (plugin.state === "started") {
-        oraLog("api", `Started Plugin: ${plugin.tcoreName}`);
-      } else if (plugin.state === "disabled") {
-        oraLog("api", `Skipped Disabled Plugin: ${plugin.tcoreName}`);
-      }
-    } catch (ex: any) {
-      const err = ex.message || ex;
-
-      const pluginPkg = Plugin.getPackage(folder);
-      const pluginName = pluginPkg.tcore?.name || pluginPkg.name;
-
-      oraLogError("api", `Failed to start Plugin ${pluginName || ""}: ${err}`);
-    }
+    await startPluginAndHandleErrors(folder);
   }
 }

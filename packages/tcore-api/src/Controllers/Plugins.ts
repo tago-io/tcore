@@ -242,19 +242,6 @@ class EditPluginSettings extends APIController<any, void, IURLParamsID> {
 
   public async main() {
     await setPluginModulesSettings(this.urlParams.id, this.bodyParams);
-
-    const plugin = plugins.get(this.urlParams.id);
-    if (plugin && plugin?.state !== "disabled" && plugin.state !== "started") {
-      await plugin.start();
-    }
-
-    const cache = {};
-    for (const item of this.bodyParams) {
-      if (!cache[item.moduleID]) {
-        cache[item.moduleID] = true;
-        await startPluginModule(this.urlParams.id, item.moduleID);
-      }
-    }
   }
 }
 

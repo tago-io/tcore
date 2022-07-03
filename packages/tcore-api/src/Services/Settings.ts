@@ -7,7 +7,7 @@ import { plugins } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
 import { rmdir } from "../Helpers/Files";
 import { compareAccountPasswordHash, encryptAccountPassword } from "./Account/AccountPassword";
-import { terminateAllPlugins } from "./Plugins";
+import { startPluginModule, terminateAllPlugins } from "./Plugins";
 import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
 
 /**
@@ -62,7 +62,7 @@ export async function getMainSettings(): Promise<ISettings> {
   const filesystem_plugin = process.env.TCORE_FILESYSTEM_PLUGIN || data.filesystem_plugin || "";
   const database_plugin = process.env.TCORE_DATABASE_PLUGIN || data.database_plugin || "";
   const settings_folder = process.env.TCORE_SETTINGS_FOLDER || folder;
-  const plugin_folder = process.env.TCORE_PLUGIN_FOLDER || data.plugin_folder || (await getPluginsFolder());
+  const plugin_folder = process.env.TCORE_PLUGINS_FOLDER || data.plugin_folder || (await getPluginsFolder());
   const port = process.env.TCORE_PORT || data.port || "8888";
   const master_password = data.master_password || "";
 
@@ -75,8 +75,8 @@ export async function getMainSettings(): Promise<ISettings> {
     master_password,
   };
 
-  if (!fs.existsSync(settings.plugin_folder || "")) {
-    fs.promises.mkdir(settings.plugin_folder || "", { recursive: true });
+  if (!fs.existsSync(settings.plugin_folder)) {
+    fs.promises.mkdir(settings.plugin_folder, { recursive: true });
   }
 
   return settings;
@@ -163,6 +163,18 @@ export async function setPluginModulesSettings(id: string, values: any) {
   };
 
   await saveYml(data, filePath);
+
+  if (plugin && plugin?.state !== "disabled" && plugin.state !== "started") {
+    await plugin.start();
+  }
+
+  const cache = {};
+  for (const item of values) {
+    if (!cache[item.moduleID]) {
+      cache[item.moduleID] = true;
+      await startPluginModule(id, item.moduleID);
+    }
+  }
 }
 
 /**

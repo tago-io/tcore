@@ -71,7 +71,7 @@ async function gracefullyStopCurrentVersion(pluginID: string, opts: IPluginInsta
  */
 async function extract(filePath: string, pluginID: string, opts: IPluginInstallOptions = {}): Promise<string> {
   const settings = await getMainSettings();
-  const destination = path.join(settings.plugin_folder || "", pluginID);
+  const destination = path.join(settings.plugin_folder, pluginID);
 
   await extractTar(filePath, destination, true);
 
@@ -109,14 +109,14 @@ async function restoreBackup(backupFile: string, pluginID: string, opts: IPlugin
   addLog(opts, false, `Starting backup restoration`);
 
   await uninstallPlugin(pluginID);
-  await extractTar(backupFile, settings.plugin_folder || "");
+  await extractTar(backupFile, settings.plugin_folder);
   await fs.promises.unlink(backupFile);
 
   addLog(opts, false, `Backup successfully restored!`);
 
   try {
     addLog(opts, false, `Starting the backup, please wait...`);
-    await startPlugin(path.join(settings.plugin_folder || "", pluginID));
+    await startPlugin(path.join(settings.plugin_folder, pluginID));
     addLog(opts, false, `Done!`, 100);
   } catch (ex: any) {
     addLog(opts, true, "The backup was restored, but could not run");
@@ -130,7 +130,7 @@ async function restoreBackup(backupFile: string, pluginID: string, opts: IPlugin
  */
 async function backupPlugin(pluginID: string, opts: IPluginInstallOptions = {}): Promise<string> {
   const settings = await getMainSettings();
-  const pluginFolder = path.join(settings.plugin_folder || "", pluginID);
+  const pluginFolder = path.join(settings.plugin_folder, pluginID);
 
   const backupFile = path.join(pluginFolder, "..", `${pluginID}-bkp.tar`);
 
@@ -245,7 +245,7 @@ async function installPlugin(source: string, opts: IPluginInstallOptions = {}) {
     pluginID = generatePluginID(pluginPkg.name);
 
     const settings = await getMainSettings();
-    const pluginFolder = path.join(settings.plugin_folder || "", pluginID);
+    const pluginFolder = path.join(settings.plugin_folder, pluginID);
     const exists = fs.existsSync(pluginFolder);
     if (exists) {
       // plugin is already installed.

@@ -23,7 +23,7 @@ function Welcome() {
 
       <section>
         <Icon icon={EIcon.lightbulb} />
-        Tip: {tip}
+        <span>Tip: {tip}</span>
       </section>
     </Style.Container>
   );

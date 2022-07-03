@@ -1,4 +1,4 @@
-import { ISettings, zSettings } from "@tago-io/tcore-sdk/types";
+import { ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/types";
 import { Application } from "express";
 import { z } from "zod";
 import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings";
@@ -14,7 +14,7 @@ const zPassword = z.object({
 class EditSettings extends APIController<ISettings, void, void> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
-    zBodyParser: zSettings,
+    zBodyParser: zSettingsEdit,
   };
 
   public async main() {
@@ -85,7 +85,7 @@ class GetSettingsInfo extends APIController<void, void, void> {
       settings,
       metadata: {
         database_plugin_disabled: !!process.env.TCORE_DATABASE_PLUGIN,
-        plugin_folder_disabled: !!process.env.TCORE_PLUGIN_FOLDER,
+        plugin_folder_disabled: !!process.env.TCORE_PLUGINS_FOLDER,
         port_disabled: !!process.env.TCORE_PORT,
       },
     };

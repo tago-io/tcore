@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { IPlugin } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
+import { useHistory } from "react-router";
 import SetupBackground from "../SetupBackground/SetupBackground";
 import setDocumentTitle from "../../../Helpers/setDocumentTitle";
 import SetupForm from "../SetupForm/SetupForm";
@@ -24,6 +25,7 @@ function StepDatabaseError() {
   const [showingConfigs, setShowingConfigs] = useState(false);
   const [modalReset, setModalReset] = useState(false);
   const [plugin, setPlugin] = useState<IPlugin | null>(null);
+  const history = useHistory();
 
   /**
    */
@@ -150,6 +152,16 @@ function StepDatabaseError() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [action, store.masterPassword]);
+
+  /**
+   * Goes to the main console route if there is no database error.
+   */
+  useEffect(() => {
+    if (!store.databaseError) {
+      history.push("/console");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.databaseError]);
 
   /**
    * Cleans up the master password after the screen ends.

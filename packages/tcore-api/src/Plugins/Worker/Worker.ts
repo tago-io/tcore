@@ -5,6 +5,7 @@ import EventEmitter from "events";
 import fs from "fs";
 import { IModuleSetup, IPluginMessage } from "@tago-io/tcore-sdk/types";
 import { nanoid } from "nanoid";
+import { getPluginSettings } from "../../Services/Settings";
 import { getActionList, invokeActionOnTriggerChange } from "../../Services/Action";
 import { log, logError } from "../../Helpers/log";
 import Plugin from "../Plugin/Plugin";
@@ -40,8 +41,6 @@ class Worker extends EventEmitter {
     if (this.worker) {
       throw new Error("Plugin already running");
     }
-
-    this.plugin.state = "started";
 
     const fileName = this.plugin.package.main || "index.js";
     const filePath = path.join(this.plugin.folder, fileName);
@@ -155,7 +154,13 @@ class Worker extends EventEmitter {
     const module = new Module(this.plugin, setup);
     this.plugin.modules.set(module.id, module);
 
-    await module.start().catch(() => null);
+    const settings = await getPluginSettings(this.plugin.id);
+    const moduleSettings = settings?.modules?.find((x) => x.id === setup.id);
+    if (moduleSettings?.disabled) {
+      module.state = "stopped";
+    } else {
+      await module.start().catch(() => null);
+    }
 
     this.onModuleLoaded();
 

@@ -1,6 +1,7 @@
+import { readableColor } from "polished";
 import styled from "styled-components";
 
-const BUILDING_BLOCK_COLOR = "rgb(230, 230, 230)";
+export const SETUP_BUILDING_BLOCK_COLOR = "rgb(230, 230, 230)";
 
 const Container = styled.div`
   width: 100%;
@@ -33,15 +34,15 @@ const Container = styled.div`
   }
 
   i svg {
-    fill: black;
     opacity: 0.04;
+    fill: ${readableColor(SETUP_BUILDING_BLOCK_COLOR, "black", "white")};
   }
 `;
 
 const Device = styled.div`
   width: 600px;
   height: 600px;
-  background: ${() => `linear-gradient(${BUILDING_BLOCK_COLOR}, transparent)`};
+  background: ${() => `linear-gradient(${SETUP_BUILDING_BLOCK_COLOR}, transparent)`};
   opacity: 0.8;
   border-radius: 20px;
   display: flex;
@@ -53,7 +54,7 @@ const Device = styled.div`
 const Small = styled.div`
   width: 150px;
   height: 150px;
-  background: ${() => `linear-gradient(transparent, ${BUILDING_BLOCK_COLOR})`};
+  background: ${() => `linear-gradient(transparent, ${SETUP_BUILDING_BLOCK_COLOR})`};
   opacity: 0.8;
   border-radius: 20px;
   display: flex;
@@ -66,7 +67,7 @@ const Bucket2 = styled.div`
   width: 1000px;
   height: 1000px;
   background: ${() =>
-    `linear-gradient(${BUILDING_BLOCK_COLOR}, ${BUILDING_BLOCK_COLOR}, transparent)`};
+    `linear-gradient(${SETUP_BUILDING_BLOCK_COLOR}, ${SETUP_BUILDING_BLOCK_COLOR}, transparent)`};
   opacity: 0.8;
   border-radius: 20px;
   display: flex;
@@ -81,7 +82,7 @@ const Bucket1 = styled(Bucket2)`
   transform: translateY(-100%);
   top: -20px;
   background: ${() =>
-    `linear-gradient(transparent, ${BUILDING_BLOCK_COLOR}, ${BUILDING_BLOCK_COLOR})`};
+    `linear-gradient(transparent, ${SETUP_BUILDING_BLOCK_COLOR}, ${SETUP_BUILDING_BLOCK_COLOR})`};
 `;
 
 export { Bucket1, Bucket2, Small, Container, Device };

@@ -19,13 +19,21 @@ interface IStartOptions {
   settingsFolder: string;
 }
 
+/**
+ * Returns the environment variables.
+ */
 function getEnv(opts: IStartOptions) {
-  const env: any = {};
-  if (opts.port) env.TCORE_PORT = opts.port;
-  if (opts.daemon) env.TCORE_DAEMON = String(opts.daemon);
-  if (opts.pluginsFolder) env.TCORE_PLUGIN_FOLDER = opts.pluginsFolder;
-  if (opts.settingsFolder) env.TCORE_SETTINGS_FOLDER = opts.settingsFolder;
-  if (opts.databasePlugin) env.TCORE_DATABASE_PLUGIN = opts.databasePlugin;
+  const env = {
+    TCORE_DAEMON: String(opts.daemon),
+    TCORE_DATABASE_PLUGIN: opts.databasePlugin,
+    TCORE_PLUGINS_FOLDER: opts.pluginsFolder,
+    TCORE_PORT: opts.port,
+    TCORE_SETTINGS_FOLDER: opts.settingsFolder,
+  };
+
+  // removes undefined objects
+  Object.keys(env).forEach((key) => (!env[key] ? delete env[key] : {}));
+
   return env;
 }
 
