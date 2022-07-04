@@ -88,7 +88,7 @@ export function internalLog(channel: string, ...args: any[]) {
 /**
  * Logs the "start box" with the localhost and internal ips.
  */
-export async function logSystemStart(port?: number | string) {
+export async function logSystemStart(port?: number | string | null) {
   const systemName = getSystemName();
   const systemVers = pkg?.version;
 

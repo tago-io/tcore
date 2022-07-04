@@ -121,6 +121,18 @@ export const zTagsAutoGen = z
   .nullish()
   .transform((e) => e ?? []); // use transform instead of `default` because `default` doesn't apply to `null`.
 
+/**
+ * Environment variables for the application.
+ */
+export const zEnvironmentVariables = z.object({
+  TCORE_PORT: z.string().nullish(),
+  TCORE_DAEMON: z.string().nullish(),
+  TCORE_PLUGIN_FOLDER: z.string().nullish(),
+  TCORE_SETTINGS_FOLDER: z.string().nullish(),
+  TCORE_DATABASE_PLUGIN: z.string().nullish(),
+});
+
+export type IEnvironmentVariables = z.infer<typeof zEnvironmentVariables>;
 export type TGenericID = string;
 export type TGenericToken = string;
 export type TDate = Date | number | null;
