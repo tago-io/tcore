@@ -19,16 +19,11 @@ interface ISetupTokenAnonymous {
   permission: "any";
 }
 
-interface ISetupMasterPassword {
-  resource: "master-password";
-  permission: "any";
-}
-
 interface ISetupController {
   zBodyParser?: ZodTypeAny;
   zQueryStringParser?: ZodTypeAny;
   zURLParamsParser?: ZodTypeAny;
-  allowTokens: (ISetupToken | ISetupTokenAnonymous | ISetupMasterPassword)[];
+  allowTokens: (ISetupToken | ISetupTokenAnonymous)[];
 }
 
 /**

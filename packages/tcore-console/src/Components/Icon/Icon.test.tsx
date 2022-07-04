@@ -7,11 +7,6 @@ test("renders without crashing", () => {
   expect(fn).not.toThrowError();
 });
 
-test("renders icon data", () => {
-  render(<Icon icon={EIcon.cog} />);
-  expect(screen.getByText("cog-icon-mock"));
-});
-
 test("has correct default size", () => {
   const { container } = render(<Icon icon={EIcon.cog} />);
   const style = window.getComputedStyle(container.firstChild as HTMLElement);

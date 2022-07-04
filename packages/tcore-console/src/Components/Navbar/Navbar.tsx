@@ -1,9 +1,12 @@
 import { useCallback } from "react";
 import { useHistory } from "react-router";
+import { useTheme } from "styled-components";
+import { readableColor } from "polished";
 import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { EIcon } from "../Icon/Icon.types";
-import Logo from "../../../assets/images/logo-black.svg";
+import LogoBlack from "../../../assets/images/logo-black.svg";
+import LogoWhite from "../../../assets/images/logo-white.svg";
 import { EButton } from "../Button/Button.types";
 import Link from "../Link/Link";
 import { setLocalStorage } from "../../Helpers/localStorage";
@@ -37,6 +40,7 @@ function Navbar(props: INavbarProps) {
   // const updateTheme = useContext(ThemeUpdateContext);
   const { logoWidth, onSidebarToggle } = props;
   const history = useHistory();
+  const theme = useTheme();
 
   /**
    * Removes the account, token, and goes back to the /console/login route.
@@ -47,6 +51,8 @@ function Navbar(props: INavbarProps) {
     setLocalStorage("token", "");
     history.push("/console/login");
   }, [history]);
+
+  const Logo = readableColor(theme.navBar, "black", "white") === "black" ? LogoBlack : LogoWhite;
 
   return (
     <Style.Container logoWidth={logoWidth || 120} data-testid="navbar">

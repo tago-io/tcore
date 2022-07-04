@@ -37,12 +37,12 @@ class Plugin {
   /**
    * Generates a plugin ID based on the plugin name.
    */
-  public static generatePluginID(packageName: string) {
+  public static generatePluginID(packageName: string): string {
     if (!packageName) {
-      return null;
+      return "";
     }
     const id = md5(packageName);
-    return id;
+    return id as string;
   }
 
   constructor(public folder: string) {

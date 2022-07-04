@@ -18,11 +18,6 @@ test("renders children", () => {
   expect(screen.getByText("Foo")).toBeInTheDocument();
 });
 
-test("renders children", () => {
-  render(<FormGroup>Foo</FormGroup>);
-  expect(screen.getByText("Foo")).toBeInTheDocument();
-});
-
 test("renders icon", () => {
   render(<FormGroup icon={EIcon.cog} />);
   expect(screen.getByText("cog-icon-mock")).toBeInTheDocument();
