@@ -30,6 +30,8 @@ function OperatingSystem(props: IOperatingSystemProps) {
   const getHardwareIcon = () => {
     if (os.hardware === "raspberry-pi") {
       return EIcon["raspberry-pi"];
+    } else if (os.hardware === "rock-pi") {
+      return EIcon["rock-pi"];
     }
   };
 
@@ -71,7 +73,7 @@ function OperatingSystem(props: IOperatingSystemProps) {
       <div className="data">
         <h3>{os.name || "-"}</h3>
         <span className="description">
-          Version {os.version}
+          {os.version}
           {os.arch ? " • " : ""}
           {os.arch}
         </span>

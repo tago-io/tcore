@@ -45,12 +45,13 @@ export async function getOSInfo() {
   const osInfo = await si.osInfo();
   const osPlatform = os.platform();
 
-  let version = osInfo.release;
+  let version = `Version ${osInfo.release}`;
   let code = "";
   let hardware = "";
   let name = osInfo.distro || osInfo.codename;
   const arch = osInfo.arch;
   const hostname = os.hostname();
+  const osVersion = os.version();
 
   // debian
   // redhat
@@ -75,9 +76,14 @@ export async function getOSInfo() {
       break;
   }
 
+  if (String(osVersion).includes("rockchip")) {
+    name = "Rock Pi";
+    version = `${osInfo.distro || osInfo.codename} ${osInfo.release}`;
+    hardware = "rock-pi";
+  }
   if (system.raspberry) {
     hardware = "raspberry-pi";
-    version = system.raspberry?.type;
+    version = `Version ${system.raspberry.type}`;
     name = "Raspberry Pi";
   }
 
