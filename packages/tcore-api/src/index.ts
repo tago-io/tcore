@@ -1,7 +1,7 @@
 import { installPlugin } from "./Plugins/Install";
 import { uninstallPlugin, uninstallPluginByFolder } from "./Plugins/Uninstall";
 import { startServer } from "./server";
-import { log, logError } from "./Helpers/log";
+import { log, logError, logSystemStart } from "./Helpers/log";
 import { getPlatformAndArch } from "./Helpers/Platform";
 import { downloadFile } from "./Helpers/Download";
 import Plugin from "./Plugins/Plugin/Plugin";
@@ -16,6 +16,7 @@ export {
   installPlugin,
   log,
   logError,
+  logSystemStart,
   Plugin,
   startServer,
   uninstallPlugin,

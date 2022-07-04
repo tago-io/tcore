@@ -25,6 +25,7 @@ export async function restart() {
       const newApp = await pm2GetApp();
       if (newApp) {
         log(`${getSystemName()} Server was ${chalk.green("successfully restarted")} with PID`, newApp.pid);
+        API.logSystemStart((app?.pm2_env as any)?.TCORE_PORT);
       } else {
         log(`${getSystemName()} Server ${chalk.redBright("could not be started")}.`);
         log(`You can check the logs by running ${chalk.cyan("tcore logs")}`);
