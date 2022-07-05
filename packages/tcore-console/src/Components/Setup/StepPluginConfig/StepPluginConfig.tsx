@@ -99,8 +99,8 @@ function StepPluginConfig(props: IStepPluginConfigProps) {
       }));
 
       await editPluginSettings(plugin?.id || "", editValues);
+      await promiseDelay(1000); // a bit of delay generates more 'trust'
       await editSettings({ database_plugin: `${plugin?.id}:${mod?.id}` });
-      await promiseDelay(500); // a bit of delay generates more 'trust'
 
       setSuccess(true);
     } catch (err: any) {

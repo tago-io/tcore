@@ -11,6 +11,7 @@ function selectPluginFile(callback: (file: File) => void) {
   newElement.setAttribute("type", "file");
   newElement.setAttribute("accept", ".tcore");
   newElement.id = "file-selector";
+  newElement.style.display = "none";
   newElement.onchange = () => {
     callback(newElement.files?.[0] as File);
     document.body.removeChild(newElement);

@@ -1,4 +1,5 @@
 import path from "path";
+import fs from "fs";
 import { listPluginFolders } from "../Services/Plugins";
 import { oraLog, oraLogError } from "../Helpers/log";
 import { getMainSettings, getPluginSettings } from "../Services/Settings";
@@ -121,6 +122,8 @@ export async function startAllPlugins() {
   const sorted = await sortFoldersByPriority(folders);
 
   for (const folder of sorted) {
-    await startPluginAndHandleErrors(folder);
+    if (fs.existsSync(folder)) {
+      await startPluginAndHandleErrors(folder);
+    }
   }
 }

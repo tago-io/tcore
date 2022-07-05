@@ -14,6 +14,7 @@ export const zSettings = z.object({
     .default(8888)
     .or(z.undefined()),
   settings_folder: z.string().optional(),
+  version: z.string().nullish(),
 });
 
 /**

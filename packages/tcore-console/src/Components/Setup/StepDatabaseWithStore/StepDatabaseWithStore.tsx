@@ -1,6 +1,7 @@
 import { IPluginList } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { useCallback, useEffect, useState } from "react";
+import { PLUGIN_STORE_PLUGIN_ID, SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
 import {
   Button,
   EButton,
@@ -13,7 +14,6 @@ import {
   Tooltip,
   useApiRequest,
 } from "../../..";
-import { PLUGIN_STORE_PLUGIN_ID, SQLITE_PLUGIN_ID } from "../../../Constants";
 import selectPluginFile from "../../../Helpers/selectPluginFile";
 import getPluginStoreInstallURLs from "../../../Requests/getPluginStoreInstallURLs";
 import store from "../../../System/Store";
@@ -94,7 +94,9 @@ function StepDatabaseWithStore(props: any) {
    */
   const deactivateModalInstall = (pluginID: string) => {
     setModalInstall(false);
-    if (pluginID) {
+    if (selectedItem) {
+      onNext(selectedItem?.id);
+    } else if (pluginID) {
       onNext(pluginID);
     }
   };

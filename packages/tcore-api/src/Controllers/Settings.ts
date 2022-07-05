@@ -1,6 +1,7 @@
 import { ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/types";
 import { Application } from "express";
 import { z } from "zod";
+import { encryptAccountPassword } from "../Services/Account/AccountPassword";
 import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings";
 import APIController, { ISetupController, warm } from "./APIController";
 
@@ -39,7 +40,9 @@ class SetMasterPassword extends APIController<z.infer<typeof zPassword>, void, v
     if (settings.master_password) {
       throw new Error("Master password is already set");
     }
-    await setMasterPassword(this.bodyParams.password);
+
+    const encrypted = await encryptAccountPassword(this.bodyParams.password);
+    await setMasterPassword(encrypted);
   }
 }
 

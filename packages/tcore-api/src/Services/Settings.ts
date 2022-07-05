@@ -6,7 +6,7 @@ import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcor
 import { plugins } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
 import { rmdir } from "../Helpers/Files";
-import { compareAccountPasswordHash, encryptAccountPassword } from "./Account/AccountPassword";
+import { compareAccountPasswordHash } from "./Account/AccountPassword";
 import { startPluginModule, terminateAllPlugins } from "./Plugins";
 import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
 
@@ -65,6 +65,7 @@ export async function getMainSettings(): Promise<ISettings> {
   const plugin_folder = process.env.TCORE_PLUGINS_FOLDER || data.plugin_folder || (await getPluginsFolder());
   const port = process.env.TCORE_PORT || data.port || "8888";
   const master_password = data.master_password || "";
+  const version = data.version || "";
 
   const settings: ISettings = {
     filesystem_plugin,
@@ -73,6 +74,7 @@ export async function getMainSettings(): Promise<ISettings> {
     port,
     settings_folder,
     master_password,
+    version,
   };
 
   if (!fs.existsSync(settings.plugin_folder)) {
@@ -102,9 +104,9 @@ export async function setMainSettings(data: ISettings): Promise<void> {
 /**
  * Sets the master password.
  */
-export async function setMasterPassword(password: string): Promise<void> {
+export async function setMasterPassword(encryptedPassword: string): Promise<void> {
   const settings = await getMainSettings();
-  settings.master_password = await encryptAccountPassword(password);
+  settings.master_password = encryptedPassword;
   await setMainSettings(settings);
 }
 

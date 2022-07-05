@@ -41,13 +41,12 @@ async function addPluginCommands(program: Command) {
       }
 
       const folder = path.join(item.folder, pluginCommand.file);
-      const func = tryRequire(folder);
+      const fileData = tryRequire(folder);
 
-      if (func) {
-        if (typeof func === "function") {
-          cliCommand.action(func);
-        } else if (typeof func.default === "function") {
-          cliCommand.action(func.default);
+      if (fileData) {
+        const handler = fileData[pluginCommand.handler] || fileData.default?.[pluginCommand.handler];
+        if (typeof handler === "function") {
+          cliCommand.action(handler);
         }
       }
     }

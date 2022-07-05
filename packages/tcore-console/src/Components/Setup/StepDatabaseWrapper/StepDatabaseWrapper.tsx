@@ -1,7 +1,7 @@
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
+import { PLUGIN_STORE_PLUGIN_ID } from "@tago-io/tcore-shared";
 import { EIcon, EmptyMessage, Loading, useApiRequest } from "../../..";
-import { PLUGIN_STORE_PLUGIN_ID } from "../../../Constants";
 import store from "../../../System/Store";
 import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
 import SetupForm from "../SetupForm/SetupForm";

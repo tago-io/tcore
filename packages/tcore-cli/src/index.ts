@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import { getSystemName } from "@tago-io/tcore-shared";
+import { runVersionMigration } from "@tago-io/tcore-api";
 // @ts-ignore
 import pkg from "../package.json";
 import { showLogs } from "./Commands/Logs";
@@ -43,6 +44,8 @@ function getBaseProgram() {
 /**
  */
 async function startCLI() {
+  await runVersionMigration().catch(() => null);
+
   const program = getBaseProgram();
 
   await addPluginCommands(program);

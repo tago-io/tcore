@@ -4,6 +4,7 @@ import { startServer } from "./server";
 import { log, logError } from "./Helpers/log";
 import { getPlatformAndArch } from "./Helpers/Platform";
 import { downloadFile } from "./Helpers/Download";
+import { runVersionMigration } from "./Services/VersionMigration";
 import Plugin from "./Plugins/Plugin/Plugin";
 export * from "./Helpers/Tar/Tar";
 export * from "./Helpers/Zip";
@@ -17,6 +18,7 @@ export {
   log,
   logError,
   Plugin,
+  runVersionMigration,
   startServer,
   uninstallPlugin,
   uninstallPluginByFolder,
