@@ -84,7 +84,7 @@ function ModalMasterPassword(props: IModalMasterPasswordProps) {
           disabled={loading}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Enter your master password"
+          placeholder="Enter your Master Password"
           value={value}
           error={error}
           errorMessage="Invalid Master Password"
