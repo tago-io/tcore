@@ -24,6 +24,11 @@ function StepMasterPassword(props: any) {
   const next = useCallback(async () => {
     setErrorMsg("");
 
+    if (value !== confirmation) {
+      setErrorMsg("Passwords do not match");
+      return;
+    }
+
     if (value.length < 6) {
       setErrorMsg("Password must have at least 6 characters");
       return;
@@ -37,7 +42,7 @@ function StepMasterPassword(props: any) {
     } catch {
       setLoading(false);
     }
-  }, [onNext, value]);
+  }, [onNext, value, confirmation]);
 
   /**
    * Called when the password input receives a keydown event.
@@ -60,7 +65,7 @@ function StepMasterPassword(props: any) {
     [next]
   );
 
-  const nextDisabled = value !== confirmation || !value || loading;
+  const nextDisabled = !value || !confirmation || loading;
 
   return (
     <SetupForm
