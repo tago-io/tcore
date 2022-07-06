@@ -1,7 +1,6 @@
 import { createServer } from "http";
 import path from "path";
 import express from "express";
-import boxen from "boxen";
 import cors from "cors";
 import chalk from "chalk";
 import ora from "ora";
@@ -25,10 +24,10 @@ import { getMainSettings } from "./Services/Settings";
 import HardwareController from "./Controllers/Hardware";
 import { setupSocketServer } from "./Socket/SocketServer";
 import { shutdown } from "./Helpers/shutdown";
-import { getLocalIPs } from "./Services/Hardware";
 import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
 import { startActionScheduleTimer } from "./Services/ActionScheduler";
+import { logSystemStart } from "./Helpers/log";
 
 const app = express();
 const httpServer = createServer(app);
@@ -141,19 +140,11 @@ async function listenOnApplicationPort() {
 
   httpServer
     .listen(port, () => {
-      const lines = [`${systemName} is ready!`, "", `- Local:             http://localhost:${port}`];
-
-      const netAddresses = getLocalIPs();
-      if (netAddresses[0]) {
-        lines.push(`- On your network:   http://${netAddresses[0]}:${port}`);
-      }
-
-      console.log("");
-      console.log(chalk.green(boxen(lines.join("\n"), { padding: 1 })));
-      console.log("");
+      logSystemStart();
     })
     .on("error", () => {
       ora(chalk.redBright(`Could not start ${systemName} on port ${port}`)).fail();
+      ora(chalk.redBright(`Check if the port is not being used by another application`)).fail();
       process.exit(1);
     });
 }

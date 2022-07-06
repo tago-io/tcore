@@ -2,8 +2,13 @@ import { ESocketRoom } from "@tago-io/tcore-sdk/types";
 import chalk from "chalk";
 import ora from "ora";
 import { getSystemName } from "@tago-io/tcore-shared";
+import boxen from "boxen";
+import { getMainSettings } from "../Services/Settings";
 import { plugins } from "../Plugins/Host";
 import { io } from "../Socket/SocketServer";
+import { getLocalIPs } from "../Services/Hardware";
+// @ts-ignore
+import pkg from "../../../../package.json";
 
 /**
  * Contains a history of all logs in the application and in the plugins.
@@ -78,4 +83,26 @@ export function internalLog(channel: string, ...args: any[]) {
     const colored = chalk.yellow(`[Plugin ${plugin}]`);
     console.log(colored, ...args);
   }
+}
+
+/**
+ * Logs the "start box" with the localhost and internal ips.
+ */
+export async function logSystemStart(port?: number | string | null) {
+  const systemName = getSystemName();
+  const systemVers = pkg?.version;
+
+  const settings = await getMainSettings();
+  const realPort = port || settings.port;
+
+  const lines = [`${systemName} v${systemVers} is ready!`, "", `- Local:             http://localhost:${realPort}`];
+
+  const netAddresses = getLocalIPs();
+  if (netAddresses[0]) {
+    lines.push(`- On your network:   http://${netAddresses[0]}:${realPort}`);
+  }
+
+  console.log("");
+  console.log(chalk.green(boxen(lines.join("\n"), { padding: 1 })));
+  console.log("");
 }
