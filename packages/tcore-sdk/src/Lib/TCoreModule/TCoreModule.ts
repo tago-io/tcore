@@ -10,6 +10,8 @@ import APIBridge from "../APIBridge/APIBridge";
 
 const moduleIDs = new Map<string, boolean>();
 
+parentPort?.setMaxListeners(100);
+
 /**
  * This is the base module for all modules.
  * It contains the communication between the API and this worker.

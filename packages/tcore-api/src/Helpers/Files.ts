@@ -25,11 +25,11 @@ async function rmdir(dir: string) {
       await rmdir(filename);
     } else {
       // rm filename
-      await fs.promises.unlink(filename);
+      await fs.promises.unlink(filename).catch(() => false);
     }
   }
 
-  await fs.promises.rmdir(dir);
+  await fs.promises.rmdir(dir).catch(() => false);
 }
 
 export { rmdir };

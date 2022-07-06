@@ -25,7 +25,7 @@ let tcoreIgnore: string[] = [];
 /**
  * The name of the output file.
  */
-const OUTPUT_FILE = `${pkgName}-${pkg.version}.tcore`;
+let outputFile = `${pkgName}-${pkg.version}.tcore`;
 
 /**
  * Formats the bytes into a more readable format.
@@ -47,7 +47,7 @@ function formatBytes(bytes: number) {
 function getSha256OutputFile() {
   return new Promise((resolve) => {
     const stream = crypto.createHash("sha1").setEncoding("hex");
-    fs.createReadStream(path.join(cwd, OUTPUT_FILE))
+    fs.createReadStream(path.join(cwd, outputFile))
       .pipe(stream)
       .on("finish", () => resolve(stream.read()));
   });
@@ -56,7 +56,7 @@ function getSha256OutputFile() {
 /**
  */
 async function printDetails(spinner: ora.Ora, amountOfFiles: number) {
-  const filePath = path.join(cwd, OUTPUT_FILE);
+  const filePath = path.join(cwd, outputFile);
   const stat = await fs.promises.stat(filePath).catch(() => null);
   const size = stat?.size || 0;
 
@@ -66,7 +66,7 @@ async function printDetails(spinner: ora.Ora, amountOfFiles: number) {
 
   spinner.succeed(`name:     ${pkg.name}`);
   spinner.succeed(`version:  ${pkg.version}`);
-  spinner.succeed(`filename: ${OUTPUT_FILE}`);
+  spinner.succeed(`filename: ${outputFile}`);
   spinner.succeed(`size:     ${formatBytes(size)}`);
   spinner.succeed(`shasum:   ${shasum}`);
   spinner.succeed(`files:    ${amountOfFiles}`);
@@ -79,12 +79,12 @@ async function pack(spinner: ora.Ora): Promise<number> {
 
   if (pkg.files) {
     for (const item of pkg.files) {
-      const ignore = [OUTPUT_FILE, "node_modules", "node_modules/**", ".DS_Store", ...tcoreIgnore];
+      const ignore = [outputFile, ".DS_Store", ...tcoreIgnore];
       const globFiles = glob.sync(item, { cwd, ignore, dot: true });
       files.push(...globFiles);
     }
   } else {
-    const ignore = [OUTPUT_FILE, ".gitignore", "node_modules", "node_modules/**", ".git", ".git/**/*", ...tcoreIgnore];
+    const ignore = [outputFile, ".gitignore", "node_modules", "node_modules/**", ".git", ".git/**/*", ...tcoreIgnore];
     const globFiles = glob.sync("**/*", { cwd, ignore, dot: true });
     files.push(...globFiles);
   }
@@ -94,9 +94,10 @@ async function pack(spinner: ora.Ora): Promise<number> {
     files.push("package.json");
   }
 
-  if (!files.includes("README.md")) {
-    // README.md is necessary, cannot remove it
-    files.push("README.md");
+  const fd = pkg.tcore?.full_description || "";
+  if (fd) {
+    // full description is necessary, cannot remove it
+    files.push(fd);
   }
 
   let amount = 0;
@@ -116,7 +117,7 @@ async function pack(spinner: ora.Ora): Promise<number> {
     const opts = {
       cwd,
       gzip: true,
-      file: path.join(cwd, OUTPUT_FILE),
+      file: path.join(cwd, outputFile),
     };
 
     tar.c(opts, files, (err) => {
@@ -209,6 +210,9 @@ async function generate(opts: any) {
       spinner.fail("Process aborted due to errors");
       return;
     }
+    if (opts?.output) {
+      outputFile = opts.output;
+    }
 
     const amountOfFiles = await pack(spinner);
     await printDetails(spinner, amountOfFiles);
@@ -220,6 +224,7 @@ async function generate(opts: any) {
 program
   .command("pack")
   .option("-f, --force", "Forces creation even with errors")
+  .option("-o, --output <value>", "Set the output name of the file")
   .description("Creates a .tcore file from a package")
   .action(generate);
 
