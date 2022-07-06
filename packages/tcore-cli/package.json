@@ -1,6 +1,6 @@
 {
   "name": "@tago-io/tcore-cli",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "description": "TCore CLI",
   "author": "Tago LLC",
@@ -34,7 +34,7 @@
     "eslint": "7.32.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-import-resolver-typescript": "2.4.0",
-    "eslint-plugin-import": "2.24.1",
+		"eslint-plugin-import": "2.26.0",
     "eslint-plugin-jest": "26.5.3",
     "eslint-plugin-prettier": "3.4.1",
     "jest": "27.0.6",

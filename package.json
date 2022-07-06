@@ -1,6 +1,6 @@
 {
   "name": "@tago-io/tcore",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "author": "Tago LLC",
   "description": "TCore by TagoIO",
   "license": "MIT",
@@ -13,6 +13,8 @@
     "packages/tcore-sdk",
     "packages/tcore-shared",
     "packages/tcore-console",
+    "packages/tcore-api",
+    "packages/tcore-cli",
     "packages/*"
   ],
   "keywords": [
