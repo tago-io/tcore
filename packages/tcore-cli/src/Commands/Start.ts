@@ -64,6 +64,7 @@ async function startWithDaemon(opts: IStartOptions) {
   try {
     const systemName = getSystemName();
     const exeName = path.basename(process.execPath);
+    const env = getEnv(opts);
 
     await pm2Connect();
 
@@ -94,7 +95,7 @@ async function startWithDaemon(opts: IStartOptions) {
       name: PM2_APP_NAME,
       output: pm2LogPath,
       error: pm2LogPath,
-      env: getEnv(opts),
+      env,
     };
 
     await pm2Start(startOptions);
@@ -103,6 +104,7 @@ async function startWithDaemon(opts: IStartOptions) {
     if (newApp?.pm2_env?.status === "online") {
       // successfully started new process
       log(`${systemName} Server successfully ${chalk.green("started")} with PID`, newApp.pid);
+      API.logSystemStart(env.TCORE_PORT);
     } else {
       // for some reason pm2 could not start the script
       log(`${systemName} Server ${chalk.redBright("could not be started")}.`);
