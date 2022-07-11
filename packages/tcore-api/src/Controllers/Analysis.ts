@@ -24,7 +24,7 @@ const zURLParamsID = z.object({
  */
 class ListAnalyses extends APIController<void, IAnalysisListQuery, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zAnalysisListQuery,
   };
 
@@ -39,7 +39,7 @@ class ListAnalyses extends APIController<void, IAnalysisListQuery, void> {
  */
 class GetAnalysisInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -54,7 +54,7 @@ class GetAnalysisInfo extends APIController<void, void, z.infer<typeof zURLParam
  */
 class DeleteAnalysis extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -68,7 +68,7 @@ class DeleteAnalysis extends APIController<void, void, z.infer<typeof zURLParams
  */
 class RunAnalysis extends APIController<any, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
     zBodyParser: z.any(),
   };
@@ -83,7 +83,7 @@ class RunAnalysis extends APIController<any, void, z.infer<typeof zURLParamsID>>
  */
 class EditAnalysis extends APIController<IAnalysisEdit, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zAnalysisEdit,
     zURLParamsParser: zURLParamsID,
   };
@@ -98,13 +98,13 @@ class EditAnalysis extends APIController<IAnalysisEdit, void, z.infer<typeof zUR
  */
 class CreateAnalysis extends APIController<IAnalysisCreate, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zAnalysisCreate,
   };
 
   public async main() {
     const response = await createAnalysis(this.bodyParams);
-    this.body = response;
+    this.body = { id: response };
   }
 }
 

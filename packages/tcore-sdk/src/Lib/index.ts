@@ -8,6 +8,7 @@ import pluginStorage from "./PluginStorage/PluginStorage";
 import ServiceModule from "./ServiceModule/ServiceModule";
 import FileSystemModule from "./FileSystemModule/FileSystemModule";
 import TCoreModule from "./TCoreModule/TCoreModule";
+import HookModule from "./HookModule/HookModule";
 
 export {
   ActionTriggerModule,
@@ -16,6 +17,7 @@ export {
   DatabaseModule,
   FileSystemModule,
   helpers,
+  HookModule,
   PayloadEncoderModule,
   pluginStorage,
   ServiceModule,

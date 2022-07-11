@@ -6,14 +6,21 @@ import { z } from "zod";
 export const zSettings = z.object({
   database_plugin: z.string().optional(),
   filesystem_plugin: z.string().optional(),
-  plugin_folder: z.string().nonempty(),
+  plugin_folder: z.string(),
+  master_password: z.string().optional(),
   port: z
     .preprocess((x) => Number(x), z.number())
     .optional()
     .default(8888)
     .or(z.undefined()),
   settings_folder: z.string().optional(),
+  version: z.string().nullish(),
 });
+
+/**
+ * Configuration to edit existing settings.
+ */
+export const zSettingsEdit = zSettings.partial();
 
 export const zSettingsMetadata = z.object({
   database_plugin_disabled: z.boolean(),
@@ -22,4 +29,5 @@ export const zSettingsMetadata = z.object({
 });
 
 export type ISettings = z.infer<typeof zSettings>;
+export type ISettingsEdit = z.infer<typeof zSettingsEdit>;
 export type ISettingsMetadata = z.infer<typeof zSettingsMetadata>;

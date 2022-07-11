@@ -1,9 +1,12 @@
 import { IncomingHttpHeaders } from "http";
 import express, { Request, Response } from "express";
 import { ZodTypeAny } from "zod";
-import { getDeviceByToken } from "../Services/Device";
+import { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
+import { getDeviceByToken, getDeviceToken } from "../Services/Device";
+import { getAccountToken } from "../Services/Account/Account";
+import { checkMasterPassword } from "../Services/Settings";
 
-type TResourceType = "device" | "analysis";
+type TResourceType = "device" | "account";
 type TPermission = "full" | "write" | "read";
 
 interface ISetupToken {
@@ -95,7 +98,14 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
    * Runs the whole routine.
    */
   private async init() {
-    // await this.resolveToken();
+    try {
+      await this.resolveAuth();
+    } catch (ex: any) {
+      this.body = ex?.message || undefined;
+      this.res.statusCode = 401;
+      this.res.json({ status: false, result: this.body });
+      return;
+    }
 
     let errorOn = "unknown";
     try {
@@ -153,6 +163,49 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
         this.res.json({ status: false, result: this.body });
       }
     }
+  }
+
+  /**
+   * Validates and resolves account and device tokens.
+   */
+  private async resolveAuth() {
+    let accountToken: IAccountToken | null = null;
+    let deviceToken: IDeviceToken | null = null;
+
+    const containAnonymousToken = this.setup.allowTokens.some((x) => x.resource === "anonymous");
+    if (containAnonymousToken) {
+      // valid by default
+      return;
+    }
+
+    for (const allowed of this.setup.allowTokens || []) {
+      if (allowed.resource === "account") {
+        if (!accountToken) {
+          accountToken = await getAccountToken(this.rawToken as string).catch(() => null);
+        }
+        if (accountToken?.permission === "full" || accountToken?.permission === allowed.permission) {
+          // valid permission
+          return;
+        }
+        if (this.req.headers.masterpassword) {
+          const matches = await checkMasterPassword(this.req.headers.masterpassword as string);
+          if (matches) {
+            return;
+          }
+        }
+      }
+      if (allowed.resource === "device") {
+        if (!deviceToken) {
+          deviceToken = await getDeviceToken(this.rawToken as string).catch(() => null);
+        }
+        if (deviceToken?.permission === "full" || deviceToken?.permission === allowed.permission) {
+          // valid permission
+          return;
+        }
+      }
+    }
+
+    throw new Error("Authorization denied");
   }
 
   /**

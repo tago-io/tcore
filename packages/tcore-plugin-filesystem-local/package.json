@@ -4,7 +4,7 @@
   "private": true,
   "main": "./build/index.js",
   "tcore": {
-    "name": "TCore Local Disk Filesystem",
+    "name": "Local Disk Filesystem",
     "types": ["filesystem"],
     "permissions": []
   },

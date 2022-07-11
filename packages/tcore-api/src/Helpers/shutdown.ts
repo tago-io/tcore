@@ -2,8 +2,7 @@
 import { Server } from "http";
 import { getSystemName } from "@tago-io/tcore-shared";
 import { stopActionScheduleTimer } from "../Services/ActionScheduler";
-import { plugins } from "../Plugins/Host";
-import Plugin from "../Plugins/Plugin/Plugin";
+import { terminateAllPlugins } from "../Services/Plugins";
 import { log } from "./log";
 
 let shutdownTries = 0;
@@ -28,40 +27,8 @@ export async function shutdown(httpServer: Server) {
     process.exit(1);
   }
 
-  const sortedPlugins = await sortPluginsByPriority();
-  for (const plugin of sortedPlugins) {
-    await destroyPlugin(plugin);
-  }
+  await terminateAllPlugins(false);
 
   log("api", "Terminated with exit code 0");
   process.exit(0);
-}
-
-/**
- * Destroys a plugin.
- * This will return the flow back to the main function only when the plugin calls the `destroy` event.
- */
-async function destroyPlugin(plugin: Plugin) {
-  return new Promise<void>(async (resolve) => {
-    await plugin.stop(false, 3000).catch(() => null);
-    resolve();
-  });
-}
-
-/**
- * Sorts the plugins by priority:
- * First all the other plugins then the main database one.
- */
-async function sortPluginsByPriority() {
-  const result: Plugin[] = [];
-
-  for (const plugin of plugins.values()) {
-    if (plugin.types.includes("database")) {
-      result.unshift(plugin);
-    } else {
-      result.push(plugin);
-    }
-  }
-
-  return result;
 }

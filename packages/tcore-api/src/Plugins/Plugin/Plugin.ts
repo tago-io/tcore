@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import path from "path";
 import fs from "fs";
-import { ESocketRoom, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
+import { ESocketRoom, IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log";
 import { setPluginDisabledSettings } from "../../Services/Settings";
@@ -10,6 +10,7 @@ import M from "../Module/Module";
 import Validator from "../Validator/Validator";
 import Worker from "../Worker/Worker";
 import { generatePluginID } from "../PluginID";
+import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS } from "../Host";
 
 /**
  */
@@ -17,12 +18,13 @@ class Plugin {
   public package: any;
   public permissions: string[];
   public types: TPluginType[];
+  public builtIn: boolean = false;
 
   public readonly version: string;
   public readonly id: string;
   public readonly packageName: string;
   public readonly tcoreName: string;
-  public readonly publisher: string;
+  public readonly publisher: IPluginPublisher;
   public readonly description: string;
   public fullDescription: string | null = null;
 
@@ -35,12 +37,12 @@ class Plugin {
   /**
    * Generates a plugin ID based on the plugin name.
    */
-  public static generatePluginID(packageName: string) {
+  public static generatePluginID(packageName: string): string {
     if (!packageName) {
-      return null;
+      return "";
     }
     const id = md5(packageName);
-    return id;
+    return id as string;
   }
 
   constructor(public folder: string) {
@@ -59,6 +61,8 @@ class Plugin {
     this.publisher = this.package.tcore.publisher;
     this.tcoreName = this.package.tcore.name;
     this.version = this.package.version;
+
+    this.builtIn = HIDDEN_BUILT_IN_PLUGINS.includes(folder) || BUILT_IN_PLUGINS.includes(folder);
 
     this.loadFullDescription();
   }

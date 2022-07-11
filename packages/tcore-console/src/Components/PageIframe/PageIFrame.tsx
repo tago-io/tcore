@@ -68,7 +68,7 @@ function PageIFrame(props: IPageIFrameProps) {
       />
 
       {modalInstall && (
-        <ModalInstallPlugin source={modalInstall} onClose={() => setModalInstall("")} />
+        <ModalInstallPlugin source={modalInstall} onClose={() => window.location.reload()} />
       )}
 
       {modalUninstall && (

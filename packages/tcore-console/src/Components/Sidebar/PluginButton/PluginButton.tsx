@@ -103,27 +103,32 @@ function PluginButton(props: IPluginButtonProps) {
         </div>
       </Style.TitleContainer>
 
-      <Style.Options onClick={onClickOptions}>
-        <Icon icon={EIcon["ellipsis-v"]} />
-      </Style.Options>
+      {(item.allow_disable || item.allow_uninstall) && (
+        <Style.Options onClick={onClickOptions}>
+          <Icon icon={EIcon["ellipsis-v"]} />
+        </Style.Options>
+      )}
 
       <Style.Dropdown visible={dropdown} onMouseDown={(e) => e.stopPropagation()}>
-        {disabled ? (
-          <div className="item" onClick={enable}>
-            <Icon icon={EIcon.check} />
-            <span>Enable Plugin</span>
-          </div>
-        ) : (
-          <div className="item" onClick={disable}>
-            <Icon icon={EIcon.ban} />
-            <span>Disable Plugin</span>
+        {item.allow_disable &&
+          (disabled ? (
+            <div className="item" onClick={enable}>
+              <Icon icon={EIcon.check} />
+              <span>Enable Plugin</span>
+            </div>
+          ) : (
+            <div className="item" onClick={disable}>
+              <Icon icon={EIcon.ban} />
+              <span>Disable Plugin</span>
+            </div>
+          ))}
+
+        {item.allow_uninstall && (
+          <div className="item" onClick={() => setModalUninstall(true)}>
+            <Icon icon={EIcon["trash-alt"]} />
+            <span>Uninstall Plugin</span>
           </div>
         )}
-
-        <div className="item" onClick={() => setModalUninstall(true)}>
-          <Icon icon={EIcon["trash-alt"]} />
-          <span>Uninstall Plugin</span>
-        </div>
       </Style.Dropdown>
 
       {modalUninstall && (

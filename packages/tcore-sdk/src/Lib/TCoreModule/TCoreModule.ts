@@ -10,6 +10,8 @@ import APIBridge from "../APIBridge/APIBridge";
 
 const moduleIDs = new Map<string, boolean>();
 
+parentPort?.setMaxListeners(100);
+
 /**
  * This is the base module for all modules.
  * It contains the communication between the API and this worker.
@@ -149,14 +151,13 @@ abstract class TCoreModule<IConfigValues = any> {
     const methodExists = !!this[method];
 
     try {
-      if (methodExists) {
-        // execute the method and send its result
-        const result = await this[method](...params);
-        parentPort?.postMessage({ event, method, params: result, connectionID });
-      } else {
-        // return no message because method doesn't exist
-        parentPort?.postMessage({ event, method, connectionID });
+      if (!methodExists) {
+        throw new Error(`Function ${method} is not implemented`);
       }
+
+      // execute the method and send its result
+      const result = await this[method](...params);
+      parentPort?.postMessage({ event, method, params: result, connectionID });
     } catch (error) {
       // error while invoking method
       const err = error || "Unhandled error";

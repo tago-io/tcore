@@ -1,14 +1,21 @@
 import { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
+import { observer } from "mobx-react";
+import { useState } from "react";
+import { Button, EButton, Icon } from "../../../..";
 import useApiRequest from "../../../../Helpers/useApiRequest";
+import store from "../../../../System/Store";
 import Col from "../../../Col/Col";
 import FileSelect from "../../../FileSelect/FileSelect";
 import FormDivision from "../../../FormDivision/FormDivision";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
 import Input from "../../../Input/Input";
+import ModalFactoryReset from "../../../Plugins/Common/ModalFactoryReset/ModalFactoryReset";
+import ModalMasterPassword from "../../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
 import Row from "../../../Row/Row";
 import Select, { ISelectOption } from "../../../Select/Select";
+import * as Style from "./GeneralInformationTab.style";
 
 /**
  * Props.
@@ -35,6 +42,7 @@ interface IGeneralInformationTabProps {
  * The settings' `General Information` tab.
  */
 function GeneralInformationTab(props: IGeneralInformationTabProps) {
+  const [resetting, setResetting] = useState(false);
   const { data: databaseList } = useApiRequest<any[]>("/module?type=database");
   const { data: filesystemList } = useApiRequest<any[]>("/module?type=filesystem");
   const { data, metadata, errors } = props;
@@ -92,6 +100,26 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
               value={data.port || ""}
             />
           </FormGroup>
+
+          <fieldset>
+            <legend>
+              <Icon icon={EIcon["exclamation-triangle"]} />
+              <span>Danger zone</span>
+            </legend>
+
+            <FormGroup>
+              <Style.DangerZone>
+                <div className="info">
+                  <b>Perform a factory reset</b>
+                  <span>A Factory reset will remove settings, plugins, and plugin files.</span>
+                </div>
+
+                <Button onClick={() => setResetting(true)} type={EButton.danger}>
+                  Factory reset
+                </Button>
+              </Style.DangerZone>
+            </FormGroup>
+          </fieldset>
         </Col>
 
         <Col size="6">
@@ -126,7 +154,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
               error={errors?.database_plugin}
               errorMessage="This field is required"
               options={getDatabaseOptions()}
-              disabled={metadata?.database_plugin_disabled}
+              disabled
             />
           </FormGroup>
 
@@ -146,8 +174,21 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
           </FormGroup>
         </Col>
       </Row>
+
+      {resetting && store.masterPassword && (
+        <ModalFactoryReset
+          onClose={() => {
+            store.masterPassword = "";
+            setResetting(false);
+          }}
+        />
+      )}
+
+      {resetting && !store.masterPassword && (
+        <ModalMasterPassword onClose={() => setResetting(false)} />
+      )}
     </div>
   );
 }
 
-export default GeneralInformationTab;
+export default observer(GeneralInformationTab);

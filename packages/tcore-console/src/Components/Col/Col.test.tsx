@@ -2,7 +2,7 @@ import { render, screen } from "../../../utils/test-utils";
 import Col from "./Col";
 
 describe("Just a test", () => {
-  test("test 1", async () => {
+  test("1", async () => {
     render(
       <Col>
         <span>Hello world</span>
@@ -12,7 +12,7 @@ describe("Just a test", () => {
     expect(item).toHaveLength(1);
   });
 
-  test("test 2", async () => {
+  test("2", async () => {
     render(
       <Col>
         <span>Testing</span>

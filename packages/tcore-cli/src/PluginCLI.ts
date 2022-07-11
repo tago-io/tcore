@@ -20,7 +20,7 @@ async function addPluginCommands(program: Command) {
   const list = await API.getPluginList();
 
   for (const item of list) {
-    const commands = item.manifest?.cli_commands || [];
+    const commands = item.manifest?.cli?.commands || [];
 
     for (const pluginCommand of commands) {
       if (!pluginCommand || !pluginCommand.name) {
@@ -41,13 +41,12 @@ async function addPluginCommands(program: Command) {
       }
 
       const folder = path.join(item.folder, pluginCommand.file);
-      const func = tryRequire(folder);
+      const fileData = tryRequire(folder);
 
-      if (func) {
-        if (typeof func === "function") {
-          cliCommand.action(func);
-        } else if (typeof func.default === "function") {
-          cliCommand.action(func.default);
+      if (fileData) {
+        const handler = fileData[pluginCommand.handler] || fileData.default?.[pluginCommand.handler];
+        if (typeof handler === "function") {
+          cliCommand.action(handler);
         }
       }
     }

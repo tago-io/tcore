@@ -2,10 +2,12 @@ import fs from "fs";
 import path from "path";
 import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
+import semver from "semver";
 import Module from "../Plugins/Module/Module";
 import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "./Settings";
+import { getVersion } from "./System";
 
 /**
  * Filters and maps the button modules for the plugin list.
@@ -30,15 +32,25 @@ function mapButtonModules(modules: Module[], type: TPluginType) {
  */
 export async function getLoadedPluginList(): Promise<IPluginList> {
   const folders = await listPluginFolders();
+  const settings = await getMainSettings();
   const result: IPluginList = [];
 
+  const dbPluginID = String(settings.database_plugin).split(":")[0];
+
   for (const folder of folders) {
-    const pkg = await Plugin.getPackage(folder);
+    const pkg = await Plugin.getPackageAsync(folder).catch(() => null);
+    if (!pkg) {
+      continue;
+    }
+
     const id = Plugin.generatePluginID(pkg.name);
     const plugin = plugins.get(id);
     const modules = [...(plugin?.modules?.values?.() || [])];
 
     const error = !!plugin?.error || modules.some((x) => x.error);
+
+    const allow_disable = dbPluginID !== id;
+    const allow_uninstall = dbPluginID !== id;
 
     const object: IPluginListItem = {
       buttons: {
@@ -46,12 +58,17 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
         sidebar: mapButtonModules(modules, "sidebar-button"),
         sidebarFooter: mapButtonModules(modules, "sidebar-footer-button"),
       },
+      allow_disable,
+      allow_uninstall,
       error: error,
       hidden: HIDDEN_BUILT_IN_PLUGINS.includes(folder),
       id: Plugin.generatePluginID(pkg.name),
       name: pkg.tcore?.name || "",
       state: plugin?.state || "stopped",
       version: pkg.version,
+      types: plugin?.types || [],
+      description: plugin?.description,
+      publisher: plugin?.publisher,
     };
 
     result.push(object);
@@ -64,7 +81,7 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
  */
 export async function listPluginFolders(): Promise<string[]> {
   const settings = await getMainSettings();
-  const root = settings.plugin_folder || "";
+  const root = settings.plugin_folder;
   const folders = await fs.promises.readdir(root);
   const plugins: string[] = [];
 
@@ -77,13 +94,15 @@ export async function listPluginFolders(): Promise<string[]> {
   }
 
   for (const item of BUILT_IN_PLUGINS) {
-    if (!plugins.includes(item)) {
+    const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
+    if (hasPackage && !plugins.includes(item)) {
       plugins.unshift(item);
     }
   }
 
   for (const item of HIDDEN_BUILT_IN_PLUGINS) {
-    if (!plugins.includes(item)) {
+    const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
+    if (hasPackage && !plugins.includes(item)) {
       plugins.unshift(item);
     }
   }
@@ -116,6 +135,64 @@ export async function getPluginList(): Promise<any> {
   return result;
 }
 
+/**
+ * Indicates if there is at least one COMPATIBLE database plugin installed.
+ */
+export async function hasDBPluginInstalled(): Promise<boolean> {
+  const folders = await listPluginFolders();
+
+  for (const folder of folders) {
+    const pkg = await Plugin.getPackageAsync(folder).catch(() => null);
+    if (pkg) {
+      const pluginEngineVersion = pkg?.engines?.tcore || "*";
+      const isDatabase = pkg?.tcore?.types?.includes("database");
+      const compatible = semver.satisfies(getVersion(), pluginEngineVersion);
+      if (isDatabase && compatible) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Lists all the plugins.
+ */
+export async function getAllPluginList(): Promise<any> {
+  const settings = await getMainSettings();
+  const folders = await fs.promises.readdir(settings.plugin_folder);
+  const result: any = [];
+
+  for (const id of folders) {
+    const pkg = await Plugin.getPackageAsync(path.join(settings.plugin_folder, id)).catch(() => null);
+    if (!pkg) {
+      continue;
+    }
+
+    const pluginID = Plugin.generatePluginID(pkg.name) as string;
+    const plugin = plugins.get(pluginID);
+    const modules = [...(plugin?.modules?.values?.() || [])];
+
+    const object: any = {
+      id: pluginID,
+      name: pkg.tcore?.name || "",
+      version: pkg.version,
+      modules: modules.map((x) => ({
+        error: x.error,
+        id: x.setup?.id,
+        name: x.setup?.name,
+        state: x.state,
+        type: x.setup?.type,
+      })),
+    };
+
+    result.push(object);
+  }
+
+  return result;
+}
+
 export async function showModuleMessage(pluginID: string, moduleID: string, message?: any) {
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);
@@ -142,6 +219,23 @@ export async function startPluginModule(pluginID: string, moduleID: string) {
   const module = plugin?.modules.get(moduleID);
   if (module) {
     await module.start();
+  }
+}
+
+/**
+ */
+export async function reloadPlugin(id: string) {
+  const plugin = plugins.get(id);
+
+  if (plugin) {
+    if (plugin.state !== "started") {
+      await plugin.start();
+    }
+
+    const modules = [...plugin.modules.values()];
+    for (const mod of modules) {
+      await startPluginModule(id, mod.id);
+    }
   }
 }
 
@@ -205,6 +299,7 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     throw new Error("Invalid Plugin ID");
   }
 
+  const mainSettings = await getMainSettings();
   const settings = await getPluginSettings(id);
 
   const modules = [...plugin.modules.values()].map((module) => {
@@ -232,6 +327,10 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     };
   });
 
+  const dbPluginID = String(mainSettings.database_plugin).split(":")[0];
+  const allow_disable = dbPluginID !== id;
+  const allow_uninstall = dbPluginID !== id;
+
   const data: IPlugin = {
     id: plugin.id,
     error: plugin.error,
@@ -240,11 +339,11 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
     name: plugin.tcoreName,
     state: plugin.state,
     slug: plugin.packageName,
-    publisher: {
-      name: plugin.publisher,
-    },
+    publisher: plugin.publisher,
     modules,
     version: plugin.version,
+    allow_disable,
+    allow_uninstall,
   };
 
   return data;
@@ -253,7 +352,7 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
 /**
  * Finds and returns the main database plugin.
  */
-export async function getMainDatabaseModule(): Promise<Module | undefined> {
+export async function getMainDatabaseModule(): Promise<Module | null> {
   const settings = await getMainSettings();
   const pluginID = String(settings.database_plugin).split(":")?.[0];
   const moduleID = String(settings.database_plugin).split(":")?.[1];
@@ -269,8 +368,7 @@ export async function getMainDatabaseModule(): Promise<Module | undefined> {
     }
   }
 
-  const modules = getModuleList("database");
-  return modules.find((x) => x.state === "started");
+  return null;
 }
 
 /**
@@ -313,11 +411,64 @@ export function getModuleList(type?: TPluginType | null): Module[] {
 }
 
 /**
+ */
+export function getPluginModuleInfo(pluginID: string, moduleID: string): any {
+  const plugin = plugins.get(pluginID);
+  const module = plugin?.modules.get(moduleID);
+  if (module) {
+    return {
+      state: module?.state,
+      error: module?.error,
+    };
+  }
+}
+
+/**
+ * Invokes a plugin module's onCall function.
+ */
+export async function invokeOnCallModule(pluginID: string, moduleID: string, data?: any) {
+  const plugin = plugins.get(pluginID);
+  const module = plugin?.modules.get(moduleID);
+  if (!module) {
+    throw new Error("Plugin or module not found");
+  }
+  return await module.invokeOnCall(data);
+}
+
+/**
  * Triggers all hook modules with a certain event.
  */
 export function triggerHooks(event: string, ...args: any[]) {
   const hooks = getModuleList("hook");
   for (const mod of hooks) {
     mod.invoke(event, ...args);
+  }
+}
+
+/**
+ * Terminates all running plugins.
+ */
+export async function terminateAllPlugins(ignoreBuiltIns = true) {
+  const result: Plugin[] = [];
+
+  for (const plugin of plugins.values()) {
+    if (plugin.types.includes("database")) {
+      result.unshift(plugin);
+    } else {
+      result.push(plugin);
+    }
+  }
+
+  for (const plugin of result) {
+    if (ignoreBuiltIns && plugin.builtIn) {
+      continue;
+    }
+
+    // eslint-disable-next-line no-async-promise-executor
+    await new Promise<void>(async (resolve) => {
+      await plugin.stop(false, 3000).catch(() => null);
+      plugins.delete(plugin.id);
+      resolve();
+    });
   }
 }

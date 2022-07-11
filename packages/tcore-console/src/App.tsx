@@ -8,8 +8,10 @@ import { ThemeProvider } from "styled-components";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { runInAction } from "mobx";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IPluginList } from "@tago-io/tcore-sdk/types";
+import { useHistory } from "react-router";
+import { observer } from "mobx-react";
 import imgFavicon from "../assets/images/favicon.png";
 import { lightTheme } from "./theme";
 import MainScreen from "./Components/MainScreen/MainScreen";
@@ -29,30 +31,18 @@ import PluginEdit from "./Components/Plugins/Edit/PluginEdit";
 import useApiRequest from "./Helpers/useApiRequest";
 import store from "./System/Store";
 import PageIFrame from "./Components/PageIframe/PageIFrame";
+import Login from "./Components/Login/Login";
+import { getLocalStorage, setLocalStorage } from "./Helpers/localStorage";
+import getAccountByToken from "./Requests/getAccountByToken";
+import Setup from "./Components/Setup/Setup";
+import StepDatabaseError from "./Components/Setup/StepDatabaseError/StepDatabaseError";
+import { startSocket } from "./System/Socket";
 
 /**
  * Main component of the application.
  */
 function App() {
-  const { data: status } = useApiRequest<any>("/status");
-  const { data: plugins } = useApiRequest<IPluginList>("/plugin");
   const themeObject = lightTheme;
-
-  useEffect(() => {
-    if (plugins) {
-      runInAction(() => {
-        store.plugins = plugins;
-      });
-    }
-  }, [plugins]);
-
-  useEffect(() => {
-    if (status) {
-      runInAction(() => {
-        store.version = status.version;
-      });
-    }
-  }, [status]);
 
   return (
     <>
@@ -64,10 +54,7 @@ function App() {
         <GlobalStyles />
 
         <BrowserRouter>
-          <Switch>
-            <Route path="/console" component={WrapperMainScreen} />
-            <Route component={() => null} />
-          </Switch>
+          <StoreWrapper />
         </BrowserRouter>
       </ThemeProvider>
     </>
@@ -75,9 +62,107 @@ function App() {
 }
 
 /**
- * Renders the main admin screen, the main screen is the one that has the sidebar and navbar.
+ * Wrapper that does all the authentication logic.
  */
-function WrapperMainScreen() {
+const StoreWrapper = observer(() => {
+  const { data: status } = useApiRequest<any>("/status");
+  const { data: plugins } = useApiRequest<IPluginList>("/plugin", { skip: !store.token });
+  const [readyToRender, setReadyToRender] = useState(false);
+  const [token] = useState(() => getLocalStorage("token", ""));
+  const history = useHistory();
+
+  /**
+   */
+  const validateAuth = async () => {
+    if (token) {
+      // has token, but maybe it's expired
+      store.token = token;
+      getAccountByToken(token)
+        .then((account) => {
+          store.account = account;
+          setReadyToRender(true);
+        })
+        .catch(() => {
+          store.token = "";
+          setLocalStorage("token", "");
+          setReadyToRender(true);
+          history.push("/console/login");
+        });
+    } else {
+      // not logged in
+      store.token = "";
+      setReadyToRender(true);
+      history.push("/console/login");
+    }
+  };
+
+  /**
+   */
+  useEffect(() => {
+    if (plugins) {
+      runInAction(() => {
+        store.plugins = plugins;
+      });
+    }
+  }, [plugins]);
+
+  /**
+   */
+  useEffect(() => {
+    if (status) {
+      if (status.database?.error) {
+        // database has error
+        setReadyToRender(true);
+        history.push("/console/database/error");
+      } else if (!status.account || !status.database?.configured || !status.master_password) {
+        // not configured, go to setup
+        setReadyToRender(true);
+        history.push("/console/setup");
+      } else {
+        // configured, validate token
+        validateAuth();
+      }
+
+      runInAction(() => {
+        store.version = status.version;
+        store.databaseConfigured = status.database.configured;
+        store.databaseError = status.database.error;
+        store.masterPasswordConfigured = status.master_password;
+        store.accountConfigured = status.account;
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  /**
+   * Starts the socket connection.
+   */
+  useEffect(() => {
+    if (store.masterPassword || store.token) {
+      startSocket();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [store.masterPassword, store.token]);
+
+  if (!readyToRender) {
+    return null;
+  }
+
+  return (
+    <Switch>
+      <Route exact path="/console/database/error" component={StepDatabaseError} />
+      <Route exact path="/console/setup" component={Setup} />
+      <Route exact path="/console/login" component={Login} />
+      <Route path="/console" component={MainScreenWrapper} />
+      <Route component={() => null} />
+    </Switch>
+  );
+});
+
+/**
+ * Renders the main admin screen, which is the one that has the sidebar and navbar.
+ */
+function MainScreenWrapper() {
   const { data: pageModules } = useApiRequest<any[]>("/module?type=page");
 
   return (

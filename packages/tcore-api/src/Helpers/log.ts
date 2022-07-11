@@ -30,8 +30,10 @@ function addToBuffer(channel: string, type: string, ...args: any[]) {
     type,
   };
 
-  // push to log buffer
+  // push to log buffer, but limit to 100 items in a single log channel
+  const array = logBuffer.get(channel);
   logBuffer.get(channel).push(data);
+  logBuffer.set(channel, array.slice(Math.max(array.length - 100, 0)));
 
   // also emit to the frontend
   io?.to(ESocketRoom.log).emit(`log::${channel}`, data);

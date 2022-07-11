@@ -79,16 +79,18 @@ function ModuleStatus(props: IModuleStatusProps) {
           )}
         </div>
 
-        <div className="buttons-container">
-          <div className="buttons-inner">
-            <Button onClick={start} disabled={loading || started || !pluginRunning}>
-              Start
-            </Button>
-            <Button onClick={stop} disabled={loading || !started || !pluginRunning}>
-              Stop
-            </Button>
+        {data.allow_disable && (
+          <div className="buttons-container">
+            <div className="buttons-inner">
+              <Button onClick={start} disabled={loading || started || !pluginRunning}>
+                Start
+              </Button>
+              <Button onClick={stop} disabled={loading || !started || !pluginRunning}>
+                Stop
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </Style.Status>
 
       {error && !loading && pluginRunning && (

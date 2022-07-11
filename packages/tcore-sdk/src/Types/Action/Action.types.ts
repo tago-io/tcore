@@ -6,6 +6,7 @@ import { zTags } from "../Tag.types";
 import preprocessBoolean from "../Helpers/preprocessBoolean";
 import preprocessObject from "../Helpers/preprocessObject";
 import removeNullValues from "../Helpers/removeNullValues";
+import createQueryOrderBy from "../Helpers/createQueryOrderBy";
 
 /**
  * Validation for a "script" action type.
@@ -167,10 +168,7 @@ export const zActionListQuery = zQuery.extend({
       if (!values.includes("tags")) values.push("tags");
       return values;
     }),
-  orderBy: z
-    .tuple([zActionListQueryFields, z.enum(["asc", "desc"])])
-    .nullish()
-    .transform((x) => x ?? ["name", "asc"]),
+  orderBy: createQueryOrderBy(zActionListQueryFields),
 });
 
 export type IAction = z.infer<typeof zAction>;

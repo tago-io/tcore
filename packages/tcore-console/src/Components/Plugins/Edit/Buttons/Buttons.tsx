@@ -69,26 +69,29 @@ function Buttons(props: IButtonsProps) {
         </Button>
       </Link>
 
-      {props.data.state === "disabled" ? (
-        <Button onClick={enable} addIconMargin>
-          <Icon icon={EIcon.check} />
-          <span>Enable</span>
-        </Button>
-      ) : props.data.state === "stopping" || props.data.state === "starting" ? (
-        <Button disabled addIconMargin>
-          <span>Loading...</span>
-        </Button>
-      ) : (
-        <Button onClick={disable} addIconMargin>
-          <Icon icon={EIcon.ban} />
-          <span>Disable</span>
+      {data.allow_disable &&
+        (props.data.state === "disabled" ? (
+          <Button onClick={enable} addIconMargin>
+            <Icon icon={EIcon.check} />
+            <span>Enable</span>
+          </Button>
+        ) : props.data.state === "stopping" || props.data.state === "starting" ? (
+          <Button disabled addIconMargin>
+            <span>Loading...</span>
+          </Button>
+        ) : (
+          <Button onClick={disable} addIconMargin>
+            <Icon icon={EIcon.ban} />
+            <span>Disable</span>
+          </Button>
+        ))}
+
+      {data.allow_uninstall && (
+        <Button addIconMargin type={EButton.danger_outline} onClick={activateModalUninstall}>
+          <Icon icon={EIcon["trash-alt"]} />
+          <span>Uninstall</span>
         </Button>
       )}
-
-      <Button addIconMargin type={EButton.danger_outline} onClick={activateModalUninstall}>
-        <Icon icon={EIcon["trash-alt"]} />
-        <span>Uninstall</span>
-      </Button>
 
       {modalUninstall && (
         <ModalUninstallPlugin

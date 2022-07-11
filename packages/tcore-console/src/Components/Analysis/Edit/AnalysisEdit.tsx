@@ -1,4 +1,4 @@
-import { ESocketResource, IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
+import { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
 import cloneDeep from "lodash.clonedeep";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router";
@@ -10,11 +10,11 @@ import { EIcon } from "../../Icon/Icon.types";
 import Switch from "../../Switch/Switch";
 import SaveAndRun from "../Common/SaveAndRun/SaveAndRun";
 import TagsTab from "../../Tags/TagsTab";
-import { socket } from "../../../System/Socket";
 import deleteAnalysis from "../../../Requests/deleteAnalysis";
 import editAnalysis from "../../../Requests/editAnalysis";
 import runAnalysis from "../../../Requests/runAnalysis";
 import store from "../../../System/Store";
+import { getSocket } from "../../../System/Socket";
 import AnalysisTab from "./AnalysisTab/AnalysisTab";
 import EnvVarsTab from "./EnvVarsTab/EnvVarsTab";
 import MoreTab from "./MoreTab/MoreTab";
@@ -214,9 +214,9 @@ function AnalysisEdit() {
       setLogs((x) => [params, ...x]);
     }
 
-    socket.on(`analysis:log:${id}`, onLog);
+    getSocket().on(`analysis::console`, onLog);
     return () => {
-      socket.off(`analysis:log:${id}`, onLog);
+      getSocket().off(`analysis::console`, onLog);
     };
   });
 
@@ -224,9 +224,9 @@ function AnalysisEdit() {
    */
   useEffect(() => {
     if (store.socketConnected) {
-      socket.emit("attach", ESocketResource.analysis);
+      getSocket().emit("attach", "analysis", id);
       return () => {
-        socket.emit("detach", ESocketResource.analysis);
+        getSocket().emit("unattach", "analysis", id);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

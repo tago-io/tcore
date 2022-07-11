@@ -15,7 +15,7 @@ interface IMainInformationProps {
   /**
    * Domain in case the publisher is verified.
    */
-  publisherDomain?: string;
+  publisherDomain?: string | null;
   /**
    * Version of the plugin.
    */

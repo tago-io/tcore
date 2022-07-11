@@ -1,18 +1,20 @@
 import { useCallback, useState } from "react";
-import ModalFileSelect from "../../ModalFileSelect/ModalFileSelect";
 import Button from "../../Button/Button";
 import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
 import Icon from "../../Icon/Icon";
 import { EIcon } from "../../Icon/Icon.types";
 import Tooltip from "../../Tooltip/Tooltip";
+import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
+import selectPluginFile from "../../../Helpers/selectPluginFile";
 import * as Style from "./InstalLocalPluginButton.style";
 
 /**
  * This component handles the installation of a plugin.
  */
 function InstallLocalPluginButton() {
-  const [modalFile, setModalFile] = useState(false);
+  const [modalUpload, setModalUpload] = useState(false);
   const [modalInstall, setModalInstall] = useState(false);
+  const [file, setFile] = useState<File>();
   const [filePath, setFilePath] = useState("");
 
   /**
@@ -20,14 +22,17 @@ function InstallLocalPluginButton() {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const activateModalFile = useCallback(() => {
-    setModalFile(true);
+    selectPluginFile((f) => {
+      setFile(f);
+      setModalUpload(true);
+    });
   }, []);
 
   /**
    * Closes the file selector modal.
    */
   const deactivateModalFile = useCallback(() => {
-    setModalFile(false);
+    setModalUpload(false);
   }, []);
 
   /**
@@ -55,19 +60,21 @@ function InstallLocalPluginButton() {
         </Tooltip>
       </Style.Container>
 
-      {modalFile && (
-        <ModalFileSelect
-          accept=".tcore"
-          message="Select a .tcore plugin file."
+      {modalUpload && (
+        <ModalUploadPlugin
+          file={file as File}
           onClose={deactivateModalFile}
-          onConfirm={activateModalInstall}
-          placeholder="/usr/local/plugin.tcore"
-          title="Select a plugin to be installed"
-          useLocalFs
+          onUpload={activateModalInstall}
         />
       )}
 
-      {modalInstall && <ModalInstallPlugin source={filePath} onClose={deactivateModalInstall} />}
+      {modalInstall && (
+        <ModalInstallPlugin
+          pluginName={file?.name}
+          source={filePath}
+          onClose={deactivateModalInstall}
+        />
+      )}
     </>
   );
 }

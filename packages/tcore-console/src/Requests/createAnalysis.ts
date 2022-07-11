@@ -1,14 +1,16 @@
+import { Account } from "@tago-io/sdk";
+import { AnalysisCreateInfo } from "@tago-io/sdk/out/modules/Account/analysis.types";
 import { IAnalysisCreate, TGenericID } from "@tago-io/tcore-sdk/types";
-import axios from "axios";
+import store from "../System/Store";
 
 /**
  */
 async function createAnalysis(
-  analysis: Omit<IAnalysisCreate, "id" | "created_at">
+  data: Omit<IAnalysisCreate, "id" | "created_at">
 ): Promise<TGenericID> {
-  const response = await axios.post("/analysis", analysis);
-  const { data } = response;
-  return data.result;
+  const account = new Account({ token: store.token });
+  const result = await account.analysis.create(data as AnalysisCreateInfo);
+  return result.id;
 }
 
 export default createAnalysis;

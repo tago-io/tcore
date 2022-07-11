@@ -210,6 +210,8 @@ function ActionEdit() {
       error = { ...error, ...err };
       if (err?.tags) {
         setTabIndex(1);
+      } else {
+        setTabIndex(0);
       }
     }
 

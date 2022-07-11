@@ -1,5 +1,4 @@
 import {
-  ESocketResource,
   IDevice,
   ILiveInspectorMessage,
   IDeviceParameter,
@@ -25,7 +24,6 @@ import TagsTab from "../../Tags/TagsTab";
 import DeviceInputOutput from "../Common/DeviceInputOutput";
 import normalizeConfigParameters from "../Helpers/normalizeConfigParameters";
 import { IInspectorData } from "../Common/LiveInspector/LiveInspector.types";
-import { socket } from "../../../System/Socket";
 import setDeviceParams from "../../../Requests/setDeviceParams";
 import createDeviceToken from "../../../Requests/createDeviceToken";
 import deleteDevice from "../../../Requests/deleteDevice";
@@ -33,6 +31,7 @@ import deleteDeviceToken from "../../../Requests/deleteDeviceToken";
 import editDevice from "../../../Requests/editDevice";
 import { setLocalStorageAsJSON } from "../../../Helpers/localStorage";
 import getDeviceTypeName from "../../../Helpers/getDeviceTypeName";
+import { getSocket } from "../../../System/Socket";
 import ConfigParametersTab from "./ConfigParametersTab/ConfigParametersTab";
 import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab";
 import LiveInspectorTab from "./LiveInspectorTab/LiveInspectorTab";
@@ -167,8 +166,8 @@ function DeviceEdit() {
    * Stops the live inspector.
    */
   const stopInspector = useCallback(() => {
-    socket.emit("detach", ESocketResource.deviceInspection, id);
-    socket.off("device::inspection");
+    getSocket().emit("unattach", "device", id);
+    getSocket().off("device::inspection");
     clearInterval(intervalInspectorAttach.current);
   }, [id]);
 
@@ -373,12 +372,12 @@ function DeviceEdit() {
       }
 
       intervalInspectorAttach.current = setInterval(() => {
-        socket.emit("attach", "device", id);
+        getSocket().emit("attach", "device", id);
       }, 30000); // 30 seconds
 
-      socket.emit("attach", ESocketResource.deviceInspection, id);
-      socket.off("device::inspection");
-      socket.on("device::inspection", onInspectorMessage);
+      getSocket().emit("attach", "device", id);
+      getSocket().off("device::inspection");
+      getSocket().on("device::inspection", onInspectorMessage);
     } else {
       stopInspector();
     }

@@ -24,7 +24,7 @@ const zURLParamsID = z.object({
  */
 class AddData extends APIController<any, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "device" }],
     zBodyParser: z.any(), // needs to be any because of raw payload
   };
 
@@ -49,7 +49,7 @@ class AddData extends APIController<any, void, void> {
  */
 class DeleteData extends APIController<void, IDeviceDataQuery, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "device" }],
     zQueryStringParser: zDeviceDataQuery,
   };
 
@@ -65,7 +65,7 @@ class DeleteData extends APIController<void, IDeviceDataQuery, void> {
  */
 class GetDataByToken extends APIController<void, IDeviceDataQuery, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "device" }],
     zQueryStringParser: zDeviceDataQuery,
   };
 
@@ -81,7 +81,7 @@ class GetDataByToken extends APIController<void, IDeviceDataQuery, void> {
  */
 class EditDataByDeviceID extends APIController<any, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: z.any(),
     zURLParamsParser: zURLParamsID,
   };
@@ -97,7 +97,7 @@ class EditDataByDeviceID extends APIController<any, void, z.infer<typeof zURLPar
  */
 class DeleteDataByDeviceID extends APIController<void, IDeviceDataQuery, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zQueryStringParser: zDeviceDataQuery,
     zURLParamsParser: zURLParamsID,
   };
@@ -113,7 +113,7 @@ class DeleteDataByDeviceID extends APIController<void, IDeviceDataQuery, z.infer
  */
 class GetDataByID extends APIController<void, IDeviceDataQuery, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zDeviceDataQuery,
     zURLParamsParser: zURLParamsID,
   };
@@ -129,7 +129,7 @@ class GetDataByID extends APIController<void, IDeviceDataQuery, z.infer<typeof z
  */
 class EmptyDevice extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -144,7 +144,7 @@ class EmptyDevice extends APIController<void, void, z.infer<typeof zURLParamsID>
  */
 class GetDataAmount extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -163,6 +163,7 @@ export default (app: Application) => {
   app.put("/device/:id/data", warm(EditDataByDeviceID));
   app.delete("/device/:id/data", warm(DeleteDataByDeviceID));
   app.get("/device/:id/data_amount", warm(GetDataAmount));
+  app.get("/bucket/:id/data_amount", warm(GetDataAmount)); // SDK still uses the bucket route
 
   app.delete("/data", warm(DeleteData));
   app.get("/data", warm(GetDataByToken));

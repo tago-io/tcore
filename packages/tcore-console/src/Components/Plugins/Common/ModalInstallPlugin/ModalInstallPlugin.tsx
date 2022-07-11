@@ -1,10 +1,10 @@
 import { ESocketResource, ILog } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
-import { memo, MouseEvent, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useTheme } from "styled-components";
 import installPlugin from "../../../../Requests/installPlugin";
-import { socket } from "../../../../System/Socket";
+import { getSocket } from "../../../../System/Socket";
 import store from "../../../../System/Store";
 import Console from "../../../Console/Console";
 import { EIcon } from "../../../Icon/Icon.types";
@@ -18,11 +18,15 @@ interface IModalInstallPlugin {
   /**
    * Called when the modal is closed.
    */
-  onClose: () => void;
+  onClose: (pluginID: string) => void;
   /**
    * The file path for the plugin that will be installed.
    */
   source: string;
+  /**
+   * Name of the plugin or the file that is being installed. Purely visual.
+   */
+  pluginName?: string;
 }
 
 /**
@@ -34,10 +38,10 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
   const [logs, setLogs] = useState<ILog[]>([]);
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
-  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [pluginData, setPluginData] = useState<any>(null);
   const [progress, setProgress] = useState(0);
   const theme = useTheme();
-  const { source } = props;
+  const { source, pluginName, onClose } = props;
 
   /**
    * Sends the install request to the back-end.
@@ -45,7 +49,8 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
   const sendInstallRequest = useCallback(async () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
     try {
-      await installPlugin(source);
+      const data = await installPlugin(source);
+      setPluginData(data);
       setProgress(100); // just to make sure it shows the bar complete
     } catch (e) {
       setError(true);
@@ -55,15 +60,6 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
       }, 500);
     }
   }, [source]);
-
-  /**
-   * Confirms and closes the modal.
-   */
-  const confirm = async (e: MouseEvent) => {
-    setButtonDisabled(true);
-    e.preventDefault();
-    window.location.reload();
-  };
 
   /**
    * Makes the request to install the plugin.
@@ -89,9 +85,9 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
       });
     }
 
-    socket.on("plugin::install", onInstallLogs);
+    getSocket().on("plugin::install", onInstallLogs);
     return () => {
-      socket.off("plugin::install", onInstallLogs);
+      getSocket().off("plugin::install", onInstallLogs);
     };
   }, [done]);
 
@@ -100,9 +96,9 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
    */
   useEffect(() => {
     if (store.socketConnected) {
-      socket.emit("attach", ESocketResource.pluginInstall);
+      getSocket().emit("attach", ESocketResource.pluginInstall);
       return () => {
-        socket.emit("detach", ESocketResource.pluginInstall);
+        getSocket().emit("unattach", ESocketResource.pluginInstall);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,18 +115,17 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
     <Modal
       color={theme.buttonPrimary}
       icon={EIcon["puzzle-piece"]}
-      onClose={() => window.location.reload()}
-      onConfirm={confirm}
+      onClose={() => onClose(pluginData)}
       confirmButtonText="Close"
       title="Installing Plugin"
       width="850px"
       height="90%"
       showCancelButton={false}
       showCloseButton={false}
-      isConfirmButtonDisabled={buttonDisabled || !done}
+      isConfirmButtonDisabled={!done}
     >
       <Style.Container>
-        <Style.Message>Plugin source: {source}</Style.Message>
+        {pluginName && <Style.Message>Installing Plugin: {pluginName}</Style.Message>}
 
         <Style.Progress done={done} error={error} value={progress}>
           <div className="value">

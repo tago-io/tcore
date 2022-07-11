@@ -8,6 +8,7 @@ import getDeviceTypeName from "../../../Helpers/getDeviceTypeName";
 import useApiRequest from "../../../Helpers/useApiRequest";
 import deleteDeviceData from "../../../Requests/deleteDeviceData";
 import editDevice from "../../../Requests/editDevice";
+import store from "../../../System/Store";
 import buildZodError from "../../../Validation/buildZodError";
 import EditPage from "../../EditPage/EditPage";
 import { EIcon } from "../../Icon/Icon.types";
@@ -82,7 +83,7 @@ function BucketEdit() {
    * Empties the bucket.
    */
   const emptyBucket = useCallback(async () => {
-    await axios.post(`/device/${id}/empty`);
+    await axios.post(`/device/${id}/empty`, {}, { headers: { token: store.token } });
     window.location.reload();
     await new Promise(() => {
       /* to get stuck until reload */

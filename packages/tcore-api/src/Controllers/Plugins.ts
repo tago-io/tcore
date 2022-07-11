@@ -1,8 +1,10 @@
 import path from "path";
+import os from "os";
 import { Request, Response, Application } from "express";
 import { z } from "zod";
 import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
-import { setPluginModulesSettings } from "../Services/Settings";
+import multer from "multer";
+import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
 import { plugins } from "../Plugins/Host";
 import {
   getPluginInfo,
@@ -14,6 +16,8 @@ import {
   disablePlugin,
   startPlugin,
   stopPlugin,
+  reloadPlugin,
+  invokeOnCallModule,
 } from "../Services/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
@@ -47,7 +51,7 @@ type IURLParamsID = z.infer<typeof zURLParamsID>;
  */
 class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQueryString>, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
     zQueryStringParser: zUninstallQueryString,
   };
@@ -63,7 +67,7 @@ class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQuery
  */
 class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zQueryStringType,
   };
 
@@ -85,7 +89,7 @@ class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, 
  */
 class ListPlugins extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
@@ -95,11 +99,27 @@ class ListPlugins extends APIController<void, void, void> {
 }
 
 /**
+ * Invokes a module's onCall function.
+ */
+class InvokeOnCallModule extends APIController<void, void, any> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+    zURLParamsParser: z.any(),
+    zBodyParser: z.any(),
+  };
+
+  public async main() {
+    const response = await invokeOnCallModule(this.urlParams.pluginID, this.urlParams.moduleID, this.bodyParams);
+    this.body = response;
+  }
+}
+
+/**
  * Starts/restarts a plugin module.
  */
 class StartPluginModule extends APIController<void, void, any> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: z.any(),
   };
 
@@ -113,7 +133,7 @@ class StartPluginModule extends APIController<void, void, any> {
  */
 class StopPluginModule extends APIController<void, void, any> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: z.any(),
   };
 
@@ -123,16 +143,34 @@ class StopPluginModule extends APIController<void, void, any> {
 }
 
 /**
+ * Uploads a plugin .tcore file.
+ */
+class UploadPlugin extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+  };
+
+  public async main() {
+    const file = this.req.file;
+    if (!file || !file.path) {
+      throw new Error("Unknown error");
+    }
+    this.body = file.path;
+  }
+}
+
+/**
  * Installs a plugin.
  */
 class InstallPlugin extends APIController<any, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: z.any(),
   };
 
   public async main() {
-    await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
+    const response = await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
+    this.body = response;
   }
 }
 
@@ -141,7 +179,7 @@ class InstallPlugin extends APIController<any, void, void> {
  */
 class EnablePlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -155,7 +193,7 @@ class EnablePlugin extends APIController<any, void, IURLParamsID> {
  */
 class DisablePlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -169,7 +207,7 @@ class DisablePlugin extends APIController<any, void, IURLParamsID> {
  */
 class StartPlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -183,7 +221,7 @@ class StartPlugin extends APIController<any, void, IURLParamsID> {
  */
 class StopPlugin extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -197,26 +235,27 @@ class StopPlugin extends APIController<any, void, IURLParamsID> {
  */
 class EditPluginSettings extends APIController<any, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
     zBodyParser: z.any(),
   };
 
   public async main() {
     await setPluginModulesSettings(this.urlParams.id, this.bodyParams);
+  }
+}
 
-    const plugin = plugins.get(this.urlParams.id);
-    if (plugin && plugin?.state !== "disabled" && plugin.state !== "started") {
-      await plugin.start();
-    }
+/**
+ */
+class ReloadPlugin extends APIController<void, void, IURLParamsID> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+    zURLParamsParser: zURLParamsID,
+  };
 
-    const cache = {};
-    for (const item of this.bodyParams) {
-      if (!cache[item.moduleID]) {
-        cache[item.moduleID] = true;
-        await startPluginModule(this.urlParams.id, item.moduleID);
-      }
-    }
+  public async main() {
+    const response = await reloadPlugin(this.urlParams.id);
+    this.body = response;
   }
 }
 
@@ -225,12 +264,28 @@ class EditPluginSettings extends APIController<any, void, IURLParamsID> {
  */
 class GetPluginInfo extends APIController<void, void, IURLParamsID> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
   public async main() {
     const response = await getPluginInfo(this.urlParams.id);
+    this.body = response;
+  }
+}
+
+/**
+ * Gets the info of the main database plugin (if it is set).
+ */
+class GetDatabasePluginInfo extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+  };
+
+  public async main() {
+    const settings = await getMainSettings();
+    const pluginID = String(settings.database_plugin).split(":")[0];
+    const response = await getPluginInfo(pluginID);
     this.body = response;
   }
 }
@@ -286,10 +341,16 @@ export async function resolvePluginImage2(req: Request, res: Response) {
  * Exports the plugin routes.
  */
 export default (app: Application) => {
+  const upload = multer({ dest: path.join(os.tmpdir(), "tcore-plugin-download") });
+  app.post("/plugin/upload", upload.single("plugin"), warm(UploadPlugin));
+
   app.get("/module", warm(ListModules));
   app.get("/plugin-uninstall/:id", warm(UninstallPlugin));
   app.get("/plugin", warm(ListPlugins));
+  app.get("/plugin/database", warm(GetDatabasePluginInfo));
   app.get("/plugin/:id", warm(GetPluginInfo));
+  app.post("/plugin/:id/reload", warm(ReloadPlugin));
+  app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));
   app.post("/plugin/:pluginID/:moduleID/stop", warm(StopPluginModule));
   app.post("/install-plugin", warm(InstallPlugin));

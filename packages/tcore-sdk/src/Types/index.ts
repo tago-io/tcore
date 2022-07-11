@@ -16,3 +16,4 @@ export * from "./Socket.types";
 export * from "./Statistic.types";
 export * from "./Summary.types";
 export * from "./Tag.types";
+export * from "./Account/Account.types";

@@ -38,7 +38,7 @@ const zURLParamsID = z.object({
  */
 class DeleteDeviceToken extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -52,7 +52,7 @@ class DeleteDeviceToken extends APIController<void, void, z.infer<typeof zURLPar
  */
 class SetDeviceParams extends APIController<IDeviceParameterCreate[], void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
     zBodyParser: z.array(zDeviceParameterCreate),
   };
@@ -67,7 +67,7 @@ class SetDeviceParams extends APIController<IDeviceParameterCreate[], void, z.in
  */
 class GetDeviceParamList extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -82,7 +82,7 @@ class GetDeviceParamList extends APIController<void, void, z.infer<typeof zURLPa
  */
 class CreateDeviceToken extends APIController<any, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: z.any(),
   };
 
@@ -97,7 +97,7 @@ class CreateDeviceToken extends APIController<any, void, void> {
  */
 class ListDeviceTokens extends APIController<void, IDeviceTokenListQuery, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zDeviceTokenListQuery,
     zURLParamsParser: zURLParamsID,
   };
@@ -113,7 +113,7 @@ class ListDeviceTokens extends APIController<void, IDeviceTokenListQuery, z.infe
  */
 class ListDevices extends APIController<void, IDeviceListQuery, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zDeviceListQuery,
   };
 
@@ -128,7 +128,7 @@ class ListDevices extends APIController<void, IDeviceListQuery, void> {
  */
 class GetDeviceInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -143,7 +143,7 @@ class GetDeviceInfo extends APIController<void, void, z.infer<typeof zURLParamsI
  */
 class DeleteDevice extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -157,7 +157,7 @@ class DeleteDevice extends APIController<void, void, z.infer<typeof zURLParamsID
  */
 class EditDevice extends APIController<IDeviceEdit, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zDeviceEdit,
     zURLParamsParser: zURLParamsID,
   };
@@ -172,7 +172,7 @@ class EditDevice extends APIController<IDeviceEdit, void, z.infer<typeof zURLPar
  */
 class CreateDevice extends APIController<IDeviceCreate, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zDeviceCreate,
   };
 

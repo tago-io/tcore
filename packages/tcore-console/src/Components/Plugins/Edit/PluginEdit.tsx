@@ -15,8 +15,8 @@ import startPluginModule from "../../../Requests/startPluginModule";
 import stopPluginModule from "../../../Requests/stopPluginModule";
 import enablePlugin from "../../../Requests/enablePlugin";
 import disablePlugin from "../../../Requests/disablePlugin";
-import { socket } from "../../../System/Socket";
 import store from "../../../System/Store";
+import { getSocket } from "../../../System/Socket";
 import SettingsTab from "./SettingsTab/SettingsTab";
 
 /**
@@ -204,11 +204,11 @@ function PluginEdit() {
       }
     }
 
-    socket.on("module:status", onModuleStatus);
-    socket.on("plugin:status", onPluginStatus);
+    getSocket().on("module:status", onModuleStatus);
+    getSocket().on("plugin:status", onPluginStatus);
     return () => {
-      socket.off("module:status", onModuleStatus);
-      socket.off("plugin:status", onPluginStatus);
+      getSocket().off("module:status", onModuleStatus);
+      getSocket().off("plugin:status", onPluginStatus);
     };
   });
 
@@ -218,11 +218,11 @@ function PluginEdit() {
   useEffect(() => {
     if (store.socketConnected && data.id) {
       for (const module of data.modules) {
-        socket.emit("attach", ESocketResource.module, module.id);
+        getSocket().emit("attach", ESocketResource.module, module.id);
       }
       return () => {
         for (const module of data.modules) {
-          socket.emit("detach", ESocketResource.module, module.id);
+          getSocket().emit("unattach", ESocketResource.module, module.id);
         }
       };
     }

@@ -8,6 +8,7 @@ import compression from "compression";
 import method_override from "method-override";
 import { getSystemName } from "@tago-io/tcore-shared";
 import { startAllPlugins } from "./Plugins/Host";
+import AccountController from "./Controllers/Account/Account";
 import SystemController from "./Controllers/System";
 import DeviceController from "./Controllers/Device/Device";
 import ActionController from "./Controllers/Action";
@@ -54,6 +55,7 @@ async function setupExpress() {
  * Sets up the routes of express.
  */
 async function setupExpressRoutes() {
+  AccountController(app);
   SystemController(app);
   DeviceController(app);
   SummaryController(app);

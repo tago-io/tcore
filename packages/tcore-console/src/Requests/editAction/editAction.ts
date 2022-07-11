@@ -1,10 +1,13 @@
+import { Account } from "@tago-io/sdk";
+import { ActionCreateInfo } from "@tago-io/sdk/out/modules/Account/actions.types";
 import { IActionEdit, TGenericID } from "@tago-io/tcore-sdk/types";
-import axios from "axios";
+import store from "../../System/Store";
 
 /**
  */
-async function editAction(id: TGenericID, action: IActionEdit): Promise<void> {
-  await axios.put(`/action/${id}`, action);
+async function editAction(id: TGenericID, data: IActionEdit): Promise<void> {
+  const account = new Account({ token: store.token });
+  await account.actions.edit(id, data as Partial<ActionCreateInfo>);
 }
 
 export default editAction;

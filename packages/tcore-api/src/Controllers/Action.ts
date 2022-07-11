@@ -23,7 +23,7 @@ const zURLParamsID = z.object({
  */
 class ListActions extends APIController<void, IActionListQuery, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zActionListQuery,
   };
 
@@ -38,7 +38,7 @@ class ListActions extends APIController<void, IActionListQuery, void> {
  */
 class GetActionInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -53,7 +53,7 @@ class GetActionInfo extends APIController<void, void, z.infer<typeof zURLParamsI
  */
 class DeleteAction extends APIController<void, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
   };
 
@@ -67,7 +67,7 @@ class DeleteAction extends APIController<void, void, z.infer<typeof zURLParamsID
  */
 class EditAction extends APIController<IActionEdit, void, z.infer<typeof zURLParamsID>> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zActionEdit,
     zURLParamsParser: zURLParamsID,
   };
@@ -82,13 +82,13 @@ class EditAction extends APIController<IActionEdit, void, z.infer<typeof zURLPar
  */
 class CreateAction extends APIController<IActionCreate, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zActionCreate,
   };
 
   public async main() {
     const response = await createAction(this.bodyParams);
-    this.body = response;
+    this.body = { action: response };
   }
 }
 

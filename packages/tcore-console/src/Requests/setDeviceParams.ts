@@ -1,13 +1,15 @@
+import { Account } from "@tago-io/sdk";
 import { IDeviceParameterCreate, TGenericID } from "@tago-io/tcore-sdk/types";
-import axios from "axios";
+import store from "../System/Store";
 
 /**
  */
 async function setDeviceParams(
   deviceID: TGenericID,
-  parameters: IDeviceParameterCreate[]
+  data: IDeviceParameterCreate[]
 ): Promise<void> {
-  await axios.post(`/device/${deviceID}/params`, parameters);
+  const account = new Account({ token: store.token });
+  await account.devices.paramSet(deviceID, data as any);
 }
 
 export default setDeviceParams;

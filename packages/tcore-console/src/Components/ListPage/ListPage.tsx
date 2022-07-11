@@ -59,6 +59,8 @@ interface IListPageProps<T> {
  */
 function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
   const [page, setPage] = useState(0);
+  const [infinitePages, setInfinitePages] = useState(false);
+  const [amountOfRecords, setAmountOfRecords] = useState(0);
   const tagValues = useRef<ITag[]>([]);
   const { onGetData, summaryKey, documentTitle, path, color, columns } = props;
   const { data: summary } = useApiRequest<ISummary>("/summary");
@@ -83,7 +85,16 @@ function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
       if (tagValues.current.length > 0) {
         filterWithTags.tags = tagValues.current;
       }
-      return onGetData(pg, idealAmountOfRows, filterWithTags);
+
+      const usingFilter = Object.keys(filterWithTags).some(
+        (x) => filterWithTags[x] !== undefined && filterWithTags[x] !== ""
+      );
+      const data = await onGetData(pg + 1, idealAmountOfRows, filterWithTags);
+
+      setAmountOfRecords(data.length);
+      setInfinitePages(usingFilter);
+
+      return data;
     },
     [onGetData]
   );
@@ -148,7 +159,7 @@ function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
       </InnerNav>
 
       <PaginatedTable<T>
-        amountOfRecords={summary?.[summaryKey] || 0}
+        amountOfRecords={infinitePages ? amountOfRecords : summary?.[summaryKey] || 0}
         columns={getColumns()}
         emptyMessage={"Nothing here yet."}
         emptyMessageIcon={props.icon}
@@ -156,6 +167,7 @@ function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
         onChangePage={setPage}
         onGetData={getData}
         onGetRowLink={getRowLink}
+        infinitePages={infinitePages}
         page={page}
       />
     </Style.Container>

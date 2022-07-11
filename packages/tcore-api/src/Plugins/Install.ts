@@ -276,9 +276,13 @@ async function installPlugin(source: string, opts: IPluginInstallOptions = {}) {
     try {
       addLog(opts, false, `Starting the plugin, please wait...`, 99);
 
-      await startPlugin(pluginPath);
+      const plugin = await startPlugin(pluginPath);
 
       addLog(opts, false, `Done!`, 100);
+
+      if (plugin) {
+        return plugin.id;
+      }
     } catch (ex: any) {
       const err = ex?.message || ex?.toString?.() || ex;
       addLog(opts, true, err);

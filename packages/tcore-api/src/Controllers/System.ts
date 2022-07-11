@@ -1,8 +1,5 @@
-import fs from "fs";
-import path from "path";
 import { Application } from "express";
-// @ts-ignore
-import pkg from "../../../../package.json";
+import { getStatus } from "../Services/System";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**
@@ -10,30 +7,12 @@ import APIController, { ISetupController, warm } from "./APIController";
  */
 class GetStatus extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [],
+    allowTokens: [{ permission: "any", resource: "anonymous" }],
   };
 
   public async main() {
-    const version = pkg.version;
-    this.body = { version };
-  }
-}
-
-/**
- * Retrieves the changelog information.
- */
-class GetChangelog extends APIController<void, void, void> {
-  setup: ISetupController = {
-    allowTokens: [],
-  };
-
-  public async main() {
-    const changelogPath = path.join(__dirname, "../../../../CHANGELOG.md");
-    const changelogMD = await fs.promises.readFile(changelogPath);
-
-    this.useBodyWrapper = false;
-    this.res.set("Content-Type", "text/plain");
-    this.body = changelogMD;
+    const response = await getStatus();
+    this.body = response;
   }
 }
 
@@ -42,5 +21,4 @@ class GetChangelog extends APIController<void, void, void> {
  */
 export default (app: Application) => {
   app.get("/status", warm(GetStatus));
-  app.get("/changelog", warm(GetChangelog));
 };

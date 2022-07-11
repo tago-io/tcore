@@ -274,7 +274,7 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
    * the footer component.
    */
   useEffect(() => {
-    if (!firstRender.current && !infinitePages) {
+    if (!infinitePages) {
       const idealAmount = getIdealAmountOfRows();
       const total = Math.ceil(amountOfRecords / idealAmount);
       setPageAmount(total);

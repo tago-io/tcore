@@ -23,11 +23,6 @@ test("passes className to inner DOM node", () => {
   expect(screen.getByRole("button")).toHaveClass("sidebar-button");
 });
 
-test("passes className to inner DOM node", () => {
-  render(<Button className="sidebar-button" />);
-  expect(screen.getByRole("button")).toHaveClass("sidebar-button");
-});
-
 test("passes disabled prop to inner DOM node", () => {
   render(<Button disabled />);
   expect(screen.getByRole("button")).toBeDisabled();
