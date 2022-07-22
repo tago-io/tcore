@@ -12,7 +12,6 @@ export * from "./Network.types";
 export * from "./Plugin.types";
 export * from "./ResourceID";
 export * from "./Settings/Settings.types";
-export * from "./Socket.types";
 export * from "./Statistic.types";
 export * from "./Summary.types";
 export * from "./Tag.types";
