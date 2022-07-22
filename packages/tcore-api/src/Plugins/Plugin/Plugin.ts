@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import path from "path";
 import fs from "fs";
-import { ESocketRoom, IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
+import { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log";
 import { setPluginDisabledSettings } from "../../Services/Settings";
@@ -187,7 +187,7 @@ class Plugin {
   /**
    */
   public emitSocketUpdate() {
-    io?.to(`${ESocketRoom.plugin}#${this.id}`).emit("plugin:status", {
+    io?.to(`plugin#${this.id}`).emit("plugin::status", {
       id: this.id,
       state: this.state,
       error: this.error || undefined,
@@ -200,7 +200,7 @@ class Plugin {
    */
   public emitSidebarSocketUpdate() {
     const modulesError = [...this.modules.values()].some((x) => x.error);
-    io?.to(`${ESocketRoom.plugin}#${this.id}`).emit("plugin:sidebar", {
+    io?.to(`plugin#${this.id}`).emit("plugin::sidebar", {
       id: this.id,
       state: this.state,
       error: !!this.error || modulesError || undefined,

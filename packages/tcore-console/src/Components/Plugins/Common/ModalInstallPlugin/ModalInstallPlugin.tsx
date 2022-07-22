@@ -1,4 +1,4 @@
-import { ESocketResource, ILog } from "@tago-io/tcore-sdk/types";
+import { ILog } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { memo, useCallback, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
@@ -96,9 +96,9 @@ function ModalInstallPlugin(props: IModalInstallPlugin) {
    */
   useEffect(() => {
     if (store.socketConnected) {
-      getSocket().emit("attach", ESocketResource.pluginInstall);
+      getSocket().emit("attach", "install");
       return () => {
-        getSocket().emit("unattach", ESocketResource.pluginInstall);
+        getSocket().emit("unattach", "install");
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

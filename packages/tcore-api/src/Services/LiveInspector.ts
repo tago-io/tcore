@@ -1,10 +1,4 @@
-import {
-  ESocketRoom,
-  IDevice,
-  ILiveInspectorMessageCreate,
-  TGenericID,
-  TLiveInspectorConnectionID,
-} from "@tago-io/tcore-sdk/types";
+import { IDevice, ILiveInspectorMessageCreate, TGenericID, TLiveInspectorConnectionID } from "@tago-io/tcore-sdk/types";
 import { DateTime } from "luxon";
 import { nanoid } from "nanoid";
 import { plugins } from "../Plugins/Host";
@@ -51,7 +45,7 @@ export const emitToLiveInspector = async (
     title: x.title,
   }));
 
-  io?.to(`${ESocketRoom.deviceInspection}#${device.id}`).emit("device::inspection", data);
+  io?.to(`device#${device.id}`).emit("device::inspection", data);
 };
 
 /**

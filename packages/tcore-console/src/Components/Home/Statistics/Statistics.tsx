@@ -1,4 +1,4 @@
-import { ESocketResource, IStatistic } from "@tago-io/tcore-sdk/types";
+import { IStatistic } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { memo, useEffect, useRef, useState } from "react";
 import useApiRequest from "../../../Helpers/useApiRequest";
@@ -41,13 +41,13 @@ function Statistics() {
   });
 
   /**
-   * Attaches and unattaches the socket to get the statistic updates in realtime.
+   * Attaches and detaches the socket to get the statistic updates in realtime.
    */
   useEffect(() => {
     if (store.socketConnected) {
-      getSocket().emit("attach", ESocketResource.statistic);
+      getSocket().emit("attach", "statistic");
       return () => {
-        getSocket().emit("unattach", ESocketResource.statistic);
+        getSocket().emit("unattach", "statistic");
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

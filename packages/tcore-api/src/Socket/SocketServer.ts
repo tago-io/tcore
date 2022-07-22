@@ -1,6 +1,6 @@
 import { Server } from "http";
 import { Server as SocketServer, Socket } from "socket.io";
-import { ESocketResource, ESocketRoom, TGenericID } from "@tago-io/tcore-sdk/types";
+import { TGenericID } from "@tago-io/tcore-sdk/types";
 import { editDevice } from "../Services/Device";
 import { checkMasterPassword } from "../";
 import { getAccountToken } from "../Services/Account/Account";
@@ -42,23 +42,23 @@ export async function setupSocketServer(httpServer: Server) {
     }
 
     socket.on("attach", (resourceType: any, resourceID?: TGenericID) => {
-      if (resourceType === ESocketResource.pluginInstall) {
-        socket.join(ESocketRoom.pluginInstall);
+      if (resourceType === "install") {
+        socket.join("install");
       }
-      if (resourceType === ESocketResource.log) {
-        socket.join(ESocketRoom.log);
+      if (resourceType === "log" && resourceID) {
+        socket.join(`log#${resourceID}`);
       }
-      if (resourceType === ESocketResource.statistic) {
-        socket.join(ESocketRoom.statistic);
+      if (resourceType === "statistic") {
+        socket.join("statistic");
       }
       if (resourceType === "analysis" && resourceID) {
         socket.join(`analysis#${resourceID}`);
       }
-      if (resourceType === ESocketResource.module && resourceID) {
-        socket.join(`${ESocketRoom.module}#${resourceID}`);
+      if (resourceType === "module" && resourceID) {
+        socket.join(`module#${resourceID}`);
       }
-      if (resourceType === ESocketResource.plugin && resourceID) {
-        socket.join(`${ESocketRoom.plugin}#${resourceID}`);
+      if (resourceType === "plugin" && resourceID) {
+        socket.join(`plugin#${resourceID}`);
       }
       if (resourceType === "device" && resourceID) {
         editDevice(resourceID, { inspected_at: new Date() }).catch(() => false);
@@ -67,26 +67,26 @@ export async function setupSocketServer(httpServer: Server) {
     });
 
     socket.on("unattach", (resourceType: any, resourceID?: string) => {
-      if (resourceType === ESocketResource.pluginInstall) {
-        socket.leave(ESocketRoom.pluginInstall);
+      if (resourceType === "install") {
+        socket.leave("install");
       }
-      if (resourceType === ESocketResource.log) {
-        socket.leave(ESocketRoom.log);
+      if (resourceType === "log" && resourceID) {
+        socket.leave(`log#${resourceID}`);
       }
-      if (resourceType === ESocketResource.statistic) {
-        socket.leave(ESocketRoom.statistic);
+      if (resourceType === "statistic") {
+        socket.leave("statistic");
       }
       if (resourceType === "analysis") {
         socket.leave(`analysis#${resourceID}`);
       }
-      if (resourceType === ESocketResource.module) {
-        socket.leave(`${ESocketRoom.module}#${resourceID}`);
+      if (resourceType === "module") {
+        socket.leave(`module#${resourceID}`);
       }
       if (resourceType === "device") {
         socket.leave(`device#${resourceID}`);
       }
-      if (resourceType === ESocketResource.plugin) {
-        socket.leave(`${ESocketRoom.plugin}#${resourceID}`);
+      if (resourceType === "plugin") {
+        socket.leave(`plugin#${resourceID}`);
       }
     });
 
