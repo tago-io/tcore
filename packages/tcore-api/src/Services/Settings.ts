@@ -3,7 +3,7 @@ import fs from "fs";
 import os from "os";
 import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
-import { plugins } from "../Plugins/Host";
+import { plugins, startAllPlugins } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
 import { rmdir } from "../Helpers/Files";
 import { compareAccountPasswordHash } from "./Account/AccountPassword";
@@ -93,6 +93,8 @@ export async function doFactoryReset(): Promise<void> {
   await terminateAllPlugins();
   await rmdir(folder);
   await runVersionMigration();
+  plugins.clear();
+  await startAllPlugins();
 }
 
 /**

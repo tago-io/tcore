@@ -80,7 +80,7 @@ function ModalFactoryReset(props: IModalFactoryResetProps) {
 
       <FormGroup addMarginBottom={false}>
         <Style.Point>
-          All Plugins in the default <b>Plugins folder</b> will be deleted;
+          All non built-in Plugins in the default <b>Plugins folder</b> will be deleted.
         </Style.Point>
         <Style.Point>
           All {getSystemName()} settings will be restored to their default values;
@@ -88,7 +88,7 @@ function ModalFactoryReset(props: IModalFactoryResetProps) {
         <Style.Point>You will need to set a new master password;</Style.Point>
         <Style.Point>You will need to reinstall a database plugin;</Style.Point>
         <Style.Point>
-          Database data will <b>NOT</b> be deleted.
+          External database data will <b>NOT</b> be deleted.
         </Style.Point>
       </FormGroup>
     </Modal>
