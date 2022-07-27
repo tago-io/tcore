@@ -4,7 +4,7 @@ import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import semver from "semver";
 import Module from "../Plugins/Module/Module";
-import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
+import { DEV_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "./Settings";
 import { getVersion } from "./System";
@@ -61,7 +61,7 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
       allow_disable,
       allow_uninstall,
       error: error,
-      hidden: HIDDEN_BUILT_IN_PLUGINS.includes(folder),
+      hidden: pkg.tcore?.hidden,
       id: Plugin.generatePluginID(pkg.name),
       name: pkg.tcore?.name || "",
       state: plugin?.state || "stopped",
@@ -93,14 +93,7 @@ export async function listPluginFolders(): Promise<string[]> {
     }
   }
 
-  for (const item of BUILT_IN_PLUGINS) {
-    const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
-    if (hasPackage && !plugins.includes(item)) {
-      plugins.unshift(item);
-    }
-  }
-
-  for (const item of HIDDEN_BUILT_IN_PLUGINS) {
+  for (const item of DEV_BUILT_IN_PLUGINS) {
     const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
     if (hasPackage && !plugins.includes(item)) {
       plugins.unshift(item);
@@ -202,6 +195,24 @@ export async function showModuleMessage(pluginID: string, moduleID: string, mess
   }
 }
 
+/**
+ * Checks if we should trigger the `onMainDatabaseModuleLoaded` hook, and if
+ * we should, we trigger it.
+ */
+export async function checkMainDatabaseModuleHook() {
+  const mainSettings = await getMainSettings();
+  const split = String(mainSettings.database_plugin).split(":");
+  const plugin = plugins.get(split[0]);
+  const module = plugin?.modules?.get(split[1]);
+  const mainDatabaseIsLoaded = mainSettings.database_plugin && plugin && module?.state === "started";
+  if (mainDatabaseIsLoaded) {
+    triggerHooks("onMainDatabaseModuleLoaded");
+  }
+}
+
+/**
+ * Hides a message from a module in the plugin's configuration.
+ */
 export async function hideModuleMessage(pluginID: string, moduleID: string) {
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);

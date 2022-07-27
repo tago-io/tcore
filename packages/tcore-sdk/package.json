@@ -39,7 +39,6 @@
     "/types.js"
   ],
   "scripts": {
-    "clean": "rm -rf node_modules; rm -rf package-lock.json",
     "build": "rm -rf ./build; tsc",
     "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",

@@ -9,6 +9,7 @@ import { rmdir } from "../Helpers/Files";
 import { compareAccountPasswordHash } from "./Account/AccountPassword";
 import { startPluginModule, terminateAllPlugins } from "./Plugins";
 import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
+import { runVersionMigration } from "./VersionMigration";
 
 /**
  * Folder name to save the settings.
@@ -91,6 +92,7 @@ export async function doFactoryReset(): Promise<void> {
   const folder = await getMainSettingsFolder();
   await terminateAllPlugins();
   await rmdir(folder);
+  await runVersionMigration();
 }
 
 /**

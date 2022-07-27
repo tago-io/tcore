@@ -50,7 +50,8 @@
     "test": "npm run test -ws --if-present",
     "linter": "npm run linter -ws --if-present",
     "build": "npm run build -ws --if-present",
-    "clean": "npm run clean -ws --if-present"
+    "pack": "npm run pack -ws --if-present",
+    "plugin:add": "npm run plugin:add -ws --if-present"
   },
   "devDependencies": {
     "@commitlint/cli": "15.0.0",

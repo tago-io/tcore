@@ -11,7 +11,6 @@
     "url": "https://github.com/tago-io/tcore"
   },
   "scripts": {
-    "clean": "rm -rf node_modules; rm -rf package-lock.json",
     "build": "rm -rf ./build; tsc",
     "linter": "eslint .",
     "test": "TZ=UTC jest --detectOpenHandles",

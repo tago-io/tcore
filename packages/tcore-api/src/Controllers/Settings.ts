@@ -1,8 +1,9 @@
 import { ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/types";
 import { Application } from "express";
 import { z } from "zod";
-import { encryptAccountPassword } from "../Services/Account/AccountPassword";
+import { checkMainDatabaseModuleHook } from "../Services/Plugins";
 import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings";
+import { encryptAccountPassword } from "../Services/Account/AccountPassword";
 import APIController, { ISetupController, warm } from "./APIController";
 
 const zPassword = z.object({
@@ -23,6 +24,10 @@ class EditSettings extends APIController<ISettings, void, void> {
     const settings = await getMainSettings();
     const data = { ...settings, ...this.bodyParams };
     await setMainSettings(data);
+
+    if (this.bodyParams.database_plugin) {
+      checkMainDatabaseModuleHook();
+    }
   }
 }
 

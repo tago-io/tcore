@@ -10,7 +10,7 @@ import M from "../Module/Module";
 import Validator from "../Validator/Validator";
 import Worker from "../Worker/Worker";
 import { generatePluginID } from "../PluginID";
-import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS } from "../Host";
+import { DEV_BUILT_IN_PLUGINS } from "../Host";
 
 /**
  */
@@ -62,7 +62,7 @@ class Plugin {
     this.tcoreName = this.package.tcore.name;
     this.version = this.package.version;
 
-    this.builtIn = HIDDEN_BUILT_IN_PLUGINS.includes(folder) || BUILT_IN_PLUGINS.includes(folder);
+    this.builtIn = DEV_BUILT_IN_PLUGINS.includes(folder);
 
     this.loadFullDescription();
   }
