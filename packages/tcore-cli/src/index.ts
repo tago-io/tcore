@@ -9,8 +9,10 @@ import { status } from "./Commands/Status";
 import { stop } from "./Commands/Stop";
 import { restart } from "./Commands/Restart";
 import { addPluginCommands } from "./PluginCLI";
+import { setPluginSetting } from "./Commands/SetPluginSetting";
 
 /**
+ * Creates and returns the base program.
  */
 function getBaseProgram() {
   const program = new Command();
@@ -38,10 +40,20 @@ function getBaseProgram() {
 
   program.command("logs").description(`Shows the ${systemName} Server logs in real time`).action(showLogs);
 
+  program
+    .command("set-plugin-setting")
+    .description(`Set a setting for a specific plugin`)
+    .argument("<id>", "Plugin slug or ID")
+    .argument("<module>", "Plugin module")
+    .argument("<key>", "Setting key")
+    .argument("[value]", "Value for the setting key")
+    .action(setPluginSetting);
+
   return program;
 }
 
 /**
+ * Starts the cli, parses and executes the commands from argv.
  */
 async function startCLI() {
   await runVersionMigration().catch(() => null);
