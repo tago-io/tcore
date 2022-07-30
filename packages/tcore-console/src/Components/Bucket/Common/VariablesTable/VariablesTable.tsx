@@ -77,7 +77,7 @@ function VariablesTable(props: IVariablesTableProps) {
   const [selectedVariables, setSelectedVariables] = useState<any>({});
   const [hasLocation, setHasLocation] = useState(false);
   const [hasMetadata, setHasMetadata] = useState(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const match = useRouteMatch<{ id: string }>();
   const { id } = match.params;
 
