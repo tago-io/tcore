@@ -244,7 +244,7 @@ test("addDeviceData", async () => {
     variable: "temperature",
     value: 10,
   });
-  expect(response).toEqual(undefined);
+  expect(response).toEqual(true);
   expect(fn).toHaveBeenCalledWith("addDeviceData", "61261ef1f87480ff318b7bcb", {
     variable: "temperature",
     value: 10,
