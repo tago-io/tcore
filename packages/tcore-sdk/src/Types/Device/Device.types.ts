@@ -261,3 +261,4 @@ export type IDeviceTokenList = z.input<typeof zDeviceTokenList>;
 export type IDeviceTokenListQuery = z.input<typeof zDeviceTokenListQuery>;
 export type TDeviceType = z.input<typeof zDeviceType>;
 export type IDeviceApplyDataRetentionQuery = z.input<typeof zDeviceApplyDataRetentionQuery>;
+export type IDeviceChunkPeriod = z.input<typeof zDeviceChunkPeriod>;

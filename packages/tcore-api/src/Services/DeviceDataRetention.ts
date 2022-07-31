@@ -36,7 +36,7 @@ async function triggerDataRemoval() {
     }
 
     for (const device of devices) {
-      if (!device.chunk_period || device.chunk_retention) {
+      if (!device.chunk_period || !device.chunk_retention) {
         continue;
       }
 
@@ -59,7 +59,7 @@ async function triggerDataRemoval() {
  */
 function startDataRetentionTimer() {
   stopDataRetentionTimer();
-  interval = setInterval(triggerDataRemoval, 1000);
+  interval = setInterval(triggerDataRemoval, 1000 * 60 * 10);
 }
 
 /**

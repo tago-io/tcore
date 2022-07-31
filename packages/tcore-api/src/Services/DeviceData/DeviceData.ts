@@ -9,6 +9,7 @@ import {
   generateResourceID,
   IDeviceAddDataOptions,
   zDeviceDataUpdate,
+  IDeviceChunkPeriod,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -128,6 +129,23 @@ export const applyPayloadEncoder = async (
 };
 
 /**
+ * Checks if the immutable `time` is out of range.
+ */
+function isImmutableTimeOutOfRange(time: Date, period: IDeviceChunkPeriod, retention: number) {
+  const date = DateTime.fromJSDate(time);
+  const startDate = DateTime.utc()
+    .minus({ [period]: retention })
+    .startOf(period);
+  const endDate = DateTime.utc().plus({ day: 1 }).endOf("day");
+
+  return {
+    isOk: date >= startDate && date <= endDate,
+    startDate: startDate.toISODate(),
+    endDate: endDate.toISODate(),
+  };
+}
+
+/**
  * Adds data into a device by an actual device object.
  * @param {IDevice} device Device object who sent the data.
  * @param {any} data Data to be inserted.
@@ -162,6 +180,18 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
   items = await applyPayloadEncoder(device, items, options);
   items = await runPayloadParser(device, items, options);
   items = await z.array(zDeviceDataCreate).parseAsync([items].flat());
+
+  for (const item of items) {
+    if (device.type === "immutable" && device.chunk_period && device.chunk_retention) {
+      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention);
+
+      if (!outOfRage.isOk) {
+        const title = `Time must be between ${outOfRage.startDate} and ${outOfRage.endDate}`;
+        await emitToLiveInspector(device, { title, content: item }, options.liveInspectorID);
+        throw new Error(title);
+      }
+    }
+  }
 
   await emitToLiveInspector(device, { title: "Raw Payload", content: data }, options.liveInspectorID);
 
