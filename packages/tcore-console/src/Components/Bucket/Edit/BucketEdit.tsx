@@ -156,7 +156,6 @@ function BucketEdit() {
    * Should return if the initial data is different from the current data.
    */
   const checkIfDataChanged = useCallback(() => {
-    console.log(initialData.current, data);
     return JSON.stringify(initialData.current) !== JSON.stringify(data);
   }, [data]);
 
