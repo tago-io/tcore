@@ -13,7 +13,7 @@ let checkingDataRemoval = false;
  * Triggers the data removal check.
  * By the end of this function, all devices that need to have data removed will have its data removed.
  */
-async function triggerDataRemoval() {
+async function triggerDataRetentionCheck() {
   if (checkingDataRemoval) {
     // lock to prevent multiple executions
     return;
@@ -59,7 +59,7 @@ async function triggerDataRemoval() {
  */
 function startDataRetentionTimer() {
   stopDataRetentionTimer();
-  interval = setInterval(triggerDataRemoval, 1000 * 60 * 10);
+  interval = setInterval(triggerDataRetentionCheck, 1000 * 60 * 10);
 }
 
 /**
@@ -71,4 +71,4 @@ function stopDataRetentionTimer() {
   }
 }
 
-export { stopDataRetentionTimer, startDataRetentionTimer };
+export { stopDataRetentionTimer, startDataRetentionTimer, triggerDataRetentionCheck };
