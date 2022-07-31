@@ -14,6 +14,36 @@ import ButtonDataAmount from "./ButtonDataAmount/ButtonDataAmount";
 function BucketList() {
   const theme = useTheme();
 
+  /**
+   * Renders the data retention field.
+   */
+  const renderDataRetention = (data: IDevice) => {
+    let value = "";
+    if (data.type === "mutable") {
+      value = "n/a";
+    } else if (data.type === "immutable") {
+      if (data.chunk_period) {
+        value = `${data.chunk_retention} ${data.chunk_period}`;
+      } else {
+        value = "forever";
+      }
+    } else {
+      value = "forever";
+    }
+
+    return <Capitalize>{value}</Capitalize>;
+  };
+
+  /**
+   * Renders the storage type.
+   */
+  function renderStorageType(data: IDevice) {
+    const { type } = data;
+    const name = getDeviceTypeName(type);
+    const color = type === "immutable" ? theme.dataStorageImmutable : theme.dataStorageMutable;
+    return <span style={{ color }}>{name}</span>;
+  }
+
   return (
     <ListPage<IDevice>
       color={theme.bucket}
@@ -41,12 +71,12 @@ function BucketList() {
         {
           id: "data_retention",
           label: "Retain data for",
-          onRender: (item) => <Capitalize>{item.data_retention || "forever"}</Capitalize>,
+          onRender: (item) => renderDataRetention(item),
         },
         {
           id: "type",
           label: "Type",
-          onRender: (item) => getDeviceTypeName(item.type),
+          onRender: (item) => renderStorageType(item),
           filterDisabled: true,
           flex: "none",
           width: 250,

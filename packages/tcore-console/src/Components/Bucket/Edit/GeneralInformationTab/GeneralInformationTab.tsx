@@ -21,20 +21,16 @@ interface IGeneralInformationTabProps {
    */
   errors: any;
   /**
-   * Retention information.
+   * Called when a field is changed.
    */
-  retention: any;
-  /**
-   * Called when a data retention field changes.
-   */
-  onChangeRetention: (newRetention: any) => void;
+  onChange: (field: keyof IDevice, value: IDevice[keyof IDevice]) => void;
 }
 
 /**
  * The bucket's general information tab.
  */
 function GeneralInformationTab(props: IGeneralInformationTabProps) {
-  const { data, onChangeRetention, retention } = props;
+  const { data, onChange } = props;
 
   return (
     <div>
@@ -67,11 +63,9 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
         </Col>
 
         <Col size="6">
-          <DataRetention
-            disabled={data.type === "mutable"}
-            retention={retention}
-            onChangeRetention={onChangeRetention}
-          />
+          {data.type === "immutable" && (
+            <DataRetention type="edit" disablePeriod data={data} onChange={onChange} />
+          )}
         </Col>
       </Row>
     </div>

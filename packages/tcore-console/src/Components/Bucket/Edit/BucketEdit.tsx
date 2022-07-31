@@ -1,5 +1,6 @@
 import { IDevice } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
+import cloneDeep from "lodash.clonedeep";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
@@ -12,8 +13,6 @@ import store from "../../../System/Store";
 import buildZodError from "../../../Validation/buildZodError";
 import EditPage from "../../EditPage/EditPage";
 import { EIcon } from "../../Icon/Icon.types";
-import joinBucketDataRetention from "../Helpers/joinDataRetention";
-import separateDataRetention from "../Helpers/separateDataRetention";
 import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab";
 import MoreTab from "./MoreTab/MoreTab";
 import VariablesTab from "./VariablesTab/VariablesTab";
@@ -32,9 +31,7 @@ function BucketEdit() {
   const { data: dataAmount, mutate: mutateDataAmount } = useApiRequest<number>(
     `/device/${id}/data_amount`
   );
-  const [retention, setRetention] = useState<any>({ value: "1", unit: "day" });
-
-  const initialRetention = useRef<any>();
+  const initialData = useRef<IDevice>({} as IDevice);
 
   const loading = !data.id || dataAmount === undefined;
 
@@ -44,9 +41,7 @@ function BucketEdit() {
    */
   const onFetch = useCallback((bucket: IDevice) => {
     setData(bucket);
-    const ret = separateDataRetention(bucket);
-    initialRetention.current = { ...ret };
-    setRetention({ ...ret });
+    initialData.current = cloneDeep(bucket);
   }, []);
 
   /**
@@ -73,11 +68,20 @@ function BucketEdit() {
    * Saves the bucket.
    */
   const save = useCallback(async () => {
-    await editDevice(id, {
-      data_retention: joinBucketDataRetention(retention),
-    });
-    initialRetention.current = { ...retention };
-  }, [retention, id]);
+    await editDevice(id, { chunk_retention: data.chunk_retention });
+    initialData.current = cloneDeep(data);
+  }, [id, data]);
+
+  /**
+   * Called when a field from a tab gets modified.
+   * This will apply the change to the data state.
+   */
+  const onChangeData = useCallback(
+    (field: keyof IDevice, value: IDevice[keyof IDevice]) => {
+      setData({ ...data, [field]: value });
+    },
+    [data]
+  );
 
   /**
    * Empties the bucket.
@@ -119,14 +123,7 @@ function BucketEdit() {
    * Renders the `General Information` tab's content.
    */
   const renderGeneralInformationTab = () => {
-    return (
-      <GeneralInformationTab
-        data={data}
-        errors={errors}
-        onChangeRetention={setRetention}
-        retention={retention}
-      />
-    );
+    return <GeneralInformationTab data={data} errors={errors} onChange={onChangeData} />;
   };
 
   /**
@@ -136,7 +133,7 @@ function BucketEdit() {
     return (
       <>
         <span>Data retention </span>
-        <b>{data.data_retention || "Forever"}</b>
+        <b>{data.data_retention}</b>
         <span> &nbsp;|&nbsp; </span>
         <span>Amount of data records </span>
         <b>{formatDataAmount(dataAmount)}</b>
@@ -159,8 +156,9 @@ function BucketEdit() {
    * Should return if the initial data is different from the current data.
    */
   const checkIfDataChanged = useCallback(() => {
-    return JSON.stringify(initialRetention.current) !== JSON.stringify(retention);
-  }, [retention]);
+    console.log(initialData.current, data);
+    return JSON.stringify(initialData.current) !== JSON.stringify(data);
+  }, [data]);
 
   /**
    */

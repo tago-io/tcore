@@ -15,7 +15,16 @@ async function getDeviceList(page: number, amount: number, filter: any): Promise
       name: filter.name ? `*${filter.name}*` : undefined,
       tags: filter.tags,
     },
-    fields: ["name", "last_input", "last_output", "active", "created_at", "type", "data_retention"],
+    fields: [
+      "name",
+      "last_input",
+      "last_output",
+      "active",
+      "created_at",
+      "type",
+      "chunk_period",
+      "chunk_retention",
+    ],
   };
 
   const account = new Account({ token: store.token });

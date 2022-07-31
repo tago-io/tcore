@@ -150,6 +150,9 @@ export const getDeviceInfo = async (id: TGenericID): Promise<IDevice> => {
     throw new Error("Invalid Device ID");
   }
   const parsed = await zDevice.parseAsync(device);
+  if (parsed.chunk_period && parsed.chunk_retention) {
+    parsed.data_retention = `${parsed.chunk_period} ${parsed.chunk_retention}`;
+  }
   return parsed;
 };
 

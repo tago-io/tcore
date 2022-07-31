@@ -29,6 +29,7 @@ import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
 import { startActionScheduleTimer } from "./Services/ActionScheduler";
 import { logSystemStart } from "./Helpers/log";
+import { startDataRetentionTimer } from "./Services/DeviceDataRetention";
 
 const app = express();
 const httpServer = createServer(app);
@@ -168,6 +169,7 @@ export async function startServer() {
 
   await listenOnApplicationPort();
   startActionScheduleTimer();
+  startDataRetentionTimer();
 
   process.on("SIGTERM", () => shutdown(httpServer));
   process.on("SIGINT", () => shutdown(httpServer));

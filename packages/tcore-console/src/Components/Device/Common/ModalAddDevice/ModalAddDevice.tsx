@@ -1,7 +1,7 @@
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useTheme } from "styled-components";
-import { zName } from "@tago-io/tcore-sdk/types";
+import { IDevice, zDeviceCreate } from "@tago-io/tcore-sdk/types";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
 import Input from "../../../Input/Input";
@@ -9,7 +9,7 @@ import Modal from "../../../Modal/Modal";
 import BucketTypePicker from "../DeviceTypePicker/DeviceTypePicker";
 import createDevice from "../../../../Requests/createDevice";
 import DataRetention from "../../../Bucket/Common/DataRetention/DataRetention";
-import joinBucketDataRetention from "../../../Bucket/Helpers/joinDataRetention";
+import buildZodError from "../../../../Validation/buildZodError";
 
 /**
  * Props.
@@ -22,9 +22,12 @@ interface IModalAddDeviceProps {
  * The device's wizard modal.
  */
 function ModalAddDevice(props: IModalAddDeviceProps) {
-  const [name, setName] = useState("");
-  const [type, setType] = useState<any>("immutable");
-  const [retention, setRetention] = useState({ value: "1", unit: "forever" });
+  const [data, setData] = useState<any>({
+    name: "",
+    type: "immutable",
+    chunk_retention: "",
+    chunk_period: "",
+  });
   const [newID, setNewID] = useState("");
   const [errors, setErrors] = useState<any>({});
   const history = useHistory();
@@ -33,37 +36,56 @@ function ModalAddDevice(props: IModalAddDeviceProps) {
   const { onClose } = props;
 
   /**
+   */
+  const onChange = useCallback(
+    (field: keyof IDevice, value: IDevice[keyof IDevice]) => {
+      setData({ ...data, [field]: value });
+    },
+    [data]
+  );
+
+  /**
    * Validates the data of the device.
    */
   const validate = useCallback(async () => {
-    const err: any = {
-      name: !zName.safeParse(name).success,
-      data_retention: retention.unit !== "forever" && (!retention.value || !retention.unit),
-      type: !type?.id,
-    };
+    try {
+      const formatted = {
+        ...data,
+        type: data.type?.id || data.type,
+      };
 
-    if (err.name || err.data_retention || err.type) {
+      if (formatted.type !== "immutable") {
+        delete formatted.chunk_period;
+        delete formatted.chunk_retention;
+      }
+
+      await zDeviceCreate.parseAsync(formatted);
+    } catch (ex: any) {
+      const err = buildZodError(ex.issues);
       setErrors(err);
       return false;
     }
 
     return true;
-  }, [name, type?.id, retention]);
+  }, [data]);
 
   /**
    * Creates the device.
    */
   const doRequest = useCallback(async () => {
-    const data = {
-      name: name,
-      data_retention: joinBucketDataRetention(retention),
-      type: type?.id,
+    const formatted = {
+      ...data,
+      type: data.type?.id || data.type,
     };
 
-    const response = await createDevice(data);
+    if (formatted.type !== "immutable") {
+      delete formatted.chunk_period;
+      delete formatted.chunk_retention;
+    }
 
+    const response = await createDevice(formatted);
     setNewID(response.device_id);
-  }, [name, type?.id, retention]);
+  }, [data]);
 
   /**
    * Called when the confirm button is pressed.
@@ -101,21 +123,25 @@ function ModalAddDevice(props: IModalAddDeviceProps) {
           autoFocus
           error={errors?.name}
           errorMessage="This field requires at least 3 characters"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => onChange("name", e.target.value)}
           placeholder="Enter a name for this device"
-          value={name}
+          value={data.name}
         />
       </FormGroup>
 
       <FormGroup label="Type" icon={EIcon.cog}>
-        <BucketTypePicker onChange={setType} value={type} error={errors?.type} />
+        <BucketTypePicker
+          onChange={(e) => onChange("type", e)}
+          value={data.type}
+          error={errors?.type}
+        />
       </FormGroup>
 
       <DataRetention
-        error={errors?.data_retention}
-        retention={type?.id === "mutable" ? { value: "1", unit: "forever" } : retention}
-        onChangeRetention={setRetention}
-        disabled={type?.id === "mutable"}
+        type="create"
+        error={errors?.chunk_retention || errors?.chunk_period}
+        data={{ ...data, type: data.type?.id || data.type }}
+        onChange={onChange}
       />
     </Modal>
   );
