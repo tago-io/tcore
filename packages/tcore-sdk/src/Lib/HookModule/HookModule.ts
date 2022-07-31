@@ -16,6 +16,13 @@ class HookModule extends TCoreModule {
   public async onAfterInsertDeviceData(deviceID: TGenericID, data: IDeviceData[]): Promise<void> {
     throw new Error("Method not implemented");
   }
+
+  /**
+   * Called after the data sent by a device was edited in the bucket.
+   */
+  public async onAfterEditDeviceData(deviceID: TGenericID, data: IDeviceData[]): Promise<void> {
+    throw new Error("Method not implemented");
+  }
 }
 
 export default HookModule;

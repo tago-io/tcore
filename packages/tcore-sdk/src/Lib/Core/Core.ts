@@ -29,6 +29,7 @@ import {
   TGenericToken,
   ILiveInspectorMessageCreate,
   TLiveInspectorConnectionID,
+  IDeviceDataEdit,
 } from "../../Types";
 import APIBridge from "../APIBridge/APIBridge";
 
@@ -248,8 +249,22 @@ class Core extends APIBridge {
   /**
    * Adds a data item into a device.
    */
-  public async addDeviceData(deviceID: TGenericID, data: any): Promise<void> {
-    await this.invokeApiMethod("addDeviceData", deviceID, data);
+  public async addDeviceData(deviceID: TGenericID, data: any): Promise<IDeviceData[]> {
+    return await this.invokeApiMethod("addDeviceData", deviceID, data);
+  }
+
+  /**
+   * Edits data from a device.
+   */
+  public async editDeviceData(deviceID: TGenericID, data: IDeviceDataEdit[]): Promise<IDeviceData[]> {
+    return await this.invokeApiMethod("editDeviceData", deviceID, data);
+  }
+
+  /**
+   * Delete data from a device.
+   */
+  public async deleteDeviceData(deviceID: TGenericID, ids: IDeviceDataQuery): Promise<void> {
+    await this.invokeApiMethod("deleteDeviceData", deviceID, ids);
   }
 
   /**

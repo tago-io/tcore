@@ -51,6 +51,7 @@ async function executePluginRequest(pluginID: string, method: string, ...e: any[
     // deviceData
     case "getDeviceDataAmount"        : return call(pluginID, "device-data", DeviceDataService, "getDeviceDataAmount", ...e);
     case "addDeviceData"              : return call(pluginID, "device-data", DeviceDataService, "addDeviceData", ...e);
+    case "editDeviceData"             : return call(pluginID, "device-data", DeviceDataService, "editDeviceData", ...e);
     case "getDeviceData"              : return call(pluginID, "device-data", DeviceDataService, "getDeviceData", ...e);
     case "deleteDeviceData"           : return call(pluginID, "device-data", DeviceDataService, "deleteDeviceData", ...e);
 

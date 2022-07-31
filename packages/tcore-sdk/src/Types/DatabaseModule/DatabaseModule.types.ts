@@ -17,7 +17,7 @@ import {
   zDeviceTokenCreate,
   zDeviceTokenListQuery,
   zPluginStorageItemSet,
-  zDeviceDataUpdate,
+  zDeviceDataEdit,
   zAccountTokenCreate,
   zAccountCreate,
   zAccountListQuery,
@@ -31,7 +31,7 @@ export type IDatabaseDeviceDataCreate = z.output<typeof zDeviceDataCreate>;
 /**
  * Data parameter of the `editDeviceData` function.
  */
-export type IDatabaseDeviceDataEdit = z.output<typeof zDeviceDataUpdate>;
+export type IDatabaseDeviceDataEdit = z.output<typeof zDeviceDataEdit>;
 
 /**
  * Data parameter of the `getDeviceData` functions.

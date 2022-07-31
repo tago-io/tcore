@@ -118,15 +118,21 @@ export const zDeviceDataCreate = zDeviceData
       created_at: now,
       id: generateResourceID(),
       time: data.time || now,
+      unit: data.unit || undefined,
     });
   });
 
 /**
- * Configuration to update a device data.
+ * Configuration to edit a single device data.
  */
-export const zDeviceDataUpdate = zDeviceData.omit({ created_at: true, variable: true, device: true }).extend({
-  location: zDeviceDataCreateLocation,
-  time: z.preprocess((x) => (x ? new Date(x as string) : undefined), z.date().nullish()),
+export const zDeviceDataEdit = z.object({
+  group: z.string().max(24).nullish(),
+  id: zObjectID,
+  location: zDeviceDataCreateLocation.optional(),
+  metadata: z.object({}).catchall(z.any()).or(z.array(z.any())).optional(),
+  time: z.preprocess((x) => (x ? new Date(x as string) : undefined), z.date()).optional(),
+  unit: z.string().optional(),
+  value: z.string().or(z.boolean()).or(z.number()).optional(),
 });
 
 /**
@@ -229,13 +235,14 @@ export const zDeviceDataQuery = z.preprocess(
 const zDeviceAddDataOptions = z.object({
   rawPayload: z.any().nullish(),
   liveInspectorID: z.string().nullish(),
+  returnDataSet: z.boolean().optional(),
 });
 
 export type IDeviceAddDataOptions = z.infer<typeof zDeviceAddDataOptions>;
 export type IDeviceData = z.infer<typeof zDeviceData>;
 export type IDeviceDataCreate = z.input<typeof zDeviceDataCreate>;
 export type IDeviceDataCreateLocation = z.input<typeof zDeviceDataCreateLocation>;
+export type IDeviceDataEdit = z.infer<typeof zDeviceDataEdit>;
 export type IDeviceDataLocationCoordinates = z.input<typeof zDeviceDataLocationCoordinates>;
 export type IDeviceDataLocationLatLng = z.input<typeof zDeviceDataLocationLatLng>;
 export type IDeviceDataQuery = z.input<typeof zDeviceDataQuery>;
-export type IDeviceDataUpdate = z.input<typeof zDeviceDataUpdate>;

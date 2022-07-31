@@ -8,7 +8,7 @@ import {
   IDevice,
   generateResourceID,
   IDeviceAddDataOptions,
-  zDeviceDataUpdate,
+  zDeviceDataEdit,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -182,9 +182,15 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
   await addStatistic({ input: items.length });
   await editDevice(device.id, { updated_at: now, last_input: now });
 
-  triggerHooks("onAfterInsertDeviceData", device.id, data);
+  const parsed = z.array(zDeviceData).parse(items);
 
-  return `${items.length} items added`;
+  triggerHooks("onAfterInsertDeviceData", device.id, parsed);
+
+  if (options?.returnDataSet) {
+    return parsed;
+  } else {
+    return `${items.length} items added`;
+  }
 };
 
 /**
@@ -194,7 +200,7 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
  */
 export async function addDeviceData(deviceID: TGenericID, data: any) {
   const device = await getDeviceInfo(deviceID);
-  return await addDeviceDataByDevice(device, data);
+  return await addDeviceDataByDevice(device, data, { returnDataSet: true });
 }
 
 /**
@@ -212,14 +218,18 @@ export async function editDeviceData(deviceID: TGenericID, data: any[]) {
   }
 
   for (let i = 0; i < payload.length; i++) {
-    const parsed: any = await zDeviceDataUpdate.parseAsync(payload[i]);
+    const parsed: any = await zDeviceDataEdit.parseAsync(payload[i]);
     if ("value" in parsed) {
       parsed.type = typeof parsed.value;
     }
     payload[i] = parsed;
   }
 
-  return await invokeDatabaseFunction("editDeviceData", deviceID, device.id, payload);
+  await invokeDatabaseFunction("editDeviceData", deviceID, device.type, payload);
+
+  triggerHooks("onAfterEditDeviceData", device.id, payload);
+
+  return payload;
 }
 
 /**
