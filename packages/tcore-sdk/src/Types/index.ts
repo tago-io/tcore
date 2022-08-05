@@ -1,5 +1,5 @@
 export * from "./Action/Action.types";
-export * from "./Analysis.types";
+export * from "./Analysis/Analysis.types";
 export * from "./DeviceData/DeviceData.types";
 export * from "./Common/Common.types";
 export * from "./Connector.types";
@@ -10,7 +10,7 @@ export * from "./Hardware.types";
 export * from "./Log.types";
 export * from "./Network.types";
 export * from "./Plugin.types";
-export * from "./ResourceID";
+export * from "./Resource/ResourceID";
 export * from "./Settings/Settings.types";
 export * from "./Socket.types";
 export * from "./Statistic.types";
