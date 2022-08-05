@@ -155,6 +155,12 @@ function DataRetention(props: IDataRetentionProps) {
                     onChange("chunk_retention", "");
                   }
                 }}
+                onKeyDown={(e) => {
+                  if (String(e.key).toLowerCase() === "e") {
+                    // html inputs allow the letter E because it stands for exponential
+                    e.preventDefault();
+                  }
+                }}
                 onChange={(e) => {
                   if (e.target.value.includes(".") || e.target.value.includes(",")) {
                     // discard

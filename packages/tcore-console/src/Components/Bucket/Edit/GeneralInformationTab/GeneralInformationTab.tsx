@@ -30,7 +30,7 @@ interface IGeneralInformationTabProps {
  * The bucket's general information tab.
  */
 function GeneralInformationTab(props: IGeneralInformationTabProps) {
-  const { data, onChange } = props;
+  const { data, errors, onChange } = props;
 
   return (
     <div>
@@ -64,7 +64,13 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
 
         <Col size="6">
           {data.type === "immutable" && (
-            <DataRetention type="edit" disablePeriod data={data} onChange={onChange} />
+            <DataRetention
+              type="edit"
+              disablePeriod
+              data={data}
+              error={errors?.chunk_retention}
+              onChange={onChange}
+            />
           )}
         </Col>
       </Row>

@@ -54,6 +54,11 @@ function ModalAddDevice(props: IModalAddDeviceProps) {
         type: data.type?.id || data.type,
       };
 
+      if (!formatted.type) {
+        setErrors({ type: true });
+        return;
+      }
+
       if (formatted.type !== "immutable") {
         delete formatted.chunk_period;
         delete formatted.chunk_retention;

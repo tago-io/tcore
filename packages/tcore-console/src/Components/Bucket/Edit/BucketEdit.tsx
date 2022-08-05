@@ -1,4 +1,4 @@
-import { IDevice } from "@tago-io/tcore-sdk/types";
+import { IDevice, zDeviceCreate } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
 import cloneDeep from "lodash.clonedeep";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -50,6 +50,17 @@ function BucketEdit() {
    */
   const validate = useCallback(async () => {
     try {
+      const formatted = {
+        ...data,
+        type: (data.type as any)?.id || data.type,
+      };
+
+      if (formatted.type !== "immutable") {
+        delete formatted.chunk_period;
+        delete formatted.chunk_retention;
+      }
+
+      await zDeviceCreate.parseAsync(formatted);
       setErrors({});
       return true;
     } catch (ex: any) {
@@ -62,7 +73,7 @@ function BucketEdit() {
       setErrors(err);
       return false;
     }
-  }, []);
+  }, [data]);
 
   /**
    * Saves the bucket.
