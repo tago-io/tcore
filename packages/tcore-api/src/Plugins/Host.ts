@@ -15,7 +15,7 @@ export const HIDDEN_BUILT_IN_PLUGINS: string[] = [path.join(__dirname, "../../..
 /**
  * List of plugins paths that are built-in as soon as tcore boots up.
  */
-export const BUILT_IN_PLUGINS: string[] = [path.join(__dirname, "../../../../../tcore-plugins/tcore-plugin-sqlite")];
+export const BUILT_IN_PLUGINS: string[] = [];
 
 /**
  * Map containing the a key with the name of a plugin and the value
