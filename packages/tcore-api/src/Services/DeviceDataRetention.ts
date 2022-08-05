@@ -36,7 +36,7 @@ async function triggerDataRetentionCheck() {
     }
 
     for (const device of devices) {
-      if (!device.chunk_period || !device.chunk_retention) {
+      if (!device.chunk_period) {
         continue;
       }
 
