@@ -68,15 +68,15 @@ export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]):
       // release/unlock the action
       const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsUnlock, device, x));
       if (dataItem) {
-        editAction(action.id, { lock: false });
+        await editAction(action.id, { lock: false });
       }
     } else {
       // action is unlocked, meaning we need to find a condition
       // which can trigger the action
       const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsLock, device, x));
       if (dataItem) {
-        triggerAction(action.id, data);
-        editAction(action.id, { lock: hasLocker });
+        await triggerAction(action.id, data);
+        await editAction(action.id, { lock: hasLocker });
       }
     }
   }
@@ -178,7 +178,7 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
 
   await invokeDatabaseFunction("addDeviceData", device.id, device.type, items);
 
-  await triggerActions(device.id, items);
+  triggerActions(device.id, items).catch(() => null);
   await addStatistic({ input: items.length });
   await editDevice(device.id, { updated_at: now, last_input: now });
 
