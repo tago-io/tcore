@@ -151,7 +151,7 @@ export const getDeviceInfo = async (id: TGenericID): Promise<IDevice> => {
   }
   const parsed = await zDevice.parseAsync(device);
   if (parsed.chunk_period && parsed.chunk_retention) {
-    parsed.data_retention = `${parsed.chunk_period} ${parsed.chunk_retention}`;
+    parsed.data_retention = `${parsed.chunk_retention} ${parsed.chunk_period}`;
   }
   return parsed;
 };

@@ -63,7 +63,7 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
         </Col>
 
         <Col size="6">
-          {data.type === "immutable" && (
+          {data.type === "immutable" && data.chunk_period && (
             <DataRetention
               type="edit"
               disablePeriod
