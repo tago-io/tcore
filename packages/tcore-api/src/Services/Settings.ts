@@ -29,8 +29,8 @@ export async function checkMasterPassword(masterPassword: string): Promise<boole
  * Gets the dirpath of the application. The dirpath is the path
  * where the application data, settings, and plugins will be saved.
  */
-function getDirpath() {
-  const dirpath = process.env.TCORE_DIRPATH || os.homedir();
+export function getDirpath() {
+  const dirpath = process.env.TCORE_DIRPATH || path.resolve(os.homedir(), folderName);
   return dirpath;
 }
 
@@ -39,7 +39,7 @@ function getDirpath() {
  */
 export async function getMainSettingsFolder(): Promise<string> {
   const dirpath = getDirpath();
-  const folder = path.resolve(dirpath, folderName);
+  const folder = path.resolve(dirpath);
   await fs.promises.mkdir(folder, { recursive: true });
   return folder;
 }
@@ -49,7 +49,7 @@ export async function getMainSettingsFolder(): Promise<string> {
  */
 export async function getPluginSettingsFolder(pluginID: string): Promise<string> {
   const dirpath = getDirpath();
-  const folder = path.resolve(dirpath, folderName, "PluginFiles", pluginID || "");
+  const folder = path.resolve(dirpath, "PluginFiles", pluginID || "");
   await fs.promises.mkdir(folder, { recursive: true });
   return folder;
 }
@@ -59,7 +59,7 @@ export async function getPluginSettingsFolder(pluginID: string): Promise<string>
  */
 export async function getPluginsFolder(): Promise<string> {
   const dirpath = getDirpath();
-  const folder = path.resolve(dirpath, folderName, "Plugins");
+  const folder = path.resolve(dirpath, "Plugins");
   await fs.promises.mkdir(folder, { recursive: true });
   return folder;
 }
