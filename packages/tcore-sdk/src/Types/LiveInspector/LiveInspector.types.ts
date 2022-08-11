@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zObjectID } from "./Common/Common.types";
+import { zObjectID } from "../Common/Common.types";
 
 /**
  * Configuration of a inspector connection ID.
@@ -9,7 +9,7 @@ export const zLiveInspectorConnectionID = z.string().nullish();
 /**
  * Configuration of a message from the device's inspector.
  */
-const zLiveInspectorMessage = z.object({
+export const zLiveInspectorMessage = z.object({
   connection_id: z.string(),
   content: z.any(),
   device_id: zObjectID,
@@ -20,7 +20,7 @@ const zLiveInspectorMessage = z.object({
 /**
  * Configuration to create a message in the device's inspector.
  */
-const zLiveInspectorMessageCreate = z.object({
+export const zLiveInspectorMessageCreate = z.object({
   content: z.any(),
   title: z.string(),
 });
