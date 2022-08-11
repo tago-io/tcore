@@ -3,7 +3,6 @@ import { convertDateToISO, parseRelativeDate } from "./parseRelativeDate";
 describe("convertDateToISO", () => {
   test("convert simple date", () => {
     const data = convertDateToISO("01/01/01");
-    console.log(data);
     expect(typeof data).toBe("string");
   });
 });

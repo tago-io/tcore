@@ -7,7 +7,7 @@ describe("zSettings", () => {
       plugin_folder: "string",
     };
     const parsed = zSettings.parse(data);
-    expect(parsed.version).toEqual("string");
+    expect(parsed.plugin_folder).toEqual("string");
   });
 
   test("check default values for optional fields", () => {
@@ -16,9 +16,9 @@ describe("zSettings", () => {
     };
     const parsed = zSettings.parse(data);
     //expect(parsed.plugin_auto_update_check_time).toEqual(null);
-    expect(parsed.port).toEqual("8888");
+    expect(parsed.port).toEqual(8888);
     //expect(parsed.telemetry).toEqual(false);
-    expect(parsed.version).toEqual(null);
+    expect(parsed.version).toBeUndefined;
   });
 });
 

@@ -6,7 +6,7 @@ describe("zStatistic", () => {
     const data = {
       input: 0,
       output: 1,
-      time: Date.now(),
+      time: new Date(),
     };
     const parsed = zStatistic.parse(data);
     expect(parsed.input).toEqual(0);

@@ -4,7 +4,7 @@ import { zLogCreate, zLogList } from "./Log.types";
 describe("zLogCreate", () => {
   test("parses simple object", () => {
     const data = {
-      timestamp: Date.now(),
+      timestamp: new Date(),
       message: "message",
       error: true,
     };
@@ -54,7 +54,7 @@ describe("zLogList", () => {
   test("parses simple object", () => {
     const data = [
       {
-        timestamp: Date.now(),
+        timestamp: new Date(),
         message: "message",
         error: true,
       },
@@ -73,7 +73,7 @@ describe("zLogList", () => {
       zLogList.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.fieldErrors).toBe({});
+      expect(e.fieldErrors).toStrictEqual({});
     }
   });
 

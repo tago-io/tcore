@@ -10,7 +10,6 @@ describe("removeNullValues", () => {
   test("removes null value", () => {
     const data = { key: null };
     const process = removeNullValues(data);
-    console.log(process);
     expect(process).toBeInstanceOf(Object);
   });
 

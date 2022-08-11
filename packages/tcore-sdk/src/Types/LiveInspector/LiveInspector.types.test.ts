@@ -47,7 +47,7 @@ describe("zLiveInspectorMessage", () => {
   test("check optional field", () => {
     const data = {
       connection_id: "connection_id",
-      device_id: 1,
+      device_id: "1",
       timestamp: 0,
       title: "title",
     };
