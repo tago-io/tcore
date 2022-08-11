@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { generateResourceID } from "../../Shared/ResourceID";
-import { IPluginConfigField, zPluginModuleIDCombo } from "../Plugin.types";
+import { IPluginConfigField, zPluginModuleIDCombo } from "../Plugin/Plugin.types";
 import { zQuery, zName, zObjectID, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types";
 import { zTags } from "../Tag/Tag.types";
 import preprocessBoolean from "../Helpers/preprocessBoolean";

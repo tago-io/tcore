@@ -9,7 +9,7 @@ export * from "./LiveInspector/LiveInspector.types";
 export * from "./Hardware/Hardware.types";
 export * from "./Log/Log.types";
 export * from "./Network.types";
-export * from "./Plugin.types";
+export * from "./Plugin/Plugin.types";
 export * from "./ResourceID";
 export * from "./Settings/Settings.types";
 export * from "./Socket.types";
