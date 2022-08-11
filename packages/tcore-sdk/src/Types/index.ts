@@ -6,7 +6,7 @@ export * from "./Connector.types";
 export * from "./DatabaseModule/DatabaseModule.types";
 export * from "./Device/Device.types";
 export * from "./LiveInspector.types";
-export * from "./Hardware.types";
+export * from "./Hardware/Hardware.types";
 export * from "./Log.types";
 export * from "./Network.types";
 export * from "./Plugin.types";
