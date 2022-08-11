@@ -9,7 +9,7 @@ import {
   zQuery,
   zObjectIDAutoGen,
 } from "./Common/Common.types";
-import { zLog } from "./Log.types";
+import { zLog } from "./Log/Log.types";
 import preprocessBoolean from "./Helpers/preprocessBoolean";
 import preprocessObject from "./Helpers/preprocessObject";
 import createQueryOrderBy from "./Helpers/createQueryOrderBy";

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zDateAutoGen } from "./Common/Common.types";
+import { zDateAutoGen } from "../Common/Common.types";
 
 /**
  * Configuration of a log.
