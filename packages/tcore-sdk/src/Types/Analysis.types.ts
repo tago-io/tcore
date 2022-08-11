@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zTags } from "./Tag.types";
+import { zTags } from "./Tag/Tag.types";
 import {
   zDateAutoGen,
   zActiveAutoGen,

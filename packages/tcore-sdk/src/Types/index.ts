@@ -15,5 +15,5 @@ export * from "./Settings/Settings.types";
 export * from "./Socket.types";
 export * from "./Statistic/Statistic.types";
 export * from "./Summary/Summary.types";
-export * from "./Tag.types";
+export * from "./Tag/Tag.types";
 export * from "./Account/Account.types";
