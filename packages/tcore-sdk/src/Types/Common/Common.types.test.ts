@@ -175,6 +175,12 @@ describe("zQuery", () => {
     expect(() => zQuery.parse({ page: false })).toThrowError();
   });
 
+  test("doesn't allow negative amounts", () => {
+    const data: IQuery = { amount: -2 };
+    const parsed = zQuery.parse(data);
+    expect(parsed.amount).toEqual(0);
+  });
+
   test("parses amount correctly", () => {
     const data: IQuery = { amount: 10 };
     const parsed = zQuery.parse(data);
