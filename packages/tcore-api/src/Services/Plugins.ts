@@ -441,7 +441,7 @@ export async function invokeOnCallModule(pluginID: string, moduleID: string, dat
 export function triggerHooks(event: string, ...args: any[]) {
   const hooks = getModuleList("hook");
   for (const mod of hooks) {
-    mod.invoke(event, ...args);
+    mod.invoke(event, ...args).catch(() => null);
   }
 }
 
