@@ -8,6 +8,7 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { logError } from "../Helpers/log";
 import { emitToLiveInspector } from "./LiveInspector";
+import { getDeviceParamList } from "./Device";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -34,6 +35,9 @@ export const runPayloadParser = async (
       throw new Error(`Payload parser file is empty or doesn't exist`);
     }
 
+    const params = await getDeviceParamList(device.id, false);
+    const paramsMapped = params.map((x) => ({ key: x.key, value: x.value, sent: x.sent })); // map to remove id
+
     const context = vm.createContext({
       payload,
       raw_payload: options?.rawPayload,
@@ -41,7 +45,7 @@ export const runPayloadParser = async (
       device: {
         id: device.id,
         tags: device.tags,
-        params: [],
+        params: paramsMapped,
       },
       console: {
         log: (...args: any[]) => onLog(device, args, options),

@@ -1,4 +1,4 @@
-import { ESocketResource, IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
+import { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
@@ -204,11 +204,11 @@ function PluginEdit() {
       }
     }
 
-    getSocket().on("module:status", onModuleStatus);
-    getSocket().on("plugin:status", onPluginStatus);
+    getSocket().on("module::status", onModuleStatus);
+    getSocket().on("plugin::status", onPluginStatus);
     return () => {
-      getSocket().off("module:status", onModuleStatus);
-      getSocket().off("plugin:status", onPluginStatus);
+      getSocket().off("module::status", onModuleStatus);
+      getSocket().off("plugin::status", onPluginStatus);
     };
   });
 
@@ -218,11 +218,11 @@ function PluginEdit() {
   useEffect(() => {
     if (store.socketConnected && data.id) {
       for (const module of data.modules) {
-        getSocket().emit("attach", ESocketResource.module, module.id);
+        getSocket().emit("attach", "module", module.id);
       }
       return () => {
         for (const module of data.modules) {
-          getSocket().emit("unattach", ESocketResource.module, module.id);
+          getSocket().emit("unattach", "module", module.id);
         }
       };
     }

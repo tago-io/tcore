@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import axios from "axios";
 import tar from "tar";
-import { ESocketRoom, IPluginInstallOptions } from "@tago-io/tcore-sdk/types";
+import { IPluginInstallOptions } from "@tago-io/tcore-sdk/types";
 import { extractTar, peekTarFile } from "../Helpers/Tar/Tar";
 import { getPlatformAndArch } from "../Helpers/Platform";
 import { getMainSettings } from "../Services/Settings";
@@ -22,7 +22,7 @@ let lastProgress: number | undefined = 0;
 /**
  */
 function emitInstallLog(data: any) {
-  io?.to(ESocketRoom.pluginInstall).emit("plugin::install", {
+  io?.to("install").emit("plugin::install", {
     error: data?.error,
     message: data?.message,
     progress: data?.progress ?? lastProgress,
