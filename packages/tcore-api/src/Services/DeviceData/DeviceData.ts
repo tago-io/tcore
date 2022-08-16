@@ -10,6 +10,7 @@ import {
   IDeviceAddDataOptions,
   zDeviceDataUpdate,
   IDeviceChunkPeriod,
+  IDeviceDataCreate,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -26,6 +27,27 @@ import { triggerHooks } from "../Plugins";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
+
+/**
+ * Gets the chunk timestamps for a date.
+ */
+function getChunkTimestamp(date: Date, device: IDevice) {
+  const dateJS = DateTime.fromJSDate(date).toUTC();
+
+  if (!device?.chunk_period) {
+    // pre 0.6.0 devices or immutable devices don't have chunk_period
+    return null;
+  }
+
+  if (!dateJS.isValid) {
+    throw "Invalid Database Chunk Address (date)";
+  }
+
+  const startDate = dateJS.startOf(device.chunk_period).toJSDate();
+  const endDate = dateJS.endOf(device.chunk_period).toJSDate();
+
+  return { startDate, endDate };
+}
 
 /**
  * Empties a device completely.
@@ -182,8 +204,8 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
   items = await z.array(zDeviceDataCreate).parseAsync([items].flat());
 
   for (const item of items) {
-    if (device.type === "immutable" && device.chunk_period && device.chunk_retention) {
-      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention);
+    if (device.type === "immutable" && device.chunk_period) {
+      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention || 0);
 
       if (!outOfRage.isOk) {
         const title = `Time must be between ${outOfRage.startDate} and ${outOfRage.endDate}`;
@@ -206,7 +228,17 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
     delete item.serie;
   }
 
-  await invokeDatabaseFunction("addDeviceData", device.id, device.type, items);
+  // map the items to insert into database
+  const dbInsertItems = items.map((x: IDeviceDataCreate) => {
+    const chunkTimestamp = getChunkTimestamp(x.time as Date, device);
+    return {
+      ...x,
+      chunk_timestamp_start: chunkTimestamp?.startDate,
+      chunk_timestamp_end: chunkTimestamp?.endDate,
+    };
+  });
+
+  await invokeDatabaseFunction("addDeviceData", device.id, device.type, dbInsertItems);
 
   triggerActions(device.id, items).catch(() => null);
   await addStatistic({ input: items.length });

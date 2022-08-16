@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { logError } from "../Helpers/log";
 import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
 import { editDevice, getDeviceList } from "./Device";
 
@@ -49,6 +50,9 @@ async function triggerDataRetentionCheck() {
 
       await editDevice(device.id, { last_retention: new Date() }).catch(console.error);
     }
+  } catch (ex: any) {
+    const err = ex?.message || ex?.toString?.() || ex;
+    logError(err);
   } finally {
     checkingDataRemoval = false;
   }

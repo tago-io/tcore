@@ -3,12 +3,14 @@ import fs from "fs";
 import os from "os";
 import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
-import { plugins } from "../Plugins/Host";
+import { log } from "..";
+import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";
 import { rmdir } from "../Helpers/Files";
 import { compareAccountPasswordHash } from "./Account/AccountPassword";
-import { startPluginModule, terminateAllPlugins } from "./Plugins";
+import { startPluginModule } from "./Plugins";
 import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
+import { runVersionMigration } from "./VersionMigration";
 
 /**
  * Folder name to save the settings.
@@ -100,9 +102,50 @@ export async function getMainSettings(): Promise<ISettings> {
  * Terminate all non-built in plugins and removes the settings folder.
  */
 export async function doFactoryReset(): Promise<void> {
-  const folder = await getMainSettingsFolder();
-  await terminateAllPlugins();
-  await rmdir(folder);
+  log("api", "Performing Factory Reset");
+
+  const dirPath = await getMainSettingsFolder();
+  const stoppedPlugins: string[] = [];
+  const ignoredPlugins: string[] = [];
+
+  // 1. we loop through the default plugins folder located at the dirPath
+  // and then we delete every single plugin that is not being used
+  const defaultPluginFolder = path.join(dirPath, "Plugins");
+  const defaultPlugins = await fs.promises.readdir(defaultPluginFolder);
+  for (const folder of defaultPlugins) {
+    if (ignoredPlugins.includes(folder)) {
+      continue;
+    }
+
+    const stat = fs.statSync(path.join(defaultPluginFolder, folder));
+    if (!stat.isDirectory()) {
+      continue;
+    }
+
+    const plugin = [...plugins.values()].find((x) => x.folder === path.join(defaultPluginFolder, folder));
+    if (plugin) {
+      stoppedPlugins.push(plugin.folder);
+      await plugin.stop(true, 3000).catch(() => null);
+      plugins.delete(plugin.id);
+    }
+
+    await rmdir(path.join(defaultPluginFolder, folder));
+  }
+
+  // 2. we delete the main configuration
+  await rmdir(path.join(dirPath, "PluginFiles")).catch(() => null);
+  await fs.promises.unlink(path.join(dirPath, `${getSystemSlug()}.yml`)).catch(() => null);
+
+  // 3. we extract the built-in plugins once again
+  await runVersionMigration().catch(() => null);
+
+  // 4. we restart the plugins
+  const sorted = await sortPluginFoldersByPriority(stoppedPlugins);
+  for (const pluginFolder of sorted) {
+    if (fs.existsSync(pluginFolder)) {
+      await startPluginAndHandleErrors(pluginFolder);
+    }
+  }
 }
 
 /**

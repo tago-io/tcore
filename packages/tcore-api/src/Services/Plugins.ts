@@ -31,26 +31,18 @@ function mapButtonModules(modules: Module[], type: TPluginType) {
  * Lists all the plugins that are loaded.
  */
 export async function getLoadedPluginList(): Promise<IPluginList> {
-  const folders = await listPluginFolders();
   const settings = await getMainSettings();
   const result: IPluginList = [];
 
   const dbPluginID = String(settings.database_plugin).split(":")[0];
 
-  for (const folder of folders) {
-    const pkg = await Plugin.getPackageAsync(folder).catch(() => null);
-    if (!pkg) {
-      continue;
-    }
-
-    const id = Plugin.generatePluginID(pkg.name);
-    const plugin = plugins.get(id);
+  for (const plugin of plugins.values()) {
     const modules = [...(plugin?.modules?.values?.() || [])];
 
     const error = !!plugin?.error || modules.some((x) => x.error);
 
-    const allow_disable = dbPluginID !== id;
-    const allow_uninstall = dbPluginID !== id;
+    const allow_disable = dbPluginID !== plugin.id;
+    const allow_uninstall = dbPluginID !== plugin.id;
 
     const object: IPluginListItem = {
       buttons: {
@@ -61,11 +53,11 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
       allow_disable,
       allow_uninstall,
       error: error,
-      hidden: HIDDEN_BUILT_IN_PLUGINS.includes(folder),
-      id: Plugin.generatePluginID(pkg.name),
-      name: pkg.tcore?.name || "",
+      hidden: plugin.package.tcore?.hidden,
+      id: plugin.id,
+      name: plugin.tcoreName || "",
       state: plugin?.state || "stopped",
-      version: pkg.version,
+      version: plugin.version,
       types: plugin?.types || [],
       description: plugin?.description,
       publisher: plugin?.publisher,

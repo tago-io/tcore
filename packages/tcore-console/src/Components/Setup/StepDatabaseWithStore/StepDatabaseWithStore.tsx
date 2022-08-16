@@ -28,6 +28,7 @@ import * as Style from "./StepDatabaseWithStore.style";
  */
 function StepDatabaseWithStore(props: any) {
   const { onBack, onNext } = props;
+  const [buttonsDisabled, setButtonsDisabled] = useState(false);
   const [action, setAction] = useState("");
   const [modalInstall, setModalInstall] = useState(false);
   const [modalURL, setModalURL] = useState(false);
@@ -41,12 +42,17 @@ function StepDatabaseWithStore(props: any) {
     skip: !store.masterPassword,
   });
   const { data: platform } = useApiRequest<string>("/hardware/platform");
-  const { data: storeList } = useApiRequest<any[]>(`/plugin/${PLUGIN_STORE_PLUGIN_ID}/list/call`, {
-    method: "post",
-    skip: !store.masterPassword,
-  });
+  const { data: storeList } = useApiRequest<any[]>(
+    `/plugin/${PLUGIN_STORE_PLUGIN_ID}/get-database-list/call`,
+    {
+      method: "post",
+      skip: !store.masterPassword,
+    }
+  );
 
-  const loading = !installedList || !storeList;
+  const installedListFiltered = installedList?.filter((x) => !x.error) || [];
+
+  const loading = !installedListFiltered || !storeList;
 
   /**
    * Opens the file selector modal.
@@ -104,22 +110,28 @@ function StepDatabaseWithStore(props: any) {
   /**
    */
   const confirm = useCallback(async () => {
-    const installed = installedList?.some((x) => x.id === selectedItem?.id);
+    const installed = installedListFiltered?.some((x) => x.id === selectedItem?.id && !x.error);
     if (!installed) {
-      const urls = await getPluginStoreInstallURLs(selectedItem?.id, selectedItem?.version);
-      const item = urls?.find((x) => x.platform === platform || x.platform === "any");
-      if (item) {
-        activateModalInstall(item.url);
+      try {
+        setButtonsDisabled(true);
+        const urls = await getPluginStoreInstallURLs(selectedItem?.id, selectedItem?.version);
+        const item = urls?.find((x) => x.platform === platform || x.platform === "any");
+        if (item) {
+          activateModalInstall(item.url);
+        }
+      } finally {
+        setButtonsDisabled(false);
       }
     } else {
       onNext(selectedItem?.id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [platform, onNext, installedList, selectedItem]);
 
   /**
    */
   const renderItem = (item: any) => {
-    const installed = installedList?.some((x) => x.id === item.id);
+    const installed = installedListFiltered?.some((x) => x.id === item.id);
     return (
       <Style.Item key={item.id}>
         <PluginImage src={item.logoURL} width={60} />
@@ -138,7 +150,7 @@ function StepDatabaseWithStore(props: any) {
 
         <Button
           onClick={() => setSelectedItem(item)}
-          disabled={selectedItem?.id === item.id}
+          disabled={selectedItem?.id === item.id || buttonsDisabled}
           type={EButton.primary}
         >
           {selectedItem?.id === item.id ? "Selected" : "Select Plugin"}
@@ -150,7 +162,7 @@ function StepDatabaseWithStore(props: any) {
   /**
    */
   const filterPlugins = () => {
-    const installedDatabases = installedList?.filter((x) => x?.types?.includes("database"));
+    const installedDatabases = installedListFiltered?.filter((x) => x?.types?.includes("database"));
     const result = [];
 
     for (const plugin of installedDatabases) {
@@ -249,7 +261,7 @@ function StepDatabaseWithStore(props: any) {
           { label: "Back", onClick: onBack },
           {
             label: "Next",
-            disabled: !selectedItem,
+            disabled: !selectedItem || buttonsDisabled,
             onClick: confirm,
             type: EButton.primary,
           },

@@ -175,7 +175,9 @@ function validate(spinner: ora.Ora): boolean {
     const ratio = ((data.width || 0) / (data.height || 1)).toFixed(2);
     const valid = data.type === "png" && ratio === "1.35";
     if (!valid) {
-      setMessage("'package.tcore.icon' should be a PNG image with aspect ratio of 7:5");
+      setMessage(
+        "'package.tcore.icon' should be a PNG image with aspect ratio of 50:37 (width 1.35x larger then height)"
+      );
     }
   } else {
     setMessage("'package.tcore.icon' file not found");

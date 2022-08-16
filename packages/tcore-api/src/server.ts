@@ -3,7 +3,6 @@ import path from "path";
 import express from "express";
 import cors from "cors";
 import chalk from "chalk";
-import ora from "ora";
 import compression from "compression";
 import method_override from "method-override";
 import { getSystemName } from "@tago-io/tcore-shared";
@@ -28,7 +27,7 @@ import { shutdown } from "./Helpers/shutdown";
 import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
 import { startActionScheduleTimer } from "./Services/ActionScheduler";
-import { logSystemStart } from "./Helpers/log";
+import { logSystemStart, oraLog, oraLogError } from "./Helpers/log";
 import { startDataRetentionTimer } from "./Services/DeviceDataRetention";
 
 const app = express();
@@ -146,8 +145,8 @@ async function listenOnApplicationPort() {
       logSystemStart();
     })
     .on("error", () => {
-      ora(chalk.redBright(`Could not start ${systemName} on port ${port}`)).fail();
-      ora(chalk.redBright(`Check if the port is not being used by another application`)).fail();
+      oraLogError("api", chalk.redBright(`Could not start ${systemName} on port ${port}`));
+      oraLogError("api", chalk.redBright(`Check if the port is not being used by another application`));
       process.exit(1);
     });
 }
@@ -156,7 +155,7 @@ async function listenOnApplicationPort() {
  * Starts the application.
  */
 export async function startServer() {
-  ora(`Started ${getSystemName()}`).succeed();
+  oraLog("api", `Started ${getSystemName()}`);
 
   startCallbackInterval();
 
