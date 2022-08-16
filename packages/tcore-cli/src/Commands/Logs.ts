@@ -1,11 +1,9 @@
 import fs from "fs";
 import path from "path";
 import * as API from "@tago-io/tcore-api";
-import chalk from "chalk";
 import { Tail } from "tail";
-import { getSystemName } from "@tago-io/tcore-shared";
-import { pm2Connect, pm2Disconnect, pm2GetApp } from "../Helpers/PM2";
-import { log, oraLog } from "../Helpers/Log";
+import { pm2Connect, pm2Disconnect } from "../Helpers/PM2";
+import { oraLog } from "../Helpers/Log";
 
 /**
  */
@@ -13,14 +11,13 @@ export async function showLogs() {
   try {
     await pm2Connect();
 
-    const app = await pm2GetApp();
-    if (!app) {
-      log(`${getSystemName()} Server is ${chalk.yellow("not running in the background")}`);
-      return;
-    }
-
     const settingsPath = await API.getMainSettingsFolder();
     const pm2LogPath = path.join(settingsPath, "tcore.log");
+
+    if (!fs.existsSync(pm2LogPath)) {
+      // file doesn't exist, don't log
+      return;
+    }
 
     const data = fs.readFileSync(pm2LogPath, { encoding: "utf-8" });
     console.log(data);

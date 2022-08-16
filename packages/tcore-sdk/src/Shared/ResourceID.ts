@@ -8,6 +8,10 @@ const nanoid = customAlphabet(hexAlphabet, 20);
  * The ID will be unique and can be used to identify a resource uniquely.
  */
 export function generateResourceID(): string {
+  if (typeof Buffer === undefined || typeof Buffer === "undefined") {
+    // to work in browser environments
+    return "";
+  }
   const firstCase = String(Date.now()).slice(0, 2).split("").reverse().join("");
   const secondCase = Buffer.from([Number(String(Date.now()).slice(2, 4))]).toString("hex");
   return `${firstCase}${secondCase}${nanoid()}`;

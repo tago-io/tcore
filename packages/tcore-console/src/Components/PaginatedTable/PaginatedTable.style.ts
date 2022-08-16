@@ -48,7 +48,7 @@ const rowCSS = css<{ $highlightColor?: string }>`
     display: flex;
     align-items: center;
 
-    .inner-cell:not(.date) {
+    .inner-cell:not(.date):not(.icon) {
       overflow: hidden;
       text-overflow: ellipsis;
     }

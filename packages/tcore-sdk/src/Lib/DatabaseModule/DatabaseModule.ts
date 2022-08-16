@@ -41,6 +41,7 @@ import {
   IDatabaseAccountListQuery,
   IDatabaseAccountCreateTokenData,
   IDeviceToken,
+  IDeviceApplyDataRetentionQuery,
 } from "../../Types";
 import TCoreModule from "../TCoreModule/TCoreModule";
 
@@ -74,6 +75,17 @@ class DatabaseModule extends TCoreModule {
    * Deletes data from a device.
    */
   public async deleteDeviceData(deviceID: TGenericID, type: TDeviceType, ids: string[]): Promise<void> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
+   * Applies data retention for a device by deleting all old data.
+   */
+  public async applyDeviceDataRetention(
+    deviceID: TGenericID,
+    type: TDeviceType,
+    query: IDeviceApplyDataRetentionQuery
+  ): Promise<void> {
     throw new Error("Method not implemented");
   }
 

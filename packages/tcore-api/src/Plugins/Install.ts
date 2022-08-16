@@ -12,6 +12,7 @@ import { io } from "../Socket/SocketServer";
 import { generatePluginID } from "./PluginID";
 import { plugins, startPlugin } from "./Host";
 import { uninstallPlugin } from "./Uninstall";
+import Plugin from "./Plugin/Plugin";
 
 /**
  * Last progress emitted by the socket. We use this to keep track of it and
@@ -36,9 +37,9 @@ function emitInstallLog(data: any) {
 function addLog(opts: IPluginInstallOptions, error: boolean, message: string, progress?: number) {
   if (opts?.log) {
     if (error) {
-      logError("api", message);
+      logError?.("api", message);
     } else {
-      log("api", message);
+      log?.("api", message);
     }
   }
 
@@ -167,6 +168,18 @@ async function validatePackage(filePath: string): Promise<any> {
 }
 
 /**
+ * Stops the plugin if it's already running.
+ */
+async function stopPluginIfRunning(pluginPath: string) {
+  const plugin = new Plugin(pluginPath);
+  const existing = plugins.get(plugin.id);
+  if (existing) {
+    await existing.stop(true, 3000);
+    plugins.delete(plugin.id);
+  }
+}
+
+/**
  * Downloads a plugin file and stores it into a temporary folder.
  * @param {string} url HTTP/HTTPS URL.
  */
@@ -275,6 +288,8 @@ async function installPlugin(source: string, opts: IPluginInstallOptions = {}) {
   if (opts?.start) {
     try {
       addLog(opts, false, `Starting the plugin, please wait...`, 99);
+
+      await stopPluginIfRunning(pluginPath);
 
       const plugin = await startPlugin(pluginPath);
 

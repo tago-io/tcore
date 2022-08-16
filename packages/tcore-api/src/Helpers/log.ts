@@ -56,14 +56,18 @@ export function logError(channel: string, ...args: any[]) {
 /**
  */
 export function oraLog(channel: string, ...args: any[]) {
-  ora(...args).succeed();
+  const spinner = ora(...args);
+  spinner.prefixText = chalk.magenta(`[${getSystemName()}]`);
+  spinner.succeed();
   addToBuffer(channel, "log", ...args);
 }
 
 /**
  */
 export function oraLogError(channel: string, ...args: any[]) {
-  ora(...args).fail();
+  const spinner = ora(...args);
+  spinner.prefixText = chalk.magenta(`[${getSystemName()}]`);
+  spinner.fail();
   addToBuffer(channel, "error", ...args);
 }
 

@@ -1,27 +1,40 @@
-import { useCallback, useEffect, useRef } from "react";
-import retentionGIF from "../../../../../assets/images/retention.gif";
-import FormGroup from "../../../FormGroup/FormGroup";
-import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
+import { IDevice, IDeviceChunkPeriod } from "@tago-io/tcore-sdk/types";
+import { useRef } from "react";
+import { Col, EIcon, FormGroup, Icon, Input, Row } from "../../../..";
+import AlertInfo from "../../../AlertInfo/AlertInfo";
+import { EAlertInfo } from "../../../AlertInfo/AlertInfo.types";
+import ErrorMessage from "../../../ErrorMessage/ErrorMessage";
 import Select from "../../../Select/Select";
 import * as Style from "./DataRetention.style";
 
-/**
- * Props.
- */
-interface IDataRetention {
+const MAX_INPUT_VALUES: any = {
+  quarter: 36,
+  week: 26,
+  month: 36,
+  day: 31,
+};
+
+interface IDataRetentionProps {
   /**
-   * Retention data.
+   * Type of alert info to show at the bottom of the component.
    */
-  retention: any;
+  type?: "create" | "edit";
   /**
-   * Called when a retention field changes.
+   * Device data.
    */
-  onChangeRetention: (newRetention: any) => void;
+  data: IDevice;
   /**
+   * Indicates if the 'period' field should be disabled.
+   */
+  disablePeriod?: boolean;
+  /**
+   * Indicates if the fields have errors.
    */
   error?: boolean;
-  disabled?: boolean;
+  /**
+   * Called when a field is changed.
+   */
+  onChange: (field: keyof IDevice, value: IDevice[keyof IDevice]) => void;
 }
 
 /**
@@ -29,115 +42,170 @@ interface IDataRetention {
  * This component shows some inputs to define the retention of the device and a visual
  * representation below the inputs.
  */
-function DataRetention(props: IDataRetention) {
-  const { retention, error, onChangeRetention } = props;
-  const isForever = retention.unit === "forever";
-  const input = useRef<HTMLInputElement>(null);
+function DataRetention(props: IDataRetentionProps) {
+  const { data, error, disablePeriod, onChange } = props;
+  const { chunk_retention } = data;
+  const chunkPeriod = data.chunk_period as IDeviceChunkPeriod;
+  const ref = useRef<HTMLInputElement>(null);
 
   /**
-   * Renders the banner of the component.
+   * Renders the alert when editing the device.
    */
-  const renderBanner = () => {
-    const pluralDisplay = `${retention.value || 0} ${retention.unit}${
-      retention.value === "1" ? "" : "s"
-    }`;
+  const renderAlertEdit = () => {
+    const color = "rgba(0, 0, 0, 0.6)";
+    const max = MAX_INPUT_VALUES[chunkPeriod];
 
     return (
       <>
-        {retention.unit === "forever" ? (
-          // forever retention
-          <Style.Banner key="banner">
-            <span className="title">Data retention strategy:</span>
-            <span className="sub-title">The data in the bucket will be kept forever.</span>
-          </Style.Banner>
-        ) : (
-          // custom retention
-          <Style.Banner key="banner">
-            <span className="title">Data retention strategy:</span>
-            <span className="sub-title">
-              All data older than {pluralDisplay} will be deleted from the bucket.
-            </span>
-            <img src={retentionGIF} alt="data-retention" />
-          </Style.Banner>
-        )}
+        <Icon color={color} icon={EIcon["info-circle"]} />
+        &nbsp;
+        <span>
+          This selection limits the storage for this device to{" "}
+          <b>1 Million data registers per {chunkPeriod}</b> (you cannot change this <b>period</b>).
+          But, you can always edit the retention from 0 to {max} {chunkPeriod}s.
+          <br />
+          <br />
+          The retention starts considering the current period - if you were to select &apos;0&apos;
+          months it would delete all data when a new month starts.&nbsp;
+        </span>
       </>
     );
   };
 
   /**
-   * Called when the select changes values.
+   * Renders the alert when creating the device.
    */
-  const onChangeUnit = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      if (!retention.value) {
-        retention.value = "1";
-      }
-      onChangeRetention({ ...retention, unit: e.target.value });
-    },
-    [retention, onChangeRetention]
-  );
+  const renderAlertCreation = () => {
+    const color = "rgba(0, 0, 0, 0.6)";
+    const max = MAX_INPUT_VALUES[chunkPeriod];
 
-  /**
-   * This effect is used to focus the input after changing the unit.
-   */
-  useEffect(() => {
-    if (input.current) {
-      input.current.focus();
-    }
-  }, [retention?.unit]);
+    return (
+      <>
+        <Icon color={color} icon={EIcon["info-circle"]} />
+        &nbsp;
+        <span>
+          This selection limits the storage for this device to{" "}
+          <b>1 Million data registers per {chunkPeriod}</b> (you cannot change this <b>period</b>).
+          But, you can always edit the retention from 0 to {max} {chunkPeriod}s.
+          <br />
+          <br />
+          The retention starts considering the current period - if you select &apos;0&apos; months
+          it will delete all data when a new month starts.&nbsp;
+        </span>
+      </>
+    );
+  };
 
   return (
-    <Style.Container isForever={isForever} disabled={!!props.disabled}>
-      <FormGroup
-        addMarginBottom={false}
-        icon={EIcon.clock}
-        label="Retain data in the bucket for"
-        tooltip="After this period expires, old data will be removed from your bucket."
-      >
-        <div className="form-group-content">
-          {isForever ? null : (
-            <Input
-              min="0"
-              onChange={(e) => onChangeRetention({ ...retention, value: e.target.value })}
-              ref={input}
-              type="number"
-              value={retention.value || ""}
-              error={error}
-            />
-          )}
+    <Style.Container disabled={data.type !== "immutable"}>
+      <legend>Data Retention</legend>
+      <FormGroup>
+        <Row>
+          <Col size="6">
+            <FormGroup
+              label="Period"
+              icon={EIcon.clock}
+              tooltip="Chunk division to retain data"
+              style={{ marginBottom: 0 }}
+            >
+              <Select
+                onChange={(e) => {
+                  if (
+                    MAX_INPUT_VALUES[e.target.value] &&
+                    Number(data.chunk_retention) > MAX_INPUT_VALUES[e.target.value]
+                  ) {
+                    data.chunk_retention = MAX_INPUT_VALUES[e.target.value];
+                  }
 
-          <Select
-            onChange={onChangeUnit}
-            value={retention.unit || "day"}
-            error={error}
-            options={[
-              {
-                label: `Day${Number(retention.value) === 1 ? "" : "s"}`,
-                value: "day",
-              },
-              {
-                label: `Week${Number(retention.value) === 1 ? "" : "s"}`,
-                value: "week",
-              },
-              {
-                label: `Month${Number(retention.value) === 1 ? "" : "s"}`,
-                value: "month",
-              },
-              {
-                label: `Quarter${Number(retention.value) === 1 ? "" : "s"}`,
-                value: "quarter",
-              },
-              {
-                label: `Year${Number(retention.value) === 1 ? "" : "s"}`,
-                value: "year",
-              },
-              { label: `Forever`, value: "forever" },
-            ]}
-          />
-        </div>
+                  onChange("chunk_period", e.target.value);
+                  setTimeout(() => ref.current?.focus(), 50);
+                }}
+                value={chunkPeriod}
+                disabled={disablePeriod}
+                error={error}
+                options={[
+                  { value: "", label: "Select a period", disabled: true },
+                  { value: "day", label: "Daily" },
+                  { value: "week", label: "Weekly" },
+                  { value: "month", label: "Monthly" },
+                  { value: "quarter", label: "Quarterly" },
+                ]}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col size="6">
+            <FormGroup
+              label="Retention"
+              icon={EIcon.clock}
+              tooltip="Used to define how many chunks to retain data for"
+              style={{ marginBottom: 0 }}
+            >
+              <Input
+                disabled={!chunkPeriod}
+                error={error}
+                ref={ref}
+                max={MAX_INPUT_VALUES[chunkPeriod] || 30}
+                min="0"
+                onBlur={() => {
+                  if (
+                    String(chunk_retention).includes(".") ||
+                    String(chunk_retention).includes(",")
+                  ) {
+                    onChange("chunk_retention", "");
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (String(e.key).toLowerCase() === "e") {
+                    // html inputs allow the letter E because it stands for exponential
+                    e.preventDefault();
+                  }
+                }}
+                onChange={(e) => {
+                  if (e.target.value.includes(".") || e.target.value.includes(",")) {
+                    // discard
+                  } else if (Number(e.target.value) > MAX_INPUT_VALUES[chunkPeriod]) {
+                    onChange("chunk_retention", String(MAX_INPUT_VALUES[chunkPeriod]));
+                  } else {
+                    onChange("chunk_retention", e.target.value);
+                  }
+                }}
+                placeholder={
+                  chunkPeriod ? `0-${MAX_INPUT_VALUES[chunkPeriod] || 30} ${chunkPeriod}s` : ""
+                }
+                type="number"
+                value={chunk_retention ?? ""}
+                style={{ textAlign: "center" }}
+              />
+            </FormGroup>
+          </Col>
+
+          <Col size="12">
+            {error && <ErrorMessage>You must select a Period and Retention</ErrorMessage>}
+          </Col>
+        </Row>
       </FormGroup>
 
-      {renderBanner()}
+      {data.type !== "immutable" ? (
+        <FormGroup>
+          <AlertInfo type={EAlertInfo.info}>
+            <Icon icon={EIcon["info-circle"]} />
+            <span>
+              &nbsp; Data Retention is available only for the Optimized Device Data (Immutable).
+            </span>
+          </AlertInfo>
+        </FormGroup>
+      ) : chunkPeriod && props.type ? (
+        <FormGroup>
+          <AlertInfo type={EAlertInfo.info}>
+            {props.type === "create"
+              ? renderAlertCreation()
+              : props.type === "edit"
+              ? renderAlertEdit()
+              : null}
+          </AlertInfo>
+        </FormGroup>
+      ) : null}
     </Style.Container>
   );
 }

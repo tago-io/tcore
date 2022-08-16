@@ -99,7 +99,7 @@ function DeviceEdit() {
     }
 
     try {
-      await zDevice.parseAsync({
+      await zDevice.omit({ last_retention: true }).parseAsync({
         ...data,
         tags: normalizeTags(data.tags),
         created_at: new Date(data.created_at),

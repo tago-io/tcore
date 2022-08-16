@@ -26,7 +26,10 @@ import {
 /**
  * Data parameter of the `addDeviceData` function.
  */
-export type IDatabaseDeviceDataCreate = z.output<typeof zDeviceDataCreate>;
+export type IDatabaseDeviceDataCreate = z.output<typeof zDeviceDataCreate> & {
+  chunk_timestamp_start?: Date;
+  chunk_timestamp_end?: Date;
+};
 
 /**
  * Data parameter of the `editDeviceData` function.
