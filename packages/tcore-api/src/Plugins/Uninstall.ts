@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { ESocketRoom } from "@tago-io/tcore-sdk/types";
 import { io } from "../Socket/SocketServer";
 import { getMainSettings, getPluginSettingsFolder } from "../Services/Settings";
 import { plugins } from "./Host";
@@ -46,8 +45,8 @@ export async function uninstallPlugin(id: string, keepPluginData?: boolean) {
     deleted: true,
   };
 
-  io?.to(`${ESocketRoom.plugin}#${id}`).emit("plugin:sidebar", socketData);
-  io?.to(`${ESocketRoom.plugin}#${id}`).emit("plugin:status", socketData);
+  io?.to(`plugin#${id}`).emit("plugin::sidebar", socketData);
+  io?.to(`plugin#${id}`).emit("plugin::status", socketData);
 }
 
 /**

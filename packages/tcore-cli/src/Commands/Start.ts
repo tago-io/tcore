@@ -31,8 +31,15 @@ function getEnv(opts: IStartOptions) {
     TCORE_SETTINGS_FOLDER: opts.settingsFolder,
   };
 
-  // removes undefined objects
-  Object.keys(env).forEach((key) => (!env[key] ? delete env[key] : {}));
+  // prioritizes the options passed in the CLI but if one of the values
+  // is falsy we try to use the process.env for that key
+  Object.keys(env).forEach((key) => {
+    env[key] ||= process.env[key];
+    if (!env[key]) {
+      // empty env
+      delete env[key];
+    }
+  });
 
   return env;
 }

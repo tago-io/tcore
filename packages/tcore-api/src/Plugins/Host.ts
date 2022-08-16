@@ -44,7 +44,7 @@ export async function startPlugin(folder: string) {
  * Sorts all folders based on their priority:
  * First the main database plugin then the other plugins.
  */
-async function sortFoldersByPriority(folders: string[]): Promise<string[]> {
+export async function sortPluginFoldersByPriority(folders: string[]): Promise<string[]> {
   const settings = await getMainSettings();
   const dbModuleID = String(settings.database_plugin).split(":")?.[0];
   const plugins: { [key: string]: string[] } = {
@@ -88,7 +88,7 @@ async function sortFoldersByPriority(folders: string[]): Promise<string[]> {
  * If there is an error, it will be logged to the terminal.
  * If no errors are present in the plugin, it will say that the plugin is good to go.
  */
-async function startPluginAndHandleErrors(folder: string) {
+export async function startPluginAndHandleErrors(folder: string) {
   try {
     const plugin = await startPlugin(folder);
 
@@ -126,7 +126,7 @@ async function startPluginAndHandleErrors(folder: string) {
  */
 export async function startAllPlugins() {
   const folders = await listPluginFolders();
-  const sorted = await sortFoldersByPriority(folders);
+  const sorted = await sortPluginFoldersByPriority(folders);
 
   for (const folder of sorted) {
     if (fs.existsSync(folder)) {

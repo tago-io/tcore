@@ -1,9 +1,5 @@
 import { useTheme } from "styled-components";
-import {
-  ESocketResource,
-  IPluginListItem,
-  IPluginButtonModuleSetupOption,
-} from "@tago-io/tcore-sdk/types";
+import { IPluginListItem, IPluginButtonModuleSetupOption } from "@tago-io/tcore-sdk/types";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import { EIcon } from "../Icon/Icon.types";
@@ -146,9 +142,9 @@ function Sidebar(props: ISidebarProps) {
       }
     }
 
-    getSocket().on("plugin:sidebar", onStatus);
+    getSocket().on("plugin::sidebar", onStatus);
     return () => {
-      getSocket().off("plugin:sidebar", onStatus);
+      getSocket().off("plugin::sidebar", onStatus);
     };
   });
 
@@ -158,11 +154,11 @@ function Sidebar(props: ISidebarProps) {
   useEffect(() => {
     if (store.socketConnected) {
       for (const plugin of store.plugins) {
-        getSocket().emit("attach", ESocketResource.plugin, plugin.id);
+        getSocket().emit("attach", "plugin", plugin.id);
       }
       return () => {
         for (const plugin of store.plugins) {
-          getSocket().emit("unattach", ESocketResource.plugin, plugin.id);
+          getSocket().emit("unattach", "plugin", plugin.id);
         }
       };
     }
