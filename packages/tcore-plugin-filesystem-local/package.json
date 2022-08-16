@@ -12,6 +12,7 @@
     "types": ["filesystem"],
     "icon": "./assets/icon.png",
     "hidden": true,
+    "cluster": true,
     "permissions": []
   },
   "scripts": {

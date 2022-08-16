@@ -85,7 +85,7 @@ export async function listPluginFolders(): Promise<string[]> {
     }
   }
 
-  for (const item of DEV_BUILT_IN_PLUGINS) {
+  for (const item of DEV_BUILT_IN_PLUGINS || []) {
     const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
     if (hasPackage && !plugins.includes(item)) {
       plugins.unshift(item);
