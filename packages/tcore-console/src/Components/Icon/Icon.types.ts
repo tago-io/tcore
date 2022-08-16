@@ -6,8 +6,11 @@
  * Types of icons available in the system.
  * Each one must match the corresponding filename in the /assets/icons folder.
  */
-enum EIcon {
+ enum EIcon {
+  "alpine" = "alpine",
   "apple" = "apple",
+  "arrow-alt-circle-down" = "arrow-alt-circle-down",
+  "arrow-alt-circle-up" = "arrow-alt-circle-up",
   "arrow-up" = "arrow-up",
   "ban" = "ban",
   "bars" = "bars",
@@ -61,6 +64,7 @@ enum EIcon {
   "hdd" = "hdd",
   "home" = "home",
   "image" = "image",
+  "info-circle" = "info-circle",
   "io" = "io",
   "key" = "key",
   "lightbulb" = "lightbulb",
@@ -108,7 +112,10 @@ enum EIcon {
 }
 
 const icons = {
+  "alpine": require("../../../assets/icons/alpine.svg"),
   "apple": require("../../../assets/icons/apple.svg"),
+  "arrow-alt-circle-down": require("../../../assets/icons/arrow-alt-circle-down.svg"),
+  "arrow-alt-circle-up": require("../../../assets/icons/arrow-alt-circle-up.svg"),
   "arrow-up": require("../../../assets/icons/arrow-up.svg"),
   "ban": require("../../../assets/icons/ban.svg"),
   "bars": require("../../../assets/icons/bars.svg"),
@@ -162,6 +169,7 @@ const icons = {
   "hdd": require("../../../assets/icons/hdd.svg"),
   "home": require("../../../assets/icons/home.svg"),
   "image": require("../../../assets/icons/image.svg"),
+  "info-circle": require("../../../assets/icons/info-circle.svg"),
   "io": require("../../../assets/icons/io.svg"),
   "key": require("../../../assets/icons/key.svg"),
   "lightbulb": require("../../../assets/icons/lightbulb.svg"),

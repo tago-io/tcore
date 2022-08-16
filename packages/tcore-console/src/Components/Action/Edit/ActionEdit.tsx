@@ -65,7 +65,7 @@ function ActionEdit() {
   const initialConditionData = useRef<IConditionData>({});
   const initialPluginTriggerData = useRef<any>({});
   const initialAction = useRef<any>({});
-  const loading = !data.id;
+  const loading = !data.id || !typeModules || !triggerModules;
 
   const customTrigger = triggerModules?.find((x) => `${x.pluginID}:${x.setup.id}` === data.type);
 

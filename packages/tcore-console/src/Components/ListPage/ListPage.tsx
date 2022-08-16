@@ -58,7 +58,7 @@ interface IListPageProps<T> {
  * List page for a certain type of resource.
  */
 function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [infinitePages, setInfinitePages] = useState(false);
   const [amountOfRecords, setAmountOfRecords] = useState(0);
   const tagValues = useRef<ITag[]>([]);
@@ -89,7 +89,7 @@ function ListPage<T extends { id?: string }>(props: IListPageProps<T>) {
       const usingFilter = Object.keys(filterWithTags).some(
         (x) => filterWithTags[x] !== undefined && filterWithTags[x] !== ""
       );
-      const data = await onGetData(pg + 1, idealAmountOfRows, filterWithTags);
+      const data = await onGetData(pg, idealAmountOfRows, filterWithTags);
 
       setAmountOfRecords(data.length);
       setInfinitePages(usingFilter);

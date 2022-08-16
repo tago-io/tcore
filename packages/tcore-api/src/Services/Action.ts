@@ -141,16 +141,16 @@ export async function triggerAction(id: TGenericID, data?: any): Promise<void> {
   const usesPluginTrigger = actionObject.type?.includes(":");
   if (usesPluginTrigger) {
     // custom type for the action
-    triggerActionPluginType(action, data);
+    await triggerActionPluginType(action, data);
   } else if (actionObject.type === "script") {
     // analysis type
-    triggerActionScriptType(action, data);
+    await triggerActionScriptType(action, data);
   } else if (actionObject.type === "post") {
     // post HTTP type
-    triggerActionPostType(action, data);
+    await triggerActionPostType(action, data);
   } else if (actionObject.type === "tagoio") {
     // post to TagoIO
-    triggerActionTagoIOType(action, data);
+    await triggerActionTagoIOType(action, data);
   }
 
   await editAction(id, { last_triggered: new Date() });
@@ -210,7 +210,7 @@ async function triggerActionPostType(action: IAction, data: any): Promise<void> 
 async function triggerActionScriptType(action: IAction, data: any): Promise<void> {
   const script = action?.action?.script || [];
   for (const analysis of script) {
-    runAnalysis(analysis, data);
+    runAnalysis(analysis, data).catch(() => null);
   }
 }
 
@@ -244,7 +244,7 @@ export async function invokeActionOnTriggerChange(id: TGenericID, actionType: st
     if (usesPluginTrigger) {
       const [pluginID, moduleID] = splitColon(actionType);
       if (module.setup.id === moduleID && module.plugin.id === pluginID) {
-        module.invokeOnTriggerChange(id, actionTrigger);
+        module.invokeOnTriggerChange(id, actionTrigger).catch(() => null);
       }
     }
   }
@@ -260,8 +260,8 @@ export async function editAction(id: TGenericID, action: IActionEdit): Promise<v
   await invokeDatabaseFunction("editAction", id, parsed);
 
   const triggerChanged = JSON.stringify(oldAction.trigger) !== JSON.stringify(parsed.trigger);
-  if (triggerChanged) {
-    invokeActionOnTriggerChange(id, oldAction.type, action.trigger);
+  if (parsed.trigger && triggerChanged) {
+    await invokeActionOnTriggerChange(id, oldAction.type, action.trigger);
   }
 }
 

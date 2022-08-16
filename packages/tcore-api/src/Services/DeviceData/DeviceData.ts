@@ -9,6 +9,8 @@ import {
   generateResourceID,
   IDeviceAddDataOptions,
   zDeviceDataUpdate,
+  IDeviceChunkPeriod,
+  IDeviceDataCreate,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
@@ -25,6 +27,27 @@ import { triggerHooks } from "../Plugins";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
+
+/**
+ * Gets the chunk timestamps for a date.
+ */
+function getChunkTimestamp(date: Date, device: IDevice) {
+  const dateJS = DateTime.fromJSDate(date).toUTC();
+
+  if (!device?.chunk_period) {
+    // pre 0.6.0 devices or immutable devices don't have chunk_period
+    return null;
+  }
+
+  if (!dateJS.isValid) {
+    throw "Invalid Database Chunk Address (date)";
+  }
+
+  const startDate = dateJS.startOf(device.chunk_period).toJSDate();
+  const endDate = dateJS.endOf(device.chunk_period).toJSDate();
+
+  return { startDate, endDate };
+}
 
 /**
  * Empties a device completely.
@@ -68,15 +91,15 @@ export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]):
       // release/unlock the action
       const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsUnlock, device, x));
       if (dataItem) {
-        editAction(action.id, { lock: false });
+        await editAction(action.id, { lock: false });
       }
     } else {
       // action is unlocked, meaning we need to find a condition
       // which can trigger the action
       const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsLock, device, x));
       if (dataItem) {
-        triggerAction(action.id, data);
-        editAction(action.id, { lock: hasLocker });
+        await triggerAction(action.id, data);
+        await editAction(action.id, { lock: hasLocker });
       }
     }
   }
@@ -128,6 +151,23 @@ export const applyPayloadEncoder = async (
 };
 
 /**
+ * Checks if the immutable `time` is out of range.
+ */
+function isImmutableTimeOutOfRange(time: Date, period: IDeviceChunkPeriod, retention: number) {
+  const date = DateTime.fromJSDate(time);
+  const startDate = DateTime.utc()
+    .minus({ [period]: retention })
+    .startOf(period);
+  const endDate = DateTime.utc().plus({ day: 1 }).endOf("day");
+
+  return {
+    isOk: date >= startDate && date <= endDate,
+    startDate: startDate.toISODate(),
+    endDate: endDate.toISODate(),
+  };
+}
+
+/**
  * Adds data into a device by an actual device object.
  * @param {IDevice} device Device object who sent the data.
  * @param {any} data Data to be inserted.
@@ -163,6 +203,18 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
   items = await runPayloadParser(device, items, options);
   items = await z.array(zDeviceDataCreate).parseAsync([items].flat());
 
+  for (const item of items) {
+    if (device.type === "immutable" && device.chunk_period) {
+      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention || 0);
+
+      if (!outOfRage.isOk) {
+        const title = `Time must be between ${outOfRage.startDate} and ${outOfRage.endDate}`;
+        await emitToLiveInspector(device, { title, content: item }, options.liveInspectorID);
+        throw new Error(title);
+      }
+    }
+  }
+
   await emitToLiveInspector(device, { title: "Raw Payload", content: data }, options.liveInspectorID);
 
   const group = generateResourceID().split("").reverse().join("");
@@ -176,9 +228,19 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
     delete item.serie;
   }
 
-  await invokeDatabaseFunction("addDeviceData", device.id, device.type, items);
+  // map the items to insert into database
+  const dbInsertItems = items.map((x: IDeviceDataCreate) => {
+    const chunkTimestamp = getChunkTimestamp(x.time as Date, device);
+    return {
+      ...x,
+      chunk_timestamp_start: chunkTimestamp?.startDate,
+      chunk_timestamp_end: chunkTimestamp?.endDate,
+    };
+  });
 
-  await triggerActions(device.id, items);
+  await invokeDatabaseFunction("addDeviceData", device.id, device.type, dbInsertItems);
+
+  triggerActions(device.id, items).catch(() => null);
   await addStatistic({ input: items.length });
   await editDevice(device.id, { updated_at: now, last_input: now });
 

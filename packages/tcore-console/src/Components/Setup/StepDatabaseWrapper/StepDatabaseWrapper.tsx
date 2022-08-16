@@ -16,10 +16,13 @@ import StepDatabaseWithStore from "../StepDatabaseWithStore/StepDatabaseWithStor
  */
 function StepDatabaseWrapper(props: any) {
   const [checkPassword, setCheckPassword] = useState(true);
-  const { data, error } = useApiRequest(`/plugin/${PLUGIN_STORE_PLUGIN_ID}/list/call`, {
-    method: "post",
-    skip: !store.masterPassword,
-  });
+  const { data, error } = useApiRequest(
+    `/plugin/${PLUGIN_STORE_PLUGIN_ID}/get-database-list/call`,
+    {
+      method: "post",
+      skip: !store.masterPassword,
+    }
+  );
   const { onBack, onNext } = props;
 
   /**

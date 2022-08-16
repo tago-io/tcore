@@ -77,7 +77,7 @@ function VariablesTable(props: IVariablesTableProps) {
   const [selectedVariables, setSelectedVariables] = useState<any>({});
   const [hasLocation, setHasLocation] = useState(false);
   const [hasMetadata, setHasMetadata] = useState(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const match = useRouteMatch<{ id: string }>();
   const { id } = match.params;
 
@@ -85,7 +85,7 @@ function VariablesTable(props: IVariablesTableProps) {
    * Called by the table to retrieve data for a page.
    */
   const onGetData = async (_page: number, amount: number, filter: IFilter) => {
-    const result = await getDeviceData(id, page, amount, filter, currentEndDate);
+    const result = await getDeviceData(id, page - 1, amount, filter, currentEndDate);
     setAmountOfRecords(result.length);
     setHasLocation(result.some((x) => x.location));
     setHasMetadata(result.some((x) => x.metadata));
@@ -104,10 +104,10 @@ function VariablesTable(props: IVariablesTableProps) {
   const refresh = useCallback(() => {
     onReloadDataAmount();
     setCurrentEndDate(new Date().toISOString());
-    if (page === 0) {
+    if (page === 1) {
       onReloadTable();
     } else {
-      setPage(0);
+      setPage(1);
     }
   }, [onReloadDataAmount, onReloadTable, page]);
 

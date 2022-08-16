@@ -1,4 +1,3 @@
-import { ESocketRoom } from "@tago-io/tcore-sdk/types";
 import chalk from "chalk";
 import ora from "ora";
 import { getSystemName } from "@tago-io/tcore-shared";
@@ -36,7 +35,7 @@ function addToBuffer(channel: string, type: string, ...args: any[]) {
   logBuffer.set(channel, array.slice(Math.max(array.length - 100, 0)));
 
   // also emit to the frontend
-  io?.to(ESocketRoom.log).emit(`log::${channel}`, data);
+  io?.to(`log#${channel}`).emit("log::message", data);
 }
 
 /**
@@ -57,14 +56,18 @@ export function logError(channel: string, ...args: any[]) {
 /**
  */
 export function oraLog(channel: string, ...args: any[]) {
-  ora(...args).succeed();
+  const spinner = ora(...args);
+  spinner.prefixText = chalk.magenta(`[${getSystemName()}]`);
+  spinner.succeed();
   addToBuffer(channel, "log", ...args);
 }
 
 /**
  */
 export function oraLogError(channel: string, ...args: any[]) {
-  ora(...args).fail();
+  const spinner = ora(...args);
+  spinner.prefixText = chalk.magenta(`[${getSystemName()}]`);
+  spinner.fail();
   addToBuffer(channel, "error", ...args);
 }
 

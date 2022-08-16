@@ -1,4 +1,4 @@
-import { ESocketRoom, IStatistic, IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/types";
+import { IStatistic, IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/types";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { io } from "../Socket/SocketServer";
@@ -14,7 +14,7 @@ export const addStatistic = async (data: IStatisticCreate): Promise<void> => {
 
   await invokeDatabaseFunction("addStatistic", time, data);
 
-  io?.to(ESocketRoom.statistic).emit(`statistic::hourly`, { time, ...data });
+  io?.to("statistic").emit(`statistic::hourly`, { time, ...data });
 };
 
 /**

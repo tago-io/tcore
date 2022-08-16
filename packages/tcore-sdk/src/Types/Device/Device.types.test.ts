@@ -26,6 +26,7 @@ describe("zDeviceCreate", () => {
     expect(parsed.name).toEqual("Device #1");
     expect(parsed.tags).toEqual([]);
     expect(parsed.active).toEqual(true);
+    expect(parsed.type).toEqual("immutable");
     expect(parsed.payload_parser).toBeUndefined();
     expect(parsed.created_at).toBeInstanceOf(Date);
   });
@@ -96,6 +97,22 @@ describe("zDeviceCreate", () => {
     const data: IDeviceCreate = { name: "Device #1", payload_parser: "/parser.js" };
     const parsed = zDeviceCreate.parse(data);
     expect(parsed.payload_parser).toEqual("/parser.js");
+  });
+
+  test("doesn't parse chunk variables if type is mutable", () => {
+    const data: IDeviceCreate = { name: "Device #1", type: "mutable", chunk_period: "day", chunk_retention: 1 };
+    const parsed = zDeviceCreate.parse(data);
+    expect(parsed.chunk_period).toBeFalsy();
+    expect(parsed.chunk_retention).toBeFalsy();
+  });
+
+  test("parses different types of retentions", () => {
+    const retentions: any = ["0", "12", "36", 0, 12, 36];
+    for (const chunk_retention of retentions) {
+      const data: IDeviceCreate = { name: "Device #1", chunk_period: "week", chunk_retention };
+      const parsed = zDeviceCreate.parse(data);
+      expect(parsed.chunk_retention).toEqual(Number(chunk_retention));
+    }
   });
 });
 

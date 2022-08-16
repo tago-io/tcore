@@ -85,3 +85,14 @@ export const Button = styled.button<{ selected?: boolean }>`
       background: rgba(0, 0, 0, 0.25);
     `}
 `;
+
+export const PaginationSeparator = styled.div`
+  border: 1px solid transparent;
+  padding: 0;
+  border-radius: 5px;
+  min-width: 30px;
+  width: initial;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;

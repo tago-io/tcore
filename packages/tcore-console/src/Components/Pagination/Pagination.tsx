@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { Tooltip } from "../..";
 import Icon from "../Icon/Icon";
 import { EIcon } from "../Icon/Icon.types";
+import { getPageList } from "./Pagination.logic";
 import * as Style from "./Pagination.style";
 
 /**
@@ -51,7 +53,7 @@ interface IPaginationProps {
  */
 function Pagination(props: IPaginationProps) {
   const { page, pageAmount, amountOfRecords, idealAmountOfRows, infinitePages, onChange } = props;
-  const array = new Array(pageAmount || 1).fill("").map((_, i) => i);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   /**
    * Goes back one page.
@@ -70,13 +72,17 @@ function Pagination(props: IPaginationProps) {
   /**
    * Renders a single item.
    */
-  const renderItem = (value: number) => {
+  const renderItem = (value: number | string, index: number) => {
     const selected = page === value;
-    return (
-      <Style.Button key={value} onClick={() => onChange(value)} selected={selected}>
-        {value + 1}
-      </Style.Button>
-    );
+    if (typeof value === "string") {
+      return <Style.PaginationSeparator key={`separator-${index}`}>...</Style.PaginationSeparator>;
+    } else {
+      return (
+        <Style.Button key={value} onClick={() => onChange(value)} selected={selected}>
+          {value}
+        </Style.Button>
+      );
+    }
   };
 
   /**
@@ -89,8 +95,29 @@ function Pagination(props: IPaginationProps) {
     );
   };
 
+  /**
+   * Renders the 'finite' pages in this component. Finite pages are the ones
+   * that have a start and end, different from the infinite pages which
+   * just show two arrows.
+   */
+  const renderFinitePages = () => {
+    if (!containerRef?.current?.clientWidth) {
+      return null;
+    }
+
+    const array = getPageList(pageAmount, containerRef?.current?.clientWidth, page);
+    const nextDisabled = !pageAmount || page === pageAmount;
+    return (
+      <>
+        {renderArrow(EIcon["chevron-left"], page === 1, goBack)}
+        {array.map(renderItem)}
+        {renderArrow(EIcon["chevron-right"], nextDisabled, goForward)}
+      </>
+    );
+  };
+
   return (
-    <Style.Container>
+    <Style.Container ref={containerRef}>
       {props.showConfigButton && (
         <Tooltip text="Configure table">
           <div className="config-button" onClick={props.onConfigButtonClick}>
@@ -101,7 +128,7 @@ function Pagination(props: IPaginationProps) {
 
       {infinitePages ? (
         <>
-          {renderArrow(EIcon["chevron-left"], page === 0, goBack)}
+          {renderArrow(EIcon["chevron-left"], page === 1, goBack)}
           {renderArrow(
             EIcon["chevron-right"],
             (amountOfRecords || 0) < (idealAmountOfRows || 0),
@@ -109,11 +136,7 @@ function Pagination(props: IPaginationProps) {
           )}
         </>
       ) : pageAmount > 0 ? (
-        <>
-          {renderArrow(EIcon["chevron-left"], page === 0, goBack)}
-          {array.map(renderItem)}
-          {renderArrow(EIcon["chevron-right"], page === pageAmount - 1, goForward)}
-        </>
+        renderFinitePages()
       ) : null}
 
       {props.showRefreshButton && (

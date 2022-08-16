@@ -51,7 +51,7 @@ export const Pencil = styled.div`
 export const CopyButtonContainer = styled.div`
   position: absolute;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -50%);
 
   ${ButtonStyle.Container} {
     padding: 7px;
