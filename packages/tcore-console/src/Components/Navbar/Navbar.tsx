@@ -1,7 +1,9 @@
-import { useCallback } from "react";
+import { Fragment, useCallback } from "react";
 import { useHistory } from "react-router";
 import { useTheme } from "styled-components";
 import { readableColor } from "polished";
+import { observer } from "mobx-react";
+import { IPluginButtonModuleSetupOption, IPluginListItem } from "@tago-io/tcore-sdk/types";
 import Button from "../Button/Button";
 import Icon from "../Icon/Icon";
 import { EIcon } from "../Icon/Icon.types";
@@ -52,6 +54,41 @@ function Navbar(props: INavbarProps) {
     history.push("/console/login");
   }, [history]);
 
+  /**
+   * Renders the navbar buttons for a specific plugin.
+   */
+  const renderNavbarButtons = (
+    plugin: IPluginListItem,
+    buttons: IPluginButtonModuleSetupOption[]
+  ) => {
+    return (
+      <Fragment key={plugin.id}>
+        {buttons.map((button) => {
+          if (button.action.type !== "open-url") {
+            // only urls supported for now
+            return null;
+          }
+
+          let buttonURL = String(button.action.url).replace(/\/\//g, "/");
+          if (!buttonURL.startsWith("/")) {
+            buttonURL = `/${buttonURL}`;
+          }
+          if (!buttonURL.startsWith("/console/")) {
+            buttonURL = `/console${buttonURL}`;
+          }
+
+          return (
+            <Link key={button.icon} href={buttonURL}>
+              <Button type={EButton.primary}>
+                <Icon size="18px" icon={button.icon as EIcon} />
+              </Button>
+            </Link>
+          );
+        })}
+      </Fragment>
+    );
+  };
+
   const Logo = readableColor(theme.navBar, "black", "white") === "black" ? LogoBlack : LogoWhite;
 
   return (
@@ -70,12 +107,14 @@ function Navbar(props: INavbarProps) {
         {props.versionName ? (
           <>
             <div className="pipe" />
-            <span className="alpha">Beta</span>
+            <span className="alpha">{props.versionName}</span>
           </>
         ) : null}
       </div>
 
       <Style.RightSection>
+        {store.plugins.map((x) => renderNavbarButtons(x, x.buttons.navbar))}
+
         <Link href="/console/logs">
           <Button type={EButton.primary} testId="plugin-logs-button">
             <Icon size="17px" icon={EIcon.scroll} />
@@ -90,4 +129,4 @@ function Navbar(props: INavbarProps) {
   );
 }
 
-export default Navbar;
+export default observer(Navbar);
