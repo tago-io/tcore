@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import cronParser from "cron-parser";
-import { parseRelativeDate } from "../Helpers/Time";
-import { getActionList, triggerAction } from "./Action";
+import { parseRelativeDate } from "../../Helpers/Time";
+import { getActionList, triggerAction } from "../Action";
 
 let interval: ReturnType<typeof setInterval>;
 
