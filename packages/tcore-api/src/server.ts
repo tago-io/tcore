@@ -28,7 +28,7 @@ import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
 import { startActionScheduleTimer } from "./Services/ActionScheduler";
 import { logSystemStart, oraLog, oraLogError } from "./Helpers/log";
-import { startDataRetentionTimer } from "./Services/DeviceDataRetention";
+import { startDataRetentionTimer } from "./Services/DeviceDataRetention/DeviceDataRetention";
 
 const app = express();
 const httpServer = createServer(app);
