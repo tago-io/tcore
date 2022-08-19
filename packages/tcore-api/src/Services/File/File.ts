@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import { WriteFileOptions } from "fs";
 import path from "path";
-import { getPluginSettingsFolder } from "./Settings";
+import { getPluginSettingsFolder } from "../Settings";
 
 /**
  * Writes data to the file, replacing the file if it already exists.
