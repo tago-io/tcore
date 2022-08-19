@@ -7,7 +7,7 @@ import * as DeviceDataService from "../Services/DeviceData/DeviceData";
 import * as AnalysisService from "../Services/Analysis";
 import * as ActionService from "../Services/Action";
 import * as LiveInspectorService from "../Services/LiveInspector";
-import { getTagKeys } from "../Services/Tag";
+import { getTagKeys } from "../Services/Tag/Tag";
 import { getSummary } from "../Services/Summary";
 import { getComputerUsage, getOSInfo } from "../Services/Hardware";
 import { plugins } from "./Host";
