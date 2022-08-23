@@ -1,7 +1,7 @@
 /* eslint-disable no-async-promise-executor */
 import { Server } from "http";
 import { getSystemName } from "@tago-io/tcore-shared";
-import { stopActionScheduleTimer } from "../Services/ActionScheduler";
+import { stopActionScheduleTimer } from "../Services/ActionScheduler/ActionScheduler";
 import { terminateAllPlugins } from "../Services/Plugins";
 import { log } from "./log";
 

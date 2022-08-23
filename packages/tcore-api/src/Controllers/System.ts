@@ -1,5 +1,5 @@
 import { Application } from "express";
-import { getStatus } from "../Services/System";
+import { getStatus } from "../Services/System/System";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

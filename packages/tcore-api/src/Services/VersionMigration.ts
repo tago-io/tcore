@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import semver from "semver";
 import { ISettings } from "@tago-io/tcore-sdk/types";
-import { SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
+import { SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared/src";
 import { extractTar } from "../Helpers/Tar/Tar";
 import { getMainSettings, setMainSettings } from "./Settings";
 import { getVersion } from "./System/System";

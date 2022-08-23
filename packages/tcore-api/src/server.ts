@@ -26,7 +26,7 @@ import { setupSocketServer } from "./Socket/SocketServer";
 import { shutdown } from "./Helpers/shutdown";
 import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
-import { startActionScheduleTimer } from "./Services/ActionScheduler";
+import { startActionScheduleTimer } from "./Services/ActionScheduler/ActionScheduler";
 import { logSystemStart, oraLog, oraLogError } from "./Helpers/log";
 import { startDataRetentionTimer } from "./Services/DeviceDataRetention/DeviceDataRetention";
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
-import { flattenConfigFields } from "@tago-io/tcore-shared";
+import { flattenConfigFields } from "@tago-io/tcore-shared/src";
 import semver from "semver";
 import Module from "../Plugins/Module/Module";
 import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";

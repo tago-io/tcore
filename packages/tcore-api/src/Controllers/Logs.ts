@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { z } from "zod";
-import { getLogChannelInfo, getLogChannelList } from "../Services/Logs";
+import { getLogChannelInfo, getLogChannelList } from "../Services/Logs/Logs";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

@@ -4,7 +4,7 @@ import { createFolder, doesFileOrFolderExist, getFileURI, getFolderURI, readFile
 import { deletePluginStorageItem, getAllPluginStorageItems, getPluginStorageItem, setPluginStorageItem } from "../Services/PluginsStorage";
 import * as DeviceService from "../Services/Device";
 import * as DeviceDataService from "../Services/DeviceData/DeviceData";
-import * as AnalysisService from "../Services/Analysis";
+import * as AnalysisService from "../Services/Analysis/Analysis";
 import * as ActionService from "../Services/Action";
 import * as LiveInspectorService from "../Services/LiveInspector";
 import { getTagKeys } from "../Services/Tag/Tag";

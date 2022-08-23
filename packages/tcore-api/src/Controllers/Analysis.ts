@@ -9,7 +9,13 @@ import {
   zAnalysisEdit,
 } from "@tago-io/tcore-sdk/types";
 import { runAnalysis } from "../Services/AnalysisCodeExecution";
-import { createAnalysis, deleteAnalysis, editAnalysis, getAnalysisInfo, getAnalysisList } from "../Services/Analysis";
+import {
+  createAnalysis,
+  deleteAnalysis,
+  editAnalysis,
+  getAnalysisInfo,
+  getAnalysisList,
+} from "../Services/Analysis/Analysis";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

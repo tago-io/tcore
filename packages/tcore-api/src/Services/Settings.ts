@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import os from "os";
 import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
-import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
+import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared/src";
 import { log } from "..";
 import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host";
 import { loadYml, saveYml } from "../Helpers/Yaml";

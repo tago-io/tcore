@@ -3,7 +3,7 @@ import fs from "fs";
 import { ILog, TGenericID } from "@tago-io/tcore-sdk/types";
 import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
 import { io } from "../Socket/SocketServer";
-import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis";
+import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis/Analysis";
 import { getMainSettings } from "./Settings";
 
 /**
