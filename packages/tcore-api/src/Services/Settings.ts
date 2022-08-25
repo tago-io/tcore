@@ -9,7 +9,7 @@ import { loadYml, saveYml } from "../Helpers/Yaml";
 import { rmdir } from "../Helpers/Files";
 import { compareAccountPasswordHash } from "./Account/AccountPassword";
 import { startPluginModule } from "./Plugins";
-import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
+import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./PluginPassword/PluginPassword";
 import { runVersionMigration } from "./VersionMigration";
 
 /**

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { hideModuleMessage, showModuleMessage } from "../Services/Plugins";
 import { createFolder, doesFileOrFolderExist, getFileURI, getFolderURI, readFile, writeFile } from "../Services/File/File";
-import { deletePluginStorageItem, getAllPluginStorageItems, getPluginStorageItem, setPluginStorageItem } from "../Services/PluginsStorage";
+import { deletePluginStorageItem, getAllPluginStorageItems, getPluginStorageItem, setPluginStorageItem } from "../Services/PluginsStorage/PluginsStorage";
 import * as DeviceService from "../Services/Device";
 import * as DeviceDataService from "../Services/DeviceData/DeviceData";
 import * as AnalysisService from "../Services/Analysis/Analysis";

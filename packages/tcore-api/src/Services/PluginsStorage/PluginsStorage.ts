@@ -1,5 +1,5 @@
 import { zPluginStorageItemSet } from "@tago-io/tcore-sdk/types";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
 
 /**
  * Retrieves a storage item of a plugin.
