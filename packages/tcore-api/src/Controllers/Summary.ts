@@ -1,5 +1,5 @@
 import { Application } from "express";
-import { getSummary } from "../Services/Summary";
+import { getSummary } from "../Services/Summary/Summary";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

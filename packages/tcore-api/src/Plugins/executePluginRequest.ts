@@ -8,7 +8,7 @@ import * as AnalysisService from "../Services/Analysis/Analysis";
 import * as ActionService from "../Services/Action";
 import * as LiveInspectorService from "../Services/LiveInspector";
 import { getTagKeys } from "../Services/Tag/Tag";
-import { getSummary } from "../Services/Summary";
+import { getSummary } from "../Services/Summary/Summary";
 import { getComputerUsage, getOSInfo } from "../Services/Hardware";
 import { plugins } from "./Host";
 
