@@ -18,7 +18,7 @@ import {
 } from "@tago-io/tcore-sdk/types";
 import Module from "../../Plugins/Module/Module";
 import * as Device from "../Device";
-import * as Statistic from "../Statistic";
+import * as Statistic from "../Statistic/Statistic";
 import * as LiveInspector from "../LiveInspector";
 import * as PayloadParser from "../PayloadParserCodeExecution";
 import { plugins } from "../../Plugins/Host";

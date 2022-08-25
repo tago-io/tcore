@@ -1,5 +1,5 @@
 import { Application } from "express";
-import { getHourlyStatistics } from "../Services/Statistic";
+import { getHourlyStatistics } from "../Services/Statistic/Statistic";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

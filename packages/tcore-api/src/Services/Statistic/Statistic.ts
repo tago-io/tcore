@@ -1,8 +1,8 @@
 import { IStatistic, IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/types";
 import { DateTime } from "luxon";
 import { z } from "zod";
-import { io } from "../Socket/SocketServer";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { io } from "../../Socket/SocketServer";
+import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
 
 /**
  * Retrieves the summary information.

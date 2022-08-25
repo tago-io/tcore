@@ -20,7 +20,7 @@ import { plugins } from "../../Plugins/Host";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
 import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
 import { editDevice, getDeviceInfo } from "../Device";
-import { addStatistic } from "../Statistic";
+import { addStatistic } from "../Statistic/Statistic";
 import { runPayloadParser } from "../PayloadParserCodeExecution";
 import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector";
 import { triggerHooks } from "../Plugins";
