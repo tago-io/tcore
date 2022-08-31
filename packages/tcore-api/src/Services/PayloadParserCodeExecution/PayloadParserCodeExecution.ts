@@ -6,9 +6,9 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { logError } from "../Helpers/log";
-import { emitToLiveInspector } from "./LiveInspector";
-import { getDeviceParamList } from "./Device";
+import { logError } from "../../Helpers/log";
+import { emitToLiveInspector } from "../LiveInspector/LiveInspector";
+import { getDeviceParamList } from "../Device/Device";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

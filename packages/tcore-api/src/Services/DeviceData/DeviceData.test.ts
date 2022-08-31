@@ -17,10 +17,10 @@ import {
   zDeviceDataQuery,
 } from "@tago-io/tcore-sdk/types";
 import Module from "../../Plugins/Module/Module";
-import * as Device from "../Device";
+import * as Device from "../Device/Device";
 import * as Statistic from "../Statistic/Statistic";
-import * as LiveInspector from "../LiveInspector";
-import * as PayloadParser from "../PayloadParserCodeExecution";
+import * as LiveInspector from "../LiveInspector/LiveInspector";
+import * as PayloadParser from "../PayloadParserCodeExecution/PayloadParserCodeExecution";
 import { plugins } from "../../Plugins/Host";
 import * as DeviceData from "./DeviceData";
 

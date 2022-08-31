@@ -4,7 +4,7 @@ import fs from "fs";
 import { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log";
-import { setPluginDisabledSettings } from "../../Services/Settings";
+import { setPluginDisabledSettings } from "../../Services/Settings/Settings";
 import { io } from "../../Socket/SocketServer";
 import M from "../Module/Module";
 import Validator from "../Validator/Validator";

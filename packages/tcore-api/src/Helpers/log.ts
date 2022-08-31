@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import ora from "ora";
-import { getSystemName } from "@tago-io/tcore-shared";
+import { getSystemName } from "@tago-io/tcore-shared/src";
 import boxen from "boxen";
-import { getMainSettings } from "../Services/Settings";
+import { getMainSettings } from "../Services/Settings/Settings";
 import { plugins } from "../Plugins/Host";
 import { io } from "../Socket/SocketServer";
-import { getLocalIPs } from "../Services/Hardware";
+import { getLocalIPs } from "../Services/Hardware/Hardware";
 // @ts-ignore
 import pkg from "../../../../package.json";
 

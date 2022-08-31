@@ -18,13 +18,13 @@ import {
 } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
 import { Device } from "@tago-io/sdk";
-import splitColon from "../Helpers/splitColon";
-import { plugins } from "../Plugins/Host";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
-import { runAnalysis } from "./AnalysisCodeExecution";
-import { addDeviceData } from "./DeviceData/DeviceData";
-import { getDeviceByToken } from "./Device";
-import { getModuleList } from "./Plugins";
+import splitColon from "../../Helpers/splitColon";
+import { plugins } from "../../Plugins/Host";
+import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
+import { runAnalysis } from "../AnalysisCodeExecution/AnalysisCodeExecution";
+import { addDeviceData } from "../DeviceData/DeviceData";
+import { getDeviceByToken } from "../Device/Device";
+import { getModuleList } from "../Plugins/Plugins";
 
 /**
  * Fixes a value's type before evaluating it.

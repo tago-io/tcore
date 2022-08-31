@@ -1,7 +1,7 @@
 import os from "os";
 import si from "systeminformation";
 import { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/types";
-import { getCpuPercentage } from "../Helpers/CPU";
+import { getCpuPercentage } from "../../Helpers/CPU";
 
 /**
  * Formats the bytes into a more readable format.

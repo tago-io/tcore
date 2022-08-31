@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { getPlatformAndArch } from "../Helpers/Platform";
-import { getComputerUsage, getNetworkInfo, getOSInfo } from "../Services/Hardware";
+import { getComputerUsage, getNetworkInfo, getOSInfo } from "../Services/Hardware/Hardware";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

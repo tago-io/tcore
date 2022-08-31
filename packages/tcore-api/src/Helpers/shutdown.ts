@@ -2,7 +2,7 @@
 import { Server } from "http";
 import { getSystemName } from "@tago-io/tcore-shared";
 import { stopActionScheduleTimer } from "../Services/ActionScheduler/ActionScheduler";
-import { terminateAllPlugins } from "../Services/Plugins";
+import { terminateAllPlugins } from "../Services/Plugins/Plugins";
 import { log } from "./log";
 
 let shutdownTries = 0;

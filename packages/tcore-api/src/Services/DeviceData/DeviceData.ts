@@ -18,12 +18,12 @@ import removeNullValues from "../../Helpers/removeNullValues";
 import splitColon from "../../Helpers/splitColon";
 import { plugins } from "../../Plugins/Host";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
-import { editDevice, getDeviceInfo } from "../Device";
+import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action/Action";
+import { editDevice, getDeviceInfo } from "../Device/Device";
 import { addStatistic } from "../Statistic/Statistic";
-import { runPayloadParser } from "../PayloadParserCodeExecution";
-import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector";
-import { triggerHooks } from "../Plugins";
+import { runPayloadParser } from "../PayloadParserCodeExecution/PayloadParserCodeExecution";
+import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector/LiveInspector";
+import { triggerHooks } from "../Plugins/Plugins";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;

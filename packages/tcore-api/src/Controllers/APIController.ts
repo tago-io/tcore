@@ -2,9 +2,9 @@ import { IncomingHttpHeaders } from "http";
 import express, { Request, Response } from "express";
 import { ZodTypeAny } from "zod";
 import { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
-import { getDeviceByToken, getDeviceToken } from "../Services/Device";
+import { getDeviceByToken, getDeviceToken } from "../Services/Device/Device";
 import { getAccountToken } from "../Services/Account/Account";
-import { checkMasterPassword } from "../Services/Settings";
+import { checkMasterPassword } from "../Services/Settings/Settings";
 
 type TResourceType = "device" | "account";
 type TPermission = "full" | "write" | "read";

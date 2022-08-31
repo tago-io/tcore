@@ -1,6 +1,6 @@
 import { IPluginFilesystemItem } from "@tago-io/tcore-sdk/types";
-import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
-import { getModuleList } from "./Plugins";
+import { invokeFilesystemFunction } from "../../Plugins/invokeFilesystemFunction";
+import { getModuleList } from "../Plugins/Plugins";
 
 /**
  * Sorts the file array by alphabetical order.

@@ -3,14 +3,14 @@ import fs from "fs";
 import os from "os";
 import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared/src";
-import { log } from "..";
-import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host";
-import { loadYml, saveYml } from "../Helpers/Yaml";
-import { rmdir } from "../Helpers/Files";
-import { compareAccountPasswordHash } from "./Account/AccountPassword";
-import { startPluginModule } from "./Plugins";
-import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./PluginPassword/PluginPassword";
-import { runVersionMigration } from "./VersionMigration";
+import { log } from "../..";
+import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../../Plugins/Host";
+import { loadYml, saveYml } from "../../Helpers/Yaml";
+import { rmdir } from "../../Helpers/Files";
+import { compareAccountPasswordHash } from "../Account/AccountPassword";
+import { startPluginModule } from "../Plugins/Plugins";
+import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "../PluginPassword/PluginPassword";
+import { runVersionMigration } from "../VersionMigration/VersionMigration";
 
 /**
  * Folder name to save the settings.

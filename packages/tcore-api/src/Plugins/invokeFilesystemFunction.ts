@@ -1,4 +1,4 @@
-import { getMainFilesystemModule, getModuleList } from "../Services/Plugins";
+import { getMainFilesystemModule, getModuleList } from "../Services/Plugins/Plugins";
 
 /**
  * Invokes a function in the main filesystem module or the local disk if the

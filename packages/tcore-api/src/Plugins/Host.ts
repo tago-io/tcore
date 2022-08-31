@@ -1,8 +1,8 @@
 import path from "path";
 import fs from "fs";
-import { listPluginFolders } from "../Services/Plugins";
+import { listPluginFolders } from "../Services/Plugins/Plugins";
 import { oraLog, oraLogError } from "../Helpers/log";
-import { getMainSettings, getPluginSettings } from "../Services/Settings";
+import { getMainSettings, getPluginSettings } from "../Services/Settings/Settings";
 import Plugin from "./Plugin/Plugin";
 import { generatePluginID } from "./PluginID";
 import { getPluginPackageJSON } from "./PluginPackage";

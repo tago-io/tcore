@@ -9,7 +9,7 @@ import {
   getDeviceData,
   getDeviceDataAmount,
 } from "../../Services/DeviceData/DeviceData";
-import { emitToLiveInspector, getLiveInspectorID } from "../../Services/LiveInspector";
+import { emitToLiveInspector, getLiveInspectorID } from "../../Services/LiveInspector/LiveInspector";
 import APIController, { ISetupController, warm } from "../APIController";
 
 /**

@@ -1,7 +1,7 @@
 import { Server } from "http";
 import { Server as SocketServer, Socket } from "socket.io";
 import { TGenericID } from "@tago-io/tcore-sdk/types";
-import { editDevice } from "../Services/Device";
+import { editDevice } from "../Services/Device/Device";
 import { checkMasterPassword } from "../";
 import { getAccountToken } from "../Services/Account/Account";
 

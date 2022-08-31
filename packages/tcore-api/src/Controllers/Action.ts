@@ -8,7 +8,7 @@ import {
 } from "@tago-io/tcore-sdk/types";
 import { Application } from "express";
 import { z } from "zod";
-import { createAction, deleteAction, editAction, getActionInfo, getActionList } from "../Services/Action";
+import { createAction, deleteAction, editAction, getActionInfo, getActionList } from "../Services/Action/Action";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

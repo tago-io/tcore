@@ -1,10 +1,10 @@
 import { spawn } from "child_process";
 import fs from "fs";
 import { ILog, TGenericID } from "@tago-io/tcore-sdk/types";
-import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
-import { io } from "../Socket/SocketServer";
-import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis/Analysis";
-import { getMainSettings } from "./Settings";
+import { invokeFilesystemFunction } from "../../Plugins/invokeFilesystemFunction";
+import { io } from "../../Socket/SocketServer";
+import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "../Analysis/Analysis";
+import { getMainSettings } from "../Settings/Settings";
 
 /**
  * Adds a log into the log buffer of the application and triggers the socket

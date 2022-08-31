@@ -23,7 +23,7 @@ import {
   getDeviceParamList,
   getDeviceTokenList,
   setDeviceParams,
-} from "../../Services/Device";
+} from "../../Services/Device/Device";
 import APIController, { ISetupController, warm } from "../APIController";
 
 /**

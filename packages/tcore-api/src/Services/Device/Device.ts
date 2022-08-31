@@ -23,7 +23,7 @@ import {
   zDeviceTokenCreate,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
 
 /**
  * Validates a device ID, throws an error if it doesn't exist.

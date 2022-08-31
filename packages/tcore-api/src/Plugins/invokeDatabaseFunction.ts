@@ -1,4 +1,4 @@
-import { getMainDatabaseModule } from "../Services/Plugins";
+import { getMainDatabaseModule } from "../Services/Plugins/Plugins";
 
 /**
  * Invokes a function from the main database plugin.

@@ -2,7 +2,7 @@ import { ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/types";
 import { Application } from "express";
 import { z } from "zod";
 import { encryptAccountPassword } from "../Services/Account/AccountPassword";
-import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings";
+import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings/Settings";
 import APIController, { ISetupController, warm } from "./APIController";
 
 const zPassword = z.object({

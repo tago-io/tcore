@@ -1,6 +1,6 @@
 import { Application } from "express";
 import { z } from "zod";
-import { getFileList } from "../Services/FilePicker";
+import { getFileList } from "../Services/FilePicker/FilePicker";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**

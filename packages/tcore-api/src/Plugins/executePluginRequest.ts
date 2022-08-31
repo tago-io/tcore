@@ -1,15 +1,15 @@
 /* eslint-disable prettier/prettier */
-import { hideModuleMessage, showModuleMessage } from "../Services/Plugins";
+import { hideModuleMessage, showModuleMessage } from "../Services/Plugins/Plugins";
 import { createFolder, doesFileOrFolderExist, getFileURI, getFolderURI, readFile, writeFile } from "../Services/File/File";
 import { deletePluginStorageItem, getAllPluginStorageItems, getPluginStorageItem, setPluginStorageItem } from "../Services/PluginsStorage/PluginsStorage";
-import * as DeviceService from "../Services/Device";
+import * as DeviceService from "../Services/Device/Device";
 import * as DeviceDataService from "../Services/DeviceData/DeviceData";
 import * as AnalysisService from "../Services/Analysis/Analysis";
-import * as ActionService from "../Services/Action";
-import * as LiveInspectorService from "../Services/LiveInspector";
+import * as ActionService from "../Services/Action/Action";
+import * as LiveInspectorService from "../Services/LiveInspector/LiveInspector";
 import { getTagKeys } from "../Services/Tag/Tag";
 import { getSummary } from "../Services/Summary/Summary";
-import { getComputerUsage, getOSInfo } from "../Services/Hardware";
+import { getComputerUsage, getOSInfo } from "../Services/Hardware/Hardware";
 import { plugins } from "./Host";
 
 /**

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { io } from "../Socket/SocketServer";
-import { getMainSettings, getPluginSettingsFolder } from "../Services/Settings";
+import { getMainSettings, getPluginSettingsFolder } from "../Services/Settings/Settings";
 import { plugins } from "./Host";
 
 /**

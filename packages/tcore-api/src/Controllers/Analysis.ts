@@ -8,7 +8,7 @@ import {
   IAnalysisEdit,
   zAnalysisEdit,
 } from "@tago-io/tcore-sdk/types";
-import { runAnalysis } from "../Services/AnalysisCodeExecution";
+import { runAnalysis } from "../Services/AnalysisCodeExecution/AnalysisCodeExecution";
 import {
   createAnalysis,
   deleteAnalysis,

@@ -4,7 +4,7 @@ import { Request, Response, Application } from "express";
 import { z } from "zod";
 import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
 import multer from "multer";
-import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
+import { getMainSettings, setPluginModulesSettings } from "../Services/Settings/Settings";
 import { plugins } from "../Plugins/Host";
 import {
   getPluginInfo,
@@ -18,7 +18,7 @@ import {
   stopPlugin,
   reloadPlugin,
   invokeOnCallModule,
-} from "../Services/Plugins";
+} from "../Services/Plugins/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
 import APIController, { ISetupController, warm } from "./APIController";

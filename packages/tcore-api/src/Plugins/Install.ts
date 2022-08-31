@@ -6,7 +6,7 @@ import tar from "tar";
 import { IPluginInstallOptions } from "@tago-io/tcore-sdk/types";
 import { extractTar, peekTarFile } from "../Helpers/Tar/Tar";
 import { getPlatformAndArch } from "../Helpers/Platform";
-import { getMainSettings } from "../Services/Settings";
+import { getMainSettings } from "../Services/Settings/Settings";
 import { logError, log } from "../Helpers/log";
 import { io } from "../Socket/SocketServer";
 import { generatePluginID } from "./PluginID";

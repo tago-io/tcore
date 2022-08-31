@@ -4,12 +4,12 @@ import { startServer } from "./server";
 import { log, logError, logSystemStart } from "./Helpers/log";
 import { getPlatformAndArch } from "./Helpers/Platform";
 import { downloadFile } from "./Helpers/Download";
-import { runVersionMigration } from "./Services/VersionMigration";
+import { runVersionMigration } from "./Services/VersionMigration/VersionMigration";
 import Plugin from "./Plugins/Plugin/Plugin";
 export * from "./Helpers/Tar/Tar";
 export * from "./Helpers/Zip";
-export * from "./Services/Plugins";
-export * from "./Services/Settings";
+export * from "./Services/Plugins/Plugins";
+export * from "./Services/Settings/Settings";
 
 export {
   downloadFile,

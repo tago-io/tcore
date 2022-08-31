@@ -2,7 +2,7 @@
 import { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { io } from "../../Socket/SocketServer";
-import { getPluginSettings } from "../../Services/Settings";
+import { getPluginSettings } from "../../Services/Settings/Settings";
 import Plugin from "../Plugin/Plugin";
 
 /**

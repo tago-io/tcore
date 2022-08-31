@@ -3,11 +3,11 @@ import path from "path";
 import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared/src";
 import semver from "semver";
-import Module from "../Plugins/Module/Module";
-import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
-import Plugin from "../Plugins/Plugin/Plugin";
-import { getMainSettings, getPluginSettings } from "./Settings";
-import { getVersion } from "./System/System";
+import Module from "../../Plugins/Module/Module";
+import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../../Plugins/Host";
+import Plugin from "../../Plugins/Plugin/Plugin";
+import { getMainSettings, getPluginSettings } from "../Settings/Settings";
+import { getVersion } from "../System/System";
 
 /**
  * Filters and maps the button modules for the plugin list.
