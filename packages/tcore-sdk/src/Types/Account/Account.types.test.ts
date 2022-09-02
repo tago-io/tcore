@@ -58,9 +58,7 @@ describe("zAccountListQuery", () => {
       zAccountListQuery.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.fieldErrors.fields[0]).toBe(
-        "Invalid enum value. Expected 'id' | 'name' | 'username' | 'password' | 'password_hint' | 'created_at'"
-      );
+      expect(e.fieldErrors.fields[0].startsWith("Invalid enum value.")).toBeTruthy();
     }
   });
 
@@ -114,7 +112,7 @@ describe("zAccountTokenCreate", () => {
       zAccountTokenCreate.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.fieldErrors.permission[0]).toBe("Invalid enum value. Expected 'full' | 'read' | 'write'");
+      expect(e.fieldErrors.permission[0].startsWith("Invalid enum value.")).toBeTruthy();
     }
   });
 

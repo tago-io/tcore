@@ -1,15 +1,19 @@
+import { time } from "console";
 import { ZodError } from "zod";
 import { zLogCreate, zLogList } from "./Log.types";
 
 describe("zLogCreate", () => {
   test("parses simple object", () => {
+    const timestamp = new Date();
     const data = {
-      timestamp: new Date(),
+      timestamp: timestamp,
       message: "message",
       error: true,
     };
     const parsed = zLogCreate.parse(data);
+    expect(parsed.timestamp).toEqual(timestamp);
     expect(parsed.message).toEqual("message");
+    expect(parsed.error).toEqual("true");
   });
 
   test("assure correct type", () => {
@@ -60,7 +64,9 @@ describe("zLogList", () => {
       },
     ];
     const parsed = zLogList.parse(data);
+    expect(parsed[0].timestamp).toEqual(data[0].timestamp);
     expect(parsed[0].message).toEqual("message");
+    expect(parsed[0].error).toEqual(true);
   });
 
   test("assure it is an array", () => {

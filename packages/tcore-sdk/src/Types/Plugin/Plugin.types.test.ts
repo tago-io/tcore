@@ -18,6 +18,12 @@ import {
 } from "./Plugin.types";
 
 describe("zPluginModuleIDCombo", () => {
+  test("valid id", () => {
+    const data = "0810916b6ca256fb25afbe19b4f83b23:sample-action";
+    const parsed = zPluginModuleIDCombo.parse(data);
+    expect(parsed).toBe(data);
+  });
+
   test("invalid id", () => {
     const data = "123:aaa";
     try {
@@ -36,9 +42,7 @@ describe("zPluginType", () => {
       zPluginType.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.formErrors[0]).toBe(
-        "Invalid enum value. Expected 'action-trigger' | 'action-type' | 'database' | 'decoder' | 'encoder' | 'filesystem' | 'hook' | 'navbar-button' | 'page' | 'service' | 'sidebar-button' | 'sidebar-footer-button'"
-      );
+      expect(e.formErrors[0].startsWith("Invalid enum value.")).toBeTruthy();
     }
   });
 });
@@ -49,7 +53,7 @@ describe("zPluginPublisher", () => {
       name: "name",
     };
     const parsed = zPluginPublisher.parse(data);
-    expect(parsed.domain).toBeUndefined;
+    expect(parsed.domain).toBeUndefined();
   });
 });
 
@@ -57,9 +61,9 @@ describe("zPluginInstallOptions", () => {
   test("accepts empty object", () => {
     const data = {};
     const parsed = zPluginInstallOptions.parse(data);
-    expect(parsed.start).toBeUndefined;
-    expect(parsed.log).toBeUndefined;
-    expect(parsed.restoreBackup).toBeUndefined;
+    expect(parsed.start).toBeUndefined();
+    expect(parsed.log).toBeUndefined();
+    expect(parsed.restoreBackup).toBeUndefined();
   });
 });
 
@@ -70,9 +74,7 @@ describe("zPluginPermission", () => {
       zPluginPermission.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.formErrors[0]).toBe(
-        "Invalid enum value. Expected 'device' | 'analysis' | 'action' | 'device-data' | 'cli'"
-      );
+      expect(e.formErrors[0].startsWith("Invalid enum value.")).toBeTruthy();
     }
   });
 });
@@ -83,7 +85,7 @@ describe("zPluginManifestCliOption", () => {
       flags: "flags",
     };
     const parsed = zPluginManifestCliOption.parse(data);
-    expect(parsed.description).toBeUndefined;
+    expect(parsed.description).toBeUndefined();
   });
 });
 
@@ -113,9 +115,7 @@ describe("zPluginPackageTCore", () => {
       zPluginPackageTCore.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.fieldErrors.types).toStrictEqual([
-        "Invalid enum value. Expected 'action-trigger' | 'action-type' | 'database' | 'decoder' | 'encoder' | 'filesystem' | 'hook' | 'navbar-button' | 'page' | 'service' | 'sidebar-button' | 'sidebar-footer-button'",
-      ]);
+      expect(e.fieldErrors.types[0]).toContain("Invalid enum value.");
     }
   });
 });
@@ -153,9 +153,7 @@ describe("zPluginModule", () => {
       zPluginModule.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.fieldErrors.state).toStrictEqual([
-        "Invalid enum value. Expected 'idle' | 'stopping' | 'starting' | 'started' | 'stopped'",
-      ]);
+      expect(e.fieldErrors.state[0]).toContain("Invalid enum value.");
     }
   });
 });

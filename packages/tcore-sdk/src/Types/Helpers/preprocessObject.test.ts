@@ -10,6 +10,6 @@ describe("preprocessObject", () => {
   test("process non object to object", () => {
     const data = "key, value";
     const process = preprocessObject(data);
-    expect(typeof process).toBe("object" || "null");
+    expect(typeof process).toBe("object");
   });
 });

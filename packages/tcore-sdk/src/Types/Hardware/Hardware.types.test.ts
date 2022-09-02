@@ -40,9 +40,7 @@ describe("zOSInfo", () => {
       zOSInfo.parse(data);
     } catch (error) {
       const e = (error as ZodError).flatten();
-      expect(e.fieldErrors.code[0]).toBe(
-        "Invalid enum value. Expected 'windows' | 'mac' | 'linux' | 'raspberry-pi' | 'other'"
-      );
+      expect(e.fieldErrors.code[0].startsWith("Invalid enum value.")).toBeTruthy();
     }
   });
 });

@@ -8,13 +8,6 @@ describe("convertDateToISO", () => {
 });
 
 describe("parseRelativeDate", () => {
-  test("simple parse", () => {
-    /*
-    const data = parseRelativeDate("01-01-2100", true);
-    expect(data).toBeInstanceOf(String);
-    */
-  });
-
   test("check invalid date", () => {
     try {
       parseRelativeDate(" ", " ");

@@ -10,12 +10,13 @@ describe("removeNullValues", () => {
   test("removes null value", () => {
     const data = { key: null };
     const process = removeNullValues(data);
-    expect(process).toBeInstanceOf(Object);
+    expect(process).toStrictEqual({});
   });
 
   test("removes undefined value", () => {
     const data = { key: undefined };
     const process = removeNullValues(data);
-    expect(process).toBeInstanceOf(Object);
+    console.log(process);
+    expect(process).toStrictEqual({});
   });
 });

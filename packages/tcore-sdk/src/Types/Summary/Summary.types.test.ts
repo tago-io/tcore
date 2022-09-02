@@ -35,6 +35,7 @@ describe("zSummary", () => {
     } catch (error) {
       const e = (error as ZodError).flatten();
       expect(e.fieldErrors.analysis[0]).toBe("Required");
+      expect(e.fieldErrors.action[0]).toBe("Required");
     }
   });
 });

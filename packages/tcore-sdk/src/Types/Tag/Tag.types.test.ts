@@ -9,6 +9,7 @@ describe("zTag", () => {
     };
     const parsed = zTag.parse(data);
     expect(parsed.key).toEqual("key");
+    expect(parsed.value).toEqual("value");
   });
 
   test("assure correct types", () => {

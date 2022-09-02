@@ -43,7 +43,7 @@ describe("zStatisticCreate", () => {
       time: Date.now(),
     };
     const parsed = zStatisticCreate.parse(data);
-    expect(parsed.input).toBeUndefined;
-    expect(parsed.output).toBeUndefined;
+    expect(parsed.input).toBeUndefined();
+    expect(parsed.output).toBeUndefined();
   });
 });

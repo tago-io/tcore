@@ -18,7 +18,7 @@ describe("zSettings", () => {
     //expect(parsed.plugin_auto_update_check_time).toEqual(null);
     expect(parsed.port).toEqual(8888);
     //expect(parsed.telemetry).toEqual(false);
-    expect(parsed.version).toBeUndefined;
+    expect(parsed.version).toBeUndefined();
   });
 });
 
@@ -26,7 +26,7 @@ describe("zSettingsEdit", () => {
   test("parses simple object", () => {
     const data = {};
     const parsed = zSettingsEdit.parse(data);
-    expect(parsed.plugin_folder).toBeUndefined;
+    expect(parsed.plugin_folder).toBeUndefined();
   });
 });
 
@@ -38,7 +38,7 @@ describe("zSettingsMetadata", () => {
       port_disabled: true,
     };
     const parsed = zSettingsMetadata.parse(data);
-    expect(parsed.port_disabled).toBeTruthy;
+    expect(parsed.port_disabled).toBeTruthy();
   });
 
   test("check required field", () => {

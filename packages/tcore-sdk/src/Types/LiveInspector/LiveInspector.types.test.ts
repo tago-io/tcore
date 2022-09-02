@@ -25,6 +25,10 @@ describe("zLiveInspectorMessage", () => {
       title: "title",
     };
     const parsed = zLiveInspectorMessage.parse(data);
+    expect(parsed.connection_id).toEqual("connection_id");
+    expect(parsed.content).toEqual("any");
+    expect(parsed.device_id).toEqual("string");
+    expect(parsed.timestamp).toEqual(0);
     expect(parsed.title).toEqual("title");
   });
 
@@ -53,7 +57,7 @@ describe("zLiveInspectorMessage", () => {
     };
 
     const parsed = zLiveInspectorMessage.parse(data);
-    expect(parsed.content).toBeUndefined;
+    expect(parsed.content).toBeUndefined();
   });
 });
 
@@ -64,6 +68,7 @@ describe("zLiveInspectorMessageCreate", () => {
       title: "title",
     };
     const parsed = zLiveInspectorMessageCreate.parse(data);
+    expect(parsed.content).toEqual("any");
     expect(parsed.title).toEqual("title");
   });
 
