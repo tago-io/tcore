@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { ESocketRoom, IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
+import { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { io } from "../../Socket/SocketServer";
 import { getPluginSettings } from "../../Services/Settings";
 import Plugin from "../Plugin/Plugin";
+import { checkMainDatabaseModuleHook } from "../../Services/Plugins";
 
 /**
  * Class that manages a single module of a plugin.
@@ -85,6 +86,10 @@ class Module {
       this.error = null;
       this.state = "started";
       this.plugin.emitSidebarSocketUpdate();
+
+      if (this.setup.type === "database") {
+        checkMainDatabaseModuleHook();
+      }
     } catch (ex: any) {
       this.error = ex?.message || String(ex);
       this.state = "stopped";
@@ -98,7 +103,7 @@ class Module {
   /**
    */
   public emitSocketUpdate() {
-    io?.to(`${ESocketRoom.module}#${this.id}`).emit("module:status", {
+    io?.to(`module#${this.id}`).emit("module::status", {
       id: this.id,
       state: this.state,
       error: this.error || undefined,

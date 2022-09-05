@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import path from "path";
 import fs from "fs";
-import { ESocketRoom, IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
+import { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log";
 import { setPluginDisabledSettings } from "../../Services/Settings";
@@ -10,7 +10,7 @@ import M from "../Module/Module";
 import Validator from "../Validator/Validator";
 import Worker from "../Worker/Worker";
 import { generatePluginID } from "../PluginID";
-import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS } from "../Host";
+import { DEV_BUILT_IN_PLUGINS } from "../Host";
 
 /**
  */
@@ -62,7 +62,7 @@ class Plugin {
     this.tcoreName = this.package.tcore.name;
     this.version = this.package.version;
 
-    this.builtIn = HIDDEN_BUILT_IN_PLUGINS.includes(folder) || BUILT_IN_PLUGINS.includes(folder);
+    this.builtIn = DEV_BUILT_IN_PLUGINS.includes(folder);
 
     this.loadFullDescription();
   }
@@ -187,7 +187,7 @@ class Plugin {
   /**
    */
   public emitSocketUpdate() {
-    io?.to(`${ESocketRoom.plugin}#${this.id}`).emit("plugin:status", {
+    io?.to(`plugin#${this.id}`).emit("plugin::status", {
       id: this.id,
       state: this.state,
       error: this.error || undefined,
@@ -200,7 +200,7 @@ class Plugin {
    */
   public emitSidebarSocketUpdate() {
     const modulesError = [...this.modules.values()].some((x) => x.error);
-    io?.to(`${ESocketRoom.plugin}#${this.id}`).emit("plugin:sidebar", {
+    io?.to(`plugin#${this.id}`).emit("plugin::sidebar", {
       id: this.id,
       state: this.state,
       error: !!this.error || modulesError || undefined,

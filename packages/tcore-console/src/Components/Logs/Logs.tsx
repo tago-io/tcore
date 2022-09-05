@@ -1,4 +1,4 @@
-import { ESocketResource, ILog, IPluginLogChannel } from "@tago-io/tcore-sdk/types";
+import { ILog, IPluginLogChannel } from "@tago-io/tcore-sdk/types";
 import { useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import qs from "qs";
@@ -141,9 +141,9 @@ function Logs() {
       setLogs((x) => [...x, params]);
     }
 
-    getSocket().on(`log::${selectedChannel}`, onLog);
+    getSocket().on("log::message", onLog);
     return () => {
-      getSocket().off(`log::${selectedChannel}`, onLog);
+      getSocket().off("log::message", onLog);
     };
   });
 
@@ -151,11 +151,11 @@ function Logs() {
    * Attaches and detaches the plugin to get the logs in realtime.
    */
   useEffect(() => {
-    getSocket().emit("attach", ESocketResource.log);
+    getSocket().emit("attach", "log", selectedChannel);
     return () => {
-      getSocket().emit("unattach", ESocketResource.log);
+      getSocket().emit("unattach", "log", selectedChannel);
     };
-  }, []);
+  }, [selectedChannel]);
 
   /**
    * Sets the query string parameters.

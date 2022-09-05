@@ -21,8 +21,6 @@ node_modules
 .settings
 newrelic_agent.log
 
-*.db
-
+*.tcore
 __build__*
-build
-build-tsc
+build*/

@@ -52,7 +52,8 @@ export const zQuery = z.object({
   amount: z
     .preprocess(preprocessNumber, z.number())
     .nullish()
-    .transform((x) => x ?? 20),
+    .transform((x) => x ?? 20)
+    .transform((x) => Math.max(x, 0)),
   fields: z
     .array(z.string())
     .nullish()

@@ -209,6 +209,7 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
   };
 
   /**
+   * Gets the ideal amount of rows to be rendered.
    */
   const getIdealAmountOfRows = () => {
     const node = rowsNode.current as HTMLDivElement;
@@ -216,7 +217,7 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
       const headerHeight = 60;
       const tableHeight = node.getBoundingClientRect().height - headerHeight;
       const rowHeight = 35;
-      const idealAmount = Math.floor(tableHeight / rowHeight);
+      const idealAmount = Math.max(Math.floor(tableHeight / rowHeight), 0);
       return idealAmount;
     }
     return 0;

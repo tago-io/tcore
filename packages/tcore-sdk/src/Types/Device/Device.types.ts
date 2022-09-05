@@ -7,6 +7,7 @@ import { generateResourceID } from "../../Shared/ResourceID";
 import { zTags } from "../Tag/Tag.types";
 import { zToken, TGenericID, zName, zObjectID, zQuery, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types";
 import createQueryOrderBy from "../Helpers/createQueryOrderBy";
+import preprocessNumber from "../Helpers/preprocessNumber";
 
 /**
  */
@@ -35,6 +36,10 @@ export const zDeviceParameterCreate = zDeviceParameter.omit({ id: true }).transf
   id: generateResourceID(),
 }));
 
+export const zDeviceChunkPeriod = z.enum(["day", "week", "month", "quarter"]);
+
+export const zDeviceChunkRetention = z.preprocess(preprocessNumber, z.number().int().min(0).max(36));
+
 /**
  * Base configuration of a device.
  */
@@ -43,6 +48,7 @@ export const zDevice = z.object({
   created_at: z.date(),
   id: zObjectID,
   inspected_at: z.date().nullish(),
+  last_retention: z.date().nullish(),
   last_input: z.date().nullish(),
   last_output: z.date().nullish(),
   name: zName,
@@ -50,6 +56,8 @@ export const zDevice = z.object({
   tags: zTags,
   encoder_stack: z.array(z.string()).nullish(),
   updated_at: z.date().nullish(),
+  chunk_period: zDeviceChunkPeriod.nullish(),
+  chunk_retention: zDeviceChunkRetention.nullish(),
   data_retention: z.string().nullish(),
   type: zDeviceType.nullish(),
 });
@@ -65,19 +73,20 @@ export const zDeviceCreate = zDevice
     last_input: true,
     last_output: true,
     updated_at: true,
+    data_retention: true,
   })
   .extend({
     active: zActiveAutoGen,
     tags: zTagsAutoGen,
-    data_retention: z
-      .string()
-      .nullish()
-      .transform((x) => x || "forever"),
-    type: zDevice.shape.type.transform((x) => x || "immutable"),
+    chunk_period: zDeviceChunkPeriod.optional(),
+    chunk_retention: zDeviceChunkRetention.optional(),
+    type: zDeviceType.nullish().transform((x) => x || "immutable"),
   })
   .transform((x) =>
     removeNullValues({
       ...x,
+      chunk_period: x.type !== "immutable" ? undefined : x.chunk_period,
+      chunk_retention: x.type !== "immutable" ? undefined : x.chunk_retention,
       created_at: new Date(),
       id: generateResourceID(),
     })
@@ -90,11 +99,12 @@ export const zDeviceEdit = zDevice
   .omit({
     created_at: true,
     id: true,
+    chunk_period: true,
+    data_retention: true,
   })
   .extend({
     active: zDevice.shape.active.nullish(),
     tags: zDevice.shape.tags.nullish(),
-    data_retention: z.string(),
   })
   .partial();
 
@@ -173,7 +183,8 @@ const zDeviceListQueryField = z.enum([
   "name",
   "active",
   "payload_parser",
-  "data_retention",
+  "chunk_period",
+  "chunk_retention",
   "type",
   "last_output",
   "last_input",
@@ -196,6 +207,8 @@ export const zDeviceListQuery = zQuery.extend({
         tags: zTags,
         name: z.string(),
         active: z.preprocess(preprocessBoolean, z.boolean()),
+        type: zDeviceType,
+        last_retention: z.date(),
       })
       .partial()
       .nullish()
@@ -211,6 +224,13 @@ export const zDeviceListQuery = zQuery.extend({
       return values;
     }),
   orderBy: createQueryOrderBy(zDeviceListQueryField),
+});
+
+/**
+ * Configuration to apply the data retention of devices.
+ */
+export const zDeviceApplyDataRetentionQuery = z.object({
+  date: z.date(),
 });
 
 /**
@@ -240,3 +260,5 @@ export type IDeviceTokenCreateResponse = z.infer<typeof zDeviceTokenCreateRespon
 export type IDeviceTokenList = z.input<typeof zDeviceTokenList>;
 export type IDeviceTokenListQuery = z.input<typeof zDeviceTokenListQuery>;
 export type TDeviceType = z.input<typeof zDeviceType>;
+export type IDeviceApplyDataRetentionQuery = z.input<typeof zDeviceApplyDataRetentionQuery>;
+export type IDeviceChunkPeriod = z.input<typeof zDeviceChunkPeriod>;

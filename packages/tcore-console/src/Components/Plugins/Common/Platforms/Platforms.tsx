@@ -43,6 +43,14 @@ function Platforms(props: IPlatformsProps) {
       title = "Linux ARMV7";
       icon = EIcon.linux;
       description = "Runs on Linux ARMV7.";
+    } else if (item === "alpine-arm64") {
+      title = "Alpine ARM64";
+      icon = EIcon.alpine;
+      description = "Runs on alpine ARM64.";
+    } else if (item === "alpine-x64") {
+      title = "Alpine x64";
+      icon = EIcon.alpine;
+      description = "Runs on alpine x64.";
     } else if (item === "any") {
       title = "Any";
       icon = EIcon.desktop;

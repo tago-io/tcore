@@ -1,4 +1,3 @@
-import path from "path";
 import fs from "fs";
 import { listPluginFolders } from "../Services/Plugins";
 import { oraLog, oraLogError } from "../Helpers/log";
@@ -8,14 +7,10 @@ import { generatePluginID } from "./PluginID";
 import { getPluginPackageJSON } from "./PluginPackage";
 
 /**
- * List of plugins paths that are built-in but do not show up in the sidebar.
- */
-export const HIDDEN_BUILT_IN_PLUGINS: string[] = [path.join(__dirname, "../../../tcore-plugin-filesystem-local")];
-
-/**
  * List of plugins paths that are built-in as soon as tcore boots up.
+ * This is used for development only, and it should be empty on production builds.
  */
-export const BUILT_IN_PLUGINS: string[] = [];
+export const DEV_BUILT_IN_PLUGINS: string[] = [];
 
 /**
  * Map containing the a key with the name of a plugin and the value
@@ -49,11 +44,14 @@ export async function startPlugin(folder: string) {
  * Sorts all folders based on their priority:
  * First the main database plugin then the other plugins.
  */
-async function sortFoldersByPriority(folders: string[]): Promise<string[]> {
+export async function sortPluginFoldersByPriority(folders: string[]): Promise<string[]> {
   const settings = await getMainSettings();
   const dbModuleID = String(settings.database_plugin).split(":")?.[0];
-
-  const result: string[] = [];
+  const plugins: { [key: string]: string[] } = {
+    highest: [],
+    databases: [],
+    others: [],
+  };
 
   for (const folder of folders) {
     const pkg = await getPluginPackageJSON(folder);
@@ -62,16 +60,25 @@ async function sortFoldersByPriority(folders: string[]): Promise<string[]> {
     }
 
     const id = generatePluginID(pkg.name);
+    const isHighest = pkg?.tcore?.priority === "highest";
     const isDatabase = dbModuleID === id || pkg?.tcore?.types?.includes("database");
 
-    if (isDatabase) {
-      // main database plugin gets priority over other plugins
-      result.unshift(folder);
+    if (isHighest) {
+      // plugin has request highest priority to start
+      plugins.highest.push(folder);
+    } else if (isDatabase) {
+      // database plugins gets some priority over other plugins
+      plugins.databases.push(folder);
     } else {
       // common plugin, not database
-      result.push(folder);
+      plugins.others.push(folder);
     }
   }
+
+  const result: string[] = [];
+  result.push(...plugins.highest);
+  result.push(...plugins.databases);
+  result.push(...plugins.others);
 
   return result;
 }
@@ -81,7 +88,7 @@ async function sortFoldersByPriority(folders: string[]): Promise<string[]> {
  * If there is an error, it will be logged to the terminal.
  * If no errors are present in the plugin, it will say that the plugin is good to go.
  */
-async function startPluginAndHandleErrors(folder: string) {
+export async function startPluginAndHandleErrors(folder: string) {
   try {
     const plugin = await startPlugin(folder);
 
@@ -119,7 +126,7 @@ async function startPluginAndHandleErrors(folder: string) {
  */
 export async function startAllPlugins() {
   const folders = await listPluginFolders();
-  const sorted = await sortFoldersByPriority(folders);
+  const sorted = await sortPluginFoldersByPriority(folders);
 
   for (const folder of sorted) {
     if (fs.existsSync(folder)) {

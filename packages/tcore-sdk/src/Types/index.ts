@@ -1,5 +1,5 @@
 export * from "./Action/Action.types";
-export * from "./Analysis.types";
+export * from "./Analysis/Analysis.types";
 export * from "./DeviceData/DeviceData.types";
 export * from "./Common/Common.types";
 export * from "./Connector.types";

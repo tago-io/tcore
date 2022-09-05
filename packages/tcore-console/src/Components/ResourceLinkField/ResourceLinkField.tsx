@@ -20,8 +20,8 @@ function ResourceLinkField(props: IResourceLinkFieldProps) {
     <Style.Container>
       <Input readOnly value={name} />
 
-      <Tooltip text={`Open ${type} page in another tab`}>
-        <Link target="_blank" to={link}>
+      <Tooltip text={`Open ${type} page`}>
+        <Link to={link}>
           <Button type={EButton.icon}>
             <Icon icon={icon} size="15px" />
           </Button>
