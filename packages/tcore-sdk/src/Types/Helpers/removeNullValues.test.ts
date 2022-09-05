@@ -16,7 +16,6 @@ describe("removeNullValues", () => {
   test("removes undefined value", () => {
     const data = { key: undefined };
     const process = removeNullValues(data);
-    console.log(process);
     expect(process).toStrictEqual({});
   });
 });
