@@ -1,6 +1,6 @@
 {
   "name": "@tago-io/tcore-api",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "private": true,
   "description": "TCore API",
   "author": "Tago LLC",
@@ -11,7 +11,6 @@
     "url": "https://github.com/tago-io/tcore"
   },
   "scripts": {
-    "clean": "rm -rf node_modules; rm -rf package-lock.json",
     "build": "rm -rf ./build; tsc",
     "linter": "eslint .",
     "test": "TZ=UTC jest --detectOpenHandles",

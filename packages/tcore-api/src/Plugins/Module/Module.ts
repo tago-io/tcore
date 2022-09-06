@@ -4,6 +4,7 @@ import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { io } from "../../Socket/SocketServer";
 import { getPluginSettings } from "../../Services/Settings/Settings";
 import Plugin from "../Plugin/Plugin";
+import { checkMainDatabaseModuleHook } from "../../Services/Plugins";
 
 /**
  * Class that manages a single module of a plugin.
@@ -85,6 +86,10 @@ class Module {
       this.error = null;
       this.state = "started";
       this.plugin.emitSidebarSocketUpdate();
+
+      if (this.setup.type === "database") {
+        checkMainDatabaseModuleHook();
+      }
     } catch (ex: any) {
       this.error = ex?.message || String(ex);
       this.state = "stopped";

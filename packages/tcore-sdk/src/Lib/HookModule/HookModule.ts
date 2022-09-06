@@ -14,7 +14,16 @@ class HookModule extends TCoreModule {
    * Called after the data sent by a device is inserted into the bucket.
    */
   public async onAfterInsertDeviceData(deviceID: TGenericID, data: IDeviceData[]): Promise<void> {
-    throw new Error("Method not implemented");
+    // not implemented
+  }
+
+  /**
+   * Called when the main database module is loaded. This will be called
+   * whenever the database module calls its `onLoad` function successfully, which
+   * means that this hook may be called multiple times.
+   */
+  public async onMainDatabaseModuleLoaded(): Promise<void> {
+    // not implemented
   }
 }
 

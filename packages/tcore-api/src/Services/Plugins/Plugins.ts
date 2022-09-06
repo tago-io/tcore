@@ -85,14 +85,7 @@ export async function listPluginFolders(): Promise<string[]> {
     }
   }
 
-  for (const item of BUILT_IN_PLUGINS) {
-    const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
-    if (hasPackage && !plugins.includes(item)) {
-      plugins.unshift(item);
-    }
-  }
-
-  for (const item of HIDDEN_BUILT_IN_PLUGINS) {
+  for (const item of DEV_BUILT_IN_PLUGINS || []) {
     const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
     if (hasPackage && !plugins.includes(item)) {
       plugins.unshift(item);
@@ -194,6 +187,24 @@ export async function showModuleMessage(pluginID: string, moduleID: string, mess
   }
 }
 
+/**
+ * Checks if we should trigger the `onMainDatabaseModuleLoaded` hook, and if
+ * we should, we trigger it.
+ */
+export async function checkMainDatabaseModuleHook() {
+  const mainSettings = await getMainSettings();
+  const split = String(mainSettings.database_plugin).split(":");
+  const plugin = plugins.get(split[0]);
+  const module = plugin?.modules?.get(split[1]);
+  const mainDatabaseIsLoaded = mainSettings.database_plugin && plugin && module?.state === "started";
+  if (mainDatabaseIsLoaded) {
+    triggerHooks("onMainDatabaseModuleLoaded");
+  }
+}
+
+/**
+ * Hides a message from a module in the plugin's configuration.
+ */
 export async function hideModuleMessage(pluginID: string, moduleID: string) {
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);

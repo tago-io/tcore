@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import semver from "semver";
 import { ISettings } from "@tago-io/tcore-sdk/types";
-import { SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared/src";
+import { getSystemName, SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared/src";
+import ora from "ora";
+import chalk from "chalk";
 import { extractTar } from "../../Helpers/Tar/Tar";
 import { getMainSettings, setMainSettings } from "../Settings/Settings";
 import { getVersion } from "../System/System";
@@ -27,8 +29,16 @@ export async function runVersionMigration() {
     return;
   }
 
+  const version = getVersion();
+  const name = getSystemName();
+  const spinner = ora(`Configuring version ${version} of ${name}`).start();
+
   try {
     await extractBuiltInPlugins(settings).catch(() => null);
+    spinner.succeed(`Configured version ${chalk.green(version)} of ${chalk.green(name)}!`);
+  } catch (ex: any) {
+    const err = ex?.message || ex?.toString?.() || ex;
+    spinner.fail(`Could not configure version ${version}: ${chalk.redBright(err)}`);
   } finally {
     await updateSettingsVersion(settings);
   }

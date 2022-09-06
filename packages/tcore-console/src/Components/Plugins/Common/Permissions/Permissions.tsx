@@ -35,6 +35,10 @@ function Permissions(props: IPermissionsProps) {
       title = "Analyses";
       icon = EIcon.code;
       description = "Create, modify, and delete analyses.";
+    } else if (perm === "plugin") {
+      title = "Plugins";
+      icon = EIcon["puzzle-piece"];
+      description = "Install, modify, and uninstall plugins.";
     } else if (perm === "bucket-data" || perm === "device-data") {
       title = "Device data";
       icon = EIcon.cube;
