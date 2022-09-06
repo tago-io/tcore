@@ -43,7 +43,7 @@ function fixDuration(duration: string) {
 
 /**
  */
-export function parseRelativeDate(expire_time, bool_minus, date = new Date()) {
+export function parseRelativeDate(expire_time: any, bool_minus: any, date = new Date()) {
   if (!expire_time) {
     return;
   }
