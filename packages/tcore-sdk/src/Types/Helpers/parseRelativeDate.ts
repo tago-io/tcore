@@ -13,7 +13,7 @@ export function convertDateToISO(date: Date | string, timezone?: string) {
 
 /**
  */
-const durationLabelsStandard = {
+const durationLabelsStandard: any = {
   S: "millisecond",
   SS: "milliseconds",
   s: "second",

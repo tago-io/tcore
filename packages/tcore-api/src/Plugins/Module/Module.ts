@@ -4,7 +4,7 @@ import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { io } from "../../Socket/SocketServer";
 import { getPluginSettings } from "../../Services/Settings/Settings";
 import Plugin from "../Plugin/Plugin";
-import { checkMainDatabaseModuleHook } from "../../Services/Plugins";
+import { checkMainDatabaseModuleHook } from "../../Services/Plugins/Plugins";
 
 /**
  * Class that manages a single module of a plugin.

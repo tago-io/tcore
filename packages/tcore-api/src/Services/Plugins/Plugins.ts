@@ -1,10 +1,10 @@
 import fs from "fs";
 import path from "path";
-import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
+import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, TModuleState } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared/src";
 import semver from "semver";
 import Module from "../../Plugins/Module/Module";
-import { BUILT_IN_PLUGINS, HIDDEN_BUILT_IN_PLUGINS, plugins } from "../../Plugins/Host";
+import { DEV_BUILT_IN_PLUGINS, plugins } from "../../Plugins/Host";
 import Plugin from "../../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "../Settings/Settings";
 import { getVersion } from "../System/System";
@@ -326,7 +326,7 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
       ...module.setup,
       error: module.error,
       message: module.message,
-      state: module.state,
+      state: module.state as TModuleState,
     };
   });
 

@@ -1,1 +1,1 @@
-module.exports = require("./src/Types");
+module.exports = require("./build/Types");

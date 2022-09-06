@@ -1,1 +1,1 @@
-export * from "./src/Types";
+export * from "./build/Types";
