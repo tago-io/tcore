@@ -11,9 +11,8 @@ describe("zLogCreate", () => {
       error: true,
     };
     const parsed = zLogCreate.parse(data);
-    expect(parsed.timestamp).toEqual(timestamp);
     expect(parsed.message).toEqual("message");
-    expect(parsed.error).toEqual("true");
+    expect(parsed.error).toEqual(true);
   });
 
   test("assure correct type", () => {

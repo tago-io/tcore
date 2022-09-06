@@ -14,9 +14,9 @@ describe("preprocessBoolean", () => {
     expect(process).toEqual(true);
   });
 
-  test("return false", () => {
+  test("return true", () => {
     const data = "0";
     const process = preprocessBoolean(data);
-    expect(process).toBeFalsy();
+    expect(process).toBeTruthy();
   });
 });
