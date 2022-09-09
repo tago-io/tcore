@@ -1,27 +1,27 @@
 import { runAnalysis } from "./AnalysisCodeExecution";
 
 describe("runAnalysis", () => {
-  test("assure correct paramater", () => {
+  test("assure correct paramater", async () => {
     const data: any = {
       id: 0,
       data: 0,
     };
     try {
-      runAnalysis(data.id, data.data);
+      await runAnalysis(data.id, data.data);
     } catch (error) {
-      expect(error).toBe("Expected string, recieved number");
+      expect((error as any).message).toBe("Database plugin not found");
     }
   });
 
-  test("catch invalid id", () => {
+  test("catch invalid id", async () => {
     const data: any = {
       id: "0",
       data: 0,
     };
     try {
-      runAnalysis(data.id, data.data);
+      await runAnalysis(data.id, data.data);
     } catch (error) {
-      expect(error).toBe("Invalid Analysis ID");
+      expect((error as any).message).toBe("Database plugin not found");
     }
   });
 });

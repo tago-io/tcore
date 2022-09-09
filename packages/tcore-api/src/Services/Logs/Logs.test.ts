@@ -1,10 +1,10 @@
 import { getLogChannelInfo, getLogChannelList } from "./Logs";
 
 describe("getLogChannelInfo", () => {
-  test("assure correct type", () => {
+  test("assure correct type", async () => {
     const data = "string";
-    const parsed = getLogChannelInfo(data);
-    expect(parsed).toBeInstanceOf(Map);
+    const parsed = await getLogChannelInfo(data);
+    expect(parsed).toBeInstanceOf(Array);
   });
 
   test("catch incorrect type", () => {
@@ -18,8 +18,8 @@ describe("getLogChannelInfo", () => {
 });
 
 describe("getLogChannelList", () => {
-  test("expect correct type", () => {
-    const data = getLogChannelList();
+  test("expect correct type", async () => {
+    const data = await getLogChannelList();
     expect(data).toBeInstanceOf(Array);
     expect(data[0]).toBeInstanceOf(Object);
   });

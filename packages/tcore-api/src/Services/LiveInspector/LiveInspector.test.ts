@@ -8,7 +8,7 @@ describe("canLiveInspectorBeActivated", () => {
     try {
       canLiveInspectorBeActivated(data as any);
     } catch (error) {
-      expect(error).toBe("Required");
+      expect(error).toBe("Invalid Device ID");
     }
   });
   test("assure correct return", () => {
@@ -25,7 +25,7 @@ describe("canLiveInspectorBeActivated", () => {
       ],
     };
     const parsed = canLiveInspectorBeActivated(data);
-    expect(parsed).toBeInstanceOf(Boolean);
+    expect(parsed).toBeFalsy();
   });
 });
 
@@ -37,22 +37,22 @@ describe("getLiveInspectorID", () => {
     try {
       getLiveInspectorID(data as any);
     } catch (error) {
-      expect(error).toBe("Required");
+      expect(error).toBe("Invalid Device ID");
     }
   });
 });
 
 describe("emitToLiveInspectorViaPlugin", () => {
-  test("assure correct paramater", () => {
+  test("assure invalid device", async () => {
     const data: any = {
       pluginID: 0,
       deviceID: 0,
       msg: 0,
     };
     try {
-      emitToLiveInspectorViaPlugin(data.pluginID, data.deviceID, data.msg);
+      await emitToLiveInspectorViaPlugin(data.pluginID, data.deviceID, data.msg);
     } catch (error) {
-      expect(error).toBe("Expected string, recieved number");
+      expect((error as any).message).toContain("Invalid Device ID");
     }
   });
 });

@@ -1,8 +1,11 @@
 import { getSummary } from "./Summary";
 
 describe("getSummary", () => {
-  test("expect correct type", () => {
-    const parsed = getSummary();
-    expect(parsed).toBeInstanceOf(Object);
+  test("check inexistent plugin", async () => {
+    try {
+      await getSummary();
+    } catch (error) {
+      expect((error as any).message).toBe("Database plugin not found");
+    }
   });
 });

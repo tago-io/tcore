@@ -2,38 +2,50 @@
 import { validateAnalysisID, addAnalysisLog, getAnalysisLogs, getAnalysisList } from "./Analysis";
 
 describe("validateAnalysisID", () => {
-  test("check invalid id", () => {
+  test("check invalid id", async () => {
     const data = " ";
-    const parsed = validateAnalysisID(data);
-    expect(parsed).toBe("Invalid Analysis ID");
+    try {
+      await validateAnalysisID(data);
+    } catch (error) {
+      expect((error as any).message).toBe("Database plugin not found");
+    }
   });
 });
 
 describe("addAnalysisLog", () => {
-  test("assure correct type", () => {
+  test("assure invalid connection", async () => {
     const data1 = "string";
     const data2 = {
       timestamp: new Date(),
       message: "string",
       error: false,
     };
-    const parsed = addAnalysisLog(data1, data2);
-    expect(parsed).toBeInstanceOf(Array);
+    try {
+      await addAnalysisLog(data1, data2);
+    } catch (error) {
+      expect((error as any).message).toBe("Database plugin not found");
+    }
   });
 });
 
 describe("getAnalysisLogs", () => {
-  test("expect correct type", () => {
+  test("assure invalid connection", async () => {
     const data = " ";
-    const parsed = getAnalysisLogs(data);
-    expect(parsed).toBeInstanceOf(Array);
+    try {
+      await getAnalysisLogs(data);
+    } catch (error) {
+      expect((error as any).message).toBe("Database plugin not found");
+    }
   });
 });
 
 describe("getAnalysisList", () => {
-  test("expect correct type", () => {
+  test("expect correct type", async () => {
     const data = {};
-    const parsed = getAnalysisList(data);
-    expect(parsed).toBeInstanceOf(Array);
+    try {
+      await getAnalysisList(data);
+    } catch (error) {
+      expect((error as any).message).toBe("Database plugin not found");
+    }
   });
 });
