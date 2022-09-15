@@ -229,6 +229,7 @@ export const zDeviceDataQuery = z.preprocess(
 const zDeviceAddDataOptions = z.object({
   rawPayload: z.any().nullish(),
   liveInspectorID: z.string().nullish(),
+  byPassQueue: z.boolean().nullish().optional(),
 });
 
 export type IDeviceAddDataOptions = z.infer<typeof zDeviceAddDataOptions>;

@@ -248,8 +248,8 @@ class Core extends APIBridge {
   /**
    * Adds a data item into a device.
    */
-  public async addDeviceData(deviceID: TGenericID, data: any): Promise<void> {
-    await this.invokeApiMethod("addDeviceData", deviceID, data);
+  public async addDeviceData(deviceID: TGenericID, data: any, options?: { forceDBInsert: boolean }): Promise<void> {
+    await this.invokeApiMethod("addDeviceData", deviceID, data, options);
   }
 
   /**

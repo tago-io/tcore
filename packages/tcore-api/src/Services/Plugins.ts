@@ -375,6 +375,27 @@ export async function getMainDatabaseModule(): Promise<Module | null> {
 }
 
 /**
+ * Finds and returns the main queue plugin.
+ */
+export async function getMainQueueModule(): Promise<Module | null> {
+  const settings = await getMainSettings();
+  const [pluginID, moduleID] = String(settings.queue_plugin).split(":");
+
+  if (pluginID && moduleID) {
+    const plugin = plugins.get(pluginID);
+    if (plugin) {
+      const module = plugin.modules.get(moduleID);
+
+      if (module?.state === "started") {
+        return module;
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
  * TODO
  */
 export async function getMainFilesystemModule(): Promise<Module | null | undefined> {

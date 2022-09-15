@@ -23,7 +23,7 @@ import { editDevice, getDeviceInfo } from "../Device";
 import { addStatistic } from "../Statistic";
 import { runPayloadParser } from "../PayloadParserCodeExecution";
 import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector";
-import { triggerHooks } from "../Plugins";
+import { getMainQueueModule, triggerHooks } from "../Plugins";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
@@ -238,24 +238,49 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
     };
   });
 
-  await invokeDatabaseFunction("addDeviceData", device.id, device.type, dbInsertItems);
+  if (options.byPassQueue) {
+    return await addDataToDatabase(device, dbInsertItems);
+  }
 
-  triggerActions(device.id, items).catch(() => null);
-  await addStatistic({ input: items.length });
-  await editDevice(device.id, { updated_at: now, last_input: now });
+  return await addDataToQueue(device, dbInsertItems);
+};
+
+export async function addDataToDatabase(device: IDevice, data: any) {
+  await invokeDatabaseFunction("addDeviceData", device.id, device.type, data);
+
+  triggerActions(device.id, data).catch(() => null);
+  await addStatistic({ input: data.length });
+  await editDevice(device.id, { last_input: new Date() });
 
   triggerHooks("onAfterInsertDeviceData", device.id, data);
 
-  return `${items.length} items added`;
-};
+  return `${data.length} items added`;
+}
+
+export async function addDataToQueue(device: IDevice, data: any) {
+  const queue = await getMainQueueModule();
+
+  if (!queue) {
+    return await addDataToDatabase(device, data);
+  }
+
+  await queue.invoke("onAddDeviceData", device.id, data);
+
+  return `${data.length} items added to queue`;
+}
 
 /**
  * Adds data into a device by device ID.
  * @param {TGenericID} deviceID ID of the device who sent the data.
  * @param {any} data Data to be inserted.
  */
-export async function addDeviceData(deviceID: TGenericID, data: any) {
+export async function addDeviceData(deviceID: TGenericID, data: any, options?: { forceDBInsert: boolean }) {
   const device = await getDeviceInfo(deviceID);
+
+  if (options?.forceDBInsert) {
+    return await addDataToDatabase(device, data);
+  }
+
   return await addDeviceDataByDevice(device, data);
 }
 

@@ -2,6 +2,7 @@ import ActionTypeModule from "./ActionTypeModule/ActionTypeModule";
 import ActionTriggerModule from "./ActionTriggerModule/ActionTriggerModule";
 import core from "./Core/Core";
 import DatabaseModule from "./DatabaseModule/DatabaseModule";
+import QueueModule from "./QueueModule/QueueModule";
 import helpers from "./Helpers/Helpers";
 import PayloadEncoderModule from "./PayloadEncoderModule/PayloadEncoderModule";
 import pluginStorage from "./PluginStorage/PluginStorage";
@@ -15,6 +16,7 @@ export {
   ActionTypeModule,
   core,
   DatabaseModule,
+  QueueModule,
   FileSystemModule,
   helpers,
   HookModule,
