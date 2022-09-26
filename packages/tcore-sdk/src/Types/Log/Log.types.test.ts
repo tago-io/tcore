@@ -29,14 +29,14 @@ describe("zLogCreate", () => {
     }
   });
 
-  test("date as null", () => {
+  test("assign date type", () => {
     const data = {
       timestamp: null,
       message: "message",
       error: true,
     };
     const parsed = zLogCreate.parse(data);
-    expect(parsed.timestamp).toBeNull;
+    expect(typeof parsed.timestamp).toBe("object");
   });
 
   test("fail if required field is missing", () => {

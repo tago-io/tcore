@@ -11,7 +11,7 @@ describe("zLiveInspectorConnectionID", () => {
   test("accepts null", () => {
     const data = null;
     const parsed = zLiveInspectorConnectionID.parse(data);
-    expect(parsed).toBeNull;
+    expect(parsed).toBeNull();
   });
 });
 

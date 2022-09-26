@@ -121,7 +121,7 @@ describe("zComputerUsage", () => {
       title: "title",
     };
     const parsed = zComputerUsage.parse(data);
-    expect(parsed.description).toBeUndefined;
-    expect(parsed.detail).toBeUndefined;
+    expect(parsed.description).toBeUndefined();
+    expect(parsed.detail).toBeUndefined();
   });
 });

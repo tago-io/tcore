@@ -67,7 +67,7 @@ describe("zAccountListQuery", () => {
       fields: [],
     };
     const parsed = zAccountListQuery.parse(data);
-    expect(parsed.fields).toBeNull;
+    expect(parsed.fields).toContain("id");
   });
 });
 
@@ -91,7 +91,7 @@ describe("zAccountCreate", () => {
     const parsed = zAccountCreate.parse(data);
     expect(parsed.created_at).toBeInstanceOf(Date);
     expect(parsed.id).toEqual(expect.any(String));
-    expect(parsed.password_hint).toBeNull;
+    expect(parsed.password_hint).toBeUndefined();
   });
 });
 
