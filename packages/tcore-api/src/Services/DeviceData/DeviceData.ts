@@ -168,6 +168,72 @@ function isImmutableTimeOutOfRange(time: Date, period: IDeviceChunkPeriod, reten
 }
 
 /**
+ * Validates the amount of mutable data points.
+ * Throws an error if something is wrong.
+ */
+async function validateMutableDataAmount(device: IDevice) {
+  if (device.type === "mutable") {
+    const amount = await getDeviceDataAmount(device.id);
+    if (amount >= LIMIT_DATA_ON_MUTABLE) {
+      throw new Error(`The device has reached the limit of ${LIMIT_DATA_ON_MUTABLE} data registers`);
+    }
+  }
+}
+
+/**
+ * Validates the time range for immutable data points.
+ * Throws an error if something is wrong.
+ */
+async function validateImmutableTimeRange(device: IDevice, items: any) {
+  for (const item of items) {
+    if (device.type === "immutable" && device.chunk_period) {
+      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention || 0);
+
+      if (!outOfRage.isOk) {
+        const title = `Time must be between ${outOfRage.startDate} and ${outOfRage.endDate}`;
+        throw new Error(title);
+      }
+    }
+  }
+}
+
+/**
+ * Apply the Zod formatting capability on the data items, and also makes sure that
+ * their format respects the latest tago format.
+ */
+async function applyZodDeviceData(items: any) {
+  items = await z.array(zDeviceDataCreate).parseAsync([items].flat());
+
+  const group = generateResourceID().split("").reverse().join("");
+  const now = new Date();
+
+  for (const item of items) {
+    item.group = item.group ?? item.serie ?? group;
+    item.time = item.time || now;
+    item.type = typeof item.value;
+    item.created_at = now;
+    delete item.serie;
+  }
+
+  return items;
+}
+
+/**
+ * Formats the timestamp for the chunks of the data.
+ */
+async function formatChunkTimestamp(device: IDevice, data: any) {
+  // map the items to insert into database
+  return data.map((x: IDeviceDataCreate) => {
+    const chunkTimestamp = getChunkTimestamp(x.time as Date, device);
+    return {
+      ...x,
+      chunk_timestamp_start: chunkTimestamp?.startDate,
+      chunk_timestamp_end: chunkTimestamp?.endDate,
+    };
+  });
+}
+
+/**
  * Adds data into a device by an actual device object.
  * @param {IDevice} device Device object who sent the data.
  * @param {any} data Data to be inserted.
@@ -191,73 +257,48 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
     options.rawPayload = data;
   }
 
-  if (device.type === "mutable") {
-    const amount = await getDeviceDataAmount(device.id);
-    if (amount >= LIMIT_DATA_ON_MUTABLE) {
-      throw new Error(`The device has reached the limit of ${LIMIT_DATA_ON_MUTABLE} data registers`);
-    }
-  }
+  await validateMutableDataAmount(device);
 
   let items: any = data;
   items = await applyPayloadEncoder(device, items, options);
   items = await runPayloadParser(device, items, options);
   items = await z.array(zDeviceDataCreate).parseAsync([items].flat());
 
-  for (const item of items) {
-    if (device.type === "immutable" && device.chunk_period) {
-      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention || 0);
-
-      if (!outOfRage.isOk) {
-        const title = `Time must be between ${outOfRage.startDate} and ${outOfRage.endDate}`;
-        await emitToLiveInspector(device, { title, content: item }, options.liveInspectorID);
-        throw new Error(title);
-      }
-    }
-  }
+  await validateImmutableTimeRange(device, items);
 
   await emitToLiveInspector(device, { title: "Raw Payload", content: data }, options.liveInspectorID);
 
-  const group = generateResourceID().split("").reverse().join("");
-  const now = new Date();
+  items = await applyZodDeviceData(items);
+  items = await formatChunkTimestamp(device, items);
 
-  for (const item of items) {
-    item.group = item.group ?? item.serie ?? group;
-    item.time = item.time || now;
-    item.type = typeof item.value;
-    item.created_at = now;
-    delete item.serie;
-  }
-
-  // map the items to insert into database
-  const dbInsertItems = items.map((x: IDeviceDataCreate) => {
-    const chunkTimestamp = getChunkTimestamp(x.time as Date, device);
-    return {
-      ...x,
-      chunk_timestamp_start: chunkTimestamp?.startDate,
-      chunk_timestamp_end: chunkTimestamp?.endDate,
-    };
-  });
-
-  if (options.byPassQueue) {
-    return await addDataToDatabase(device, dbInsertItems);
-  }
-
-  return await addDataToQueue(device, dbInsertItems);
+  return await addDataToQueue(device, items);
 };
 
-export async function addDataToDatabase(device: IDevice, data: any) {
-  await invokeDatabaseFunction("addDeviceData", device.id, device.type, data);
+/**
+ * Adds the data point directly into the database.
+ */
+async function addDataToDatabase(device: IDevice, data: any) {
+  let items: any = await z.array(zDeviceDataCreate).parseAsync([data].flat());
+  await validateMutableDataAmount(device);
+  await validateImmutableTimeRange(device, items);
+  items = await applyZodDeviceData(items);
+  items = await formatChunkTimestamp(device, items);
 
-  triggerActions(device.id, data).catch(() => null);
-  await addStatistic({ input: data.length });
+  await invokeDatabaseFunction("addDeviceData", device.id, device.type, items);
+
+  triggerActions(device.id, items).catch(() => null);
+  await addStatistic({ input: items.length });
   await editDevice(device.id, { last_input: new Date() });
 
-  triggerHooks("onAfterInsertDeviceData", device.id, data);
+  triggerHooks("onAfterInsertDeviceData", device.id, items);
 
-  return `${data.length} items added`;
+  return `${items.length} items added`;
 }
 
-export async function addDataToQueue(device: IDevice, data: any) {
+/**
+ * Adds the data point to the queue.
+ */
+async function addDataToQueue(device: IDevice, data: any) {
   const queue = await getMainQueueModule();
 
   if (!queue) {
