@@ -88,6 +88,14 @@ export async function deleteAnalysis(id: TGenericID): Promise<void> {
 }
 
 /**
+ * Deletes all logs of an analysis.
+ */
+export async function deleteAnalysisLogs(id: TGenericID): Promise<void> {
+  await validateAnalysisID(id);
+  await invokeDatabaseFunction("deleteAnalysisLogs", id);
+}
+
+/**
  * Creates a new analysis.
  */
 export async function createAnalysis(analysis: IAnalysisCreate): Promise<TGenericID> {

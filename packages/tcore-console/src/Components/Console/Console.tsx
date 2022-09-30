@@ -42,11 +42,11 @@ function Console(props: IConsoleProps) {
   /**
    * Renders a single line.
    */
-  const renderLog = (item: any) => {
+  const renderLog = (item: any, index: number) => {
     const format = showDate ? "yyyy-LL-dd HH:mm:ss.SSS" : "HH:mm:ss.SSS";
     const date = getDateTimeObject(item.timestamp)?.toFormat(format);
     return (
-      <Style.Row error={item.error} key={item.timestamp + item.message}>
+      <Style.Row error={item.error} key={item.timestamp + item.message + index}>
         <b className="date">[{date}]: </b>
         <span>{item.message}</span>
       </Style.Row>

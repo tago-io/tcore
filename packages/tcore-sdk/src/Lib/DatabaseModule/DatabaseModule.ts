@@ -417,6 +417,13 @@ class DatabaseModule extends TCoreModule {
   }
 
   /**
+   * Deletes all logs of an analysis.
+   */
+  public async deleteAnalysisLogs(analysisID: TGenericID): Promise<void> {
+    throw new Error("Method not implemented");
+  }
+
+  /**
    * Creates a new analysis.
    */
   public async createAnalysis(data: IDatabaseCreateAnalysisData): Promise<void> {

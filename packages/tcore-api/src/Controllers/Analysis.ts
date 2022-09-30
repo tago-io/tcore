@@ -9,7 +9,14 @@ import {
   zAnalysisEdit,
 } from "@tago-io/tcore-sdk/types";
 import { runAnalysis } from "../Services/AnalysisCodeExecution";
-import { createAnalysis, deleteAnalysis, editAnalysis, getAnalysisInfo, getAnalysisList } from "../Services/Analysis";
+import {
+  createAnalysis,
+  deleteAnalysis,
+  deleteAnalysisLogs,
+  editAnalysis,
+  getAnalysisInfo,
+  getAnalysisList,
+} from "../Services/Analysis";
 import APIController, { ISetupController, warm } from "./APIController";
 
 /**
@@ -64,6 +71,20 @@ class DeleteAnalysis extends APIController<void, void, z.infer<typeof zURLParams
 }
 
 /**
+ * Deletes all logs of an analysis.
+ */
+class DeleteAnalysisLogs extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "write", resource: "account" }],
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    await deleteAnalysisLogs(this.urlParams.id);
+  }
+}
+
+/**
  * Runs a single analysis.
  */
 class RunAnalysis extends APIController<any, void, z.infer<typeof zURLParamsID>> {
@@ -112,6 +133,7 @@ class CreateAnalysis extends APIController<IAnalysisCreate, void, void> {
  * Exports the routes of the analysis.
  */
 export default (app: Application) => {
+  app.delete("/analysis/:id/log", warm(DeleteAnalysisLogs));
   app.delete("/analysis/:id", warm(DeleteAnalysis));
   app.get("/analysis/:id/run", warm(RunAnalysis));
   app.post("/analysis/:id/run", warm(RunAnalysis));
