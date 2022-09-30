@@ -245,10 +245,15 @@ test("addDeviceData", async () => {
     value: 10,
   });
   expect(response).toEqual(undefined);
-  expect(fn).toHaveBeenCalledWith("addDeviceData", "61261ef1f87480ff318b7bcb", {
-    variable: "temperature",
-    value: 10,
-  });
+  expect(fn).toHaveBeenCalledWith(
+    "addDeviceData",
+    "61261ef1f87480ff318b7bcb",
+    {
+      variable: "temperature",
+      value: 10,
+    },
+    undefined
+  );
 });
 
 test("getDeviceData works without query", async () => {

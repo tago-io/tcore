@@ -5,6 +5,7 @@ import { z } from "zod";
  */
 export const zSettings = z.object({
   database_plugin: z.string().optional(),
+  queue_plugin: z.string().optional(),
   filesystem_plugin: z.string().optional(),
   plugin_folder: z.string(),
   master_password: z.string().optional(),

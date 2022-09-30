@@ -200,7 +200,6 @@ describe("addDeviceDataByDevice", () => {
     const arg1 = mock.mock.calls[0][0];
     const arg2 = mock.mock.calls[0][1];
     expect(arg1).toEqual(activeDevice.id);
-    expect(arg2.updated_at).toBeInstanceOf(Date);
     expect(arg2.last_input).toBeInstanceOf(Date);
   });
 

@@ -44,6 +44,7 @@ interface IGeneralInformationTabProps {
 function GeneralInformationTab(props: IGeneralInformationTabProps) {
   const [resetting, setResetting] = useState(false);
   const { data: databaseList } = useApiRequest<any[]>("/module?type=database");
+  const { data: queueList } = useApiRequest<any[]>("/module?type=queue");
   const { data: filesystemList } = useApiRequest<any[]>("/module?type=filesystem");
   const { data, metadata, errors } = props;
 
@@ -53,6 +54,17 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
   const getDatabaseOptions = () => {
     const options: ISelectOption[] = [{ label: "Default (first one loaded)", value: "" }];
     for (const item of databaseList || []) {
+      options.push({ label: item.setupName, value: `${item.pluginID}:${item.setupID}` });
+    }
+    return options;
+  };
+
+  /**
+   * Gets a list of database options based on the backend list.
+   */
+  const getQueueOptions = () => {
+    const options: ISelectOption[] = [{ label: "None", value: "" }];
+    for (const item of queueList || []) {
       options.push({ label: item.setupName, value: `${item.pluginID}:${item.setupID}` });
     }
     return options;
@@ -155,6 +167,21 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
               errorMessage="This field is required"
               options={getDatabaseOptions()}
               disabled
+            />
+          </FormGroup>
+
+          <FormGroup
+            tooltip={`The plugin that will be used as the main queue for ${getSystemName()}.`}
+            icon={EIcon.list}
+            label="Queue plugin"
+          >
+            <Select
+              onChange={(e) => props.onChange("queue_plugin", e.target.value)}
+              placeholder="Select the default queue plugin"
+              value={data.queue_plugin}
+              error={errors?.queue_plugin}
+              options={getQueueOptions()}
+              disabled={!queueList?.length}
             />
           </FormGroup>
 

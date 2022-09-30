@@ -48,6 +48,7 @@ function InstallLocalPluginButton() {
    */
   const deactivateModalInstall = useCallback(() => {
     setModalInstall(false);
+    window.location.reload();
   }, []);
 
   return (
