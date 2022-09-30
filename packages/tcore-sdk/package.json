@@ -1,6 +1,6 @@
 {
   "name": "@tago-io/tcore-sdk",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": false,
   "main": "./build/Lib/index.js",
   "description": "TCore SDK for creating plugins",
