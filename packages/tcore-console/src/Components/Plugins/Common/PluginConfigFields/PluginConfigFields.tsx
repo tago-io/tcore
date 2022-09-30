@@ -112,7 +112,7 @@ function PluginConfigFields(props: IPluginConfigFieldsProps) {
         onWheel={(e) => (e.target as HTMLInputElement).blur()} // annoying scroll
         placeholder={field.placeholder || ""}
         type="number"
-        value={values[field.field] ?? ""}
+        value={values[field.field] || ""}
         min={typeof field.min === "number" ? field.min : undefined}
         max={typeof field.max === "number" ? field.max : undefined}
       />
