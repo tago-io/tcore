@@ -4,7 +4,7 @@ import preprocessObject from "../Helpers/preprocessObject";
 import preprocessBoolean from "../Helpers/preprocessBoolean";
 import removeNullValues from "../Helpers/removeNullValues";
 import { generateResourceID } from "../../Shared/ResourceID";
-import { zTags } from "../Tag.types";
+import { zTags } from "../Tag/Tag.types";
 import { zToken, TGenericID, zName, zObjectID, zQuery, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types";
 import createQueryOrderBy from "../Helpers/createQueryOrderBy";
 import preprocessNumber from "../Helpers/preprocessNumber";
