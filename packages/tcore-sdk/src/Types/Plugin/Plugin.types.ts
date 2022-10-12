@@ -24,6 +24,7 @@ export const zPluginType = z.enum([
   "action-trigger",
   "action-type",
   "database",
+  "queue",
   "decoder",
   "encoder",
   "filesystem",

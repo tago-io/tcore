@@ -1,5 +1,5 @@
 import { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import downloadFile from "../../../../Helpers/download";
 import getDateTimeObject from "../../../../Helpers/getDateTimeObject";
 import Button from "../../../Button/Button";
@@ -7,11 +7,13 @@ import { EButton } from "../../../Button/Button.types";
 import Console from "../../../Console/Console";
 import FlexRow from "../../../FlexRow/FlexRow";
 import FormGroup from "../../../FormGroup/FormGroup";
+import Tooltip from "../../../Tooltip/Tooltip";
 import Icon from "../../../Icon/Icon";
 import { EIcon } from "../../../Icon/Icon.types";
 import Input from "../../../Input/Input";
 import ProgramFieldset from "../../../ProgramFieldset/ProgramFieldset";
 import AutomateTip from "../../Common/AutomateTip/AutomateTip";
+import ConsoleOptions from "../../Common/ConsoleOptions/ConsoleOptions";
 import * as Style from "./AnalysisTab.style";
 
 /**
@@ -34,25 +36,31 @@ interface IAnalysisTabProps {
    * Called when the logs are cleared.
    */
   onClearLogs: () => void;
+  /**
+   * Called when the logs are deleted.
+   */
+  onDeleteLogs: () => void;
 }
 
 /**
  * The device edit page.
  */
 function AnalysisTab(props: IAnalysisTabProps) {
-  const { data, logs, onClearLogs, onChange } = props;
+  const { data, logs, onClearLogs, onDeleteLogs, onChange } = props;
+  const [options, setOptions] = useState(false);
+  const [logsTrimmed, setLogsTrimmed] = useState(() => logs || []);
 
   /**
    * Downloads the logs in a `txt` file.
    */
   const downloadLogs = useCallback(() => {
-    const mapped = logs.map((item) => {
+    const mapped = logsTrimmed.map((item) => {
       const date = getDateTimeObject(item.timestamp)?.toFormat("yyyy-LL-dd HH:mm:ss.SSS");
       const message = String(item.message).trim();
       return `[${date}]: ${message}`;
     });
     downloadFile(mapped.join("\n"), "txt", "console");
-  }, [logs]);
+  }, [logsTrimmed]);
 
   /**
    * Renders the console header.
@@ -65,17 +73,41 @@ function AnalysisTab(props: IAnalysisTabProps) {
         </div>
 
         <FlexRow>
-          <Button type={EButton.icon} onClick={downloadLogs}>
-            <Icon size="15px" icon={EIcon.download} />
+          <Tooltip text="Download logs as a text file">
+            <Button type={EButton.icon} onClick={downloadLogs}>
+              <Icon size="15px" icon={EIcon.download} />
+            </Button>
+          </Tooltip>
+
+          <Tooltip text="Clear console">
+            <Button type={EButton.icon} onClick={onClearLogs}>
+              <Icon size="15px" icon={EIcon.ban} />
+            </Button>
+          </Tooltip>
+
+          <Button
+            className="ban-append"
+            onClick={(e) => {
+              setOptions(!options);
+              e.stopPropagation();
+            }}
+          >
+            <Icon size="15px" icon={EIcon["caret-down"]} />
           </Button>
 
-          <Button type={EButton.icon} onClick={onClearLogs}>
-            <Icon size="15px" icon={EIcon.ban} />
-          </Button>
+          <ConsoleOptions
+            visible={options}
+            onClose={() => setOptions(false)}
+            onDelete={onDeleteLogs}
+          />
         </FlexRow>
       </Style.ConsoleHeader>
     );
   };
+
+  useEffect(() => {
+    setLogsTrimmed(logs?.slice(0, 100) || []);
+  }, [logs]);
 
   return (
     <Style.Container>
@@ -103,7 +135,12 @@ function AnalysisTab(props: IAnalysisTabProps) {
 
       <div className="console">
         {renderConsoleHeader()}
-        <Console showDate data={logs} emptyMessage="No logs yet." emptyMessageIcon={EIcon.code} />
+        <Console
+          showDate
+          data={logsTrimmed}
+          emptyMessage="No logs yet."
+          emptyMessageIcon={EIcon.code}
+        />
       </div>
     </Style.Container>
   );

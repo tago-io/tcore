@@ -133,7 +133,7 @@ class Module {
     const values = moduleSettings?.values || {};
 
     const conf = this.setup.configs || [];
-    const defs = conf?.filter((x) => "defaultValue" in x && x.defaultValue);
+    const defs = conf?.filter((x) => "defaultValue" in x && x.defaultValue !== "");
     const flat = flattenConfigFields(defs);
     const defsObject = {};
 

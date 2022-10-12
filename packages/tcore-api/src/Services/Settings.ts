@@ -75,6 +75,7 @@ export async function getMainSettings(): Promise<ISettings> {
 
   const filesystem_plugin = process.env.TCORE_FILESYSTEM_PLUGIN || data.filesystem_plugin || "";
   const database_plugin = process.env.TCORE_DATABASE_PLUGIN || data.database_plugin || "";
+  const queue_plugin = process.env.TCORE_QUEUE_PLUGIN || data.queue_plugin || "";
   const settings_folder = process.env.TCORE_SETTINGS_FOLDER || folder;
   const plugin_folder = process.env.TCORE_PLUGINS_FOLDER || data.plugin_folder || (await getPluginsFolder());
   const port = process.env.TCORE_PORT || data.port || "8888";
@@ -84,6 +85,7 @@ export async function getMainSettings(): Promise<ISettings> {
   const settings: ISettings = {
     filesystem_plugin,
     database_plugin,
+    queue_plugin,
     plugin_folder,
     port,
     settings_folder,

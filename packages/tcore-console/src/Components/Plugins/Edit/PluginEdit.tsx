@@ -48,8 +48,12 @@ function PluginEdit() {
 
       const flattened = flattenConfigFields(module.configs || []);
       for (const field of flattened) {
-        if ("defaultValue" in field && field.defaultValue) {
-          newValues[module.id][field.field] = field.defaultValue;
+        if ("defaultValue" in field) {
+          if (field.defaultValue === 0) {
+            newValues[module.id][field.field] = "0";
+          } else {
+            newValues[module.id][field.field] = field.defaultValue;
+          }
         }
       }
     }

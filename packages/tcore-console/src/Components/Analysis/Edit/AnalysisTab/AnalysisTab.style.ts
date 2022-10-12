@@ -39,7 +39,19 @@ export const ConsoleHeader = styled.div`
     font-weight: 500;
   }
 
+  button {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
   button:first-child {
     margin-right: 5px;
+  }
+
+  .ban-append {
+    margin-left: -1px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    padding: 0px 5px;
+    height: 33px;
   }
 `;

@@ -15,6 +15,7 @@ import editAnalysis from "../../../Requests/editAnalysis";
 import runAnalysis from "../../../Requests/runAnalysis";
 import store from "../../../System/Store";
 import { getSocket } from "../../../System/Socket";
+import deleteAnalysisLogs from "../../../Requests/deleteAnalysisLogs";
 import AnalysisTab from "./AnalysisTab/AnalysisTab";
 import EnvVarsTab from "./EnvVarsTab/EnvVarsTab";
 import MoreTab from "./MoreTab/MoreTab";
@@ -137,6 +138,14 @@ function AnalysisEdit() {
   }, []);
 
   /**
+   * Deletes the logs.
+   */
+  const deleteLogs = useCallback(() => {
+    deleteAnalysisLogs(id);
+    clearLogs();
+  }, [clearLogs, id]);
+
+  /**
    * Called when a field from a tab gets modified.
    * This will apply the change to the data state.
    */
@@ -151,7 +160,15 @@ function AnalysisEdit() {
    * Renders the `Analysis` tab.
    */
   const renderAnalysisTab = () => {
-    return <AnalysisTab onClearLogs={clearLogs} logs={logs} data={data} onChange={onChangeData} />;
+    return (
+      <AnalysisTab
+        onClearLogs={clearLogs}
+        onDeleteLogs={deleteLogs}
+        logs={logs}
+        data={data}
+        onChange={onChangeData}
+      />
+    );
   };
 
   /**
