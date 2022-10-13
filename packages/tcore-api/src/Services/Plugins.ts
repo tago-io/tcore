@@ -305,11 +305,13 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
   const mainSettings = await getMainSettings();
   const settings = await getPluginSettings(id);
 
-  const modules = [...plugin.modules.values()].map((module) => {
+  const modules: any[] = [];
+
+  for (const module of [...plugin.modules.values()]) {
     const moduleSettings = settings?.modules?.find((y) => y.id === module.setup.id);
     const moduleValues = moduleSettings?.values || {};
 
-    const moduleFields = flattenConfigFields(module.setup.configs || []);
+    const moduleFields = flattenConfigFields(await module.getConfigDefinitions());
     for (const field of moduleFields) {
       // we override the default value of the config field to use the last
       // inserted value or the actual default from the module configuration
@@ -322,13 +324,13 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
       }
     }
 
-    return {
+    modules.push({
       ...module.setup,
       error: module.error,
       message: module.message,
       state: module.state,
-    };
-  });
+    });
+  }
 
   const dbPluginID = String(mainSettings.database_plugin).split(":")[0];
   const allow_disable = dbPluginID !== id;

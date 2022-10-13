@@ -6,7 +6,7 @@
  * Types of icons available in the system.
  * Each one must match the corresponding filename in the /assets/icons folder.
  */
- enum EIcon {
+enum EIcon {
   "alpine" = "alpine",
   "apple" = "apple",
   "arrow-alt-circle-down" = "arrow-alt-circle-down",

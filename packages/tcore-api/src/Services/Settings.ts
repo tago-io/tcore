@@ -197,7 +197,7 @@ export async function setPluginModulesSettings(id: string, values: any) {
 
   for (const item of values) {
     const module = plugin?.modules?.get(item.moduleID);
-    const configs = flattenConfigFields(module?.setup.configs || []);
+    const configs = flattenConfigFields((await module?.getConfigDefinitions()) || []);
     const field = configs.find((x) => "field" in x && x.field === item.field);
     const isPassword = field?.type === "password";
 
