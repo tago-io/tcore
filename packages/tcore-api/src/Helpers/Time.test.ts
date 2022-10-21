@@ -89,84 +89,84 @@ describe("Parse Relative Date", () => {
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T03:00:00.040Z");
+    expect((result as Date).toISOString()).toBe("2021-01-01T00:00:00.040Z");
   });
   it("should parse relative date using plus operator for seconds", () => {
     const expireTime = "30 seconds";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T03:00:30.000Z");
+    expect((result as Date).toISOString()).toBe("2021-01-01T00:00:30.000Z");
   });
   it("should parse relative date using plus operator for minutes", () => {
     const expireTime = "15 minutes";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T03:15:00.000Z");
+    expect((result as Date).toISOString()).toBe("2021-01-01T00:15:00.000Z");
   });
   it("should parse relative date using plus operator for hours", () => {
     const expireTime = "12 hours";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T15:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2021-01-01T12:00:00.000Z");
   });
   it("should parse relative date using plus operator for days", () => {
     const expireTime = "9 days";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-10T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2021-01-10T00:00:00.000Z");
   });
   it("should parse relative date using plus operator for weeks", () => {
     const expireTime = "6 weeks";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-02-12T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2021-02-12T00:00:00.000Z");
   });
   it("should parse relative date using plus operator for months", () => {
     const expireTime = "12 months";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2022-01-01T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2022-01-01T00:00:00.000Z");
   });
   it("should parse relative date using plus operator for years", () => {
     const expireTime = "3 years";
     const operation = "plus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2024-01-01T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2024-01-01T00:00:00.000Z");
   });
   it("should parse relative date using minus operator for milliseconds", () => {
     const expireTime = "20 SS";
     const operation = "minus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T02:59:59.980Z");
+    expect((result as Date).toISOString()).toBe("2020-12-31T23:59:59.980Z");
   });
   it("should parse relative date using minus operator for seconds", () => {
     const expireTime = "60 sec";
     const operation = "minus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T02:59:00.000Z");
+    expect((result as Date).toISOString()).toBe("2020-12-31T23:59:00.000Z");
   });
   it("should parse relative date using minus operator for minutes", () => {
     const expireTime = "15 min";
     const operation = "minus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2021-01-01T02:45:00.000Z");
+    expect((result as Date).toISOString()).toBe("2020-12-31T23:45:00.000Z");
   });
   it("should parse relative date using minus operator for hours", () => {
     const expireTime = "32 hh";
     const operation = "minus";
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
-    expect((result as Date).toISOString()).toBe("2020-12-30T19:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2020-12-30T16:00:00.000Z");
   });
   it("should parse relative date using minus operator for days", () => {
     const expireTime = "5 dd";
@@ -174,7 +174,7 @@ describe("Parse Relative Date", () => {
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
 
-    expect((result as Date).toISOString()).toBe("2020-12-27T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2020-12-27T00:00:00.000Z");
   });
   it("should parse relative date using minus operator for weeks", () => {
     const expireTime = "9 ww";
@@ -182,7 +182,7 @@ describe("Parse Relative Date", () => {
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
 
-    expect((result as Date).toISOString()).toBe("2020-10-30T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2020-10-30T00:00:00.000Z");
   });
   it("should parse relative date using minus operator for months", () => {
     const expireTime = "6 MM";
@@ -190,7 +190,7 @@ describe("Parse Relative Date", () => {
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
 
-    expect((result as Date).toISOString()).toBe("2020-07-01T03:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2020-07-01T00:00:00.000Z");
   });
   it("should parse relative date using minus operator for years", () => {
     const expireTime = "5 yy";
@@ -198,7 +198,7 @@ describe("Parse Relative Date", () => {
     const fromDate = new Date(2021, 0, 1);
     const result = parseRelativeDate(expireTime, operation, fromDate);
 
-    expect((result as Date).toISOString()).toBe("2016-01-01T02:00:00.000Z");
+    expect((result as Date).toISOString()).toBe("2016-01-01T00:00:00.000Z");
   });
   it("should return never", () => {
     const expireTime = "Never";
@@ -216,13 +216,14 @@ describe("Parse Relative Date", () => {
     const expireTime = "months";
     const operation = "plus";
     const fn = () => parseRelativeDate(expireTime, operation);
-    expect(fn).rejects.toThrowError("Invalid relative time");
+    expect(fn).toThrowError("Invalid relative time");
   });
   it("should have a valid time", () => {
     const expireTime = "3 days";
     const operation = "plus";
-    const fromDate = new Date(1, 10, 2020);
+    const fromDate = "invalid date";
+    // @ts-expect-error invalid date
     const fn = () => parseRelativeDate(expireTime, operation, fromDate);
-    expect(fn).rejects.toThrowError("Invalid relative time");
+    expect(fn).toThrowError("Invalid relative time");
   });
 });
