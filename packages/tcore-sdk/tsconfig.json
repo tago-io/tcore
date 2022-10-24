@@ -20,10 +20,11 @@
   },
   "exclude": [
     "node_module",
-    "jest.config.js"
+    "jest.config.ts"
   ],
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "vitest.config.ts"
   ],
   "ts-node": {
     "transpileOnly": true

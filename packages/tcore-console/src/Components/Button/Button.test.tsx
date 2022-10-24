@@ -7,7 +7,7 @@ test("renders without crashing", () => {
 });
 
 test("calls onClick", () => {
-  const fn = jest.fn();
+  const fn = vi.fn();
   render(<Button onClick={fn} />);
   fireEvent.click(screen.getByRole("button"));
   expect(fn).toHaveBeenCalled();

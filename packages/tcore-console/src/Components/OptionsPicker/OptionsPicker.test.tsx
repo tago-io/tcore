@@ -2,9 +2,9 @@ import { fireEvent, render, screen } from "../../../utils/test-utils";
 import OptionsPicker from "./OptionsPicker";
 
 const defaultProps = {
-  onGetOptions: jest.fn().mockImplementation(() => []),
-  onRenderOption: jest.fn(),
-  onChange: jest.fn(),
+  onGetOptions: vi.fn().mockImplementation(() => []),
+  onRenderOption: vi.fn(),
+  onChange: vi.fn(),
 };
 
 test("renders without crashing", () => {
@@ -39,14 +39,14 @@ test("renders correct icon with value", () => {
 });
 
 test("clears value when clicking on the clear button", () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   render(<OptionsPicker {...defaultProps} onChange={onChange} value={{}} />);
   fireEvent.click(screen.getByText("times-icon-mock"));
   expect(onChange).toHaveBeenCalledWith(null);
 });
 
 test("calls onChange when selecting option", () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   render(<OptionsPicker {...defaultProps} onChange={onChange} value={{}} />);
   fireEvent.click(screen.getByText("times-icon-mock"));
   expect(onChange).toHaveBeenCalledWith(null);

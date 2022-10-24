@@ -1,5 +1,5 @@
-jest.mock("../../../Helpers/useApiRequest.ts");
-jest.mock("../../../System/Socket.ts");
+vi.mock("../../../Helpers/useApiRequest.ts");
+vi.mock("../../../System/Socket.ts");
 
 import { render } from "../../../../utils/test-utils";
 import AnalysisEdit from "./AnalysisEdit";

@@ -1,4 +1,4 @@
-jest.setMock("./RequestChart/RequestChart.tsx", "div");
+vi.setMock("./RequestChart/RequestChart.tsx", "div");
 
 import { getSystemName } from "@tago-io/tcore-shared";
 import { render, screen } from "../../../utils/test-utils";

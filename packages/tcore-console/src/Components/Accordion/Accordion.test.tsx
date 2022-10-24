@@ -18,7 +18,7 @@ test("renders children if `open` = `true`", () => {
 });
 
 test("calls onChangeOpen when clicking on the title bar", () => {
-  const onChangeOpen = jest.fn();
+  const onChangeOpen = vi.fn();
   render(<Accordion onChangeOpen={onChangeOpen}>Hello world</Accordion>);
   expect(onChangeOpen).not.toHaveBeenCalled();
   fireEvent.click(screen.getByTestId("title-bar"));
@@ -32,7 +32,7 @@ test("doesn't call onChangeOpen if it's undefined", () => {
 });
 
 test("doesn't call onChangeOpen if `isAlwaysOpen` = `true`", () => {
-  const onChangeOpen = jest.fn();
+  const onChangeOpen = vi.fn();
   render(
     <Accordion isAlwaysOpen onChangeOpen={onChangeOpen}>
       Hello world
@@ -44,7 +44,7 @@ test("doesn't call onChangeOpen if `isAlwaysOpen` = `true`", () => {
 });
 
 test("doesn't call onChangeOpen if clicking on the children", () => {
-  const onChangeOpen = jest.fn();
+  const onChangeOpen = vi.fn();
   render(
     <Accordion open onChangeOpen={onChangeOpen}>
       Hello world

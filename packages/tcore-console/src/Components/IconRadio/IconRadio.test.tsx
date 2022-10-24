@@ -9,7 +9,7 @@ import IconRadio from "./IconRadio";
 const defaultProps = {
   value: "",
   options: [],
-  onChange: jest.fn(),
+  onChange: vi.fn(),
 };
 
 test("renders without crashing", () => {
@@ -47,7 +47,7 @@ test("renders detailed option", () => {
 });
 
 test("doesn't call onChange if the option is disabled", () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const options = [{ icon: EIcon.cog, disabled: true, label: "Hello", value: "world" }];
   render(<IconRadio {...defaultProps} options={options} onChange={onChange} />);
   fireEvent.click(screen.getByTestId("option-world"));
@@ -55,7 +55,7 @@ test("doesn't call onChange if the option is disabled", () => {
 });
 
 test("calls onChange when an option is clicked", () => {
-  const onChange = jest.fn();
+  const onChange = vi.fn();
   const options = [{ icon: EIcon.cog, label: "Hello", value: "world" }];
   render(<IconRadio {...defaultProps} options={options} onChange={onChange} />);
   fireEvent.click(screen.getByTestId("option-world"));

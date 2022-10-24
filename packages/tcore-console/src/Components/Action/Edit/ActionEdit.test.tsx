@@ -1,4 +1,4 @@
-jest.mock("../../../Helpers/useApiRequest.ts");
+vi.mock("../../../Helpers/useApiRequest.ts");
 
 import { render } from "../../../../utils/test-utils";
 import ActionEdit from "./ActionEdit";

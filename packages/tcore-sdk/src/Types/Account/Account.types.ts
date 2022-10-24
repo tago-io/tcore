@@ -6,7 +6,7 @@ import { generateResourceID } from "../../Shared/ResourceID";
 /**
  * Configuration of an account.
  */
-export const zAccount = z.object({
+const zAccount = z.object({
   id: zObjectID,
   name: z.string(),
   username: z.string(),
@@ -86,3 +86,4 @@ export type IAccountCreate = z.infer<typeof zAccountCreate>;
 export type IAccountToken = z.infer<typeof zAccountToken>;
 export type IAccountTokenCreate = z.input<typeof zAccountTokenCreate>;
 export type IAccountListQuery = z.input<typeof zAccountListQuery>;
+export { zAccount };

@@ -10,7 +10,7 @@ test("respects `href` prop", async () => {
   render(<Link href="/console/test" />);
   const link = screen.getByRole("link");
   expect(link).not.toBeDisabled();
-  expect(link).toHaveProperty("href", "http://localhost/console/test");
+  expect(link).toHaveAttribute("href", "/console/test");
 });
 
 test("respects `target` prop", async () => {

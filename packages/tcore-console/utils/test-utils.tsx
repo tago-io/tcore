@@ -1,5 +1,5 @@
-jest.mock("../src/Helpers/useApiRequest.ts");
-jest.mock("../src/System/Socket.ts");
+vi.mock("../src/Helpers/useApiRequest.ts");
+vi.mock("../src/System/Socket.ts");
 
 import { FC, ReactElement } from "react";
 import "@testing-library/jest-dom";
@@ -33,7 +33,7 @@ const manuallyMockIcons = () => {
     if (key in icons) {
       (icons as any)[key] = {
         ReactComponent: () => <svg>{key}-icon-mock</svg>,
-      }
+      };
     }
   }
 };
