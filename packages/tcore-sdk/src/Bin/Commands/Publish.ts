@@ -1,8 +1,7 @@
 import path from "path";
 import fs from "fs";
 import JSZip from "jszip";
-import axios from "axios";
-import { Account } from "@tago-io/sdk";
+import axios, { AxiosError } from "axios";
 import chalk from "chalk";
 import { THardwareTarget } from "../../Types";
 import { getConfigToken, oraLog, validateConfigToken } from "../Helpers";
@@ -15,7 +14,6 @@ import { IPackArgs, pack } from "./Pack";
 interface IPublishArgs {
   force: boolean;
   visible: string;
-  publisher: string;
   onlyPublish: boolean;
   out: string;
 }
@@ -52,13 +50,13 @@ function extractTarget(filename: string) {
  * Gets the upload URL.
  */
 async function getUploadURL(args: IPublishArgs) {
-  const visible = !args.visible || args.visible === "true";
+  const visible = args?.visible === "true";
 
   const token = await getConfigToken();
   const headers = { token };
   const query = `
     query {
-      pluginUpload(profileID: "${args.publisher}", active: ${visible})
+      pluginUpload(active: ${visible})
     }
   `;
 
@@ -115,23 +113,6 @@ async function generateZip(args: IPublishArgs) {
 }
 
 /**
- * Validates if the publisher is set and if the profile id is valid.
- */
-async function validatePublisher(profileID: string) {
-  if (!profileID) {
-    return Promise.reject(`Invalid publisher (${chalk.cyanBright("--publisher")} flag is required)`);
-  }
-
-  try {
-    const token = await getConfigToken();
-    const account = new Account({ token, region: "usa-1" });
-    await account.profiles.info(profileID);
-  } catch (ex) {
-    await Promise.reject(`Invalid publisher. Do you have access to the TagoIO Profile ${chalk.cyanBright(profileID)}?`);
-  }
-}
-
-/**
  * Publishes a plugin to the plugin store.
  */
 async function publish(args: IPublishArgs) {
@@ -144,8 +125,6 @@ async function publish(args: IPublishArgs) {
 
     spinner.succeed();
     spinner.start("Validating publisher");
-
-    await validatePublisher(args.publisher);
 
     spinner.succeed();
 

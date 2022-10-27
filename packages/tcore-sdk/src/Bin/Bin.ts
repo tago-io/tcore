@@ -13,7 +13,7 @@ program.command("logout").description("logs out of the plugin store").action(log
 
 program
   .command("login")
-  .option("-u, --username <value>", "Email of your TagoIO Account")
+  .option("-u, --email <value>", "Email of your TagoIO Account")
   .option("-p, --password <value>", "Password of your TagoIO Account")
   .description("logs into the plugin store")
   .action(login);
