@@ -102,6 +102,7 @@ async function startWithDaemon(opts: IStartOptions) {
       name: PM2_APP_NAME,
       output: pm2LogPath,
       error: pm2LogPath,
+      force: true,
       env,
     };
 
