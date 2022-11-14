@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import chalk from "chalk";
 import tar from "tar";
@@ -61,7 +61,7 @@ function trimExtension(filename: string) {
  */
 async function getFilesToPack() {
   const files: string[] = [];
-  const tcoreIgnore = await fs.promises
+  const tcoreIgnore = await fs
     .readFile(path.join(cwd, TCOREIGNORE_FILENAME), "utf-8")
     .then((r) => r.split("\n").filter((x) => x))
     .catch(() => []);
@@ -107,13 +107,13 @@ async function getFilesToPack() {
 async function generateTCoreFile(args: IPackArgs) {
   // recreate the out path
   const outDir = path.resolve(cwd, args.out);
-  await fs.promises.rm(outDir, { recursive: true }).catch(() => null);
-  await fs.promises.mkdir(outDir, { recursive: true }).catch(() => null);
+  await fs.rm(outDir, { recursive: true }).catch(() => null);
+  await fs.mkdir(outDir, { recursive: true }).catch(() => null);
 
   const files = await getFilesToPack();
 
   for (const file of files) {
-    const stat = fs.statSync(path.join(cwd, file));
+    const stat = await fs.stat(path.join(cwd, file));
     const size = stat.size;
     if (!stat.isDirectory()) {
       oraLog(`Added ${chalk.cyan(file)} (${formatBytes(size)})`).succeed();
@@ -150,7 +150,7 @@ async function copyTargets(args: IPackArgs) {
   const origin = path.resolve(cwd, args.out, args.filename);
   for (const target of args.target) {
     const dest = renameTarget(origin, target);
-    await fs.promises.copyFile(origin, dest);
+    await fs.copyFile(origin, dest);
   }
 
   spinner.succeed();
@@ -161,7 +161,7 @@ async function copyTargets(args: IPackArgs) {
  */
 async function printDetails(args: IPackArgs) {
   const filePath = path.resolve(cwd, args.out, args.filename);
-  const stat = await fs.promises.stat(filePath).catch(() => null);
+  const stat = await fs.stat(filePath).catch(() => null);
   const size = stat?.size || 0;
 
   console.log(`${chalk.magentaBright("[TCore SDK]")} ${chalk.magenta(`====== Details ======`)}`);
@@ -224,7 +224,7 @@ async function validate(args: IPackArgs) {
   // icon validation, required
   const icon = pkg.tcore?.icon || "";
   const iconPath = path.join(cwd, icon);
-  const iconExists = await fs.promises.stat(iconPath).catch(() => null);
+  const iconExists = await fs.stat(iconPath).catch(() => null);
   if (icon && iconExists) {
     const data = getImageData(iconPath);
     const ratio = ((data.width || 0) / (data.height || 1)).toFixed(2);
@@ -242,7 +242,7 @@ async function validate(args: IPackArgs) {
   // full description, not required
   const fd = pkg.tcore?.full_description || "";
   const fdPath = path.join(cwd, fd);
-  const fdExists = fs.existsSync(fdPath);
+  const fdExists = await fs.stat(fdPath).catch(() => null);
   if (fd && !fdExists) {
     addMessage("'package.tcore.full_description' file not found");
   }
@@ -289,7 +289,7 @@ async function pack(args: IPackArgs) {
 
     if (args.target.length > 0) {
       const filePath = path.resolve(cwd, args.out, args.filename);
-      await fs.promises.unlink(filePath).catch(() => null);
+      await fs.unlink(filePath).catch(() => null);
     }
   } catch (ex: any) {
     oraLog(ex.message || ex).fail();
