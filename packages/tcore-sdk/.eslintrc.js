@@ -15,7 +15,7 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint", "import"],
-  ignorePatterns: ['.eslintrc.js', 'types.js', 'types.d.ts'],
+  ignorePatterns: ['.eslintrc.js', 'types.js', 'types.d.ts', "__mocks__/*"],
   extends: [
     "plugin:prettier/recommended",
     "plugin:@typescript-eslint/eslint-recommended",

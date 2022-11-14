@@ -15,7 +15,7 @@ import { DEFAULT_OUT_FOLDERNAME, TCOREIGNORE_FILENAME } from "../Constants";
  */
 interface IPackArgs {
   filename: string;
-  force: boolean;
+  force?: boolean;
   out: string;
   target: THardwareTarget[];
 }
@@ -107,7 +107,6 @@ async function getFilesToPack() {
 async function generateTCoreFile(args: IPackArgs) {
   // recreate the out path
   const outDir = path.resolve(cwd, args.out);
-  await fs.rm(outDir, { recursive: true }).catch(() => null);
   await fs.mkdir(outDir, { recursive: true }).catch(() => null);
 
   const files = await getFilesToPack();
@@ -122,6 +121,12 @@ async function generateTCoreFile(args: IPackArgs) {
 
   const spinner = oraLog("Generating .tcore file").start();
 
+  const compressedFile = await compressProject(args, files, spinner);
+
+  return compressedFile;
+}
+
+async function compressProject(args: IPackArgs, files: string[], spinner) {
   return await new Promise<void>((resolve, reject) => {
     const tarOpts = {
       cwd,
@@ -297,4 +302,4 @@ async function pack(args: IPackArgs) {
 }
 
 export type { IPackArgs };
-export { pack };
+export { pack, getFilesToPack, compressProject, generateTCoreFile };
