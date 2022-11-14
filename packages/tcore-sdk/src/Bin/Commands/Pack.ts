@@ -59,12 +59,14 @@ function trimExtension(filename: string) {
  * This function will take into account the .tcoreignore file and the `files` property
  * of the package.json.
  */
-async function getFilesToPack() {
+async function getFilesToPack(args: { outDir: string }) {
   const files: string[] = [];
-  const tcoreIgnore = await fs
+  const tcoreIgnore: string[] = await fs
     .readFile(path.join(cwd, TCOREIGNORE_FILENAME), "utf-8")
     .then((r) => r.split("\n").filter((x) => x))
     .catch(() => []);
+
+  tcoreIgnore.push(args.outDir);
 
   if (pkg.files) {
     for (const item of pkg.files) {
@@ -109,7 +111,7 @@ async function generateTCoreFile(args: IPackArgs) {
   const outDir = path.resolve(cwd, args.out);
   await fs.mkdir(outDir, { recursive: true }).catch(() => null);
 
-  const files = await getFilesToPack();
+  const files = await getFilesToPack({ outDir });
 
   for (const file of files) {
     const stat = await fs.stat(path.join(cwd, file));
