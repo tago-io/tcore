@@ -142,6 +142,7 @@ export async function getDeviceList(query: IDeviceListQuery): Promise<IDeviceLis
  * Retrieves all the information of a single device.
  */
 export const getDeviceInfo = async (id: TGenericID): Promise<IDevice> => {
+  console.log("getDeviceInfo");
   if (!id) {
     throw new Error("Invalid Device ID");
   }

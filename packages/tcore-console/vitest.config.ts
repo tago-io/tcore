@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react(), viteRequire()],
   test: {
     include: ["**/*.{test,spec}.{ts,tsx}"],
-    exclude: ["build/*", "build-tsc/*", "node_module/*"],
+    exclude: ["build/*", "build-tsc/*", "node_module/*", "*.js"],
     environment: "jsdom",
     globals: true,
     setupFiles: ["./utils/setup-jest.tsx"],

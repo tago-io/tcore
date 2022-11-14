@@ -425,6 +425,7 @@ export const getDeviceDataByDevice = async (
 /**
  */
 export const getDeviceData = async (id: TGenericID, query?: IDeviceDataQuery) => {
+  console.log("Aaaaaaaa");
   const device = await getDeviceInfo(id);
   return await getDeviceDataByDevice(device, query);
 };
@@ -435,11 +436,14 @@ export const getDeviceData = async (id: TGenericID, query?: IDeviceDataQuery) =>
  */
 export async function deleteDeviceData(id: TGenericID, query?: IDeviceDataQuery): Promise<number> {
   const device = await getDeviceInfo(id);
+  console.log(device);
   if (device.type === "immutable") {
     throw new Error("Data in immutable devices cannot be deleted");
   }
 
   const data = await getDeviceData(id, query);
+
+  console.log(data);
 
   if (!Array.isArray(data)) {
     throw new Error("Invalid query");

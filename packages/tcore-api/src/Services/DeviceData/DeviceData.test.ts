@@ -1,4 +1,4 @@
-const invokeDatabaseFunction = jest.fn<any, any>((method: string) => {
+const invokeDatabaseFunction = vi.fn<any, any>((method: string) => {
   switch (method) {
     case "getDeviceInfo":
       return activeDevice;
@@ -7,7 +7,7 @@ const invokeDatabaseFunction = jest.fn<any, any>((method: string) => {
   }
 });
 
-jest.mock("../../Plugins/invokeDatabaseFunction", () => ({ invokeDatabaseFunction }));
+vi.mock("../../Plugins/invokeDatabaseFunction", () => ({ invokeDatabaseFunction }));
 
 import {
   IDevice,
@@ -25,17 +25,17 @@ import { plugins } from "../../Plugins/Host";
 import * as DeviceData from "./DeviceData";
 
 beforeAll(() => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
 });
 
 afterEach(() => {
-  jest.restoreAllMocks();
-  jest.clearAllMocks();
+  vi.restoreAllMocks();
+  vi.clearAllMocks();
   plugins.clear();
 });
 
 afterAll(() => {
-  jest.clearAllTimers();
+  vi.clearAllTimers();
 });
 
 const inactiveDevice: any = {
@@ -81,7 +81,7 @@ const mockData: IDeviceData = {
 
 describe("addDeviceData", () => {
   test("resolves device", async () => {
-    const mock = jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(inactiveDevice);
+    const mock = vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(inactiveDevice);
     await DeviceData.addDeviceData("123", []).catch(() => null);
     expect(mock).toHaveBeenCalled();
   });
@@ -89,61 +89,61 @@ describe("addDeviceData", () => {
 
 describe("addDeviceDataByDevice", () => {
   test("rejects inactive devices", async () => {
-    const error = jest.fn();
+    const error = vi.fn();
     await DeviceData.addDeviceDataByDevice(inactiveDevice, []).catch(error);
     expect(error).toHaveBeenCalledWith(new Error("Device not found or inactive"));
   });
 
   test("rejects falsy devices", async () => {
-    const error = jest.fn();
+    const error = vi.fn();
     await DeviceData.addDeviceDataByDevice(null as any, []).catch(error);
     expect(error).toHaveBeenCalledWith(new Error("Device not found or inactive"));
   });
 
   test("applies payload encoder", async () => {
-    jest.spyOn(DeviceData, "applyPayloadEncoder").mockResolvedValue(123);
+    vi.spyOn(DeviceData, "applyPayloadEncoder").mockResolvedValueOnce(123);
     const fn = () => DeviceData.addDeviceDataByDevice(activeDevice, []);
     await expect(fn).rejects.toThrow("invalid_type");
   });
 
   test("applies payload parser", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue("abc");
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce("abc");
     const fn = () => DeviceData.addDeviceDataByDevice(activeDevice, []);
     await expect(fn).rejects.toThrow("invalid_type");
   });
 
   test("payload parser cannot return a string", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue("hello");
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce("hello");
     const fn = () => DeviceData.addDeviceDataByDevice(activeDevice, []);
     await expect(fn).rejects.toThrow("Expected object, received string");
   });
 
   test("payload parser cannot return a number", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue(123);
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce(123);
     const fn = () => DeviceData.addDeviceDataByDevice(activeDevice, []);
     await expect(fn).rejects.toThrow("Expected object, received number");
   });
 
   test("payload parser cannot return a non-data object", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue({});
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce({});
     const fn = () => DeviceData.addDeviceDataByDevice(activeDevice, []);
     await expect(fn).rejects.toThrow("variable");
   });
 
   test("payload parser cannot return a random array", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue([1, 2, 3]);
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce([1, 2, 3]);
     const fn = () => DeviceData.addDeviceDataByDevice(activeDevice, []);
     await expect(fn).rejects.toThrow("Expected object, received number");
   });
 
   test("payload parser can return a data object", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue(dataCreate);
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce(dataCreate);
     const result = await DeviceData.addDeviceDataByDevice(activeDevice, []);
     expect(result).toEqual("1 items added");
   });
 
   test("payload parser can return a data array", async () => {
-    jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue([dataCreate, dataCreate]);
+    vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce([dataCreate, dataCreate]);
     const result = await DeviceData.addDeviceDataByDevice(activeDevice, []);
     expect(result).toEqual("2 items added");
   });
@@ -165,8 +165,8 @@ describe("addDeviceDataByDevice", () => {
   });
 
   test("applies payload encoder, then parser, then inserts data", async () => {
-    const m1 = jest.spyOn(DeviceData, "applyPayloadEncoder").mockResolvedValue(123);
-    const m2 = jest.spyOn(PayloadParser, "runPayloadParser").mockResolvedValue([]);
+    const m1 = vi.spyOn(DeviceData, "applyPayloadEncoder").mockResolvedValueOnce(123);
+    const m2 = vi.spyOn(PayloadParser, "runPayloadParser").mockResolvedValueOnce([]);
     await DeviceData.addDeviceDataByDevice(activeDevice, dataCreate);
 
     expect(m1.mock.calls[0][0]).toEqual(activeDevice);
@@ -182,19 +182,19 @@ describe("addDeviceDataByDevice", () => {
   });
 
   test("triggers actions after inserting data", async () => {
-    const mock = jest.spyOn(DeviceData, "triggerActions");
+    const mock = vi.spyOn(DeviceData, "triggerActions");
     await DeviceData.addDeviceDataByDevice(activeDevice, dataCreate);
     expect(mock).toHaveBeenCalled();
   });
 
   test("adds statistics", async () => {
-    const mock = jest.spyOn(Statistic, "addStatistic");
+    const mock = vi.spyOn(Statistic, "addStatistic");
     await DeviceData.addDeviceDataByDevice(activeDevice, [dataCreate, dataCreate]);
     expect(mock).toHaveBeenCalledWith({ input: 2, output: 0 });
   });
 
   test("updates device last_input", async () => {
-    const mock = jest.spyOn(Device, "editDevice");
+    const mock = vi.spyOn(Device, "editDevice");
     await DeviceData.addDeviceDataByDevice(activeDevice, dataCreate);
 
     const arg1 = mock.mock.calls[0][0];
@@ -204,19 +204,19 @@ describe("addDeviceDataByDevice", () => {
   });
 
   test("throws if mutable device has too much data", async () => {
-    jest.spyOn(DeviceData, "getDeviceDataAmount").mockResolvedValue(50000);
+    vi.spyOn(DeviceData, "getDeviceDataAmount").mockResolvedValueOnce(50000);
     const fn = () => DeviceData.addDeviceDataByDevice(mutableDevice, dataCreate);
     await expect(fn).rejects.toThrow("has reached the limit");
   });
 
   test("doesn't throws if mutable device doesn't have too much data", async () => {
-    jest.spyOn(DeviceData, "getDeviceDataAmount").mockResolvedValue(1000);
+    vi.spyOn(DeviceData, "getDeviceDataAmount").mockResolvedValueOnce(1000);
     const result = await DeviceData.addDeviceDataByDevice(mutableDevice, dataCreate);
     expect(result).toEqual("1 items added");
   });
 
   test("doesn't throw if immutable device has too much data", async () => {
-    jest.spyOn(DeviceData, "getDeviceDataAmount").mockResolvedValue(50000);
+    vi.spyOn(DeviceData, "getDeviceDataAmount").mockResolvedValueOnce(50000);
     const result = await DeviceData.addDeviceDataByDevice(immutableDevice, dataCreate);
     expect(result).toEqual("1 items added");
   });
@@ -253,7 +253,7 @@ describe("addDeviceDataByDevice", () => {
   });
 
   test("calls emitToLiveInspector with the raw payload", async () => {
-    const mock = jest.spyOn(LiveInspector, "emitToLiveInspector");
+    const mock = vi.spyOn(LiveInspector, "emitToLiveInspector");
     await DeviceData.addDeviceDataByDevice(immutableDevice, dataCreate);
     const arg1 = mock.mock.calls[0][0]; // device
     const arg2 = mock.mock.calls[0][1]; // inspector data
@@ -319,21 +319,21 @@ describe("group generation", () => {
 
 describe("deleteDeviceData", () => {
   test("cannot delete data from immutable devices", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(immutableDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(immutableDevice);
     const fn = () => DeviceData.deleteDeviceData(immutableDevice.id);
     await expect(fn).rejects.toThrow("Data in immutable devices cannot be deleted");
   });
 
   test("can delete data from mutable devices", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
-    jest.spyOn(DeviceData, "getDeviceData").mockResolvedValue([]);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
+    vi.spyOn(DeviceData, "getDeviceData").mockResolvedValueOnce([]);
     await DeviceData.deleteDeviceData(mutableDevice.id);
     expect(invokeDatabaseFunction).toHaveBeenCalled();
   });
 
   test("passes array of ids to database deleteDeviceData", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
-    jest.spyOn(DeviceData, "getDeviceData").mockResolvedValue([mockData, mockData]);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
+    vi.spyOn(DeviceData, "getDeviceData").mockResolvedValueOnce([mockData, mockData]);
     await DeviceData.deleteDeviceData(mutableDevice.id);
 
     const arg1 = invokeDatabaseFunction.mock.calls[0][0]; // method
@@ -345,17 +345,17 @@ describe("deleteDeviceData", () => {
     expect(arg3).toEqual(["789", "789"]);
   });
 
-  test("returns the amount of deleted items", async () => {
+  test.only("returns the amount of deleted items", async () => {
     const deviceData = [mockData, mockData, mockData, mockData];
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
-    jest.spyOn(DeviceData, "getDeviceData").mockResolvedValue(deviceData);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
+    vi.spyOn(DeviceData, "getDeviceData").mockResolvedValueOnce(deviceData);
     const result = await DeviceData.deleteDeviceData(mutableDevice.id);
     expect(result).toEqual(deviceData.length);
   });
 
   test("throws if getDeviceData result is not an array", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
-    jest.spyOn(DeviceData, "getDeviceData").mockResolvedValue(123);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
+    vi.spyOn(DeviceData, "getDeviceData").mockResolvedValueOnce(123);
     const fn = () => DeviceData.deleteDeviceData(mutableDevice.id);
     await expect(fn).rejects.toThrow("Invalid query");
   });
@@ -363,48 +363,48 @@ describe("deleteDeviceData", () => {
 
 describe("getDeviceDataAmount", () => {
   test("validates the device id", async () => {
-    const spy = jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    const spy = vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     await DeviceData.getDeviceDataAmount(mutableDevice.id).catch(() => null);
     expect(spy).toHaveBeenCalled();
   });
 
   test("database getDeviceDataAmount cannot return a string", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce("123");
     const fn = () => DeviceData.getDeviceDataAmount(mutableDevice.id);
     await expect(fn).rejects.toThrow("Expected number, received string");
   });
 
   test("database getDeviceDataAmount cannot return an array", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce([]);
     const fn = () => DeviceData.getDeviceDataAmount(mutableDevice.id);
     await expect(fn).rejects.toThrow("Expected number, received array");
   });
 
   test("database getDeviceDataAmount cannot return an object", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce({});
     const fn = () => DeviceData.getDeviceDataAmount(mutableDevice.id);
     await expect(fn).rejects.toThrow("Expected number, received object");
   });
 
   test("database getDeviceDataAmount cannot return false", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce(false);
     const fn = () => DeviceData.getDeviceDataAmount(mutableDevice.id);
     await expect(fn).rejects.toThrow("Expected number, received boolean");
   });
 
   test("database getDeviceDataAmount cannot return true", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce(true);
     const fn = () => DeviceData.getDeviceDataAmount(mutableDevice.id);
     await expect(fn).rejects.toThrow("Expected number, received boolean");
   });
 
   test("database getDeviceDataAmount must return a number", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce(1000);
     const result = await DeviceData.getDeviceDataAmount(mutableDevice.id);
     expect(result).toEqual(1000);
@@ -418,7 +418,7 @@ describe("applyPayloadEncoder", () => {
   });
 
   test("emits to live inspector if encoder plugin is not found", async () => {
-    const mock = jest.spyOn(LiveInspector, "emitToLiveInspector");
+    const mock = vi.spyOn(LiveInspector, "emitToLiveInspector");
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
     const result = await DeviceData.applyPayloadEncoder(device, "123");
     expect(result).toEqual("123");
@@ -427,7 +427,7 @@ describe("applyPayloadEncoder", () => {
 
   test("emits to live inspector if encoder module is not found", async () => {
     plugins.set("plugin1", { modules: new Map() } as any);
-    const mock = jest.spyOn(LiveInspector, "emitToLiveInspector");
+    const mock = vi.spyOn(LiveInspector, "emitToLiveInspector");
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
     const result = await DeviceData.applyPayloadEncoder(device, "123");
     expect(result).toEqual("123");
@@ -437,7 +437,7 @@ describe("applyPayloadEncoder", () => {
   test("invokes onCall on the module", async () => {
     const plugin: any = { modules: new Map() };
     plugin.modules.set("module1", new Module(plugin, {} as any));
-    plugin.modules.get("module1").invokeOnCall = jest.fn().mockResolvedValue(444);
+    plugin.modules.get("module1").invokeOnCall = vi.fn().mockResolvedValueOnce(444);
     plugins.set("plugin1", plugin);
 
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
@@ -450,7 +450,7 @@ describe("applyPayloadEncoder", () => {
   test("ignores encoder if onCall throws an error", async () => {
     const plugin: any = { modules: new Map() };
     plugin.modules.set("module1", new Module(plugin, {} as any));
-    plugin.modules.get("module1").invokeOnCall = jest.fn().mockRejectedValue(null);
+    plugin.modules.get("module1").invokeOnCall = vi.fn().mockRejectedValue(null);
     plugins.set("plugin1", plugin);
 
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
@@ -463,10 +463,10 @@ describe("applyPayloadEncoder", () => {
   test("emits to live inspector after module.onCall", async () => {
     const plugin: any = { modules: new Map() };
     plugin.modules.set("module1", new Module(plugin, { id: "1", name: "Temp" } as any));
-    plugin.modules.get("module1").invokeOnCall = jest.fn().mockResolvedValue(1000);
+    plugin.modules.get("module1").invokeOnCall = vi.fn().mockResolvedValueOnce(1000);
     plugins.set("plugin1", plugin);
 
-    const mock = jest.spyOn(LiveInspector, "emitToLiveInspector");
+    const mock = vi.spyOn(LiveInspector, "emitToLiveInspector");
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
     await DeviceData.applyPayloadEncoder(device, "123");
 
@@ -478,10 +478,10 @@ describe("applyPayloadEncoder", () => {
 
     const plugin: any = { modules: new Map() };
     plugin.modules.set("module1", new Module(plugin, { id: "1", name: "Temp" } as any));
-    plugin.modules.get("module1").invokeOnCall = jest.fn().mockResolvedValue(null);
+    plugin.modules.get("module1").invokeOnCall = vi.fn().mockResolvedValueOnce(null);
     plugins.set("plugin1", plugin);
 
-    const mock = jest.spyOn(LiveInspector, "emitToLiveInspector");
+    const mock = vi.spyOn(LiveInspector, "emitToLiveInspector");
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
     await DeviceData.applyPayloadEncoder(device, "123", options);
 
@@ -492,13 +492,13 @@ describe("applyPayloadEncoder", () => {
 
 describe("editDeviceData", () => {
   test("calls invokeDatabaseFunction", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
     await DeviceData.editDeviceData("123", [mockData]);
     expect(invokeDatabaseFunction).toHaveBeenCalled();
   });
 
   test("deletes time and created_at", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
     await DeviceData.editDeviceData("123", [mockData]);
     const arg3 = invokeDatabaseFunction.mock.calls[0][2][0];
     expect(arg3.time).toBeUndefined();
@@ -506,7 +506,7 @@ describe("editDeviceData", () => {
   });
 
   test("keeps data id", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(mutableDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(mutableDevice);
     await DeviceData.editDeviceData("123", [mockData]);
     const arg3 = invokeDatabaseFunction.mock.calls[0][3][0];
     expect(arg3.id).toEqual(mockData.id);
@@ -522,14 +522,14 @@ describe("emptyDevice", () => {
 
 describe("getDeviceData", () => {
   test("throws on invalid query type", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "invalid_query" };
     const fn = () => DeviceData.getDeviceData("123", query);
     await expect(fn).rejects.toThrow("Invalid enum value");
   });
 
   test("calls getDeviceDataCount on count", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "count" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -538,14 +538,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataCount on count", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce(456);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "count" };
     const result = await DeviceData.getDeviceData("123", query);
     expect(result).toEqual(456);
   });
 
   test("calls getDeviceDataAvg on avg", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { start_date: new Date(), query: "avg" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -554,14 +554,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataAvg on avg", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce(1000);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { start_date: new Date(), query: "avg" };
     const result = await DeviceData.getDeviceData("123", query);
     expect(result).toEqual(1000);
   });
 
   test("calls getDeviceDataSum on sum", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { start_date: new Date(), query: "sum" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -569,14 +569,14 @@ describe("getDeviceData", () => {
   });
 
   test("calls getDeviceDataDefaultQ without a query", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const parsed = zDeviceDataQuery.parse({});
     await DeviceData.getDeviceData("123");
     expect(invokeDatabaseFunction).toHaveBeenCalledWith("getDeviceDataDefaultQ", "123", "immutable", parsed);
   });
 
   test("calls getDeviceDataDefaultQ on defaultQ", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "defaultQ" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -585,14 +585,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataDefaultQ", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataLastValue on last_value", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "last_value" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -601,14 +601,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataLastValue", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataLastLocation on last_location", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "last_location" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -616,7 +616,7 @@ describe("getDeviceData", () => {
   });
 
   test("returns the value of getDeviceDataLastLocation", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
@@ -624,7 +624,7 @@ describe("getDeviceData", () => {
   });
 
   test("calls getDeviceDataLastItem on last_item", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "last_item" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -633,14 +633,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataLastItem", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataLastInsert on last_insert", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "last_insert" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -649,14 +649,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataLastInsert", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataFirstValue on first_value", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "first_value" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -665,14 +665,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataFirstValue", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataFirstLocation on first_location", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "first_location" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -681,14 +681,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataFirstLocation", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataFirstItem on first_item", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "first_item" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -697,14 +697,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataFirstItem", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataFirstInsert on first_insert", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { query: "first_insert" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -713,14 +713,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataFirstInsert", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataMin on min", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { start_date: new Date(), query: "min" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -729,14 +729,14 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataMin", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
   });
 
   test("calls getDeviceDataMax on max", async () => {
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const query: any = { start_date: new Date(), query: "max" };
     const parsed = zDeviceDataQuery.parse(query);
     await DeviceData.getDeviceData("123", query);
@@ -745,7 +745,7 @@ describe("getDeviceData", () => {
 
   test("returns the value of getDeviceDataMax", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
@@ -753,7 +753,7 @@ describe("getDeviceData", () => {
 
   test("adds device to return on array queries", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData, serie: "123" }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123");
     expect(result).toHaveLength(1);
     expect(result[0].id).toEqual(mockData.id);
@@ -764,7 +764,7 @@ describe("getDeviceData", () => {
 
   test("only adds created_at if details is set", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
     const result = await DeviceData.getDeviceData("123", { details: true });
     expect(result).toHaveLength(1);
     expect(result[0].created_at).toBeInstanceOf(Date);
@@ -772,8 +772,8 @@ describe("getDeviceData", () => {
 
   test("adds statistics", async () => {
     invokeDatabaseFunction.mockResolvedValueOnce([{ ...mockData }]);
-    jest.spyOn(Device, "getDeviceInfo").mockResolvedValue(activeDevice);
-    const mock = jest.spyOn(Statistic, "addStatistic");
+    vi.spyOn(Device, "getDeviceInfo").mockResolvedValueOnce(activeDevice);
+    const mock = vi.spyOn(Statistic, "addStatistic");
     await DeviceData.getDeviceData("123");
     expect(mock).toHaveBeenCalledWith({ input: 0, output: 1 });
   });

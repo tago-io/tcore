@@ -1,4 +1,4 @@
-vi.setMock("./RequestChart/RequestChart.tsx", "div");
+vi.mock("./RequestChart/RequestChart.tsx", () => ({ default: () => null }));
 
 import { getSystemName } from "@tago-io/tcore-shared";
 import { render, screen } from "../../../utils/test-utils";

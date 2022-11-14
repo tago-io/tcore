@@ -16,14 +16,15 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "types": ["vitest/globals"]
   },
   "exclude": [
     "node_module",
     "jest.config.js",
     ".eslintrc.js"
   ],
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "./vitest.config.ts"],
   "ts-node": {
     "transpileOnly": true
   }

@@ -18,7 +18,7 @@ test("throws error if package is not found", () => {
 });
 
 test("calls Validator.validatePackageJSON", async () => {
-  const fn = jest.spyOn(Validator.prototype, "validatePackageJSON");
+  const fn = vi.spyOn(Validator.prototype, "validatePackageJSON");
   const folder = path.join(__dirname, "..", "__mocks__", "plugin4");
   const plugin = new Plugin(folder);
   await plugin.start();

@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     node: true,
-    jest: true
+    "vitest-globals/env": true
   },
   root: true,
   parserOptions: {
@@ -22,7 +22,8 @@ module.exports = {
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:vitest-globals/recommended"
   ],
   rules: {
     "import/order": 1
