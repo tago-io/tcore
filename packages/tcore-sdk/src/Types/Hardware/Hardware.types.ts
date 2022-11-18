@@ -13,6 +13,20 @@ export const zOSInfo = z.object({
 });
 
 /**
+ * Targets available.
+ */
+export const zHardwareTarget = z.enum([
+  "linux-x64",
+  "linux-armv7",
+  "linux-arm64",
+  "alpine-x64",
+  "alpine-arm64",
+  "mac-x64",
+  "win-x64",
+  "any",
+]);
+
+/**
  * Configuration of the main network info.
  */
 export const zNetworkInfo = z.object({
@@ -34,6 +48,7 @@ export const zComputerUsage = z.object({
   detail: z.string().optional(),
 });
 
-export type IOSInfo = z.infer<typeof zOSInfo>;
 export type IComputerUsage = z.infer<typeof zComputerUsage>;
+export type THardwareTarget = z.infer<typeof zHardwareTarget>;
 export type INetworkInfo = z.infer<typeof zNetworkInfo>;
+export type IOSInfo = z.infer<typeof zOSInfo>;
