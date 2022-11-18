@@ -71,7 +71,6 @@ export async function getOSInfo() {
 
   return result;
 }
-getOSInfo();
 
 /**
  * Retrieves the RAM usage.
