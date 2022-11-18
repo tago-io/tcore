@@ -1,22 +1,7 @@
 import os from "os";
 import si from "systeminformation";
 import { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/types";
-import { getCpuPercentage } from "../Helpers/CPU";
-
-/**
- * Formats the bytes into a more readable format.
- */
-function formatBytes(bytes: number) {
-  if (bytes === 0) {
-    return "0 B";
-  }
-
-  const k = 1024;
-  const dm = 2;
-  const sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
-}
+import { formatBytes } from "../Helpers/formatBytes";
 
 /**
  * Retrieves all the local ips of this computer.
@@ -37,22 +22,10 @@ export function getLocalIPs() {
   return addresses;
 }
 
-/**
- * Retrieves the main information of the OS.
- */
-export async function getOSInfo() {
-  const system = await si.system();
-  const osInfo = await si.osInfo();
-  const osPlatform = os.platform();
-
-  let version = `Version ${osInfo.release}`;
-  let code = "";
-  let hardware = "";
-  let name = osInfo.distro || osInfo.codename;
-  const arch = osInfo.arch;
-  const hostname = os.hostname();
-  const osVersion = os.version();
-
+const platformCode = new Map([
+  ["win32", "windows"],
+  ["linux", "linux"],
+  ["darwin", "mac"],
   // debian
   // redhat
   // ubuntu
@@ -60,54 +33,56 @@ export async function getOSInfo() {
   // fedora
   // alpine
   // bsd (not linux)
+]);
 
-  switch (osPlatform) {
-    case "win32":
-      code = "windows";
-      break;
-    case "linux":
-      code = "linux";
-      break;
-    case "darwin":
-      code = "mac";
-      break;
-    default:
-      code = "other";
-      break;
-  }
+export function getPlatformCode(platform: string) {
+  return platformCode.get(platform) || "other";
+}
+
+/**
+ * Retrieves the main information of the OS.
+ */
+export async function getOSInfo() {
+  const system = await si.system();
+  const osInfo = await si.osInfo();
+
+  const result = {
+    arch: osInfo.arch,
+    name: osInfo.distro || osInfo.codename,
+    code: getPlatformCode(osInfo.platform),
+    hardware: "",
+    hostname: osInfo.hostname,
+    version: `Version ${osInfo.release}`,
+  };
+
+  const osVersion = os.version();
 
   if (String(osVersion).includes("rockchip")) {
-    name = "Rock Pi";
-    version = `${osInfo.distro || osInfo.codename} ${osInfo.release}`;
-    hardware = "rock-pi";
-  }
-  if (system.raspberry) {
-    hardware = "raspberry-pi";
-    version = `Version ${system.raspberry.type}`;
-    name = "Raspberry Pi";
+    result.name = "Rock Pi";
+    result.version = `${osInfo.distro || osInfo.codename} ${osInfo.release}`;
+    result.hardware = "rock-pi";
   }
 
-  return {
-    arch,
-    name,
-    code,
-    hardware,
-    hostname,
-    version,
-  };
+  if (system.raspberry) {
+    result.hardware = "raspberry-pi";
+    result.version = `Version ${system.raspberry.type}`;
+    result.name = "Raspberry Pi";
+  }
+
+  return result;
 }
 
 /**
  * Retrieves the RAM usage.
  */
 export async function getRAMUsage(): Promise<IComputerUsage> {
-  const data = await si.mem();
+  const { total, used } = await si.mem();
   return {
-    description: `${formatBytes(data.used)} / ${formatBytes(data.total)}`,
+    description: `${formatBytes(used)} / ${formatBytes(total)}`,
     title: "RAM usage",
-    total: data.total,
+    total,
     type: "memory",
-    used: data.used,
+    used,
   };
 }
 
@@ -115,16 +90,18 @@ export async function getRAMUsage(): Promise<IComputerUsage> {
  * Retrieves the swap memory usage.
  */
 export async function getSwapUsage(): Promise<IComputerUsage | undefined> {
-  const data = await si.mem();
-  if (data.swaptotal && data.swapused) {
-    return {
-      description: `${formatBytes(data.swapused)} / ${formatBytes(data.swaptotal)}`,
-      title: "Swap Memory usage",
-      total: data.swaptotal,
-      type: "memory",
-      used: data.swapused,
-    };
+  const { swaptotal, swapused } = await si.mem();
+  if (!swaptotal) {
+    return;
   }
+
+  return {
+    description: `${formatBytes(swapused)} / ${formatBytes(swaptotal)}`,
+    title: "Swap Memory usage",
+    total: swaptotal,
+    type: "memory",
+    used: swapused,
+  };
 }
 
 /**
@@ -136,7 +113,7 @@ export async function getNetworkInfo(): Promise<INetworkInfo[]> {
   const interfacesWithIP = [...interfaces.filter((x) => x.ip4 && x.ip4 !== "127.0.0.1")];
 
   return interfacesWithIP.map((x) => {
-    const stat = stats.find((x) => x.iface === x.iface);
+    const stat = stats.find((y) => y.iface === x.iface);
     return {
       bytesDropped: stat?.tx_dropped || 0,
       bytesTransferred: stat?.tx_bytes || 0,
@@ -150,12 +127,13 @@ export async function getNetworkInfo(): Promise<INetworkInfo[]> {
  * Retrieves the CPU usage.
  */
 export async function getCPUUsage(): Promise<IComputerUsage> {
-  const data = await Promise.all([si.cpu(), getCpuPercentage()]);
-  const percentage = Math.round(data[1]);
+  const cpu = await si.cpu();
+  const { currentLoad } = await si.currentLoad();
+  const percentage = Math.round(currentLoad);
 
   return {
     description: `${percentage}%`,
-    detail: `${data[0].manufacturer} ${data[0].brand}`,
+    detail: `${cpu.manufacturer} ${cpu.brand}`,
     title: `CPU usage`,
     total: 100,
     type: "cpu",
@@ -168,6 +146,7 @@ export async function getCPUUsage(): Promise<IComputerUsage> {
  */
 export async function getDiskUsages(): Promise<IComputerUsage[]> {
   const data = await si.fsSize();
+
   return data.map((x, i) => ({
     description: `${formatBytes(x.used)} / ${formatBytes(x.size)}`,
     detail: x.mount,
@@ -183,16 +162,18 @@ export async function getDiskUsages(): Promise<IComputerUsage[]> {
  */
 export async function getBatteryUsage(): Promise<IComputerUsage | undefined> {
   const battery = await si.battery();
-  if (battery && battery.percent > 0) {
-    return {
-      description: battery.isCharging ? "Charging" : "",
-      detail: `${battery.percent}%`,
-      title: "Battery",
-      total: 100,
-      type: "battery",
-      used: battery.percent,
-    };
+  if (!battery.hasBattery) {
+    return;
   }
+
+  return {
+    description: battery.isCharging ? "Charging" : "",
+    detail: `${battery.percent}%`,
+    title: "Battery",
+    total: 100,
+    type: "battery",
+    used: battery.percent,
+  };
 }
 
 /**
@@ -200,7 +181,7 @@ export async function getBatteryUsage(): Promise<IComputerUsage | undefined> {
  * Some statistics may not be available on all systems.
  */
 export async function getComputerUsage(): Promise<IComputerUsage[]> {
-  const usages = await Promise.all([getRAMUsage(), getSwapUsage(), getBatteryUsage(), getCPUUsage(), getDiskUsages()]);
+  const usages = await Promise.all([getCPUUsage(), getRAMUsage(), getSwapUsage(), getBatteryUsage(), getDiskUsages()]);
   const filtered = usages.flat().filter((x) => x) as IComputerUsage[];
   return filtered;
 }
