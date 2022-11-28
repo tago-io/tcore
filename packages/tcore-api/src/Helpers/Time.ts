@@ -57,4 +57,4 @@ function parseRelativeDate(expireTime: string | undefined, operation: "plus" | "
   return time.toJSDate();
 }
 
-export { parseRelativeDate };
+export { parseRelativeDate, fixDurationMoment };
