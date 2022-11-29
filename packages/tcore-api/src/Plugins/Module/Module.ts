@@ -2,7 +2,7 @@
 import { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { io } from "../../Socket/SocketServer";
-import { getPluginSettings } from "../../Services/Settings";
+import { getPluginSettings, getPluginSettingsFolder } from "../../Services/Settings";
 import Plugin from "../Plugin/Plugin";
 import { checkMainDatabaseModuleHook } from "../../Services/Plugins";
 
@@ -132,7 +132,7 @@ class Module {
     const moduleSettings = settings?.modules?.find((x) => x.id === this.id);
     const values = moduleSettings?.values || {};
 
-    const conf = this.setup.configs || [];
+    const conf = await this.getConfigDefinitions();
     const defs = conf?.filter((x) => "defaultValue" in x && x.defaultValue !== "");
     const flat = flattenConfigFields(defs);
     const defsObject = {};
@@ -147,6 +147,21 @@ class Module {
       ...defsObject,
       ...values,
     };
+  }
+
+  public async getConfigDefinitions() {
+    const configurations = this.plugin.package?.tcore?.configs?.[this.setup.id] || [];
+    for (const config of configurations) {
+      if (typeof config.defaultValue === "string" && config.defaultValue.includes("$PLUGIN_SETTINGS$")) {
+        // replace $PLUGIN_SETTINGS$ with the folder location where the plugin has its settings
+        config.defaultValue = config.defaultValue.replace(
+          "$PLUGIN_SETTINGS$",
+          await getPluginSettingsFolder(this.plugin.id)
+        );
+      }
+    }
+
+    return configurations;
   }
 }
 
