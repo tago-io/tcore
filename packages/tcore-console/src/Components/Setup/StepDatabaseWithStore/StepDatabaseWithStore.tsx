@@ -42,17 +42,18 @@ function StepDatabaseWithStore(props: any) {
     skip: !store.masterPassword,
   });
   const { data: platform } = useApiRequest<string>("/hardware/platform");
-  const { data: storeList } = useApiRequest<any[]>(
-    `/plugin/${PLUGIN_STORE_PLUGIN_ID}/get-database-list/call`,
-    {
-      method: "post",
-      skip: !store.masterPassword,
-    }
-  );
+  // const { data: storeList } = useApiRequest<any[]>(
+  //   `/plugin/${PLUGIN_STORE_PLUGIN_ID}/get-database-list/call`,
+  //   {
+  //     method: "post",
+  //     skip: !store.masterPassword,
+  //   }
+  // );
+  const storeList = [];
 
   const installedListFiltered = installedList?.filter((x) => !x.error) || [];
 
-  const loading = !installedListFiltered || !storeList;
+  const loading = !installedListFiltered; // || !storeList;
 
   /**
    * Opens the file selector modal.

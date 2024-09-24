@@ -50,7 +50,7 @@ function StepDatabaseWrapper(props: any) {
           )}
         </SetupForm>
       ) : error ? (
-        <StepDatabaseNoStore onBack={onBack} onNext={onNext} />
+        <StepDatabaseWithStore onBack={onBack} onNext={onNext} />
       ) : (
         <StepDatabaseWithStore onBack={onBack} onNext={onNext} />
       )}

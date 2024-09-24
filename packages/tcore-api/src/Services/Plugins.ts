@@ -76,9 +76,18 @@ export async function listPluginFolders(): Promise<string[]> {
   const root = settings.plugin_folder;
   const folders = await fs.promises.readdir(root);
   const plugins: string[] = [];
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
 
   for (const folder of folders) {
     const fullPath = path.join(root, folder);
+    const hasPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
+    if (hasPackage) {
+      plugins.push(fullPath);
+    }
+  }
+
+  for (const folder of insidePlugins) {
+    const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
     const hasPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
     if (hasPackage) {
       plugins.push(fullPath);
