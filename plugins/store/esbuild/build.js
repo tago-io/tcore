@@ -1,6 +1,6 @@
+const fs = require("fs");
 const svgr = require("./svgr");
 const esbuild = require("esbuild");
-const fs = require("fs");
 const trimTCoreCodePlugin = require("./trim-tcore-plugin");
 
 const dev = process.argv.includes("--watch");
@@ -20,7 +20,8 @@ async function buildFront() {
     publicPath: "/pages/pluginstore",
     sourcemap: dev,
     external: ["path"],
-    plugins: [svgr()]
+    plugins: [svgr()],
+    platform: "node",
   });
 }
 

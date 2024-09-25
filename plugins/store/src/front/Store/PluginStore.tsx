@@ -4,6 +4,7 @@ import { EIcon, EmptyMessage, Loading, InnerNav } from "@tago-io/tcore-console";
 import { useTheme } from "styled-components";
 import Card from "./Card/Card";
 import * as Style from "./PluginStore.style";
+import { getAllInsidePlugins } from "../../back/Requests";
 
 /**
  * Query to fetch the details of the plugin.
@@ -30,14 +31,13 @@ const QUERY = gql`
 function PluginStore() {
   const [filter] = useState("");
   const theme = useTheme() as any;
+  const list = getAllInsidePlugins();
+  const error = "";
 
-  const { data, error } = useQuery(QUERY, {
-    variables: { name: filter },
-    fetchPolicy: "network-only",
+  Promise.resolve(list).then((list) => {
+    const plugins = list || [];
+    const loading = !list;
   });
-
-  const plugins = data?.pluginList || [];
-  const loading = !data;
 
   /**
    * Renders a single plugin card.

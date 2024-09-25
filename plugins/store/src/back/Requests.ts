@@ -1,4 +1,8 @@
+import { getMainSettings, Plugin } from "@tago-io/tcore-api";
 import axios from "axios";
+import fs from "fs";
+import path from "path";
+import md5 from "md5";
 
 /**
  * Endpoint of the graphql API.
@@ -35,29 +39,7 @@ export async function getInstallURLs(data: any) {
  * Gets the list of
  */
 export async function getDatabaseList() {
-  const query = `
-    query {
-      pluginList {
-        name
-        id
-        version
-        short_description
-        logo_url
-        publisher {
-          name
-          domain
-        }
-      }
-    }
-  `;
-
-  const response = await axios.post(GRAPHQL_ENDPOINT, { query });
-  if (response.data.errors) {
-    const message = response.data.errors[0].message;
-    throw new Error(message);
-  }
-
-  const list = response.data.data.pluginList;
+  const list = await getAllInsidePlugins();
 
   // TODO fix this when new database is released
   // currently we cant filter database plugins just yet so they
@@ -68,4 +50,37 @@ export async function getDatabaseList() {
     || String(x.name).toLowerCase().includes("postgres")
   );
   return filtered;
+}
+
+export async function getAllInsidePlugins() {
+  const settings = await getMainSettings();
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
+  console.log("insidePLugins", insidePlugins);
+  const list = [];
+  for (const folder of insidePlugins) {
+    const fullPath = path.join(__dirname, "../../..", "plugins", folder);
+    const pluginPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
+
+    if (pluginPackage) {
+      const isStore = pluginPackage?.tcore?.store;
+
+      if (!isStore) {
+        list.push({
+          name: pluginPackage.name,
+          id: md5(pluginPackage.name),
+          version: pluginPackage.version,
+          short_description: pluginPackage.tcore.short_description,
+          logo_url: "",
+          publisher: {
+            name: pluginPackage.tcore.publisher.name,
+            domain: pluginPackage.tcore.publisher.domain,
+            __typename: "PluginPublisher"
+          },
+          __typename: "PluginListItem"
+        });
+      }
+    }
+  }
+
+  return list;
 }
