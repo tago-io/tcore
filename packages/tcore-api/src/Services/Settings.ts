@@ -81,6 +81,7 @@ export async function getMainSettings(): Promise<ISettings> {
   const port = process.env.TCORE_PORT || data.port || "8888";
   const master_password = data.master_password || "";
   const version = data.version || "";
+  const installed_plugins = data.installed_plugins || [];
 
   const settings: ISettings = {
     filesystem_plugin,
@@ -91,6 +92,7 @@ export async function getMainSettings(): Promise<ISettings> {
     settings_folder,
     master_password,
     version,
+    installed_plugins,
   };
 
   if (!fs.existsSync(settings.plugin_folder)) {

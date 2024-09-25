@@ -16,6 +16,7 @@ export const zSettings = z.object({
     .or(z.undefined()),
   settings_folder: z.string().optional(),
   version: z.string().nullish(),
+  installed_plugins: z.array(z.string()).optional(),
 });
 
 /**

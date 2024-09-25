@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem } from "@tago-io/tcore-sdk/types";
+import md5 from "md5";
+import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import semver from "semver";
 import Module from "../Plugins/Module/Module";
@@ -76,7 +77,6 @@ export async function listPluginFolders(): Promise<string[]> {
   const root = settings.plugin_folder;
   const folders = await fs.promises.readdir(root);
   const plugins: string[] = [];
-  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
 
   for (const folder of folders) {
     const fullPath = path.join(root, folder);
@@ -86,13 +86,7 @@ export async function listPluginFolders(): Promise<string[]> {
     }
   }
 
-  for (const folder of insidePlugins) {
-    const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
-    const hasPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
-    if (hasPackage) {
-      plugins.push(fullPath);
-    }
-  }
+  await getInstalledInsidePlugins(plugins, settings);
 
   for (const item of DEV_BUILT_IN_PLUGINS || []) {
     const hasPackage = await Plugin.getPackageAsync(item).catch(() => null);
@@ -102,6 +96,25 @@ export async function listPluginFolders(): Promise<string[]> {
   }
 
   return plugins;
+}
+
+async function getInstalledInsidePlugins(plugins: string[], settings: ISettings) {
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
+  for (const folder of insidePlugins) {
+    const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
+    const getPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
+
+    if (getPackage) {
+      const isInstalled = settings.installed_plugins?.includes(md5(getPackage.name));
+      const isInstalledDatabasePlugin = settings.database_plugin?.split(":")[0] === md5(getPackage.name);
+      const isDatabase = getPackage?.tcore?.types?.includes("database");
+      const isStore = getPackage?.tcore?.store;
+
+      if (isInstalled || isInstalledDatabasePlugin || (isDatabase && !settings.database_plugin) || isStore) {
+        plugins.push(fullPath);
+      }
+    }
+  }
 }
 
 /**
@@ -505,3 +518,4 @@ export async function terminateAllPlugins(ignoreBuiltIns = true) {
     });
   }
 }
+
