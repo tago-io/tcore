@@ -10,6 +10,20 @@ import Plugin from "../Plugins/Plugin/Plugin";
 import { getMainSettings, getPluginSettings } from "./Settings";
 import { getVersion } from "./System";
 
+interface IPluginPackage {
+  name: string;
+  id: string;
+  version: string;
+  short_description: string;
+  logo_url: string;
+  publisher: {
+    name: string;
+    domain: string;
+    __typename: string;
+  };
+  __typename: string;
+}
+
 /**
  * Filters and maps the button modules for the plugin list.
  */
@@ -140,6 +154,37 @@ export async function getPluginList(): Promise<any> {
   }
 
   return result;
+}
+
+export async function getAllInsidePlugins() {
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
+  const list: IPluginPackage[] = [];
+  for (const folder of insidePlugins) {
+    const fullPath = path.join(__dirname, "../../..", "plugins", folder);
+    const pluginPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
+
+    if (pluginPackage) {
+      const isStore = pluginPackage?.tcore?.store;
+
+      if (!isStore) {
+        list.push({
+          name: pluginPackage.name,
+          id: md5(pluginPackage.name),
+          version: pluginPackage.version,
+          short_description: pluginPackage.tcore.short_description,
+          logo_url: "",
+          publisher: {
+            name: pluginPackage.tcore.publisher.name,
+            domain: pluginPackage.tcore.publisher.domain,
+            __typename: "PluginPublisher",
+          },
+          __typename: "PluginListItem",
+        });
+      }
+    }
+  }
+
+  return list;
 }
 
 /**
@@ -518,4 +563,3 @@ export async function terminateAllPlugins(ignoreBuiltIns = true) {
     });
   }
 }
-

@@ -1,6 +1,6 @@
 import { SidebarButtonModule, PageModule } from "@tago-io/tagocore-internal-sdk";
 import { ServiceModule } from "@tago-io/tcore-sdk";
-import { getDatabaseList, getInstallURLs } from "./Requests";
+import { getAllInsidePlugins, getDatabaseList, getInstallURLs } from "./Requests";
 
 /**
  * Retrieves the install URLs of a plugin.

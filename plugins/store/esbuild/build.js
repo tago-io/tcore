@@ -21,7 +21,6 @@ async function buildFront() {
     sourcemap: dev,
     external: ["path"],
     plugins: [svgr()],
-    platform: "node",
   });
 }
 

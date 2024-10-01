@@ -1,8 +1,5 @@
-import { getMainSettings, Plugin } from "@tago-io/tcore-api";
+import { Plugin } from "@tago-io/tcore-api";
 import axios from "axios";
-import fs from "fs";
-import path from "path";
-import md5 from "md5";
 
 /**
  * Endpoint of the graphql API.
@@ -53,9 +50,10 @@ export async function getDatabaseList() {
 }
 
 export async function getAllInsidePlugins() {
-  const settings = await getMainSettings();
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const md5 = require("md5");
   const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
-  console.log("insidePLugins", insidePlugins);
   const list = [];
   for (const folder of insidePlugins) {
     const fullPath = path.join(__dirname, "../../..", "plugins", folder);

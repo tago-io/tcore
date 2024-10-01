@@ -1,48 +1,29 @@
-import { useQuery, gql } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { EIcon, EmptyMessage, Loading, InnerNav } from "@tago-io/tcore-console";
 import { useTheme } from "styled-components";
 import Card from "./Card/Card";
 import * as Style from "./PluginStore.style";
-import { getAllInsidePlugins } from "../../back/Requests";
+import useSWR from "swr";
 
-/**
- * Query to fetch the details of the plugin.
- */
-const QUERY = gql`
-  query ($name: String, $category: String) {
-    pluginList(name: $name, category: $category) {
-      name
-      id
-      version
-      short_description
-      logo_url
-      publisher {
-        name
-        domain
-      }
-    }
-  }
-`;
+async function fetchMyData() {
+  return fetch("http://localhost:8888/plugins/store");
+}
 
 /**
  * The plugin store page.
  */
 function PluginStore() {
-  const [filter] = useState("");
   const theme = useTheme() as any;
-  const list = getAllInsidePlugins();
   const error = "";
-
-  Promise.resolve(list).then((list) => {
-    const plugins = list || [];
-    const loading = !list;
-  });
+  const { data, isLoading } = useSWR("/plugins/store", fetchMyData)
+  const plugins = data || [];
+  const loading = isLoading;
 
   /**
    * Renders a single plugin card.
    */
   const renderPlugin = (plugin: any) => {
+
     return (
       <Card
         description={plugin.short_description}
