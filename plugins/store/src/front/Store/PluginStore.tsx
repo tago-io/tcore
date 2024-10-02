@@ -1,22 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { EIcon, EmptyMessage, Loading, InnerNav } from "@tago-io/tcore-console";
 import { useTheme } from "styled-components";
 import Card from "./Card/Card";
 import * as Style from "./PluginStore.style";
 import useSWR from "swr";
 
-async function fetchMyData() {
-  return fetch("http://localhost:8888/plugins/store");
-}
+const fetcher = (url) => fetch(url).then((res) => res.json());
 
 /**
  * The plugin store page.
  */
 function PluginStore() {
   const theme = useTheme() as any;
-  const error = "";
-  const { data, isLoading } = useSWR("/plugins/store", fetchMyData)
-  const plugins = data || [];
+  const { data, error, isLoading } = useSWR("http://localhost:8888/plugins/store", fetcher);
+  const plugins = data?.result || [];
   const loading = isLoading;
 
   /**

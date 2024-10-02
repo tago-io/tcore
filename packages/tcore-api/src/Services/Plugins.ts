@@ -157,10 +157,10 @@ export async function getPluginList(): Promise<any> {
 }
 
 export async function getAllInsidePlugins() {
-  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
   const list: IPluginPackage[] = [];
   for (const folder of insidePlugins) {
-    const fullPath = path.join(__dirname, "../../..", "plugins", folder);
+    const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
     const pluginPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
 
     if (pluginPackage) {
@@ -168,7 +168,7 @@ export async function getAllInsidePlugins() {
 
       if (!isStore) {
         list.push({
-          name: pluginPackage.name,
+          name: pluginPackage.tcore.name,
           id: md5(pluginPackage.name),
           version: pluginPackage.version,
           short_description: pluginPackage.tcore.short_description,

@@ -18,6 +18,7 @@ import {
   stopPlugin,
   reloadPlugin,
   invokeOnCallModule,
+  getAllInsidePlugins,
 } from "../Services/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
@@ -275,6 +276,20 @@ class GetPluginInfo extends APIController<void, void, IURLParamsID> {
 }
 
 /**
+ * Lists all the plugins in store.
+ */
+class PluginStore extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "any", resource: "anonymous" }],
+  };
+
+  public async main() {
+    const response = await getAllInsidePlugins();
+    this.body = response;
+  }
+}
+
+/**
  * Gets the info of the main database plugin (if it is set).
  */
 class GetDatabasePluginInfo extends APIController<void, void, void> {
@@ -349,6 +364,7 @@ export default (app: Application) => {
   app.get("/plugin", warm(ListPlugins));
   app.get("/plugin/database", warm(GetDatabasePluginInfo));
   app.get("/plugin/:id", warm(GetPluginInfo));
+  app.get("/plugins/store", warm(PluginStore));
   app.post("/plugin/:id/reload", warm(ReloadPlugin));
   app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));
