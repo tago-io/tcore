@@ -9,7 +9,7 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { runInAction } from "mobx";
 import { useEffect, useState } from "react";
-import { IPluginList } from "@tago-io/tcore-sdk/types";
+import type { IPluginList } from "@tago-io/tcore-sdk/types";
 import { useHistory } from "react-router";
 import { observer } from "mobx-react";
 import imgFavicon from "../assets/images/favicon.png";
@@ -37,6 +37,8 @@ import getAccountByToken from "./Requests/getAccountByToken";
 import Setup from "./Components/Setup/Setup";
 import StepDatabaseError from "./Components/Setup/StepDatabaseError/StepDatabaseError";
 import { startSocket } from "./System/Socket";
+import PluginStore from "./Components/Store/List/PluginStore";
+import PluginDetails from "./Components/Store/Details/PluginDetails";
 
 /**
  * Main component of the application.
@@ -179,6 +181,8 @@ function MainScreenWrapper() {
         <Route exact path="/console/logs" component={Logs} />
         <Route exact path="/console/plugin/:id" component={PluginEdit} />
         <Route exact path="/console/settings" component={Settings} />
+        <Route exact path="/console/pluginstore" component={PluginStore} />
+        {/* <Route exact path="/console/pluginstore/detail/:id" component={PluginDetails} /> */}
 
         {pageModules?.map((module) => (
           <Route

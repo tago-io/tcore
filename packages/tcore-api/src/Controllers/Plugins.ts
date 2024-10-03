@@ -280,12 +280,26 @@ class GetPluginInfo extends APIController<void, void, IURLParamsID> {
  */
 class PluginStore extends APIController<void, void, void> {
   setup: ISetupController = {
-    allowTokens: [{ permission: "any", resource: "anonymous" }],
+    allowTokens: [{ permission: "read", resource: "account" }],
   };
 
   public async main() {
     const response = await getAllInsidePlugins();
     this.body = response;
+  }
+}
+
+/**
+ * Get plugin info.
+ */
+class PluginStoreInfo extends APIController<void, void, IURLParamsID> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+  };
+
+  public async main() {
+    const plugins = await getAllInsidePlugins();
+    this.body = plugins.find((x: any) => x.id === this.urlParams.id);
   }
 }
 
@@ -365,6 +379,7 @@ export default (app: Application) => {
   app.get("/plugin/database", warm(GetDatabasePluginInfo));
   app.get("/plugin/:id", warm(GetPluginInfo));
   app.get("/plugins/store", warm(PluginStore));
+  app.get("/plugins/store/:id", warm(PluginStoreInfo));
   app.post("/plugin/:id/reload", warm(ReloadPlugin));
   app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));

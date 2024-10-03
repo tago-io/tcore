@@ -73,7 +73,15 @@ function Sidebar(props: ISidebarProps) {
         url: "/console/actions/",
       },
     },
-    null,
+    {
+      text: "Store",
+      icon: EIcon.store,
+      color: theme.settings,
+      action: {
+        type: "open-url",
+        url: "/console/pluginstore",
+      },
+    },
     {
       text: "Settings",
       icon: EIcon.cog,
