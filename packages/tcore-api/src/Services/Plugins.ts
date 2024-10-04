@@ -5,9 +5,9 @@ import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettin
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import semver from "semver";
 import Module from "../Plugins/Module/Module";
-import { DEV_BUILT_IN_PLUGINS, plugins } from "../Plugins/Host";
+import { DEV_BUILT_IN_PLUGINS, plugins, startPluginAndHandleErrors } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
-import { getMainSettings, getPluginSettings } from "./Settings";
+import { getMainSettings, getPluginSettings, setMainSettings } from "./Settings";
 import { getVersion } from "./System";
 
 interface IPluginPackage {
@@ -17,6 +17,7 @@ interface IPluginPackage {
   short_description: string;
   logo_url: string;
   full_description_url: string;
+  fullPath: string;
   publisher: {
     name: string;
     domain: string;
@@ -178,6 +179,7 @@ export async function getAllInsidePlugins() {
           short_description: pluginPackage.tcore.short_description,
           full_description_url: await Plugin.returnFullDescription(fullPath, pluginPackage.tcore.full_description),
           logo_url: "",
+          fullPath: fullPath,
           publisher: {
             name: pluginPackage.tcore.publisher.name,
             domain: pluginPackage.tcore.publisher.domain,
@@ -210,7 +212,40 @@ export async function getAllInstalledPlugins() {
  */
 export async function activatePlugin(pluginID: string) {
   const settings = await getMainSettings();
-  settings.installed_plugins?.push(pluginID);
+
+  if (!settings.installed_plugins) {
+    settings.installed_plugins = [];
+  }
+  if (!settings.installed_plugins.includes(pluginID)) {
+    settings.installed_plugins.push(pluginID);
+    await setMainSettings(settings);
+    const plugins = await getAllInsidePlugins();
+    const plugin = plugins.find((x: any) => x.id === pluginID);
+    if (plugin) {
+      await startPluginAndHandleErrors(plugin.fullPath);
+    }
+    console.log(`Plugin ${pluginID} activated`);
+  }
+  return true;
+}
+
+/**
+ * Deactivate a plugin by it's ID.
+ */
+export async function deactivatePlugin(pluginID: string) {
+  const settings = await getMainSettings();
+
+  if (settings.installed_plugins?.includes(pluginID)) {
+    settings.installed_plugins = settings.installed_plugins.filter((id) => id !== pluginID);
+    await setMainSettings(settings);
+    const plugins = await getAllInsidePlugins();
+    const plugin = plugins.find((x: any) => x.id === pluginID);
+    if (plugin) {
+      const stopPlugin = new Plugin(plugin.fullPath);
+      await stopPlugin.stop(true, 3000).catch(() => null);
+    }
+    console.log(`Plugin ${pluginID} deactivated`);
+  }
   return true;
 }
 

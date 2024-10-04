@@ -31,8 +31,6 @@
     "url": "git+https://github.com/tago-io/tcore.git"
   },
   "scripts": {
-    "tagocore-plugin-store:tsc": "npm run tsc:watch -w @tago-io/tagocore-plugin-store",
-    "tagocore-internal-sdk:tsc": "npm run tsc:watch -w @tago-io/tagocore-internal-sdk",
     "plugin-filesystem-local:tsc": "npm run tsc:watch -w @tago-io/tcore-plugin-filesystem-local",
     "plugin-filesystem-local:watch": "npm run tsc:watch -w @tago-io/tcore-plugin-filesystem-local",
     "shared:watch": "npm run watch -w @tago-io/tcore-shared",

@@ -21,6 +21,7 @@ import {
   getAllInsidePlugins,
   getAllInstalledPlugins,
   activatePlugin,
+  deactivatePlugin,
 } from "../Services/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
@@ -336,6 +337,20 @@ class ActivatePlugin extends APIController<void, void, IURLParamsID> {
 }
 
 /**
+ * Deactivate a plugin from store.
+ */
+class DeactivatePlugin extends APIController<void, void, IURLParamsID> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    this.body = await deactivatePlugin(this.urlParams.id);
+  }
+}
+
+/**
  * Gets the info of the main database plugin (if it is set).
  */
 class GetDatabasePluginInfo extends APIController<void, void, void> {
@@ -414,6 +429,7 @@ export default (app: Application) => {
   app.get("/plugins/store/:id", warm(PluginStoreInfo));
   app.get("/plugins/installed", warm(InstalledPlugins));
   app.post("/plugins/activate/:id", warm(ActivatePlugin));
+  app.post("/plugins/deactivate/:id", warm(DeactivatePlugin));
   app.post("/plugin/:id/reload", warm(ReloadPlugin));
   app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));

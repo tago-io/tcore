@@ -42,14 +42,6 @@ function StepDatabaseWithStore(props: any) {
     skip: !store.masterPassword,
   });
   const { data: platform } = useApiRequest<string>("/hardware/platform");
-  // const { data: storeList } = useApiRequest<any[]>(
-  //   `/plugin/${PLUGIN_STORE_PLUGIN_ID}/get-database-list/call`,
-  //   {
-  //     method: "post",
-  //     skip: !store.masterPassword,
-  //   }
-  // );
-  const storeList = [];
 
   const installedListFiltered = installedList?.filter((x) => !x.error) || [];
 
@@ -177,22 +169,6 @@ function StepDatabaseWithStore(props: any) {
       });
     }
 
-    for (const plugin of storeList) {
-      const item = result.find((x) => x.id === plugin.id);
-      if (item) {
-        item.publisher = plugin.publisher;
-      } else if (!item) {
-        result.push({
-          description: plugin.short_description,
-          id: plugin.id,
-          logoURL: plugin.logo_url,
-          name: plugin.name,
-          publisher: plugin.publisher,
-          version: plugin.version,
-        });
-      }
-    }
-
     result.sort((a, b) => {
       if (a.id === SQLITE_PLUGIN_ID && b.id !== SQLITE_PLUGIN_ID) {
         // priority for sqlite plugin
@@ -247,11 +223,11 @@ function StepDatabaseWithStore(props: any) {
   /**
    */
   useEffect(() => {
-    if (storeList && installedList) {
+    if (installedList) {
       filterPlugins();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [installedList, filter, storeList]);
+  }, [installedList, filter]);
 
   return (
     <>

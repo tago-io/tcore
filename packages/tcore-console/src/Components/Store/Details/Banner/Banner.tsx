@@ -30,7 +30,7 @@ function Banner(props: IBannerProps) {
   // const { data: plugins } = useApiRequest<IPluginListItem[]>("/plugin");
   const { data: installedPlugins } = useApiRequest<Array<string>>("/plugins/installed");
 
-  const { plugin, onChangeSelectedVersion, installURL, selectedVersion } = props;
+  const { plugin, onChangeSelectedVersion, selectedVersion } = props;
 
   const { id, logo_url, name, publisher, short_description, compatibility, version } = plugin;
 
@@ -40,13 +40,14 @@ function Banner(props: IBannerProps) {
   const isClusterCompatible = !runningInCluster || compatibility?.cluster;
 
   const isIncompatible = !isClusterCompatible;
+  const installURL = `/plugins/activate/${id}`;
 
   /**
    * Called when the install button is pressed.
    */
   const install = useCallback(() => {
-    window.top?.postMessage({ type: "install-plugin", url: `/plugins/activate/${id}` }, "*");
-  }, [id]);
+    window.top?.postMessage({ type: "install-plugin", url: installURL }, "*");
+  }, [installURL]);
 
   /**
    * Edits the configuration of the plugin.
