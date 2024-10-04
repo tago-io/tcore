@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { LinkStyle, ButtonStyle, PluginImageStyle } from "@tago-io/tcore-console";
+import { ButtonStyle, LinkStyle, PluginImageStyle } from "../../../..";
 
 /**
  */

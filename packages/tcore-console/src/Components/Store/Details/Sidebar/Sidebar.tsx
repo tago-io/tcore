@@ -1,11 +1,8 @@
 import { TPluginType } from "@tago-io/tcore-sdk/types";
-import {
-  Categories,
-  ClassTypes,
-  MainInformation,
-  Permissions,
-  Platforms,
-} from "@tago-io/tcore-console";
+import MainInformation from "../../../Plugins/Common/MainInformation/MainInformation";
+import Platforms from "../../../Plugins/Common/Platforms/Platforms";
+import ClassTypes from "../../../Plugins/Common/ClassTypes/ClassTypes";
+import Permissions from "../../../Plugins/Common/Permissions/Permissions";
 import * as Style from "./Sidebar.style";
 
 interface ISidebarProps {
@@ -72,7 +69,7 @@ function Sidebar(props: ISidebarProps) {
       {categories.length > 0 && (
         <section>
           <h4>Categories</h4>
-          <Categories value={categories} />
+          {/* <Categories value={categories} /> */}
         </section>
       )}
     </Style.Container>

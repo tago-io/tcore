@@ -43,7 +43,7 @@ function Card(props: ICardProps) {
   const { id, logoURL, name, description, version, publisherDomain, publisherName } = props;
 
   return (
-    <Style.Container to={`/console/pluginstore/details/${id}`}>
+    <Style.Container to={`/console/pluginstore/detail/${id}`}>
       <div className="icon-container">
         <PluginImage width={60} src={logoURL} />
       </div>

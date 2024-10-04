@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { Icon, EIcon } from "@tago-io/tcore-console";
+import Icon from "../../../Icon/Icon";
+import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./Screenshots.style";
 
 /**

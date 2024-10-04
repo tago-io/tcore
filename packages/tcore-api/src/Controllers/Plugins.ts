@@ -19,6 +19,8 @@ import {
   reloadPlugin,
   invokeOnCallModule,
   getAllInsidePlugins,
+  getAllInstalledPlugins,
+  activatePlugin,
 } from "../Services/Plugins";
 import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
@@ -295,11 +297,41 @@ class PluginStore extends APIController<void, void, void> {
 class PluginStoreInfo extends APIController<void, void, IURLParamsID> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
+    zURLParamsParser: zURLParamsID,
   };
 
   public async main() {
     const plugins = await getAllInsidePlugins();
-    this.body = plugins.find((x: any) => x.id === this.urlParams.id);
+    const plugin = plugins.find((x: any) => x.id === this.urlParams.id);
+    this.body = plugin;
+  }
+}
+
+/**
+ * Get list of installed plugins.
+ */
+class InstalledPlugins extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+  };
+
+  public async main() {
+    const plugins = await getAllInstalledPlugins();
+    this.body = plugins;
+  }
+}
+
+/**
+ * Activate a plugin from store.
+ */
+class ActivatePlugin extends APIController<void, void, IURLParamsID> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+    zURLParamsParser: zURLParamsID,
+  };
+
+  public async main() {
+    this.body = await activatePlugin(this.urlParams.id);
   }
 }
 
@@ -380,6 +412,8 @@ export default (app: Application) => {
   app.get("/plugin/:id", warm(GetPluginInfo));
   app.get("/plugins/store", warm(PluginStore));
   app.get("/plugins/store/:id", warm(PluginStoreInfo));
+  app.get("/plugins/installed", warm(InstalledPlugins));
+  app.post("/plugins/activate/:id", warm(ActivatePlugin));
   app.post("/plugin/:id/reload", warm(ReloadPlugin));
   app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));

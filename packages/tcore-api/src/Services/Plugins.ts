@@ -16,6 +16,7 @@ interface IPluginPackage {
   version: string;
   short_description: string;
   logo_url: string;
+  full_description_url: string;
   publisher: {
     name: string;
     domain: string;
@@ -156,6 +157,9 @@ export async function getPluginList(): Promise<any> {
   return result;
 }
 
+/**
+ * Lists all the plugins directly main plugin folder.
+ */
 export async function getAllInsidePlugins() {
   const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
   const list: IPluginPackage[] = [];
@@ -172,6 +176,7 @@ export async function getAllInsidePlugins() {
           id: md5(pluginPackage.name),
           version: pluginPackage.version,
           short_description: pluginPackage.tcore.short_description,
+          full_description_url: await Plugin.returnFullDescription(fullPath, pluginPackage.tcore.full_description),
           logo_url: "",
           publisher: {
             name: pluginPackage.tcore.publisher.name,
@@ -185,6 +190,28 @@ export async function getAllInsidePlugins() {
   }
 
   return list;
+}
+
+/**
+ * Get a list of ids of all installed plugins.
+ */
+export async function getAllInstalledPlugins() {
+  const settings = await getMainSettings();
+  const isInstalledDatabasePlugin = settings.database_plugin?.split(":")[0];
+  const list = settings.installed_plugins || [];
+  if (isInstalledDatabasePlugin) {
+    list.push(isInstalledDatabasePlugin);
+  }
+  return list;
+}
+
+/**
+ * Activate a plugin by it's ID.
+ */
+export async function activatePlugin(pluginID: string) {
+  const settings = await getMainSettings();
+  settings.installed_plugins?.push(pluginID);
+  return true;
 }
 
 /**

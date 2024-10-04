@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { EmptyMessage, EIcon, Loading, Markdown, Tabs } from "@tago-io/tcore-console";
 import Screenshots from "../Screenshots/Screenshots";
+import Loading from "../../../Loading/Loading";
+import Markdown from "../../../Markdown/Markdown";
+import EmptyMessage from "../../../EmptyMessage/EmptyMessage";
+import { EIcon } from "../../../Icon/Icon.types";
+import Tabs from "../../../Tabs/Tabs";
 
 /**
  * Props.
@@ -54,15 +58,8 @@ function DataTabs(props: IDataTabsProps) {
    */
   useEffect(() => {
     if (markdownURL) {
-      axios
-        .get(markdownURL)
-        .then((r) => {
-          setLoadingMarkdown(false);
-          setMarkdownDescription(r.data);
-        })
-        .catch(() => {
-          setLoadingMarkdown(false);
-        });
+      setLoadingMarkdown(false);
+      setMarkdownDescription(markdownURL);
     }
   }, [markdownURL]);
 

@@ -1,5 +1,5 @@
-import { fonts } from "@tago-io/tcore-console/build-tsc/theme";
 import styled from "styled-components";
+import { fonts } from "../../../theme";
 
 /**
  */

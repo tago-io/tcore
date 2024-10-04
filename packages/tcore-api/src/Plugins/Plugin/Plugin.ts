@@ -224,6 +224,14 @@ class Plugin {
   public static async getPackageAsync(folder: string) {
     return Plugin.getPackage(folder);
   }
+
+  /**
+   */
+  public static async returnFullDescription(folder: string, relativePath: string) {
+    const fullPath = path.join(folder, relativePath);
+    const data = fs.readFileSync(fullPath, "utf8");
+    return data;
+  }
 }
 
 export default Plugin;

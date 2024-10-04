@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
+import { observer } from "mobx-react";
 import useApiRequest from "../../../Helpers/useApiRequest";
 import Loading from "../../Loading/Loading";
 import EmptyMessage from "../../EmptyMessage/EmptyMessage";
@@ -42,7 +43,7 @@ function PluginDetails() {
   /**
    */
   useEffect(() => {
-    window.top?.postMessage({ type: "set-link", url: `/console/pluginstore/details/${id}` }, "*");
+    window.top?.postMessage({ type: "set-link", url: `/console/pluginstore/detail/${id}` }, "*");
   }, [id]);
 
   if (error) {
@@ -70,7 +71,7 @@ function PluginDetails() {
         plugin={plugin}
         installURL={installURL}
         onChangeSelectedVersion={setSelectedVersion}
-        selectedVersion={selectedVersion || plugin.versions[0]}
+        selectedVersion={selectedVersion || plugin.versions}
         systemPlatform={platform}
       />
 
@@ -80,7 +81,7 @@ function PluginDetails() {
             markdownURL={plugin.full_description_url}
             screenshots={plugin.screenshots}
             themeColor={plugin.theme_color}
-            pluginVersion={selectedVersion || plugin.versions[0]}
+            pluginVersion={selectedVersion || plugin.version}
             pluginID={id}
           />
         </div>
@@ -100,4 +101,4 @@ function PluginDetails() {
   );
 }
 
-export default PluginDetails;
+export default observer(PluginDetails);

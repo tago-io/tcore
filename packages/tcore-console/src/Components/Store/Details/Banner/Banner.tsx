@@ -1,16 +1,14 @@
-import { IPluginListItem } from "@tago-io/tcore-sdk/types";
+import type { IPluginListItem } from "@tago-io/tcore-sdk/types";
 import { useCallback } from "react";
-import {
-  Button,
-  EButton,
-  Icon,
-  Tooltip,
-  EIcon,
-  PluginImage,
-  Publisher,
-  useApiRequest,
-} from "@tago-io/tcore-console";
 import semver from "semver";
+import useApiRequest from "../../../../Helpers/useApiRequest";
+import Publisher from "../../../Plugins/Common/Publisher/Publisher";
+import Button from "../../../Button/Button";
+import { EButton } from "../../../Button/Button.types";
+import Icon from "../../../Icon/Icon";
+import { EIcon } from "../../../Icon/Icon.types";
+import Tooltip from "../../../Tooltip/Tooltip";
+import PluginImage from "../../../PluginImage/PluginImage";
 import * as Style from "./Banner.style";
 
 /**
@@ -29,33 +27,26 @@ interface IBannerProps {
  */
 function Banner(props: IBannerProps) {
   const { data: status } = useApiRequest<any>("/status");
-  const { data: plugins } = useApiRequest<IPluginListItem[]>("/plugin");
+  // const { data: plugins } = useApiRequest<IPluginListItem[]>("/plugin");
+  const { data: installedPlugins } = useApiRequest<Array<string>>("/plugins/installed");
 
-  const { plugin, onChangeSelectedVersion, installURL, selectedVersion, systemPlatform } = props;
+  const { plugin, onChangeSelectedVersion, installURL, selectedVersion } = props;
 
-  const systemVersion = status?.version;
+  const { id, logo_url, name, publisher, short_description, compatibility, version } = plugin;
 
-  const { id, logo_url, name, platforms, publisher, short_description, compatibility, versions } =
-    plugin;
-
-  const installedPluginItem = plugins?.find((x) => String(plugin.id).includes(x.id));
-  const isInstalled = installedPluginItem?.version === selectedVersion;
+  const isInstalled = installedPlugins?.includes(id);
 
   const runningInCluster = status?.cluster;
   const isClusterCompatible = !runningInCluster || compatibility?.cluster;
-  const isVersionCompatible =
-    compatibility && semver.satisfies(systemVersion, compatibility.tcore_version);
-  const isPlatformCompatible =
-    (installURL && platforms?.includes(systemPlatform)) || platforms?.includes("any");
 
-  const isIncompatible = !isClusterCompatible || !isVersionCompatible || !isPlatformCompatible;
+  const isIncompatible = !isClusterCompatible;
 
   /**
    * Called when the install button is pressed.
    */
   const install = useCallback(() => {
-    window.top?.postMessage({ type: "install-plugin", url: installURL }, "*");
-  }, [installURL]);
+    window.top?.postMessage({ type: "install-plugin", url: `/plugins/activate/${id}` }, "*");
+  }, [id]);
 
   /**
    * Edits the configuration of the plugin.
@@ -75,10 +66,10 @@ function Banner(props: IBannerProps) {
   /**
    * Renders the dropdown/select version.
    */
-  const renderDropdownVersion = (version: string, index: number) => {
+  const renderDropdownVersion = (ver: string, index: number) => {
     return (
-      <option key={version} value={version}>
-        {index === 0 ? `v${version} (Latest)` : `v${version}`}
+      <option key={ver} value={ver}>
+        {index === 0 ? `v${ver} (Latest)` : `v${ver}`}
       </option>
     );
   };
@@ -92,7 +83,7 @@ function Banner(props: IBannerProps) {
         <div className="title">
           <h1>{name}</h1>
           <select value={selectedVersion} onChange={(e) => onChangeSelectedVersion(e.target.value)}>
-            {versions.map(renderDropdownVersion)}
+            {version}
           </select>
         </div>
 
@@ -127,7 +118,7 @@ function Banner(props: IBannerProps) {
             type={EButton.danger_outline}
           >
             <Icon icon={EIcon["trash-alt"]} />
-            <span>Uninstall</span>
+            <span>Deactivate</span>
           </Button>
         </Style.Install>
       );
@@ -137,23 +128,13 @@ function Banner(props: IBannerProps) {
       <Tooltip text={isInstalled ? `This version is already installed` : ""}>
         <Style.Install disabled={disabled}>
           <Button onClick={install} type={EButton.primary}>
-            Install
+            Activate
           </Button>
 
           {!isClusterCompatible ? (
             <div className="error">
               <Icon icon={EIcon["exclamation-triangle"]} size="10px" />
               <span> This version can&apos;t run in a Cluster instance</span>
-            </div>
-          ) : !isVersionCompatible ? (
-            <div className="error">
-              <Icon icon={EIcon["exclamation-triangle"]} size="10px" />
-              <span> This version can&apos;t run on TagoCore v{systemVersion}</span>
-            </div>
-          ) : !isPlatformCompatible ? (
-            <div className="error">
-              <Icon icon={EIcon["exclamation-triangle"]} size="10px" />
-              <span> This version isn&apos;t compatible with this platform</span>
             </div>
           ) : null}
         </Style.Install>

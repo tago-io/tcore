@@ -182,7 +182,7 @@ function MainScreenWrapper() {
         <Route exact path="/console/plugin/:id" component={PluginEdit} />
         <Route exact path="/console/settings" component={Settings} />
         <Route exact path="/console/pluginstore" component={PluginStore} />
-        {/* <Route exact path="/console/pluginstore/detail/:id" component={PluginDetails} /> */}
+        <Route exact path="/console/pluginstore/detail/:id" component={PluginDetails} />
 
         {pageModules?.map((module) => (
           <Route
