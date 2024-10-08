@@ -7,7 +7,6 @@ export const zSettings = z.object({
   database_plugin: z.string().optional(),
   queue_plugin: z.string().optional(),
   filesystem_plugin: z.string().optional(),
-  plugin_folder: z.string(),
   master_password: z.string().optional(),
   port: z
     .preprocess((x) => Number(x), z.number())
@@ -17,6 +16,7 @@ export const zSettings = z.object({
   settings_folder: z.string().optional(),
   version: z.string().nullish(),
   installed_plugins: z.array(z.string()).optional(),
+  custom_plugins: z.array(z.string()).optional(),
 });
 
 /**
