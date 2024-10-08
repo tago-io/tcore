@@ -26,7 +26,7 @@ function DataTabs(props: IDataTabsProps) {
   const [loadingMarkdown, setLoadingMarkdown] = useState(true);
   const [markdownDescription, setMarkdownDescription] = useState("");
 
-  const { markdownURL, pluginID, pluginVersion, themeColor, screenshots } = props;
+  const { markdownURL, pluginID, themeColor, screenshots } = props;
 
   /**
    * Renders the markdown description.
@@ -37,10 +37,7 @@ function DataTabs(props: IDataTabsProps) {
     }
 
     return markdownDescription ? (
-      <Markdown
-        localImgPrefix={`https://plugins.tagocore.com/${pluginID}/${pluginVersion}`}
-        value={markdownDescription}
-      />
+      <Markdown localImgPrefix={`/images2/${pluginID}`} value={markdownDescription} />
     ) : (
       <EmptyMessage icon={EIcon.list} message="No description available." />
     );

@@ -1,6 +1,5 @@
-import type { IPluginListItem } from "@tago-io/tcore-sdk/types";
-import { useCallback } from "react";
-import semver from "semver";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import useApiRequest from "../../../../Helpers/useApiRequest";
 import Publisher from "../../../Plugins/Common/Publisher/Publisher";
 import Button from "../../../Button/Button";
@@ -9,7 +8,10 @@ import Icon from "../../../Icon/Icon";
 import { EIcon } from "../../../Icon/Icon.types";
 import Tooltip from "../../../Tooltip/Tooltip";
 import PluginImage from "../../../PluginImage/PluginImage";
+import { getLocalStorage } from "../../../../Helpers/localStorage";
+import store from "../../../../System/Store";
 import * as Style from "./Banner.style";
+import { useHistory } from "react-router";
 
 /**
  * Props.
@@ -27,53 +29,48 @@ interface IBannerProps {
  */
 function Banner(props: IBannerProps) {
   const { data: status } = useApiRequest<any>("/status");
-  // const { data: plugins } = useApiRequest<IPluginListItem[]>("/plugin");
   const { data: installedPlugins } = useApiRequest<Array<string>>("/plugins/installed");
+  const { plugin } = props;
+  const { id, logo_url, name, publisher, short_description, compatibility } = plugin;
 
-  const { plugin, onChangeSelectedVersion, selectedVersion } = props;
-
-  const { id, logo_url, name, publisher, short_description, compatibility, version } = plugin;
-
-  const isInstalled = installedPlugins?.includes(id);
+  const [isInstalled, setIsInstalled] = useState(installedPlugins?.includes(id));
+  useEffect(() => {
+    setIsInstalled(installedPlugins?.includes(id));
+  }, [installedPlugins, id]);
+  const history = useHistory();
 
   const runningInCluster = status?.cluster;
   const isClusterCompatible = !runningInCluster || compatibility?.cluster;
 
   const isIncompatible = !isClusterCompatible;
-  const installURL = `/plugins/activate/${id}`;
+  const token = getLocalStorage("token", "") as string;
+  const masterPassword = store.masterPassword;
+  const headers = useMemo(() => ({ token, masterPassword }), [token, masterPassword]);
 
   /**
-   * Called when the install button is pressed.
+   * Called when the activate button is pressed.
    */
-  const install = useCallback(() => {
-    window.top?.postMessage({ type: "install-plugin", url: installURL }, "*");
-  }, [installURL]);
+  const activate = useCallback(() => {
+    axios.post(`/plugins/activate/${id}`, {}, { headers }).then(() => {
+      setIsInstalled(true);
+    });
+  }, [id, headers]);
 
   /**
    * Edits the configuration of the plugin.
    */
   const editConfiguration = useCallback(() => {
-    window.top?.postMessage({ type: "set-link", url: `/plugin/${id}` }, "*");
-  }, [id]);
+    history.push(`/console/plugin/${id}`);
+  }, [id, history]);
 
   /**
-   * Called when the uninstall button is pressed.
+   * Called when the deactivate button is pressed.
    */
-  const uninstall = useCallback(() => {
-    const pluginID = id;
-    window.top?.postMessage({ type: "uninstall-plugin", pluginID }, "*");
-  }, [id]);
-
-  /**
-   * Renders the dropdown/select version.
-   */
-  const renderDropdownVersion = (ver: string, index: number) => {
-    return (
-      <option key={ver} value={ver}>
-        {index === 0 ? `v${ver} (Latest)` : `v${ver}`}
-      </option>
-    );
-  };
+  const deactivate = useCallback(() => {
+    axios.post(`/plugins/deactivate/${id}`, {}, { headers }).then(() => {
+      setIsInstalled(false);
+    });
+  }, [id, headers]);
 
   /**
    * Renders the information part of the banner.
@@ -83,9 +80,6 @@ function Banner(props: IBannerProps) {
       <Style.Info>
         <div className="title">
           <h1>{name}</h1>
-          <select value={selectedVersion} onChange={(e) => onChangeSelectedVersion(e.target.value)}>
-            {version}
-          </select>
         </div>
 
         {publisher?.name && (
@@ -115,7 +109,7 @@ function Banner(props: IBannerProps) {
           <Button
             style={{ padding: "8px 20px", marginTop: "10px" }}
             addIconMargin
-            onClick={uninstall}
+            onClick={deactivate}
             type={EButton.danger_outline}
           >
             <Icon icon={EIcon["trash-alt"]} />
@@ -128,7 +122,7 @@ function Banner(props: IBannerProps) {
     return (
       <Tooltip text={isInstalled ? `This version is already installed` : ""}>
         <Style.Install disabled={disabled}>
-          <Button onClick={install} type={EButton.primary}>
+          <Button onClick={activate} type={EButton.primary}>
             Activate
           </Button>
 

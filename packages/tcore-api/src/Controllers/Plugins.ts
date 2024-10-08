@@ -385,6 +385,14 @@ export async function resolvePluginImage(req: Request, res: Response) {
       const option = (module?.setup as any as IActionTypeModuleSetup)?.option;
       fullImagePath = option?.icon?.replace("$PLUGIN_FOLDER$", plugin.folder) || "";
     }
+  } else {
+    const pluginsStore = await getAllInsidePlugins();
+    const pluginStore = pluginsStore.find((x: any) => x.id === req.params.plugin);
+    if (pluginStore) {
+      if (type === "icon") {
+        fullImagePath = path.join(pluginStore.fullPath, pluginStore.icon);
+      }
+    }
   }
 
   if (fullImagePath) {
@@ -404,6 +412,13 @@ export async function resolvePluginImage2(req: Request, res: Response) {
   const [pluginID] = split.splice(0, 1); // pop the plugin id
   const plugin = plugins.get(pluginID);
   if (!plugin) {
+    const pluginsStore = await getAllInsidePlugins();
+    const pluginStore = pluginsStore.find((x: any) => x.id === req.params.plugin);
+    if (pluginStore) {
+      const imgPath = split.join(path.sep);
+      const fullImagePath = path.join(pluginStore.fullPath, imgPath);
+      return res.sendFile(fullImagePath);
+    }
     return res.sendStatus(404);
   }
 

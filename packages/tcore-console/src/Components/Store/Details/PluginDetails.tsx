@@ -31,14 +31,8 @@ function PluginDetails() {
    * Updates the URL with the new selected version.
    */
   useEffect(() => {
-    if (selectedVersion) {
-      history.replaceState(
-        null,
-        "",
-        `/console/pluginstore/details/${id}?version=${selectedVersion}`
-      );
-    }
-  }, [id, selectedVersion]);
+    history.replaceState(null, "", `/console/pluginstore/details/${id}`);
+  }, [id]);
 
   /**
    */

@@ -7,6 +7,7 @@ import semver from "semver";
 import Module from "../Plugins/Module/Module";
 import { DEV_BUILT_IN_PLUGINS, plugins, startPluginAndHandleErrors } from "../Plugins/Host";
 import Plugin from "../Plugins/Plugin/Plugin";
+import { io } from "../Socket/SocketServer";
 import { getMainSettings, getPluginSettings, setMainSettings } from "./Settings";
 import { getVersion } from "./System";
 
@@ -18,6 +19,7 @@ interface IPluginPackage {
   logo_url: string;
   full_description_url: string;
   fullPath: string;
+  icon: string;
   publisher: {
     name: string;
     domain: string;
@@ -178,8 +180,9 @@ export async function getAllInsidePlugins() {
           version: pluginPackage.version,
           short_description: pluginPackage.tcore.short_description,
           full_description_url: await Plugin.returnFullDescription(fullPath, pluginPackage.tcore.full_description),
-          logo_url: "",
+          logo_url: `/images/${md5(pluginPackage.name)}/icon`,
           fullPath: fullPath,
+          icon: pluginPackage.tcore.icon,
           publisher: {
             name: pluginPackage.tcore.publisher.name,
             domain: pluginPackage.tcore.publisher.domain,
@@ -223,10 +226,14 @@ export async function activatePlugin(pluginID: string) {
     const plugin = plugins.find((x: any) => x.id === pluginID);
     if (plugin) {
       await startPluginAndHandleErrors(plugin.fullPath);
+      const socketData = {
+        id: pluginID,
+        install: true,
+      };
+      io?.to(`plugin#${pluginID}`).emit("plugin::sidebar", socketData);
+      io?.to(`plugin#${pluginID}`).emit("plugin::status", socketData);
     }
-    console.log(`Plugin ${pluginID} activated`);
   }
-  return true;
 }
 
 /**
@@ -243,10 +250,14 @@ export async function deactivatePlugin(pluginID: string) {
     if (plugin) {
       const stopPlugin = new Plugin(plugin.fullPath);
       await stopPlugin.stop(true, 3000).catch(() => null);
+      const socketData = {
+        id: pluginID,
+        delete: true,
+      };
+      io?.to(`plugin#${pluginID}`).emit("plugin::sidebar", socketData);
+      io?.to(`plugin#${pluginID}`).emit("plugin::status", socketData);
     }
-    console.log(`Plugin ${pluginID} deactivated`);
   }
-  return true;
 }
 
 /**
