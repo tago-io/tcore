@@ -1,0 +1,16 @@
+FROM arm64v8/node:16
+
+# Sets the current dir as this one
+WORKDIR /usr/src/app
+
+# Copies the project over to the image
+COPY . .
+
+# Installs dependencies
+RUN npm install
+
+# Builds the modules
+RUN npm run build
+
+# Generates the .tcore file
+RUN npm run pack

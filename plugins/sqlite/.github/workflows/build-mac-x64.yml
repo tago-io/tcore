@@ -1,0 +1,47 @@
+name: Build for mac-x64
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    # Checks out the code
+    - name: Checkout the code
+      uses: actions/checkout@v1
+
+    # Installs dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Builds the modules
+    - name: Run build
+      run: npm run build
+
+    # Sign the executable
+    - name: Codesign binary
+      env:
+        MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+        MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+        MACOS_FULL_IDENTITY: ${{ secrets.MACOS_FULL_IDENTITY }}
+      run: |
+        echo $MACOS_CERTIFICATE | openssl base64 -d -A > certificate.p12
+        security create-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+        security default-keychain -s build.keychain
+        security unlock-keychain -p $MACOS_CERTIFICATE_PWD build.keychain
+        security import certificate.p12 -k build.keychain -P $MACOS_CERTIFICATE_PWD -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $MACOS_CERTIFICATE_PWD build.keychain
+        /usr/bin/codesign -f -s "$MACOS_FULL_IDENTITY" --options=runtime --timestamp ./build/Binary/node_sqlite3.node
+
+    # Generates the .tcore file
+    - name: Generate .tcore
+      run: npm run pack
+
+    # Deploys the .tar.gz into S3
+    - name: Upload to S3
+      run: |
+        aws s3 cp --content-type binary/octet-stream ./tcore-plugin-sqlite.tcore s3://tagocore-github-actions/plugins/tcore-plugin-sqlite-mac-x64.tcore
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
