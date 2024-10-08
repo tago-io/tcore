@@ -1,18 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { io } from "../Socket/SocketServer";
-import { getPluginSettingsFolder } from "../Services/Settings";
 import { deactivatePlugin } from "../Services/Plugins";
 /**
  * Uninstalls a plugin.
  */
-export async function uninstallPlugin(id: string, keepPluginData?: boolean) {
+export async function uninstallPlugin(id: string) {
   await deactivatePlugin(id);
-
-  if (!keepPluginData) {
-    const settingsFolder = await getPluginSettingsFolder(id);
-    await rmdir(settingsFolder);
-  }
 
   const socketData = {
     id: id,
