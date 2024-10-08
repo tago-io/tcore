@@ -21,7 +21,6 @@ function PluginStore() {
    * Renders a single plugin card.
    */
   const renderPlugin = (plugin: any) => {
-
     return (
       <Card
         description={plugin.short_description}

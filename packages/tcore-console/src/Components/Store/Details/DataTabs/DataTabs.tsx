@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Screenshots from "../Screenshots/Screenshots";
 import Loading from "../../../Loading/Loading";

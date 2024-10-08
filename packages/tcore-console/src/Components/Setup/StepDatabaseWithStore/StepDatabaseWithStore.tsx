@@ -1,7 +1,7 @@
 import { IPluginList } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { useCallback, useEffect, useState } from "react";
-import { PLUGIN_STORE_PLUGIN_ID, SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
+import { SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
 import {
   Button,
   EButton,

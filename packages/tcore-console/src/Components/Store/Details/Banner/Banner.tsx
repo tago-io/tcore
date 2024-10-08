@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import { useHistory } from "react-router";
 import useApiRequest from "../../../../Helpers/useApiRequest";
 import Publisher from "../../../Plugins/Common/Publisher/Publisher";
 import Button from "../../../Button/Button";
@@ -11,7 +12,6 @@ import PluginImage from "../../../PluginImage/PluginImage";
 import { getLocalStorage } from "../../../../Helpers/localStorage";
 import store from "../../../../System/Store";
 import * as Style from "./Banner.style";
-import { useHistory } from "react-router";
 
 /**
  * Props.

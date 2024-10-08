@@ -24,7 +24,7 @@ import { getMainSettings } from "./Services/Settings";
 import HardwareController from "./Controllers/Hardware";
 import { setupSocketServer } from "./Socket/SocketServer";
 import { shutdown } from "./Helpers/shutdown";
-import { getAllInsidePlugins, getAllPluginList, getModuleList } from "./Services/Plugins";
+import { getModuleList } from "./Services/Plugins";
 import { startCallbackInterval } from "./Plugins/Worker/Worker";
 import { startActionScheduleTimer } from "./Services/ActionScheduler";
 import { logSystemStart, oraLog, oraLogError } from "./Helpers/log";
