@@ -172,7 +172,6 @@ export async function getAllInsidePlugins() {
 
     if (pluginPackage) {
       const isStore = pluginPackage?.tcore?.store;
-
       if (!isStore) {
         list.push({
           name: pluginPackage.tcore.name,
@@ -184,8 +183,8 @@ export async function getAllInsidePlugins() {
           fullPath: fullPath,
           icon: pluginPackage.tcore.icon,
           publisher: {
-            name: pluginPackage.tcore.publisher.name,
-            domain: pluginPackage.tcore.publisher.domain,
+            name: pluginPackage.tcore.publisher?.name,
+            domain: pluginPackage.tcore.publisher?.domain,
             __typename: "PluginPublisher",
           },
           __typename: "PluginListItem",
