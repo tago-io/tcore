@@ -417,7 +417,9 @@ export async function resolvePluginImage2(req: Request, res: Response) {
     if (pluginStore) {
       const imgPath = split.join(path.sep);
       const fullImagePath = path.join(pluginStore.fullPath, imgPath);
-      return res.sendFile(fullImagePath);
+      if (fullImagePath) {
+        return res.sendFile(fullImagePath);
+      }
     }
     return res.sendStatus(404);
   }
@@ -425,7 +427,10 @@ export async function resolvePluginImage2(req: Request, res: Response) {
   const imgPath = split.join(path.sep);
   const fullPath = path.join(plugin.folder, imgPath);
 
-  res.sendFile(fullPath);
+  if (fullPath) {
+    return res.sendFile(fullPath);
+  }
+  return res.sendStatus(404);
 }
 
 /**
