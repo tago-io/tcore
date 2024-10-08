@@ -61,7 +61,7 @@ class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQuery
   };
 
   public async main() {
-    const response = await uninstallPlugin(this.urlParams.id, this.queryStringParams.keep_data);
+    const response = await uninstallPlugin(this.urlParams.id);
     this.body = response;
   }
 }
