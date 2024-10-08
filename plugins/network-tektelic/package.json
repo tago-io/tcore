@@ -1,0 +1,58 @@
+{
+  "name": "@tago-io/tcore-plugin-network-tektelic",
+  "version": "0.7.0",
+  "private": false,
+  "main": "./build/index.js",
+  "engines": {
+    "tcore": ">= 0.7.0 < 1.0.0"
+  },
+  "files": [
+    "build/**/*",
+    "assets/**/*"
+  ],
+  "tcore": {
+    "name": "Tektelic LoRaWAN",
+    "short_description": "Adds support for Tektelic LoRaWAN",
+    "full_description": "./README.md",
+    "icon": "./assets/icon.png",
+    "cluster": true,
+    "types": [
+      "service",
+      "encoder",
+      "action-type"
+    ],
+    "permissions": [
+      "device",
+      "action",
+      "device-data"
+    ]
+  },
+  "scripts": {
+    "pack": "tcore-plugin pack",
+    "watch": "node esbuild/build.js --watch",
+    "linter": "eslint .",
+    "build": "npm run linter; rm -rf ./build; node esbuild/build.js"
+  },
+  "dependencies": {
+    "@tago-io/tcore-sdk": "0.5.0",
+    "async": "3.2.3",
+    "axios": "^0.26.1",
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/ms": "^0.7.31",
+    "@types/node": "17.0.21",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "esbuild": "^0.14.26",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsdoc": "^38.0.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1"
+  }
+}

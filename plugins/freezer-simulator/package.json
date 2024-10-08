@@ -1,0 +1,48 @@
+{
+  "name": "@tago-io/tcore-plugin-freezer-simulator",
+  "version": "0.7.0",
+  "private": false,
+  "main": "./build/index.js",
+  "engines": {
+    "tcore": ">= 0.7.0 <= 1.0.0"
+  },
+  "files": [
+    "assets/**",
+    "build/**"
+  ],
+  "tcore": {
+    "name": "Freezer Simulator",
+    "short_description": "Ice cream freezer that simulates internal temperature, door and compressor status",
+    "full_description": "./README.md",
+    "icon": "./assets/icon.png",
+    "keywords": [
+      "Raspberry",
+      "action"
+    ],
+    "types": ["action-type", "action-trigger", "service"],
+    "permissions": ["device", "device-data"]
+  },
+  "scripts": {
+    "pack": "tcore-plugin pack",
+    "test": "echo No Test",
+    "watch": "node esbuild/build.js --watch",
+    "build": "rm -rf ./build; node esbuild/build.js"
+  },
+  "dependencies": {
+    "@tago-io/tcore-sdk": "0.4.2",
+    "csv-parser": "3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "16.7.1",
+    "esbuild": "^0.14.26",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^25.3.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint": "^8.6.0",
+    "prettier": "^2.5.1"
+  }
+}

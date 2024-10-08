@@ -1,0 +1,66 @@
+{
+  "name": "@tago-io/tcore-plugin-mysql",
+  "version": "0.7.0",
+  "private": false,
+  "main": "./build/index.js",
+  "files": [
+    "build/**/*",
+    "assets/**/*"
+  ],
+  "engines": {
+    "tcore": ">= 0.7.0 < 0.8.0",
+    "node": ">=14.17.0"
+  },
+  "tcore": {
+    "name": "MySQL",
+    "short_description": "Integrates the MySQL and MariaDB Database with TagoCore",
+    "full_description": "./README.md",
+    "icon": "./assets/icon.png",
+    "cluster": true,
+    "types": [
+      "database"
+    ],
+    "permissions": [
+      "action",
+      "analysis",
+      "device-data",
+      "device"
+    ]
+  },
+  "scripts": {
+    "pack": "tcore-plugin pack",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "watch": "node esbuild/build.js --watch",
+    "build": "rm -rf ./build; tsc; node esbuild/build.js",
+    "linter": "eslint src",
+    "migrate": "knex migrate:make --client=mysql --migrations-directory=src/Migrations"
+  },
+  "dependencies": {
+    "@tago-io/tcore-sdk": "0.6.1-alpha.0",
+    "@types/jest": "^27.4.1",
+    "axios": "^0.26.0",
+    "esbuild": "0.14.29",
+    "jest": "^27.5.1",
+    "knex": "^0.95.10",
+    "mysql": "^2.18.1",
+    "ts-jest": "^27.1.3"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/mysql": "^2.15.21",
+    "@types/node": "16.7.1",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.5.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^25.3.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-unicorn": "^42.0.0",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.6.0",
+    "typescript": "^4.6.2"
+  }
+}
