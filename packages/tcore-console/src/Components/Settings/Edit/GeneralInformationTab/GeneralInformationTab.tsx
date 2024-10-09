@@ -138,23 +138,6 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
           <FormDivision icon={EIcon["puzzle-piece"]} title="Plugin Settings" />
 
           <FormGroup
-            tooltip="The location in the server's filesystem where the plugin folder will reside."
-            icon={EIcon.folder}
-            label="Plugins folder"
-          >
-            <FileSelect
-              error={errors?.plugin_folder}
-              modalMessage={`Select a folder to be used as the plugins folder of ${getSystemName()}.`}
-              onChange={(e) => props.onChange("plugin_folder", e)}
-              onlyFolders
-              placeholder="e.g. /users/tcore-plugins"
-              value={data.plugin_folder}
-              disabled={metadata?.plugin_folder_disabled}
-              useLocalFs
-            />
-          </FormGroup>
-
-          <FormGroup
             tooltip={`The plugin that will be used as the main database for ${getSystemName()}.`}
             icon={EIcon.database}
             label="Database plugin"

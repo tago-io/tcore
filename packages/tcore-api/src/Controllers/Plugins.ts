@@ -23,7 +23,6 @@ import {
   activatePlugin,
   deactivatePlugin,
 } from "../Services/Plugins";
-import { installPlugin } from "../Plugins/Install";
 import { uninstallPlugin } from "../Plugins/Uninstall";
 import APIController, { ISetupController, warm } from "./APIController";
 
@@ -160,21 +159,6 @@ class UploadPlugin extends APIController<void, void, void> {
       throw new Error("Unknown error");
     }
     this.body = file.path;
-  }
-}
-
-/**
- * Installs a plugin.
- */
-class InstallPlugin extends APIController<any, void, void> {
-  setup: ISetupController = {
-    allowTokens: [{ permission: "write", resource: "account" }],
-    zBodyParser: z.any(),
-  };
-
-  public async main() {
-    const response = await installPlugin(this.bodyParams.source, { restoreBackup: true, log: true, start: true });
-    this.body = response;
   }
 }
 
@@ -454,7 +438,6 @@ export default (app: Application) => {
   app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));
   app.post("/plugin/:pluginID/:moduleID/stop", warm(StopPluginModule));
-  app.post("/install-plugin", warm(InstallPlugin));
   app.put("/plugin/:id", warm(EditPluginSettings));
   app.post("/plugin/:id/enable", warm(EnablePlugin));
   app.post("/plugin/:id/disable", warm(DisablePlugin));

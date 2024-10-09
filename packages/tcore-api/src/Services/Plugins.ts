@@ -92,15 +92,15 @@ export async function getLoadedPluginList(): Promise<IPluginList> {
  */
 export async function listPluginFolders(): Promise<string[]> {
   const settings = await getMainSettings();
-  const root = settings.plugin_folder;
-  const folders = await fs.promises.readdir(root);
+  const customPluginsFolders = settings.custom_plugins;
   const plugins: string[] = [];
 
-  for (const folder of folders) {
-    const fullPath = path.join(root, folder);
-    const hasPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
-    if (hasPackage) {
-      plugins.push(fullPath);
+  if (customPluginsFolders && customPluginsFolders.length > 0) {
+    for (const customFolder of customPluginsFolders) {
+      const hasPackage = await Plugin.getPackageAsync(customFolder).catch(() => null);
+      if (hasPackage) {
+        plugins.push(customFolder);
+      }
     }
   }
 
@@ -285,33 +285,34 @@ export async function hasDBPluginInstalled(): Promise<boolean> {
  */
 export async function getAllPluginList(): Promise<any> {
   const settings = await getMainSettings();
-  const folders = await fs.promises.readdir(settings.plugin_folder);
   const result: any = [];
 
-  for (const id of folders) {
-    const pkg = await Plugin.getPackageAsync(path.join(settings.plugin_folder, id)).catch(() => null);
-    if (!pkg) {
-      continue;
+  if (settings.custom_plugins) {
+    for (const customPluginFolder of settings.custom_plugins) {
+      const pkg = await Plugin.getPackageAsync(customPluginFolder).catch(() => null);
+      if (!pkg) {
+        continue;
+      }
+
+      const pluginID = Plugin.generatePluginID(pkg.name) as string;
+      const plugin = plugins.get(pluginID);
+      const modules = [...(plugin?.modules?.values?.() || [])];
+
+      const object: any = {
+        id: pluginID,
+        name: pkg.tcore?.name || "",
+        version: pkg.version,
+        modules: modules.map((x) => ({
+          error: x.error,
+          id: x.setup?.id,
+          name: x.setup?.name,
+          state: x.state,
+          type: x.setup?.type,
+        })),
+      };
+
+      result.push(object);
     }
-
-    const pluginID = Plugin.generatePluginID(pkg.name) as string;
-    const plugin = plugins.get(pluginID);
-    const modules = [...(plugin?.modules?.values?.() || [])];
-
-    const object: any = {
-      id: pluginID,
-      name: pkg.tcore?.name || "",
-      version: pkg.version,
-      modules: modules.map((x) => ({
-        error: x.error,
-        id: x.setup?.id,
-        name: x.setup?.name,
-        state: x.state,
-        type: x.setup?.type,
-      })),
-    };
-
-    result.push(object);
   }
 
   return result;

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import os from "os";
-import { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
+import type { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
 import { log } from "..";
 import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host";
@@ -10,7 +10,6 @@ import { rmdir } from "../Helpers/Files";
 import { compareAccountPasswordHash } from "./Account/AccountPassword";
 import { startPluginModule } from "./Plugins";
 import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
-import { runVersionMigration } from "./VersionMigration";
 
 /**
  * Folder name to save the settings.
@@ -57,16 +56,6 @@ export async function getPluginSettingsFolder(pluginID: string): Promise<string>
 }
 
 /**
- * Retrieves the plugins folder.
- */
-export async function getPluginsFolder(): Promise<string> {
-  const dirpath = getDirpath();
-  const folder = path.resolve(dirpath, "Plugins");
-  await fs.promises.mkdir(folder, { recursive: true });
-  return folder;
-}
-
-/**
  * Retrieves the main settings of the application.
  */
 export async function getMainSettings(): Promise<ISettings> {
@@ -77,27 +66,23 @@ export async function getMainSettings(): Promise<ISettings> {
   const database_plugin = process.env.TCORE_DATABASE_PLUGIN || data.database_plugin || "";
   const queue_plugin = process.env.TCORE_QUEUE_PLUGIN || data.queue_plugin || "";
   const settings_folder = process.env.TCORE_SETTINGS_FOLDER || folder;
-  const plugin_folder = process.env.TCORE_PLUGINS_FOLDER || data.plugin_folder || (await getPluginsFolder());
   const port = process.env.TCORE_PORT || data.port || "8888";
   const master_password = data.master_password || "";
   const version = data.version || "";
   const installed_plugins = data.installed_plugins || [];
+  const custom_plugins = data.custom_plugins || [];
 
   const settings: ISettings = {
     filesystem_plugin,
     database_plugin,
     queue_plugin,
-    plugin_folder,
     port,
     settings_folder,
     master_password,
     version,
     installed_plugins,
+    custom_plugins,
   };
-
-  if (!fs.existsSync(settings.plugin_folder)) {
-    fs.promises.mkdir(settings.plugin_folder, { recursive: true });
-  }
 
   return settings;
 }
@@ -139,9 +124,6 @@ export async function doFactoryReset(): Promise<void> {
   // 2. we delete the main configuration
   await rmdir(path.join(dirPath, "PluginFiles")).catch(() => null);
   await fs.promises.unlink(path.join(dirPath, `${getSystemSlug()}.yml`)).catch(() => null);
-
-  // 3. we extract the built-in plugins once again
-  await runVersionMigration().catch(() => null);
 
   // 4. we restart the plugins
   const sorted = await sortPluginFoldersByPriority(stoppedPlugins);
