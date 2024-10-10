@@ -122,13 +122,6 @@ function PluginButton(props: IPluginButtonProps) {
               <span>Disable Plugin</span>
             </div>
           ))}
-
-        {item.allow_uninstall && (
-          <div className="item" onClick={() => setModalUninstall(true)}>
-            <Icon icon={EIcon["trash-alt"]} />
-            <span>Remove Plugin</span>
-          </div>
-        )}
       </Style.Dropdown>
 
       {modalUninstall && (
