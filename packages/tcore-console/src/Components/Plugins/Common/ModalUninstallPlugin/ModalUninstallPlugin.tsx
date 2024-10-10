@@ -1,10 +1,10 @@
 import { getSystemName } from "@tago-io/tcore-shared";
-import { KeyboardEvent, MouseEvent, useCallback, useState } from "react";
-import Checkbox from "../../../Checkbox/Checkbox";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
-import TooltipText from "../../../TooltipText/TooltipText";
+import { type KeyboardEvent, type MouseEvent, useCallback, useState } from "react";
+import Checkbox from "../../../Checkbox/Checkbox.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
+import TooltipText from "../../../TooltipText/TooltipText.tsx";
 
 /**
  * Props.

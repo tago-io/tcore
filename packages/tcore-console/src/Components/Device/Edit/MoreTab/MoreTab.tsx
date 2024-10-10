@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { IDevice } from "@tago-io/tcore-sdk/types";
-import Button from "../../../Button/Button";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import Col from "../../../Col/Col";
-import FormDivision from "../../../FormDivision/FormDivision";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Icon from "../../../Icon/Icon";
+import Col from "../../../Col/Col.tsx";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
-import RelativeDate from "../../../RelativeDate/RelativeDate";
-import Row from "../../../Row/Row";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
+import RelativeDate from "../../../RelativeDate/RelativeDate.tsx";
+import Row from "../../../Row/Row.tsx";
 
 /**
  * Props.

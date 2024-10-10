@@ -1,7 +1,7 @@
-import { Application } from "express";
-import { getPlatformAndArch } from "../Helpers/Platform";
-import { getComputerUsage, getNetworkInfo, getOSInfo } from "../Services/Hardware";
-import APIController, { ISetupController, warm } from "./APIController";
+import type { Application } from "express";
+import { getPlatformAndArch } from "../Helpers/Platform.ts";
+import { getComputerUsage, getNetworkInfo, getOSInfo } from "../Services/Hardware.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Retrieves some of the information of the operational system.

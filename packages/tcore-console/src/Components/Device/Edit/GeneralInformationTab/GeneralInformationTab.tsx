@@ -1,15 +1,15 @@
-import { IDeviceToken, IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDeviceToken, IDevice } from "@tago-io/tcore-sdk/types";
 import { useCallback } from "react";
-import Col from "../../../Col/Col";
-import FormDivision from "../../../FormDivision/FormDivision";
-import FormGroup from "../../../FormGroup/FormGroup";
+import Col from "../../../Col/Col.tsx";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import ResourceLinkField from "../../../ResourceLinkField/ResourceLinkField";
-import Row from "../../../Row/Row";
-import PayloadParser from "../../Common/PayloadParser/PayloadParser";
-import TokenTable from "../../Common/TokenTable/TokenTable";
-import EncoderStack from "../EncoderStack/EncoderStack";
+import Input from "../../../Input/Input.tsx";
+import ResourceLinkField from "../../../ResourceLinkField/ResourceLinkField.tsx";
+import Row from "../../../Row/Row.tsx";
+import PayloadParser from "../../Common/PayloadParser/PayloadParser.tsx";
+import TokenTable from "../../Common/TokenTable/TokenTable.tsx";
+import EncoderStack from "../EncoderStack/EncoderStack.tsx";
 
 /**
  * Props.

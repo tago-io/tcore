@@ -1,4 +1,4 @@
-import { randomBytes, createHash, createCipheriv, createDecipheriv } from "crypto";
+import { randomBytes, createHash, createCipheriv, createDecipheriv } from "node:crypto";
 
 /**
  * Secret to the password hash.

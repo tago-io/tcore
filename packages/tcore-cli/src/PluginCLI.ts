@@ -1,13 +1,13 @@
-import path from "path";
+import path from "node:path";
 import * as API from "@tago-io/tcore-api";
-import { Command } from "commander";
+import type { Command } from "commander";
 
 /**
  * Try to require a module and returns null if the module doesn't exist.
  */
 function tryRequire(folder: string) {
   try {
-    return require(folder);
+    return import(folder);
   } catch (ex) {
     return null;
   }

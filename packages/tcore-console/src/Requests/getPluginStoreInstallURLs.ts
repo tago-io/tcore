@@ -1,6 +1,6 @@
 import axios from "axios";
 import { PLUGIN_STORE_PLUGIN_ID } from "@tago-io/tcore-shared";
-import store from "../System/Store";
+import store from "../System/Store.tsx";
 
 /**
  */

@@ -1,8 +1,8 @@
-import { Application } from "express";
+import type { Application } from "express";
 import { z } from "zod";
-import { IAccountCreate, zAccountCreate } from "@tago-io/tcore-sdk/types";
-import { createAccount, getAccountByToken, login } from "../../Services/Account/Account";
-import APIController, { ISetupController, warm } from "../APIController";
+import { type IAccountCreate, zAccountCreate } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { createAccount, getAccountByToken, login } from "../../Services/Account/Account.ts";
+import APIController, { type ISetupController, warm } from "../APIController.ts";
 
 const zAccountLoginBody = z.object({
   username: z.string(),

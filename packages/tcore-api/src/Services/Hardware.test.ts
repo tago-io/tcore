@@ -20,7 +20,7 @@ jest.mock("os", () => os);
 
 jest.mock("systeminformation", () => si);
 
-import { getLocalIPs, getPlatformCode } from "./Hardware";
+import { getLocalIPs, getPlatformCode } from "./Hardware.ts";
 
 afterEach(() => {
   jest.restoreAllMocks();

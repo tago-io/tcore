@@ -1,15 +1,15 @@
 import {
   zActionListQuery,
-  IActionListQuery,
-  IActionEdit,
+  type IActionListQuery,
+  type IActionEdit,
   zActionEdit,
-  IActionCreate,
+  type IActionCreate,
   zActionCreate,
-} from "@tago-io/tcore-sdk/types";
-import { Application } from "express";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { Application } from "express";
 import { z } from "zod";
-import { createAction, deleteAction, editAction, getActionInfo, getActionList } from "../Services/Action";
-import APIController, { ISetupController, warm } from "./APIController";
+import { createAction, deleteAction, editAction, getActionInfo, getActionList } from "../Services/Action.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Configuration for ID in the URL.

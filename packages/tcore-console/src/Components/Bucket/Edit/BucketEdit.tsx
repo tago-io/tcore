@@ -1,23 +1,23 @@
-import { IDevice, zDeviceChunkRetention } from "@tago-io/tcore-sdk/types";
+import { type IDevice, zDeviceChunkRetention } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
 import cloneDeep from "lodash.clonedeep";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
 import { z } from "zod";
-import { formatDataAmount } from "../../../Helpers/formatDataAmount";
-import getDeviceTypeName from "../../../Helpers/getDeviceTypeName";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import deleteDeviceData from "../../../Requests/deleteDeviceData";
-import editDevice from "../../../Requests/editDevice";
-import store from "../../../System/Store";
-import buildZodError from "../../../Validation/buildZodError";
-import Capitalize from "../../Capitalize/Capitalize";
-import EditPage from "../../EditPage/EditPage";
+import { formatDataAmount } from "../../../Helpers/formatDataAmount.ts";
+import getDeviceTypeName from "../../../Helpers/getDeviceTypeName.ts";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import deleteDeviceData from "../../../Requests/deleteDeviceData.ts";
+import editDevice from "../../../Requests/editDevice.ts";
+import store from "../../../System/Store.tsx";
+import buildZodError from "../../../Validation/buildZodError.ts";
+import Capitalize from "../../Capitalize/Capitalize.tsx";
+import EditPage from "../../EditPage/EditPage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab";
-import MoreTab from "./MoreTab/MoreTab";
-import VariablesTab from "./VariablesTab/VariablesTab";
+import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab.tsx";
+import MoreTab from "./MoreTab/MoreTab.tsx";
+import VariablesTab from "./VariablesTab/VariablesTab.tsx";
 
 /**
  * The bucket's edit page.

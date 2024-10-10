@@ -1,12 +1,12 @@
 jest.mock("../src/Helpers/useApiRequest.ts");
 jest.mock("../src/System/Socket.ts");
 
-import { FC, ReactElement } from "react";
+import type { FC, ReactElement } from "react";
 import "@testing-library/jest-dom";
-import { render, RenderOptions } from "@testing-library/react";
+import { render, type RenderOptions } from "@testing-library/react";
 import { ThemeProvider } from "styled-components";
 import { MemoryRouter, Route, Switch } from "react-router-dom";
-import { lightTheme } from "../src/theme";
+import { lightTheme } from "../src/theme.ts";
 import { icons } from "../src/Components/Icon/Icon.types";
 
 const AllTheProviders: FC = ({ children }) => {

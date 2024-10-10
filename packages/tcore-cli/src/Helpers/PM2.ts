@@ -1,4 +1,4 @@
-import pm2, { ProcessDescription, StartOptions } from "pm2";
+import pm2, { type ProcessDescription, type StartOptions } from "pm2";
 import { getSystemName } from "@tago-io/tcore-shared";
 
 export const PM2_APP_NAME = getSystemName();

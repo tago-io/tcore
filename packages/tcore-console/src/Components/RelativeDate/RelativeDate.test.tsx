@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "../../../utils/test-utils";
-import RelativeDate from "./RelativeDate";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
+import RelativeDate from "./RelativeDate.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<RelativeDate value={null} />);

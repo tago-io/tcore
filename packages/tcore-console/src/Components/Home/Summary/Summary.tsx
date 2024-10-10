@@ -1,10 +1,10 @@
-import { ISummary } from "@tago-io/tcore-sdk/types";
-import { AxiosError } from "axios";
+import type { ISummary } from "@tago-io/tcore-sdk/types";
+import type { AxiosError } from "axios";
 import { observer } from "mobx-react";
 import { memo } from "react";
-import { EmptyMessage } from "../../..";
-import store from "../../../System/Store";
-import Icon from "../../Icon/Icon";
+import { EmptyMessage } from "../../../index.ts";
+import store from "../../../System/Store.tsx";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
 import * as Style from "./Summary.style";
 

@@ -1,4 +1,4 @@
-import { IScheduleData } from "../../Action.interface";
+import type { IScheduleData } from "../../Action.interface";
 
 function spreadCronToScheduleData(cron: string, scheduleData: IScheduleData): void {
   if (!cron) {
@@ -109,7 +109,7 @@ function spreadCronToScheduleData(cron: string, scheduleData: IScheduleData): vo
 
     repeatHour = `${cronHour.padStart(2, "0")}:${cronMinute.padStart(2, "0")}`; // 4:20 for example
 
-    if (cronDay && cronDay.startsWith("*")) {
+    if (cronDay?.startsWith("*")) {
       repeatType = "day"; // by default
       repeatUnit = "1"; // 1 by default
 

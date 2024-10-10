@@ -1,6 +1,6 @@
-import { ReactNode, cloneElement, Children, useEffect, useRef } from "react";
-import { EIcon } from "../..";
-import TooltipPopup from "./TooltipPopup";
+import { type ReactNode, cloneElement, Children, useEffect, useRef } from "react";
+import type { EIcon } from "../../index.ts";
+import TooltipPopup from "./TooltipPopup.tsx";
 
 /**
  * Props.

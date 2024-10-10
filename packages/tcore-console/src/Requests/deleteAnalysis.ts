@@ -1,6 +1,6 @@
 import { Account } from "@tago-io/sdk";
-import { TGenericID } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.tsx";
 
 /**
  */

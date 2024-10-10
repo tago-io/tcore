@@ -1,12 +1,12 @@
 import { zName } from "@tago-io/tcore-sdk/types";
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { type MouseEvent, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useTheme } from "styled-components";
-import createAnalysis from "../../../../Requests/createAnalysis";
-import FormGroup from "../../../FormGroup/FormGroup";
+import createAnalysis from "../../../../Requests/createAnalysis.ts";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 
 /**
  */

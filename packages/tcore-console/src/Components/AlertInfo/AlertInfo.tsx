@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import * as Style from "./AlertInfo.style";
-import { EAlertInfo } from "./AlertInfo.types";
+import type { EAlertInfo } from "./AlertInfo.types";
 
 /**
  * Props.

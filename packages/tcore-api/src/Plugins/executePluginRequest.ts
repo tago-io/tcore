@@ -1,16 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { hideModuleMessage, showModuleMessage } from "../Services/Plugins";
-import { createFolder, doesFileOrFolderExist, getFileURI, getFolderURI, readFile, writeFile } from "../Services/File";
-import { deletePluginStorageItem, getAllPluginStorageItems, getPluginStorageItem, setPluginStorageItem } from "../Services/PluginsStorage";
-import * as DeviceService from "../Services/Device";
-import * as DeviceDataService from "../Services/DeviceData/DeviceData";
-import * as AnalysisService from "../Services/Analysis";
-import * as ActionService from "../Services/Action";
-import * as LiveInspectorService from "../Services/LiveInspector";
-import { getTagKeys } from "../Services/Tag";
-import { getSummary } from "../Services/Summary";
-import { getComputerUsage, getOSInfo } from "../Services/Hardware";
-import { plugins } from "./Host";
+import { hideModuleMessage, showModuleMessage } from "../Services/Plugins.ts";
+import { createFolder, doesFileOrFolderExist, getFileURI, getFolderURI, readFile, writeFile } from "../Services/File.ts";
+import { deletePluginStorageItem, getAllPluginStorageItems, getPluginStorageItem, setPluginStorageItem } from "../Services/PluginsStorage.ts";
+import * as DeviceService from "../Services/Device.ts";
+import * as DeviceDataService from "../Services/DeviceData/DeviceData.ts";
+import * as AnalysisService from "../Services/Analysis.ts";
+import * as ActionService from "../Services/Action.ts";
+import * as LiveInspectorService from "../Services/LiveInspector.ts";
+import { getTagKeys } from "../Services/Tag.ts";
+import { getSummary } from "../Services/Summary.ts";
+import { getComputerUsage, getOSInfo } from "../Services/Hardware.ts";
+import { plugins } from "./Host.ts";
 
 /**
  * This function is a helper to execute plugin requests, such as creating

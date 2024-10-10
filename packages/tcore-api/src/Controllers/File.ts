@@ -1,7 +1,7 @@
-import { Application } from "express";
+import type { Application } from "express";
 import { z } from "zod";
-import { getFileList } from "../Services/FilePicker";
-import APIController, { ISetupController, warm } from "./APIController";
+import { getFileList } from "../Services/FilePicker.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Configuration of a `path` property in the query string.

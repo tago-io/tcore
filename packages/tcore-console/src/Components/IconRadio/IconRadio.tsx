@@ -1,5 +1,5 @@
-import Icon from "../Icon/Icon";
-import { IIconRadioOption } from "./IconRadio.types";
+import Icon from "../Icon/Icon.tsx";
+import type { IIconRadioOption } from "./IconRadio.types";
 import * as Style from "./IconRadio.style";
 
 /**

@@ -1,1 +1,1 @@
-export * from "./build-tsc";
+export * from "./build-tsc.ts";

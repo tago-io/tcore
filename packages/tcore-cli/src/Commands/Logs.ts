@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import * as API from "@tago-io/tcore-api";
 import { Tail } from "tail";
-import { pm2Connect, pm2Disconnect } from "../Helpers/PM2";
-import { oraLog } from "../Helpers/Log";
+import { pm2Connect, pm2Disconnect } from "../Helpers/PM2.tsx";
+import { oraLog } from "../Helpers/Log.tsx";
 
 /**
  */
@@ -29,7 +29,7 @@ export async function showLogs() {
     });
 
     tail.on("error", () => {
-      oraLog(`Something went wrong while fetching the logs`).fail();
+      oraLog("Something went wrong while fetching the logs").fail();
       process.exit(1);
     });
   } finally {

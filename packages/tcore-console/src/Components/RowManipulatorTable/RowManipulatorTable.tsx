@@ -1,7 +1,7 @@
-import React, { UIEvent, useRef } from "react";
-import RowManipulator from "../RowManipulator/RowManipulator";
-import TooltipText from "../TooltipText/TooltipText";
-import { IRowManipulatorTableColumn } from "./RowManipulatorTable.types";
+import React, { type UIEvent, useRef } from "react";
+import RowManipulator from "../RowManipulator/RowManipulator.tsx";
+import TooltipText from "../TooltipText/TooltipText.tsx";
+import type { IRowManipulatorTableColumn } from "./RowManipulatorTable.types";
 import * as Style from "./RowManipulatorTable.style";
 
 /**

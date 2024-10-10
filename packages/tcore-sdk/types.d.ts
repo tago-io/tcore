@@ -1,1 +1,1 @@
-export * from "./build/Types";
+export * from "./build/Types.ts";

@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { DeviceCreateInfo } from "@tago-io/sdk/out/modules/Account/devices.types";
-import { ICreateDeviceResponse, IDeviceCreate } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { DeviceCreateInfo } from "@tago-io/sdk/out/modules/Account/devices.types";
+import type { ICreateDeviceResponse, IDeviceCreate } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.tsx";
 
 /**
  */

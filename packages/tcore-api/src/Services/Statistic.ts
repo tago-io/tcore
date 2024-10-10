@@ -1,8 +1,8 @@
-import { IStatistic, IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/types";
+import { type IStatistic, type IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { DateTime } from "luxon";
 import { z } from "zod";
-import { io } from "../Socket/SocketServer";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { io } from "../Socket/SocketServer.ts";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**
  * Retrieves the summary information.
@@ -14,7 +14,7 @@ export const addStatistic = async (data: IStatisticCreate): Promise<void> => {
 
   await invokeDatabaseFunction("addStatistic", time, data);
 
-  io?.to("statistic").emit(`statistic::hourly`, { time, ...data });
+  io?.to("statistic").emit("statistic::hourly", { time, ...data });
 };
 
 /**

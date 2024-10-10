@@ -1,5 +1,5 @@
-import { logBuffer } from "../Helpers/log";
-import { plugins } from "../Plugins/Host";
+import { logBuffer } from "../Helpers/log.ts";
+import { plugins } from "../Plugins/Host.ts";
 
 /**
  * Retrieves all the logs of a single channel.

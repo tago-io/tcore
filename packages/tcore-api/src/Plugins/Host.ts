@@ -1,10 +1,10 @@
-import fs from "fs";
-import { listPluginFolders } from "../Services/Plugins";
-import { oraLog, oraLogError } from "../Helpers/log";
-import { getMainSettings, getPluginSettings } from "../Services/Settings";
-import Plugin from "./Plugin/Plugin";
-import { generatePluginID } from "./PluginID";
-import { getPluginPackageJSON } from "./PluginPackage";
+import fs from "node:fs";
+import { listPluginFolders } from "../Services/Plugins.ts";
+import { oraLog, oraLogError } from "../Helpers/log.ts";
+import { getMainSettings, getPluginSettings } from "../Services/Settings.ts";
+import Plugin from "./Plugin/Plugin.ts";
+import { generatePluginID } from "./PluginID.ts";
+import { getPluginPackageJSON } from "./PluginPackage.ts";
 
 /**
  * List of plugins paths that are built-in as soon as tcore boots up.
@@ -98,7 +98,7 @@ export async function startPluginAndHandleErrors(folder: string) {
     if (errors.length === 1 && errors[0].error) {
       // only one module threw an error, show a single line of error
       throw new Error(errors[0].error);
-    } else if (errors.length > 1) {
+    }if (errors.length > 1) {
       // multiple modules threw errors, show multiline of errors, one for
       // each module that threw an error
       const msgs = errors.map((x) => `  - ${x.name}: ${x.error}`);

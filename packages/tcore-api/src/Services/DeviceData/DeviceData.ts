@@ -1,29 +1,29 @@
 import {
-  TGenericID,
-  IDeviceDataQuery,
-  IDeviceData,
+  type TGenericID,
+  type IDeviceDataQuery,
+  type IDeviceData,
   zDeviceDataCreate,
   zDeviceData,
   zDeviceDataQuery,
-  IDevice,
+  type IDevice,
   generateResourceID,
-  IDeviceAddDataOptions,
+  type IDeviceAddDataOptions,
   zDeviceDataUpdate,
-  IDeviceChunkPeriod,
-  IDeviceDataCreate,
-} from "@tago-io/tcore-sdk/types";
+  type IDeviceChunkPeriod,
+  type IDeviceDataCreate,
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { z } from "zod";
 import { DateTime } from "luxon";
-import removeNullValues from "../../Helpers/removeNullValues";
-import splitColon from "../../Helpers/splitColon";
-import { plugins } from "../../Plugins/Host";
-import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action";
-import { editDevice, getDeviceInfo } from "../Device";
-import { addStatistic } from "../Statistic";
-import { runPayloadParser } from "../PayloadParserCodeExecution";
-import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector";
-import { getMainQueueModule, triggerHooks } from "../Plugins";
+import removeNullValues from "../../Helpers/removeNullValues.ts";
+import splitColon from "../../Helpers/splitColon.ts";
+import { plugins } from "../../Plugins/Host.ts";
+import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction.ts";
+import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action.ts";
+import { editDevice, getDeviceInfo } from "../Device.ts";
+import { addStatistic } from "../Statistic.ts";
+import { runPayloadParser } from "../PayloadParserCodeExecution.ts";
+import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector.ts";
+import { getMainQueueModule, triggerHooks } from "../Plugins.ts";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
@@ -212,7 +212,7 @@ async function applyZodDeviceData(items: any) {
     item.time = item.time || now;
     item.type = typeof item.value;
     item.created_at = now;
-    delete item.serie;
+    item.serie = undefined;
   }
 
   return items;
@@ -369,13 +369,13 @@ export const getDeviceDataByDevice = async (
 
   if (query.query === "count") {
     return await invokeDatabaseFunction("getDeviceDataCount", device.id, device.type, query);
-  } else if (query.query === "avg") {
+  }if (query.query === "avg") {
     await validateMonthRange(query);
     return await invokeDatabaseFunction("getDeviceDataAvg", device.id, device.type, query);
-  } else if (query.query === "sum") {
+  }if (query.query === "sum") {
     await validateMonthRange(query);
     return await invokeDatabaseFunction("getDeviceDataSum", device.id, device.type, query);
-  } else {
+  }
     let response: any[] = [];
 
     if (!query.query || query.query === "defaultQ") {
@@ -409,7 +409,7 @@ export const getDeviceDataByDevice = async (
       response[i].group = response[i].group || response[i].serie;
       response[i] = removeNullValues(response[i]);
       if (!query.details) {
-        delete response[i].created_at;
+        response[i].created_at = undefined;
       }
     }
 
@@ -419,7 +419,6 @@ export const getDeviceDataByDevice = async (
     await addStatistic({ output: items.length });
 
     return items;
-  }
 };
 
 /**

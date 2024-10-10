@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
-import preprocessObject from "../Helpers/preprocessObject";
-import preprocessBoolean from "../Helpers/preprocessBoolean";
-import removeNullValues from "../Helpers/removeNullValues";
-import { generateResourceID } from "../../Shared/ResourceID";
-import { zTags } from "../Tag/Tag.types";
-import { zToken, TGenericID, zName, zObjectID, zQuery, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types";
-import createQueryOrderBy from "../Helpers/createQueryOrderBy";
-import preprocessNumber from "../Helpers/preprocessNumber";
+import preprocessObject from "../Helpers/preprocessObject.ts";
+import preprocessBoolean from "../Helpers/preprocessBoolean.ts";
+import removeNullValues from "../Helpers/removeNullValues.ts";
+import { generateResourceID } from "../../Shared/ResourceID.ts";
+import { zTags } from "../Tag/Tag.types.ts";
+import { zToken, type TGenericID, zName, zObjectID, zQuery, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types.ts";
+import createQueryOrderBy from "../Helpers/createQueryOrderBy.ts";
+import preprocessNumber from "../Helpers/preprocessNumber.ts";
 
 /**
  */

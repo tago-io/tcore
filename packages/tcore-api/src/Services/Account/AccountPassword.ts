@@ -1,5 +1,5 @@
-import { scrypt as scryptNoPromise, randomBytes as randomBytesNoPromise } from "crypto";
-import { promisify } from "util";
+import { scrypt as scryptNoPromise, randomBytes as randomBytesNoPromise } from "node:crypto";
+import { promisify } from "node:util";
 
 const scrypt = promisify(scryptNoPromise);
 const randomBytes = promisify(randomBytesNoPromise);

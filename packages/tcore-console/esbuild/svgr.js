@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const svgr = require("@svgr/core").default;
-const fs = require("fs");
+import svgr from "@svgr/core";
+import fs from "node:fs";
 
-module.exports = (options = {}) => ({
+export default (options = {}) => ({
   name: "svgr",
   setup(build) {
     build.onLoad({ filter: /\.svg$/ }, async (args) => {

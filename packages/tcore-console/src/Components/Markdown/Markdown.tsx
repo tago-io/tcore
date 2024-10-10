@@ -1,4 +1,4 @@
-import { ImgHTMLAttributes, lazy, memo, Suspense } from "react";
+import { type ImgHTMLAttributes, lazy, memo, Suspense } from "react";
 import * as Style from "./Markdown.style";
 
 /**

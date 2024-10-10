@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { zTag, zTags } from "./Tag.types";
+import type { ZodError } from "zod";
+import { zTag, zTags } from "./Tag.types.ts";
 
 describe("zTag", () => {
   test("parses simple object", () => {
@@ -12,7 +12,7 @@ describe("zTag", () => {
     expect(parsed.value).toEqual("value");
   });
 
-  test("assure correct types", () => {
+  test("assure correct types.ts", () => {
     const data = {
       key: 0,
       value: "value",

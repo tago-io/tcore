@@ -1,5 +1,5 @@
-import PluginImage from "../../../PluginImage/PluginImage";
-import Publisher from "../../../Plugins/Common/Publisher/Publisher";
+import PluginImage from "../../../PluginImage/PluginImage.tsx";
+import Publisher from "../../../Plugins/Common/Publisher/Publisher.tsx";
 import * as Style from "./Card.style";
 
 /**

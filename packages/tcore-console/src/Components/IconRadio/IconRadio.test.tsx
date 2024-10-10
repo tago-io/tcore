@@ -1,7 +1,7 @@
 import { within } from "@testing-library/react";
-import { fireEvent, render, screen } from "../../../utils/test-utils";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
 import { EIcon } from "../Icon/Icon.types";
-import IconRadio from "./IconRadio";
+import IconRadio from "./IconRadio.tsx";
 
 /**
  * Default (required) props for the component.

@@ -1,14 +1,14 @@
 import { useTheme } from "styled-components";
-import { IPluginListItem, IPluginButtonModuleSetupOption } from "@tago-io/tcore-sdk/types";
+import type { IPluginListItem, IPluginButtonModuleSetupOption } from "@tago-io/tcore-sdk/types";
 import { useEffect } from "react";
 import { observer } from "mobx-react";
 import { EIcon } from "../Icon/Icon.types";
-import store from "../../System/Store";
-import { getSocket } from "../../System/Socket";
+import store from "../../System/Store.tsx";
+import { getSocket } from "../../System/Socket.tsx";
 import * as Style from "./Sidebar.style";
-import Item from "./Item";
-import InstallLocalPluginButton from "./InstalLocalPluginButton/InstalLocalPluginButton";
-import PluginButton from "./PluginButton/PluginButton";
+import Item from "./Item.tsx";
+import InstallLocalPluginButton from "./InstalLocalPluginButton/InstalLocalPluginButton.tsx";
+import PluginButton from "./PluginButton/PluginButton.tsx";
 
 /**
  * Props.

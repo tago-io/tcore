@@ -1,5 +1,5 @@
-import { EIcon } from "../../../../..";
-import EmptyMessage from "../../../../EmptyMessage/EmptyMessage";
+import { EIcon } from "../../../../../index.ts";
+import EmptyMessage from "../../../../EmptyMessage/EmptyMessage.tsx";
 import * as Style from "./MessageTriggerNotFound.style";
 
 interface IMessageTriggerNotFound {

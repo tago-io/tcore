@@ -1,5 +1,5 @@
-import { TPluginType } from "@tago-io/tcore-sdk/types";
-import Icon from "../../../Icon/Icon";
+import type { TPluginType } from "@tago-io/tcore-sdk/types";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./ClassTypes.style";
 

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import Icon from "../../../Icon/Icon";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./Screenshots.style";
 

@@ -1,6 +1,6 @@
-import FileSelect from "../FileSelect/FileSelect";
-import FormGroup from "../FormGroup/FormGroup";
-import Icon from "../Icon/Icon";
+import FileSelect from "../FileSelect/FileSelect.tsx";
+import FormGroup from "../FormGroup/FormGroup.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
 import * as Style from "./ProgramFieldset.style";
 

@@ -1,23 +1,23 @@
-import { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
+import type { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
 import cloneDeep from "lodash.clonedeep";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { observer } from "mobx-react";
-import EditPage from "../../EditPage/EditPage";
-import PluginImage from "../../PluginImage/PluginImage";
-import uninstallPlugin from "../../../Requests/uninstallPlugin";
-import editPluginSettings from "../../../Requests/editPluginSettings";
-import removeEmptyKeys from "../../../Helpers/removeEmptyKeys";
-import validateConfigFields from "../../../Helpers/validateConfigFields";
-import startPluginModule from "../../../Requests/startPluginModule";
-import stopPluginModule from "../../../Requests/stopPluginModule";
-import enablePlugin from "../../../Requests/enablePlugin";
-import disablePlugin from "../../../Requests/disablePlugin";
-import store from "../../../System/Store";
-import { getSocket } from "../../../System/Socket";
-import SettingsTab from "./SettingsTab/SettingsTab";
+import EditPage from "../../EditPage/EditPage.tsx";
+import PluginImage from "../../PluginImage/PluginImage.tsx";
+import uninstallPlugin from "../../../Requests/uninstallPlugin.ts";
+import editPluginSettings from "../../../Requests/editPluginSettings.ts";
+import removeEmptyKeys from "../../../Helpers/removeEmptyKeys.ts";
+import validateConfigFields from "../../../Helpers/validateConfigFields.ts";
+import startPluginModule from "../../../Requests/startPluginModule.ts";
+import stopPluginModule from "../../../Requests/stopPluginModule.ts";
+import enablePlugin from "../../../Requests/enablePlugin.ts";
+import disablePlugin from "../../../Requests/disablePlugin.ts";
+import store from "../../../System/Store.tsx";
+import { getSocket } from "../../../System/Socket.tsx";
+import SettingsTab from "./SettingsTab/SettingsTab.tsx";
 
 /**
  * The plugin's edit page.
@@ -199,7 +199,7 @@ function PluginEdit() {
     function onPluginStatus(params: any) {
       if (params?.id === id) {
         if (params.deleted) {
-          history.push(`/console`);
+          history.push("/console");
           return;
         }
         data.state = params.state;

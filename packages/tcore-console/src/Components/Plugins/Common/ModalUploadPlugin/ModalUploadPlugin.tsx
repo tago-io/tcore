@@ -1,8 +1,8 @@
 import axios from "axios";
 import { observer } from "mobx-react";
 import { memo, useCallback, useEffect, useState } from "react";
-import store from "../../../../System/Store";
-import Modal from "../../../Modal/Modal";
+import store from "../../../../System/Store.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 import * as Style from "./ModalUploadPlugin.style";
 
 /**

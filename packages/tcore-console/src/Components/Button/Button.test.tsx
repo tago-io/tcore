@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "../../../utils/test-utils";
-import Button from "./Button";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
+import Button from "./Button.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Button />);

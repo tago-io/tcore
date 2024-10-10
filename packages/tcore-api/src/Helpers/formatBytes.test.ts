@@ -1,4 +1,4 @@
-import { formatBytes } from "./formatBytes";
+import { formatBytes } from "./formatBytes.ts";
 
 describe("Format bytes", () => {
   it("should return 0 B if value its equal to 0", () => {

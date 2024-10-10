@@ -1,4 +1,4 @@
-import { Tooltip } from "../../../../..";
+import { Tooltip } from "../../../../../index.ts";
 import * as Style from "./WeekdayButton.style";
 
 /**

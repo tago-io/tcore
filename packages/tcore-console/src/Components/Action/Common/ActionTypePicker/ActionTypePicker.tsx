@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { IPluginConfigField, IPluginModuleList } from "@tago-io/tcore-sdk/types";
-import Icon from "../../../Icon/Icon";
+import type { IPluginConfigField, IPluginModuleList } from "@tago-io/tcore-sdk/types";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import OptionsPicker from "../../../OptionsPicker/OptionsPicker";
-import { useApiRequest } from "../../../..";
+import OptionsPicker from "../../../OptionsPicker/OptionsPicker.tsx";
+import { useApiRequest } from "../../../../index.ts";
 import * as Style from "./ActionTypePicker.style";
 
 interface IOption {

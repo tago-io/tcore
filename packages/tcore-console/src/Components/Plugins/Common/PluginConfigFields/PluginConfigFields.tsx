@@ -1,4 +1,4 @@
-import {
+import type {
   IPluginConfigField,
   IPluginConfigFieldBoolean,
   IPluginConfigFieldFile,
@@ -12,19 +12,19 @@ import {
   IPluginConfigFieldString,
   IPluginConfigFieldStringList,
 } from "@tago-io/tcore-sdk/types";
-import { ReactNode } from "react";
-import Icon from "../../../Icon/Icon";
-import TooltipText from "../../../TooltipText/TooltipText";
-import FileSelect from "../../../FileSelect/FileSelect";
-import FormGroup from "../../../FormGroup/FormGroup";
-import IconRadio from "../../../IconRadio/IconRadio";
-import Input from "../../../Input/Input";
-import InputList from "../../../InputList/InputList";
-import OptionList from "../../../OptionList/OptionList";
-import Select from "../../../Select/Select";
-import Switch from "../../../Switch/Switch";
-import { EIcon } from "../../../..";
-import isConfigFieldVisible from "../../../../Helpers/isConfigFieldVisible";
+import type { ReactNode } from "react";
+import Icon from "../../../Icon/Icon.tsx";
+import TooltipText from "../../../TooltipText/TooltipText.tsx";
+import FileSelect from "../../../FileSelect/FileSelect.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import IconRadio from "../../../IconRadio/IconRadio.tsx";
+import Input from "../../../Input/Input.tsx";
+import InputList from "../../../InputList/InputList.tsx";
+import OptionList from "../../../OptionList/OptionList.tsx";
+import Select from "../../../Select/Select.tsx";
+import Switch from "../../../Switch/Switch.tsx";
+import type { EIcon } from "../../../../index.ts";
+import isConfigFieldVisible from "../../../../Helpers/isConfigFieldVisible.ts";
 import * as Style from "./PluginConfigFields.style";
 
 /**
@@ -265,9 +265,8 @@ function PluginConfigFields(props: IPluginConfigFieldsProps) {
           {content}
         </FormGroup>
       );
-    } else {
-      return <FormGroup key={field.field}>{content}</FormGroup>;
     }
+      return <FormGroup key={field.field}>{content}</FormGroup>;
   };
 
   /**
@@ -282,7 +281,7 @@ function PluginConfigFields(props: IPluginConfigFieldsProps) {
 
     if (field.type === "boolean") {
       return renderBoolean(field);
-    } else if (field.type === "option") {
+    }if (field.type === "option") {
       content = renderOption(field);
     } else if (field.type === "string") {
       content = renderString(field);

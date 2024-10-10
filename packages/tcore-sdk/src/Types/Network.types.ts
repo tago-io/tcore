@@ -1,4 +1,4 @@
-import { TGenericID } from "./Common/Common.types";
+import type { TGenericID } from "./Common/Common.types.ts";
 
 export interface INetworkDeviceParameter {
   name?: string;

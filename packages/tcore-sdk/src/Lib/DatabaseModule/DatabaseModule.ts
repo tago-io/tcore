@@ -1,4 +1,4 @@
-import {
+import type {
   IAction,
   IActionList,
   IAnalysis,
@@ -42,8 +42,8 @@ import {
   IDatabaseAccountCreateTokenData,
   IDeviceToken,
   IDeviceApplyDataRetentionQuery,
-} from "../../Types";
-import TCoreModule from "../TCoreModule/TCoreModule";
+} from "../../Types.ts";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows the creation of a new database connection.
@@ -314,7 +314,7 @@ class DatabaseModule extends TCoreModule {
   /**
    * Gets all the parameters of a device.
    */
-  public async getDeviceParamList(deviceID: TGenericID, sentStatus?: Boolean): Promise<IDeviceParameter[]> {
+  public async getDeviceParamList(deviceID: TGenericID, sentStatus?: boolean): Promise<IDeviceParameter[]> {
     throw new Error("Method not implemented");
   }
 

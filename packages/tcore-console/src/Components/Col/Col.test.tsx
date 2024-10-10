@@ -1,5 +1,5 @@
-import { render, screen } from "../../../utils/test-utils";
-import Col from "./Col";
+import { render, screen } from "../../../utils/test-utils.ts";
+import Col from "./Col.tsx";
 
 describe("Just a test", () => {
   test("1", async () => {

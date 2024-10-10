@@ -1,17 +1,17 @@
-import { Application } from "express";
+import type { Application } from "express";
 import { z } from "zod";
 import {
-  IDeviceCreate,
-  IDeviceEdit,
-  IDeviceListQuery,
-  IDeviceParameterCreate,
-  IDeviceTokenListQuery,
+  type IDeviceCreate,
+  type IDeviceEdit,
+  type IDeviceListQuery,
+  type IDeviceParameterCreate,
+  type IDeviceTokenListQuery,
   zDeviceCreate,
   zDeviceEdit,
   zDeviceListQuery,
   zDeviceParameterCreate,
   zDeviceTokenListQuery,
-} from "@tago-io/tcore-sdk/types";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
 import {
   createDevice,
   createDeviceToken,
@@ -23,8 +23,8 @@ import {
   getDeviceParamList,
   getDeviceTokenList,
   setDeviceParams,
-} from "../../Services/Device";
-import APIController, { ISetupController, warm } from "../APIController";
+} from "../../Services/Device.ts";
+import APIController, { type ISetupController, warm } from "../APIController.ts";
 
 /**
  * Configuration for ID in the URL.

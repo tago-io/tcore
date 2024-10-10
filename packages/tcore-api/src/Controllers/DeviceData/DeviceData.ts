@@ -1,6 +1,6 @@
-import { Application } from "express";
+import type { Application } from "express";
 import { z } from "zod";
-import { IDeviceDataQuery, zDeviceDataQuery } from "@tago-io/tcore-sdk/types";
+import { type IDeviceDataQuery, zDeviceDataQuery } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import {
   addDeviceDataByDevice,
   deleteDeviceData,
@@ -8,9 +8,9 @@ import {
   emptyDevice,
   getDeviceData,
   getDeviceDataAmount,
-} from "../../Services/DeviceData/DeviceData";
-import { emitToLiveInspector, getLiveInspectorID } from "../../Services/LiveInspector";
-import APIController, { ISetupController, warm } from "../APIController";
+} from "../../Services/DeviceData/DeviceData.ts";
+import { emitToLiveInspector, getLiveInspectorID } from "../../Services/LiveInspector.ts";
+import APIController, { type ISetupController, warm } from "../APIController.ts";
 
 /**
  * Configuration for ID in the URL.

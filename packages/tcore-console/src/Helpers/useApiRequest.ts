@@ -1,7 +1,7 @@
-import axios, { Method, AxiosError } from "axios";
+import axios, { type Method, type AxiosError } from "axios";
 import useSWR from "swr";
-import store from "../System/Store";
-import { getLocalStorage } from "./localStorage";
+import store from "../System/Store.tsx";
+import { getLocalStorage } from "./localStorage.ts";
 
 /**
  * Options.
@@ -54,9 +54,8 @@ function useApiRequest<T>(
 
   if ((data as any)?.result !== undefined) {
     return { data: (data as any).result, error, revalidate, mutate };
-  } else {
-    return { data: data as T, error, revalidate, mutate };
   }
+    return { data: data as T, error, revalidate, mutate };
 }
 
 export default useApiRequest;

@@ -1,16 +1,16 @@
-import { CSSProperties, useCallback, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import * as cronstrue from "cronstrue";
-import { EIcon } from "../../../..";
-import FormDivision from "../../../FormDivision/FormDivision";
-import Select from "../../../Select/Select";
-import TimezonePicker from "../../../TimezonePicker/TimezonePicker";
-import { getCronFromScheduleData } from "../Logic/getCronFromScheduleData";
-import { IScheduleData } from "../../Action.interface";
-import AdvancedCron from "./AdvancedCron/AdvancedCron";
-import BasicCron from "./BasicCron/BasicCron";
-import MinimumScheduleMessage from "./MinimumScheduleMessage";
+import { EIcon } from "../../../../index.ts";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import Select from "../../../Select/Select.tsx";
+import TimezonePicker from "../../../TimezonePicker/TimezonePicker.tsx";
+import { getCronFromScheduleData } from "../Logic/getCronFromScheduleData.ts";
+import type { IScheduleData } from "../../Action.interface";
+import AdvancedCron from "./AdvancedCron/AdvancedCron.tsx";
+import BasicCron from "./BasicCron/BasicCron.tsx";
+import MinimumScheduleMessage from "./MinimumScheduleMessage.tsx";
 import * as Style from "./ScheduleTrigger.style";
-import TypeScheduleOptions from "./TypeScheduleOptions";
+import TypeScheduleOptions from "./TypeScheduleOptions.tsx";
 
 /**
  * Props.

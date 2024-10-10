@@ -1,4 +1,4 @@
-import { IPluginConfigField } from "@tago-io/tcore-sdk/types";
+import type { IPluginConfigField } from "@tago-io/tcore-sdk/src/Types/index.ts";
 
 /**
  */

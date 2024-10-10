@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useTheme } from "styled-components";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import InnerNav from "../../InnerNav/InnerNav";
-import EmptyMessage from "../../EmptyMessage/EmptyMessage";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import InnerNav from "../../InnerNav/InnerNav.tsx";
+import EmptyMessage from "../../EmptyMessage/EmptyMessage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Loading from "../../Loading/Loading";
+import Loading from "../../Loading/Loading.tsx";
 import * as Style from "./PluginStore.style";
-import Card from "./Card/Card";
+import Card from "./Card/Card.tsx";
 
 /**
  * The plugin store page.
@@ -38,7 +38,7 @@ function PluginStore() {
   /**
    */
   useEffect(() => {
-    window.top?.postMessage({ type: "set-link", url: `/pages/pluginstore` }, "*");
+    window.top?.postMessage({ type: "set-link", url: "/pages/pluginstore" }, "*");
   }, []);
 
   return (

@@ -1,14 +1,14 @@
-import React, { memo, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import React, { memo, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "styled-components";
-import useApiRequest from "../../Helpers/useApiRequest";
-import FormGroup from "../FormGroup/FormGroup";
-import Icon from "../Icon/Icon";
+import useApiRequest from "../../Helpers/useApiRequest.ts";
+import FormGroup from "../FormGroup/FormGroup.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import Input from "../Input/Input";
-import Loading from "../Loading/Loading";
-import Modal from "../Modal/Modal";
-import { EmptyMessage } from "../..";
-import { IFile } from "./ModalFileSelect.types";
+import Input from "../Input/Input.tsx";
+import Loading from "../Loading/Loading.tsx";
+import Modal from "../Modal/Modal.tsx";
+import { EmptyMessage } from "../../index.ts";
+import type { IFile } from "./ModalFileSelect.types";
 import * as Style from "./ModalFileSelect.style";
 
 /**

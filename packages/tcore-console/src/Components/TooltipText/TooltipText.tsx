@@ -1,6 +1,6 @@
-import { memo, ReactNode } from "react";
-import { EIcon } from "../..";
-import Tooltip from "../Tooltip/Tooltip";
+import { memo, type ReactNode } from "react";
+import type { EIcon } from "../../index.ts";
+import Tooltip from "../Tooltip/Tooltip.tsx";
 import * as Style from "./TooltipText.style";
 
 /**

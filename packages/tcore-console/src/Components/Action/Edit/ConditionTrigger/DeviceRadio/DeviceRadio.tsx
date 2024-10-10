@@ -1,13 +1,13 @@
 import { useTheme } from "styled-components";
-import { IDevice, ITag } from "@tago-io/tcore-sdk/types";
-import Col from "../../../../Col/Col";
-import DevicePicker from "../../../../Device/Common/DevicePicker/DevicePicker";
-import FlexRow from "../../../../FlexRow/FlexRow";
-import FormGroup from "../../../../FormGroup/FormGroup";
+import type { IDevice, ITag } from "@tago-io/tcore-sdk/types";
+import Col from "../../../../Col/Col.tsx";
+import DevicePicker from "../../../../Device/Common/DevicePicker/DevicePicker.tsx";
+import FlexRow from "../../../../FlexRow/FlexRow.tsx";
+import FormGroup from "../../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../../Icon/Icon.types";
-import IconRadio from "../../../../IconRadio/IconRadio";
-import Input from "../../../../Input/Input";
-import Row from "../../../../Row/Row";
+import IconRadio from "../../../../IconRadio/IconRadio.tsx";
+import Input from "../../../../Input/Input.tsx";
+import Row from "../../../../Row/Row.tsx";
 
 /**
  * Props.

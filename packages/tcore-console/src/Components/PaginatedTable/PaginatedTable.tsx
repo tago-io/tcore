@@ -1,12 +1,12 @@
 import { useRef, useEffect, useCallback, useState } from "react";
-import EmptyMessage from "../EmptyMessage/EmptyMessage";
-import Icon from "../Icon/Icon";
+import EmptyMessage from "../EmptyMessage/EmptyMessage.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import Input from "../Input/Input";
-import Pagination from "../Pagination/Pagination";
-import Select from "../Select/Select";
-import TooltipText from "../TooltipText/TooltipText";
-import { IColumn, IFilter } from "./PaginatedTable.types";
+import Input from "../Input/Input.tsx";
+import Pagination from "../Pagination/Pagination.tsx";
+import Select from "../Select/Select.tsx";
+import TooltipText from "../TooltipText/TooltipText.tsx";
+import type { IColumn, IFilter } from "./PaginatedTable.types";
 import * as Style from "./PaginatedTable.style";
 
 /**
@@ -189,13 +189,12 @@ function PaginatedTable<T>(props: IPaginatedTableProps<T>) {
           {columns.map((column) => renderRowCell(item, column, rowIndex))}
         </Style.LinkRow>
       );
-    } else {
+    }
       return (
         <Style.DivRow key={rowIndex} $highlightColor={highlightColor}>
           {columns.map((column) => renderRowCell(item, column, rowIndex))}
         </Style.DivRow>
       );
-    }
   };
 
   /**

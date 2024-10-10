@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
-import { fonts } from "../../../../theme";
-import Icon from "../../../Icon/Icon";
+import { fonts } from "../../../../theme.ts";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./Publisher.style";
 
@@ -41,9 +41,8 @@ function Publisher(props: IPublisherProps) {
   const getFontSize = useCallback(() => {
     if (size === "medium") {
       return fonts.medium;
-    } else {
-      return fonts.default;
     }
+      return fonts.default;
   }, [size]);
 
   /**
@@ -52,9 +51,8 @@ function Publisher(props: IPublisherProps) {
   const getIconSize = useCallback(() => {
     if (size === "medium") {
       return "12px";
-    } else {
-      return "10px";
     }
+      return "10px";
   }, [size]);
 
   /**

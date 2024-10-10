@@ -1,10 +1,10 @@
-import { IDeviceParameter } from "@tago-io/tcore-sdk/types";
+import type { IDeviceParameter } from "@tago-io/tcore-sdk/types";
 import { useTheme } from "styled-components";
-import FormDivision from "../../../FormDivision/FormDivision";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable";
-import Switch from "../../../Switch/Switch";
+import Input from "../../../Input/Input.tsx";
+import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable.tsx";
+import Switch from "../../../Switch/Switch.tsx";
 import { ESwitchSize } from "../../../Switch/Switch.types";
 
 /**

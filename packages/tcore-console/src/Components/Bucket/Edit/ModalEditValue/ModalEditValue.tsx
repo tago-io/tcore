@@ -1,9 +1,9 @@
-import { IDeviceData, IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDeviceData, IDevice } from "@tago-io/tcore-sdk/types";
 import { useCallback, useState } from "react";
 import { EIcon } from "../../../Icon/Icon.types";
-import { Col, FormGroup, Input, Modal, Row } from "../../../..";
-import Select from "../../../Select/Select";
-import editDeviceData from "../../../../Requests/editDeviceData";
+import { Col, FormGroup, Input, Modal, Row } from "../../../../index.ts";
+import Select from "../../../Select/Select.tsx";
+import editDeviceData from "../../../../Requests/editDeviceData.ts";
 
 /**
  * Props.
@@ -32,9 +32,8 @@ function ModalEditValue(props: IModalEditValueProps) {
     const t = typeof data.value;
     if (t !== "string" && t !== "number" && t !== "boolean") {
       return "";
-    } else {
-      return String(v);
     }
+      return String(v);
   });
   const [type, setType] = useState<string>(() => {
     const t = typeof data.value;

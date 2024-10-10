@@ -1,4 +1,4 @@
-import { parseSafe } from "./parseSafe";
+import { parseSafe } from "./parseSafe.ts";
 
 describe("parseSafe", () => {
   test("assure correct parsing", () => {

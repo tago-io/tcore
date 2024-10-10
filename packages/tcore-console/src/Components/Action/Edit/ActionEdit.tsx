@@ -1,7 +1,7 @@
 import {
-  IAction,
-  IPluginConfigField,
-  IPluginModuleList,
+  type IAction,
+  type IPluginConfigField,
+  type IPluginModuleList,
   zName,
   zTags,
 } from "@tago-io/tcore-sdk/types";
@@ -11,19 +11,19 @@ import { useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
 import { observer } from "mobx-react";
 import { z } from "zod";
-import normalizeTags from "../../../Helpers/normalizeTags";
-import EditPage from "../../EditPage/EditPage";
+import normalizeTags from "../../../Helpers/normalizeTags.ts";
+import EditPage from "../../EditPage/EditPage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Switch from "../../Switch/Switch";
-import deleteAction from "../../../Requests/deleteAction";
-import TagsTab from "../../Tags/TagsTab";
-import editAction from "../../../Requests/editAction/editAction";
-import buildZodError from "../../../Validation/buildZodError";
-import { useApiRequest } from "../../..";
-import validateConfigFields from "../../../Helpers/validateConfigFields";
+import Switch from "../../Switch/Switch.tsx";
+import deleteAction from "../../../Requests/deleteAction.ts";
+import TagsTab from "../../Tags/TagsTab.tsx";
+import editAction from "../../../Requests/editAction/editAction.ts";
+import buildZodError from "../../../Validation/buildZodError.ts";
+import { useApiRequest } from "../../../index.ts";
+import validateConfigFields from "../../../Helpers/validateConfigFields.ts";
 import {
-  IConditionData,
-  IScheduleData,
+  type IConditionData,
+  type IScheduleData,
   zFrontAction,
   zFrontActionPost,
   zFrontActionScript,
@@ -33,10 +33,10 @@ import {
   zFrontIntervalData,
   zFrontScheduleData,
 } from "../Action.interface";
-import ActionTab from "./ActionTab/ActionTab";
-import MoreTab from "./MoreTab/MoreTab";
-import { convertActionFromAPI } from "./Logic/convertActionFromAPI";
-import { convertActionToAPI } from "./Logic/convertActionToAPI";
+import ActionTab from "./ActionTab/ActionTab.tsx";
+import MoreTab from "./MoreTab/MoreTab.tsx";
+import { convertActionFromAPI } from "./Logic/convertActionFromAPI.ts";
+import { convertActionToAPI } from "./Logic/convertActionToAPI.ts";
 
 /**
  * The Action' edit page.
@@ -75,15 +75,14 @@ function ActionEdit() {
   const hasInvalidTrigger = useCallback(() => {
     if (data.type.includes(":") && !customTrigger) {
       return true;
-    } else if (customTrigger) {
+    }if (customTrigger) {
       return false;
-    } else if (data.type === "interval" || data.type === "schedule") {
+    }if (data.type === "interval" || data.type === "schedule") {
       return false;
-    } else if (data.type === "condition") {
+    }if (data.type === "condition") {
       return false;
-    } else {
-      return true;
     }
+      return true;
   }, [customTrigger, data.type]);
 
   /**
@@ -218,10 +217,9 @@ function ActionEdit() {
     if (Object.keys(error).length > 0) {
       setErrors(error);
       return false;
-    } else {
+    }
       setErrors({});
       return true;
-    }
   }, [typeModules, action, data, customTrigger, pluginTriggerData, conditionData, scheduleData]);
 
   /**

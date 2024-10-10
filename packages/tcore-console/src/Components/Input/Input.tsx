@@ -1,5 +1,5 @@
-import { InputHTMLAttributes, memo, forwardRef } from "react";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import { type InputHTMLAttributes, memo, forwardRef } from "react";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.tsx";
 import * as Style from "./Input.style";
 
 interface IInput extends InputHTMLAttributes<HTMLInputElement> {

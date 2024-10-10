@@ -1,5 +1,5 @@
-import { SelectHTMLAttributes } from "react";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import type { SelectHTMLAttributes } from "react";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.tsx";
 import * as Style from "./Select.style";
 
 /**
@@ -65,4 +65,4 @@ function Select(props: ISelectProps) {
 }
 
 export default Select;
-export { IOption as ISelectOption };
+export type { IOption as ISelectOption };

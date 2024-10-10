@@ -1,13 +1,13 @@
-import fs from "fs";
+import fs from "node:fs";
 import { Account } from "@tago-io/sdk";
 import chalk from "chalk";
-import { LoginResponse } from "@tago-io/sdk/out/modules/Account/account.types";
+import type { LoginResponse } from "@tago-io/sdk/out/modules/Account/account.types.ts";
 import ini from "ini";
 import { z } from "zod";
 import prompts from "prompts";
-import { oraLog } from "../Helpers";
-import { CONFIG_FILEPATH } from "../Constants";
-import { OTPError, parseOTPError } from "../../Helper/OTP/parseOTPError";
+import { oraLog } from "../Helpers.ts";
+import { CONFIG_FILEPATH } from "../Constants.ts";
+import { type OTPError, parseOTPError } from "../../Helper/OTP/parseOTPError.ts";
 
 /**
  * Arguments from the CLI.

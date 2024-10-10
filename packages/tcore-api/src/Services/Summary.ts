@@ -1,5 +1,5 @@
-import { ISummary, zSummary } from "@tago-io/tcore-sdk/types";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { type ISummary, zSummary } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**
  * Retrieves the summary information.

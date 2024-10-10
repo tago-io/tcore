@@ -1,13 +1,13 @@
-import { IDeviceData, IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDeviceData, IDevice } from "@tago-io/tcore-sdk/types";
 import { memo, useCallback, useState } from "react";
-import Button from "../../../Button/Button";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import Col from "../../../Col/Col";
-import FormDivision from "../../../FormDivision/FormDivision";
-import Icon from "../../../Icon/Icon";
+import Col from "../../../Col/Col.tsx";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Row from "../../../Row/Row";
-import VariablesTable from "../../Common/VariablesTable/VariablesTable";
+import Row from "../../../Row/Row.tsx";
+import VariablesTable from "../../Common/VariablesTable/VariablesTable.tsx";
 import * as Style from "./VariablesTab.style";
 
 /**

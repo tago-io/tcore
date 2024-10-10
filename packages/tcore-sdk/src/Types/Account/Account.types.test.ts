@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { zAccountList, zAccountCreate, zAccountTokenCreate, zAccountListQuery } from "./Account.types";
+import type { ZodError } from "zod";
+import { zAccountList, zAccountCreate, zAccountTokenCreate, zAccountListQuery } from "./Account.types.ts";
 
 describe("zAccountList", () => {
   test("parses simple object", () => {

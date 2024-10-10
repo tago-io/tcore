@@ -1,14 +1,14 @@
-import { Application } from "express";
+import type { Application } from "express";
 import { z } from "zod";
 import {
   zAnalysisListQuery,
-  IAnalysisListQuery,
-  IAnalysisCreate,
+  type IAnalysisListQuery,
+  type IAnalysisCreate,
   zAnalysisCreate,
-  IAnalysisEdit,
+  type IAnalysisEdit,
   zAnalysisEdit,
-} from "@tago-io/tcore-sdk/types";
-import { runAnalysis } from "../Services/AnalysisCodeExecution";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { runAnalysis } from "../Services/AnalysisCodeExecution.ts";
 import {
   createAnalysis,
   deleteAnalysis,
@@ -16,8 +16,8 @@ import {
   editAnalysis,
   getAnalysisInfo,
   getAnalysisList,
-} from "../Services/Analysis";
-import APIController, { ISetupController, warm } from "./APIController";
+} from "../Services/Analysis.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Configuration for ID in the URL.

@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react";
 import { useTheme } from "styled-components";
-import { Col, EIcon, FormGroup, Input, Row } from "../../../..";
-import IconRadio from "../../../IconRadio/IconRadio";
-import Select from "../../../Select/Select";
-import {
+import { Col, EIcon, FormGroup, Input, Row } from "../../../../index.ts";
+import IconRadio from "../../../IconRadio/IconRadio.tsx";
+import Select from "../../../Select/Select.tsx";
+import type {
   IScheduleData,
   TScheduleDataIntervalUnit,
   TScheduleDataType,
 } from "../../Action.interface";
-import MinimumScheduleMessage from "./MinimumScheduleMessage";
+import MinimumScheduleMessage from "./MinimumScheduleMessage.tsx";
 import * as Style from "./TypeScheduleOptions.style";
 
 /**

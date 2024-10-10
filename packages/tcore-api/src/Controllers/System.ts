@@ -1,6 +1,6 @@
-import { Application } from "express";
-import { getStatus } from "../Services/System";
-import APIController, { ISetupController, warm } from "./APIController";
+import type { Application } from "express";
+import { getStatus } from "../Services/System.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Retrieves the status information.

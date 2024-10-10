@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import { io } from "../Socket/SocketServer";
-import { deactivatePlugin } from "../Services/Plugins";
+import fs from "node:fs";
+import path from "node:path";
+import { io } from "../Socket/SocketServer.ts";
+import { deactivatePlugin } from "../Services/Plugins.ts";
 /**
  * Uninstalls a plugin.
  */
@@ -41,7 +41,7 @@ async function rmdir(dir: string) {
     const filename = path.join(dir, list[i]);
     const stat = fs.statSync(filename);
 
-    if (filename == "." || filename == "..") {
+    if (filename === "." || filename === "..") {
       // pass these files
     } else if (stat.isDirectory()) {
       // rmdir recursively

@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
-import getDateTimeObject from "../../Helpers/getDateTimeObject";
-import TooltipText from "../TooltipText/TooltipText";
+import getDateTimeObject from "../../Helpers/getDateTimeObject.ts";
+import TooltipText from "../TooltipText/TooltipText.tsx";
 import * as Style from "./RelativeDate.style";
 
 /**
@@ -55,9 +55,8 @@ function RelativeDate(props: IRelativeDateProps) {
 
   if (props.useInputStyle) {
     return <Style.Box>{content}</Style.Box>;
-  } else {
-    return content;
   }
+    return content;
 }
 
 export default RelativeDate;

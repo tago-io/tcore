@@ -1,11 +1,11 @@
-import path from "path";
-import os from "os";
-import { Request, Response, Application } from "express";
+import path from "node:path";
+import os from "node:os";
+import type { Request, Response, Application } from "express";
 import { z } from "zod";
-import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
+import { type IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import multer from "multer";
-import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
-import { plugins } from "../Plugins/Host";
+import { getMainSettings, setPluginModulesSettings } from "../Services/Settings.ts";
+import { plugins } from "../Plugins/Host.ts";
 import {
   getPluginInfo,
   getLoadedPluginList,
@@ -23,9 +23,9 @@ import {
   activatePlugin,
   deactivatePlugin,
   addExternalPlugin,
-} from "../Services/Plugins";
-import { uninstallPlugin } from "../Plugins/Uninstall";
-import APIController, { ISetupController, warm } from "./APIController";
+} from "../Services/Plugins.ts";
+import { uninstallPlugin } from "../Plugins/Uninstall.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Configuration for ID in the URL.

@@ -1,30 +1,32 @@
 import {
-  IAction,
-  IActionCreate,
-  IActionEdit,
-  IActionList,
-  IActionListQuery,
-  IActionOption,
-  IActionTriggerModuleSetup,
-  IActionTypeModuleSetup,
-  IDevice,
-  IDeviceData,
-  TGenericID,
+  type IAction,
+  type IActionCreate,
+  type IActionEdit,
+  type IActionList,
+  type IActionListQuery,
+  type IActionOption,
+  type IActionTriggerModuleSetup,
+  type IActionTypeModuleSetup,
+  type IDevice,
+  type IDeviceData,
+  type TGenericID,
   zAction,
   zActionCreate,
   zActionEdit,
   zActionList,
   zActionListQuery,
-} from "@tago-io/tcore-sdk/types";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
 import axios from "axios";
-import { Device } from "@tago-io/sdk";
-import splitColon from "../Helpers/splitColon";
-import { plugins } from "../Plugins/Host";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
-import { runAnalysis } from "./AnalysisCodeExecution";
-import { addDeviceData } from "./DeviceData/DeviceData";
-import { getDeviceByToken } from "./Device";
-import { getModuleList } from "./Plugins";
+import splitColon from "../Helpers/splitColon.ts";
+import { plugins } from "../Plugins/Host.ts";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
+import { runAnalysis } from "./AnalysisCodeExecution.ts";
+import { addDeviceData } from "./DeviceData/DeviceData.ts";
+import { getDeviceByToken } from "./Device.ts";
+import { getModuleList } from "./Plugins.ts";
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const { Device } = require("@tago-io/sdk");
 
 /**
  * Fixes a value's type before evaluating it.
@@ -228,7 +230,7 @@ async function triggerActionPluginType(action: IAction, data: any): Promise<void
   const [pluginID, moduleID] = splitColon(action?.action.type);
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);
-  delete actionObject.type;
+  actionObject.type = undefined;
 
   await module?.invokeOnCall(action.id, actionObject, data).catch(() => false);
 }

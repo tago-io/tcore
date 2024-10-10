@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router";
-import useApiRequest from "../../../../Helpers/useApiRequest";
-import Publisher from "../../../Plugins/Common/Publisher/Publisher";
-import Button from "../../../Button/Button";
+import useApiRequest from "../../../../Helpers/useApiRequest.ts";
+import Publisher from "../../../Plugins/Common/Publisher/Publisher.tsx";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import Icon from "../../../Icon/Icon";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Tooltip from "../../../Tooltip/Tooltip";
-import PluginImage from "../../../PluginImage/PluginImage";
-import { getLocalStorage } from "../../../../Helpers/localStorage";
-import store from "../../../../System/Store";
+import Tooltip from "../../../Tooltip/Tooltip.tsx";
+import PluginImage from "../../../PluginImage/PluginImage.tsx";
+import { getLocalStorage } from "../../../../Helpers/localStorage.ts";
+import store from "../../../../System/Store.tsx";
 import * as Style from "./Banner.style";
 
 /**
@@ -120,7 +120,7 @@ function Banner(props: IBannerProps) {
     }
 
     return (
-      <Tooltip text={isInstalled ? `This version is already installed` : ""}>
+      <Tooltip text={isInstalled ? "This version is already installed" : ""}>
         <Style.Install disabled={disabled}>
           <Button onClick={activate} type={EButton.primary}>
             Activate

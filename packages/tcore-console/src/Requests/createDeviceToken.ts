@@ -1,11 +1,11 @@
 import { Account } from "@tago-io/sdk";
-import { TokenData } from "@tago-io/sdk/out/common/common.types";
-import {
+import type { TokenData } from "@tago-io/sdk/out/common/common.types";
+import type {
   IDeviceTokenCreate,
   IDeviceTokenCreateResponse,
   TGenericID,
 } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import store from "../System/Store.tsx";
 
 /**
  */

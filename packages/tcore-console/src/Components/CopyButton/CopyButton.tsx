@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import Button, { IButtonProps } from "../Button/Button";
+import Button, { type IButtonProps } from "../Button/Button.tsx";
 import { EButton } from "../Button/Button.types";
-import Icon from "../Icon/Icon";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import Tooltip from "../Tooltip/Tooltip";
+import Tooltip from "../Tooltip/Tooltip.tsx";
 
 /**
  * Props.

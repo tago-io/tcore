@@ -1,11 +1,11 @@
-import path from "path";
-import fs from "fs";
-import { StartOptions } from "pm2";
+import path from "node:path";
+import fs from "node:fs";
+import type { StartOptions } from "pm2";
 import * as API from "@tago-io/tcore-api";
 import chalk from "chalk";
 import { getSystemName } from "@tago-io/tcore-shared";
-import { pm2Connect, pm2Delete, pm2Disconnect, pm2GetApp, pm2Start, PM2_APP_NAME } from "../Helpers/PM2";
-import { log } from "../Helpers/Log";
+import { pm2Connect, pm2Delete, pm2Disconnect, pm2GetApp, pm2Start, PM2_APP_NAME } from "../Helpers/PM2.tsx";
+import { log } from "../Helpers/Log.tsx";
 
 /**
  * Options of CLI.
@@ -33,13 +33,13 @@ function getEnv(opts: IStartOptions) {
 
   // prioritizes the options passed in the CLI but if one of the values
   // is falsy we try to use the process.env for that key
-  Object.keys(env).forEach((key) => {
+  for (const key of Object.keys(env)) {
     env[key] ||= process.env[key];
     if (!env[key]) {
       // empty env
       delete env[key];
     }
-  });
+  }
 
   return env;
 }
@@ -83,10 +83,9 @@ async function startWithDaemon(opts: IStartOptions) {
         // the app is already online
         log(`To restart ${systemName}, run ${chalk.cyan(`${exeName} restart`)}`);
         return;
-      } else {
+      }
         log(`Flag ${chalk.yellow("--force")} detected, restarting down ${systemName} Server`);
         await pm2Delete();
-      }
     } else {
       log(`${systemName} Server is stopped, starting it...`);
       await pm2Delete().catch(() => null);

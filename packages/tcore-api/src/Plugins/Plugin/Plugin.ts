@@ -1,16 +1,16 @@
 /* eslint-disable no-unused-vars */
-import path from "path";
-import fs from "fs";
-import { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
+import path from "node:path";
+import fs from "node:fs";
+import type { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import md5 from "md5";
-import { logError } from "../../Helpers/log";
-import { setPluginDisabledSettings } from "../../Services/Settings";
-import { io } from "../../Socket/SocketServer";
-import M from "../Module/Module";
-import Validator from "../Validator/Validator";
-import Worker from "../Worker/Worker";
-import { generatePluginID } from "../PluginID";
-import { DEV_BUILT_IN_PLUGINS } from "../Host";
+import { logError } from "../../Helpers/log.ts";
+import { setPluginDisabledSettings } from "../../Services/Settings.ts";
+import { io } from "../../Socket/SocketServer.ts";
+import type M from "../Module/Module.ts";
+import Validator from "../Validator/Validator.ts";
+import Worker from "../Worker/Worker.ts";
+import { generatePluginID } from "../PluginID.ts";
+import { DEV_BUILT_IN_PLUGINS } from "../Host.ts";
 
 /**
  */
@@ -18,7 +18,7 @@ class Plugin {
   public package: any;
   public permissions: string[];
   public types: TPluginType[];
-  public builtIn: boolean = false;
+  public builtIn = false;
 
   public readonly version: string;
   public readonly id: string;
@@ -114,7 +114,9 @@ class Plugin {
 
     if (force) {
       // quickly stop executing whole plugin
-      [...this.modules.values()].forEach((x) => (x.state = "stopped"));
+      for (const module of this.modules.values()) {
+        module.state = "stopped";
+      }
       this.state = "stopped";
       this.worker.stop();
       this.emitSocketUpdate();

@@ -1,7 +1,7 @@
-import { IPluginConfigField } from "@tago-io/tcore-sdk/types";
-import isConfigFieldVisible from "./isConfigFieldVisible";
-import validateStringField from "./validateStringField";
-import validateStringListField from "./validateStringListField";
+import type { IPluginConfigField } from "@tago-io/tcore-sdk/types";
+import isConfigFieldVisible from "./isConfigFieldVisible.ts";
+import validateStringField from "./validateStringField.ts";
+import validateStringListField from "./validateStringListField.ts";
 
 /**
  * Helper to validate all the config fields of a plugin and

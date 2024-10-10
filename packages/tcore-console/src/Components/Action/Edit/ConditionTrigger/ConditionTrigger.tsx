@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Accordion, EIcon, Switch } from "../../../..";
-import VariableCondition from "../../../VariableCondition/VariableCondition";
-import TooltipText from "../../../TooltipText/TooltipText";
-import { IConditionData } from "../../Action.interface";
-import DeviceRadio from "./DeviceRadio/DeviceRadio";
+import { Accordion, EIcon, Switch } from "../../../../index.ts";
+import VariableCondition from "../../../VariableCondition/VariableCondition.tsx";
+import TooltipText from "../../../TooltipText/TooltipText.tsx";
+import type { IConditionData } from "../../Action.interface";
+import DeviceRadio from "./DeviceRadio/DeviceRadio.tsx";
 
 /**
  * Props.

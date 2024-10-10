@@ -1,6 +1,6 @@
-import { ITag } from "@tago-io/tcore-sdk/types";
-import Input from "../Input/Input";
-import RowManipulatorTable from "../RowManipulatorTable/RowManipulatorTable";
+import type { ITag } from "@tago-io/tcore-sdk/types";
+import Input from "../Input/Input.tsx";
+import RowManipulatorTable from "../RowManipulatorTable/RowManipulatorTable.tsx";
 
 /**
  * Props.

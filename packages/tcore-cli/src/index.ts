@@ -2,12 +2,12 @@ import { Command } from "commander";
 import { getSystemName } from "@tago-io/tcore-shared";
 // @ts-ignore
 import pkg from "../package.json";
-import { showLogs } from "./Commands/Logs";
-import { start } from "./Commands/Start";
-import { status } from "./Commands/Status";
-import { stop } from "./Commands/Stop";
-import { restart } from "./Commands/Restart";
-import { addPluginCommands } from "./PluginCLI";
+import { showLogs } from "./Commands/Logs.tsx";
+import { start } from "./Commands/Start.tsx";
+import { status } from "./Commands/Status.tsx";
+import { stop } from "./Commands/Stop.tsx";
+import { restart } from "./Commands/Restart.tsx";
+import { addPluginCommands } from "./PluginCLI.tsx";
 
 /**
  */

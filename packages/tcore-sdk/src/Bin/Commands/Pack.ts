@@ -1,14 +1,14 @@
-import fs from "fs/promises";
-import path from "path";
+import fs from "node:fs/promises";
+import path from "node:path";
 import chalk from "chalk";
 import tar from "tar";
 import glob from "glob";
 import semver from "semver";
 import getImageData from "image-size";
 import { z } from "zod";
-import { THardwareTarget, zHardwareTarget, zPluginPermission, zPluginType } from "../../Types";
-import { formatBytes, getPackage, getSha256, oraLog } from "../Helpers";
-import { DEFAULT_OUT_FOLDERNAME, TCOREIGNORE_FILENAME } from "../Constants";
+import { type THardwareTarget, zHardwareTarget, zPluginPermission, zPluginType } from "../../Types.ts";
+import { formatBytes, getPackage, getSha256, oraLog } from "../Helpers.ts";
+import { DEFAULT_OUT_FOLDERNAME, TCOREIGNORE_FILENAME } from "../Constants.ts";
 
 /**
  * Arguments from the CLI.
@@ -171,7 +171,7 @@ async function printDetails(args: IPackArgs) {
   const stat = await fs.stat(filePath).catch(() => null);
   const size = stat?.size || 0;
 
-  console.log(`${chalk.magentaBright("[TCore SDK]")} ${chalk.magenta(`====== Details ======`)}`);
+  console.log(`${chalk.magentaBright("[TCore SDK]")} ${chalk.magenta("====== Details ======")}`);
 
   const shasum = await getSha256(filePath);
 

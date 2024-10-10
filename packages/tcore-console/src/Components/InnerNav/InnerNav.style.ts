@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { fonts } from "../../theme";
+import { fonts } from "../../theme.ts";
 import * as ButtonStyle from "../Button/Button.style";
 
 /**

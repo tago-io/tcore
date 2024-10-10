@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
 import { observer } from "mobx-react";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import Loading from "../../Loading/Loading";
-import EmptyMessage from "../../EmptyMessage/EmptyMessage";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import Loading from "../../Loading/Loading.tsx";
+import EmptyMessage from "../../EmptyMessage/EmptyMessage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Banner from "./Banner/Banner";
+import Banner from "./Banner/Banner.tsx";
 import * as Style from "./PluginDetails.style";
-import DataTabs from "./DataTabs/DataTabs";
-import Sidebar from "./Sidebar/Sidebar";
+import DataTabs from "./DataTabs/DataTabs.tsx";
+import Sidebar from "./Sidebar/Sidebar.tsx";
 
 /**
  * The plugin details page.

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { zObjectID } from "../Common/Common.types";
+import { zObjectID } from "../Common/Common.types.ts";
 
 /**
  * Configuration of a inspector connection ID.

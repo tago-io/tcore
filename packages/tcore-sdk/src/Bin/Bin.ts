@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 import { program } from "commander";
-import { login } from "./Commands/Login";
-import { logout } from "./Commands/Logout";
-import { pack } from "./Commands/Pack";
-import { publish } from "./Commands/Publish";
-import { whoAmI } from "./Commands/WhoAmI";
+import { login } from "./Commands/Login.ts";
+import { logout } from "./Commands/Logout.ts";
+import { pack } from "./Commands/Pack.ts";
+import { publish } from "./Commands/Publish.ts";
+import { whoAmI } from "./Commands/WhoAmI.ts";
 
 program.command("whoami").description("display account name").action(whoAmI);
 

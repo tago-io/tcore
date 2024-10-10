@@ -28,9 +28,8 @@ const getPageAmount = (paginationWidth: number): number => {
 
   if (pageAmount === MAX_PAGES || pageAmount === MIN_PAGES) {
     return pageAmount;
-  } else {
-    return MID_PAGES;
   }
+    return MID_PAGES;
 };
 
 /**
@@ -49,7 +48,7 @@ const getPageList = (
   // we need to round them out because floating numbers can break the Array() call:
   let amountOfPagesRounded = Math.round(amountOfPages) || 1;
 
-  if (isNaN(amountOfPagesRounded) || amountOfPagesRounded === Infinity) {
+  if (Number.isNaN(amountOfPagesRounded) || amountOfPagesRounded === Number.POSITIVE_INFINITY) {
     // extreme cases we will use at least one page
     amountOfPagesRounded = 1;
   }
@@ -72,11 +71,11 @@ const getPageList = (
 
     if (pageInLowerBound) {
       return [...pageNumbers.slice(0, lowerBound), "...", amountOfPagesRounded];
-    } else if (pageInUpperBound) {
+    }if (pageInUpperBound) {
       return [1, "...", ...pageNumbers.slice(upperBound - 1, amountOfPagesRounded)];
-    } else if (maxPages === MIN_PAGES) {
+    }if (maxPages === MIN_PAGES) {
       return ["...", page, "..."];
-    } else {
+    }
       return [
         1,
         "...",
@@ -84,7 +83,6 @@ const getPageList = (
         "...",
         amountOfPagesRounded,
       ];
-    }
   }
 
   return pageNumbers;

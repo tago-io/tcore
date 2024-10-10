@@ -1,6 +1,6 @@
-import { render, screen } from "../../../utils/test-utils";
+import { render, screen } from "../../../utils/test-utils.ts";
 import { EIcon } from "../Icon/Icon.types";
-import InnerNav from "./InnerNav";
+import InnerNav from "./InnerNav.tsx";
 
 /**
  * Default (required) props for the component.

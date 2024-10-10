@@ -21,7 +21,7 @@ export function generateResourceID(): string {
 export function validateResourceID(id?: string): boolean {
   const idSafe = String(id);
 
-  if (idSafe.length != 24) {
+  if (idSafe.length !== 24) {
     return false;
   }
 

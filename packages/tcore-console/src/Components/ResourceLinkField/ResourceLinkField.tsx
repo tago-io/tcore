@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button, EButton, EIcon, Icon, Input, Tooltip } from "../..";
+import { Button, EButton, type EIcon, Icon, Input, Tooltip } from "../../index.ts";
 import * as Style from "./ResourceLinkField.style";
 
 /**

@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { zLiveInspectorConnectionID, zLiveInspectorMessage, zLiveInspectorMessageCreate } from "./LiveInspector.types";
+import type { ZodError } from "zod";
+import { zLiveInspectorConnectionID, zLiveInspectorMessage, zLiveInspectorMessageCreate } from "./LiveInspector.types.ts";
 
 describe("zLiveInspectorConnectionID", () => {
   test("parses string", () => {

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import Screenshots from "../Screenshots/Screenshots";
-import Loading from "../../../Loading/Loading";
-import Markdown from "../../../Markdown/Markdown";
-import EmptyMessage from "../../../EmptyMessage/EmptyMessage";
+import Screenshots from "../Screenshots/Screenshots.tsx";
+import Loading from "../../../Loading/Loading.tsx";
+import Markdown from "../../../Markdown/Markdown.tsx";
+import EmptyMessage from "../../../EmptyMessage/EmptyMessage.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Tabs from "../../../Tabs/Tabs";
+import Tabs from "../../../Tabs/Tabs.tsx";
 
 /**
  * Props.

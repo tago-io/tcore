@@ -1,8 +1,8 @@
-import { IAction } from "@tago-io/tcore-sdk/types";
-import normalizeTags from "../../../../Helpers/normalizeTags";
+import type { IAction } from "@tago-io/tcore-sdk/types";
+import normalizeTags from "../../../../Helpers/normalizeTags.ts";
 import {
-  IConditionData,
-  IScheduleData,
+  type IConditionData,
+  type IScheduleData,
   zFrontActionScript,
   zFrontActionTagoIO,
   zFrontActionPost,
@@ -47,10 +47,10 @@ function convertActionToAPI(
     for (const condition of conditionData.conditions || []) {
       if (conditionData.type === "single") {
         condition.device = conditionData.device?.id || conditionData.device;
-        delete condition.tag_key;
-        delete condition.tag_value;
+        condition.tag_key = undefined;
+        condition.tag_value = undefined;
       } else {
-        delete condition.device;
+        condition.device = undefined;
         condition.tag_key = conditionData.tag?.key;
         condition.tag_value = conditionData.tag?.value;
       }
@@ -60,10 +60,10 @@ function convertActionToAPI(
     for (const condition of conditionData.unlockConditions || []) {
       if (conditionData.type === "single") {
         condition.device = conditionData.device?.id || conditionData.device;
-        delete condition.tag_key;
-        delete condition.tag_value;
+        condition.tag_key = undefined;
+        condition.tag_value = undefined;
       } else {
-        delete condition.device;
+        condition.device = undefined;
         condition.tag_key = conditionData.tag?.key;
         condition.tag_value = conditionData.tag?.value;
       }

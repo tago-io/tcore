@@ -1,10 +1,10 @@
-import { IDevice, IDeviceChunkPeriod } from "@tago-io/tcore-sdk/types";
+import type { IDevice, IDeviceChunkPeriod } from "@tago-io/tcore-sdk/types";
 import { useRef } from "react";
-import { Col, EIcon, FormGroup, Icon, Input, Row } from "../../../..";
-import AlertInfo from "../../../AlertInfo/AlertInfo";
+import { Col, EIcon, FormGroup, Icon, Input, Row } from "../../../../index.ts";
+import AlertInfo from "../../../AlertInfo/AlertInfo.tsx";
 import { EAlertInfo } from "../../../AlertInfo/AlertInfo.types";
-import ErrorMessage from "../../../ErrorMessage/ErrorMessage";
-import Select from "../../../Select/Select";
+import ErrorMessage from "../../../ErrorMessage/ErrorMessage.tsx";
+import Select from "../../../Select/Select.tsx";
 import * as Style from "./DataRetention.style";
 
 const MAX_INPUT_VALUES: any = {

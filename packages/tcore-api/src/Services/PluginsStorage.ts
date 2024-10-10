@@ -1,5 +1,5 @@
-import { zPluginStorageItemSet } from "@tago-io/tcore-sdk/types";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { zPluginStorageItemSet } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**
  * Retrieves a storage item of a plugin.
@@ -30,8 +30,8 @@ export async function deletePluginStorageItem(pluginID: string, key: string) {
 export async function getAllPluginStorageItems(pluginID: string): Promise<any> {
   const response = await invokeDatabaseFunction("getAllPluginStorageItems", pluginID);
   for (const item of response) {
-    delete item.created_at;
-    delete item.type;
+    item.created_at = undefined;
+    item.type = undefined;
   }
   return response;
 }

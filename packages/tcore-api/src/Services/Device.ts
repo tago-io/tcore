@@ -1,17 +1,17 @@
 import {
-  ICreateDeviceResponse,
-  IDevice,
-  IDeviceCreate,
-  IDeviceEdit,
-  IDeviceList,
-  IDeviceListQuery,
-  IDeviceParameterCreate,
-  IDeviceToken,
-  IDeviceTokenCreate,
-  IDeviceTokenCreateResponse,
-  IDeviceTokenListQuery,
-  TGenericID,
-  TGenericToken,
+  type ICreateDeviceResponse,
+  type IDevice,
+  type IDeviceCreate,
+  type IDeviceEdit,
+  type IDeviceList,
+  type IDeviceListQuery,
+  type IDeviceParameterCreate,
+  type IDeviceToken,
+  type IDeviceTokenCreate,
+  type IDeviceTokenCreateResponse,
+  type IDeviceTokenListQuery,
+  type TGenericID,
+  type TGenericToken,
   zDevice,
   zDeviceCreate,
   zDeviceEdit,
@@ -21,9 +21,9 @@ import {
   zDeviceParameterCreate,
   zDeviceToken,
   zDeviceTokenCreate,
-} from "@tago-io/tcore-sdk/types";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { z } from "zod";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**
  * Validates a device ID, throws an error if it doesn't exist.

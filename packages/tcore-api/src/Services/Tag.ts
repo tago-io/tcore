@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**
  * Retrieves all the tag keys of a resource type.

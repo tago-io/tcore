@@ -1,11 +1,11 @@
 import { useCallback, useState } from "react";
-import Button from "../Button/Button";
+import Button from "../Button/Button.tsx";
 import { EButton } from "../Button/Button.types";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import Icon from "../Icon/Icon";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import Input from "../Input/Input";
-import ModalFileSelect from "../ModalFileSelect/ModalFileSelect";
+import Input from "../Input/Input.tsx";
+import ModalFileSelect from "../ModalFileSelect/ModalFileSelect.tsx";
 import * as Style from "./FileSelect.style";
 
 /**
@@ -57,7 +57,7 @@ interface IFileSelectProps {
 function FileSelect(props: IFileSelectProps) {
   const [modalFile, setModalFile] = useState(false);
   const { value, error, disabled, accept, modalMessage, onlyFolders, onChange } = props;
-  const placeholder = props.placeholder || `Select a ${onlyFolders ? `folder` : `file`}`;
+  const placeholder = props.placeholder || `Select a ${onlyFolders ? "folder" : "file"}`;
 
   /**
    * Opens the file selector modal.
@@ -104,7 +104,7 @@ function FileSelect(props: IFileSelectProps) {
         </div>
 
         <Button disabled={disabled} onClick={activateModalFile} type={EButton.primary}>
-          Select {onlyFolders ? `folder` : `file`}
+          Select {onlyFolders ? "folder" : "file"}
         </Button>
 
         {modalFile && (

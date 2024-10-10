@@ -1,8 +1,8 @@
-import { WriteFileOptions } from "fs";
+import type { WriteFileOptions } from "node:fs";
 import { nanoid } from "nanoid";
-import { IComputerUsage } from "../../Types";
-import { generateResourceID, validateResourceID } from "../../Shared/ResourceID";
-import APIBridge from "../APIBridge/APIBridge";
+import type { IComputerUsage } from "../../Types.ts";
+import { generateResourceID, validateResourceID } from "../../Shared/ResourceID.ts";
+import APIBridge from "../APIBridge/APIBridge.ts";
 
 /**
  * Helper class containing useful functions available to plugin publishers.

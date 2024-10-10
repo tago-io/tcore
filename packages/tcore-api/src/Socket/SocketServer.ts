@@ -1,9 +1,9 @@
-import { Server } from "http";
-import { Server as SocketServer, Socket } from "socket.io";
-import { TGenericID } from "@tago-io/tcore-sdk/types";
-import { editDevice } from "../Services/Device";
-import { checkMasterPassword } from "../";
-import { getAccountToken } from "../Services/Account/Account";
+import type { Server } from "node:http";
+import { Server as SocketServer, type Socket } from "socket.io";
+import type { TGenericID } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { editDevice } from "../Services/Device.ts";
+import { checkMasterPassword } from "../index.ts";
+import { getAccountToken } from "../Services/Account/Account.ts";
 
 /**
  * Socket server instance.

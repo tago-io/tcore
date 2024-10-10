@@ -1,5 +1,5 @@
-import { render, screen } from "../../../utils/test-utils";
-import Footer from "./Footer";
+import { render, screen } from "../../../utils/test-utils.ts";
+import Footer from "./Footer.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Footer />);

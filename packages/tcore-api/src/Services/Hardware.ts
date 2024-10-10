@@ -1,7 +1,7 @@
-import os from "os";
+import os from "node:os";
 import si from "systeminformation";
-import { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/types";
-import { formatBytes } from "../Helpers/formatBytes";
+import type { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { formatBytes } from "../Helpers/formatBytes.ts";
 
 /**
  * Retrieves all the local ips of this computer.
@@ -134,7 +134,7 @@ export async function getCPUUsage(): Promise<IComputerUsage> {
   return {
     description: `${percentage}%`,
     detail: `${cpu.manufacturer} ${cpu.brand}`,
-    title: `CPU usage`,
+    title: "CPU usage",
     total: 100,
     type: "cpu",
     used: percentage,

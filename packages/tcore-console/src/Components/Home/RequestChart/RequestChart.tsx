@@ -1,9 +1,9 @@
 import { Chart } from "@antv/g2";
-import { IStatistic } from "@tago-io/tcore-sdk/types";
+import type { IStatistic } from "@tago-io/tcore-sdk/types";
 import { Interval } from "luxon";
 import { useEffect, useRef } from "react";
 import { useTheme } from "styled-components";
-import Loading from "../../Loading/Loading";
+import Loading from "../../Loading/Loading.tsx";
 import * as Style from "./RequestChart.style";
 
 /**
@@ -164,7 +164,7 @@ function ResourceHistoryChart(props: IResourceHistoryChart) {
 
       let description = value === 1 ? `${type}` : `${type}s`;
       if (i === 0) {
-        description += ` so far`;
+        description += " so far";
       } else {
         description += ` ${time} ago`;
       }

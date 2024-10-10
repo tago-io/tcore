@@ -1,11 +1,11 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import * as API from "@tago-io/tcore-api";
 import chalk from "chalk";
-import { IEnvironmentVariables } from "@tago-io/tcore-sdk/types";
+import type { IEnvironmentVariables } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
-import { pm2Connect, pm2Disconnect, pm2Restart, pm2GetApp } from "../Helpers/PM2";
-import { log } from "../Helpers/Log";
+import { pm2Connect, pm2Disconnect, pm2Restart, pm2GetApp } from "../Helpers/PM2.tsx";
+import { log } from "../Helpers/Log.tsx";
 
 /**
  * Restarts the server if it is started.

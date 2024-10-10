@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
-import { zObjectID, zToken } from "..";
-import { generateResourceID } from "../../Shared/ResourceID";
+import { zObjectID, zToken } from "../index.ts";
+import { generateResourceID } from "../../Shared/ResourceID.ts";
 
 /**
  * Configuration of an account.

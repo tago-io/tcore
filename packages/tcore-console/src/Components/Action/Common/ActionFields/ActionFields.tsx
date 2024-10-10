@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import FlexRow from "../../../FlexRow/FlexRow";
-import FormGroup from "../../../FormGroup/FormGroup";
+import FlexRow from "../../../FlexRow/FlexRow.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Switch from "../../../Switch/Switch";
-import ActionTypePicker from "../ActionTypePicker/ActionTypePicker";
-import HttpHeaders from "../HttpHeaders/HttpHeaders";
-import MultipleAnalysis from "../MultipleAnalysis/MultipleAnalysis";
-import PluginConfigFields from "../../../Plugins/Common/PluginConfigFields/PluginConfigFields";
+import Input from "../../../Input/Input.tsx";
+import Switch from "../../../Switch/Switch.tsx";
+import ActionTypePicker from "../ActionTypePicker/ActionTypePicker.tsx";
+import HttpHeaders from "../HttpHeaders/HttpHeaders.tsx";
+import MultipleAnalysis from "../MultipleAnalysis/MultipleAnalysis.tsx";
+import PluginConfigFields from "../../../Plugins/Common/PluginConfigFields/PluginConfigFields.tsx";
 
 /**
  * Props.
@@ -156,11 +156,11 @@ function ActionFields(props: IActionFields) {
   const renderContent = () => {
     if (actionType?.id === "script") {
       return renderAnalysis();
-    } else if (actionType?.id === "post") {
+    }if (actionType?.id === "post") {
       return renderPost();
-    } else if (actionType?.id === "tagoio") {
+    }if (actionType?.id === "tagoio") {
       return renderTagoIO();
-    } else if (actionType?.id) {
+    }if (actionType?.id) {
       return renderCustomOption();
     }
     return null;

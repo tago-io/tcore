@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { darken } from "polished";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import Button, { IButtonProps } from "../../../Button/Button";
+import Button, { IButtonProps } from "../../../Button/Button.tsx";
 
 /**
  * Main style of the component.

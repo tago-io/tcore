@@ -1,19 +1,19 @@
 import { useEffect, useState, useCallback } from "react";
-import { IPlugin } from "@tago-io/tcore-sdk/types";
+import type { IPlugin } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { useHistory } from "react-router";
-import SetupBackground from "../SetupBackground/SetupBackground";
-import setDocumentTitle from "../../../Helpers/setDocumentTitle";
-import SetupForm from "../SetupForm/SetupForm";
-import { Button, EButton, EIcon, Icon } from "../../..";
-import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import ModalFactoryReset from "../../Plugins/Common/ModalFactoryReset/ModalFactoryReset";
-import SuccessMessage from "../SuccessMessage/SuccessMessage";
-import StepPluginConfig from "../StepPluginConfig/StepPluginConfig";
-import getPluginDatabaseInfo from "../../../Requests/getPluginDatabaseInfo";
-import { promiseDelay } from "../../../Helpers/promiseDelay";
-import reloadPlugin from "../../../Requests/reloadPlugin";
-import store from "../../../System/Store";
+import SetupBackground from "../SetupBackground/SetupBackground.tsx";
+import setDocumentTitle from "../../../Helpers/setDocumentTitle.ts";
+import SetupForm from "../SetupForm/SetupForm.tsx";
+import { Button, EButton, EIcon, Icon } from "../../../index.ts";
+import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import ModalFactoryReset from "../../Plugins/Common/ModalFactoryReset/ModalFactoryReset.tsx";
+import SuccessMessage from "../SuccessMessage/SuccessMessage.tsx";
+import StepPluginConfig from "../StepPluginConfig/StepPluginConfig.tsx";
+import getPluginDatabaseInfo from "../../../Requests/getPluginDatabaseInfo.ts";
+import { promiseDelay } from "../../../Helpers/promiseDelay.ts";
+import reloadPlugin from "../../../Requests/reloadPlugin.ts";
+import store from "../../../System/Store.tsx";
 import * as Style from "./StepDatabaseError.style";
 
 /**
@@ -40,9 +40,8 @@ function StepDatabaseError() {
       const plug = await getPluginDatabaseInfo();
       setPlugin(plug);
       return plug;
-    } else {
-      return plugin;
     }
+      return plugin;
   };
 
   /**

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { ButtonStyle } from "../../../..";
-import { fonts } from "../../../../theme";
+import { ButtonStyle } from "../../../../index.ts";
+import { fonts } from "../../../../theme.ts";
 import * as PaginatedTableStyle from "../../../PaginatedTable/PaginatedTable.style";
 
 export const Container = styled.div`

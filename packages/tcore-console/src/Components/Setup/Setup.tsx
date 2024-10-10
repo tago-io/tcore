@@ -1,14 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { useHistory } from "react-router";
 import { observer } from "mobx-react";
-import setDocumentTitle from "../../Helpers/setDocumentTitle";
-import store from "../../System/Store";
-import StepDatabaseWrapper from "./StepDatabaseWrapper/StepDatabaseWrapper";
-import StepWelcome from "./StepWelcome/StepWelcome";
-import SetupBackground from "./SetupBackground/SetupBackground";
-import StepSignUp from "./StepSignUp/StepSignUp";
-import StepMasterPassword from "./StepMasterPassword/StepMasterPassword";
-import StepPluginConfig from "./StepPluginConfig/StepPluginConfig";
+import setDocumentTitle from "../../Helpers/setDocumentTitle.ts";
+import store from "../../System/Store.tsx";
+import StepDatabaseWrapper from "./StepDatabaseWrapper/StepDatabaseWrapper.tsx";
+import StepWelcome from "./StepWelcome/StepWelcome.tsx";
+import SetupBackground from "./SetupBackground/SetupBackground.tsx";
+import StepSignUp from "./StepSignUp/StepSignUp.tsx";
+import StepMasterPassword from "./StepMasterPassword/StepMasterPassword.tsx";
+import StepPluginConfig from "./StepPluginConfig/StepPluginConfig.tsx";
 
 /**
  * Main setup component.

@@ -1,5 +1,5 @@
-import { TGenericID, IModuleSetupWithoutType, IDeviceData } from "../../Types";
-import TCoreModule from "../TCoreModule/TCoreModule";
+import type { TGenericID, IModuleSetupWithoutType, IDeviceData } from "../../Types.ts";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows the creation of listener functions that are triggered

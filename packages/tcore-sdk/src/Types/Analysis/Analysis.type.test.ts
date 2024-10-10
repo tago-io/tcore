@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { zAnalysisCreate, zAnalysisEdit, zAnalysisList, zAnalysisListQuery, zAnalysisLogList } from "./Analysis.types";
+import type { ZodError } from "zod";
+import { zAnalysisCreate, zAnalysisEdit, zAnalysisList, zAnalysisListQuery, zAnalysisLogList } from "./Analysis.types.ts";
 
 describe("zAnalysis Create", () => {
   test("Success", () => {

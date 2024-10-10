@@ -1,18 +1,18 @@
 import { memo, useCallback, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
-import { ILiveInspectorMessage } from "@tago-io/tcore-sdk/types";
-import downloadFile from "../../../../Helpers/download";
-import getDateTimeObject from "../../../../Helpers/getDateTimeObject";
-import Button from "../../../Button/Button";
+import type { ILiveInspectorMessage } from "@tago-io/tcore-sdk/types";
+import downloadFile from "../../../../Helpers/download.ts";
+import getDateTimeObject from "../../../../Helpers/getDateTimeObject.ts";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import EmptyMessage from "../../../EmptyMessage/EmptyMessage";
-import Icon from "../../../Icon/Icon";
+import EmptyMessage from "../../../EmptyMessage/EmptyMessage.tsx";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import InputRadio from "../../../InputRadio/InputRadio";
-import Tooltip from "../../../Tooltip/Tooltip";
+import Input from "../../../Input/Input.tsx";
+import InputRadio from "../../../InputRadio/InputRadio.tsx";
+import Tooltip from "../../../Tooltip/Tooltip.tsx";
 import * as Style from "./LiveInspector.style";
-import LiveInspectorRow from "./LiveInspectorRow";
+import LiveInspectorRow from "./LiveInspectorRow.tsx";
 
 /**
  * Props.

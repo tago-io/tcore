@@ -1,12 +1,12 @@
 import {
-  IAnalysis,
-  IAnalysisCreate,
-  IAnalysisEdit,
-  IAnalysisList,
-  IAnalysisListQuery,
-  ILog,
-  ILogCreate,
-  TGenericID,
+  type IAnalysis,
+  type IAnalysisCreate,
+  type IAnalysisEdit,
+  type IAnalysisList,
+  type IAnalysisListQuery,
+  type ILog,
+  type ILogCreate,
+  type TGenericID,
   zAnalysis,
   zAnalysisCreate,
   zAnalysisEdit,
@@ -14,9 +14,9 @@ import {
   zAnalysisListQuery,
   zLog,
   zLogCreate,
-} from "@tago-io/tcore-sdk/types";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { z } from "zod";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**
  * Validates an analysis ID, throws an error if it doesn't exist.

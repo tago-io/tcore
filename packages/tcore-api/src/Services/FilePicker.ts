@@ -1,6 +1,6 @@
-import { IPluginFilesystemItem } from "@tago-io/tcore-sdk/types";
-import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
-import { getModuleList } from "./Plugins";
+import type { IPluginFilesystemItem } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction.ts";
+import { getModuleList } from "./Plugins.ts";
 
 /**
  * Sorts the file array by alphabetical order.
@@ -29,9 +29,8 @@ export async function getFileList(folderPath: string, preferLocalFs?: boolean): 
     const result = await localFilesystem.invoke("resolveFolder", folderPath);
     sortFiles(result as IPluginFilesystemItem[]);
     return result as IPluginFilesystemItem[];
-  } else {
+  }
     const result = await invokeFilesystemFunction("resolveFolder", folderPath);
     sortFiles(result);
     return result;
-  }
 }

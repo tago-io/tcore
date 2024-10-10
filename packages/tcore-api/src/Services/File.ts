@@ -1,7 +1,7 @@
-import fs from "fs/promises";
-import { WriteFileOptions } from "fs";
-import path from "path";
-import { getPluginSettingsFolder } from "./Settings";
+import fs from "node:fs/promises";
+import type { WriteFileOptions } from "node:fs";
+import path from "node:path";
+import { getPluginSettingsFolder } from "./Settings.ts";
 
 /**
  * Writes data to the file, replacing the file if it already exists.

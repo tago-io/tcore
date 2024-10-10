@@ -1,9 +1,9 @@
-import { TGenericID } from "@tago-io/tcore-sdk/types";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
 import { useEffect, useState } from "react";
-import { Switch } from "../..";
-import { getLocalStorageAsJSON, setLocalStorageAsJSON } from "../../Helpers/localStorage";
-import Modal from "../Modal/Modal";
-import Select from "../Select/Select";
+import { Switch } from "../../index.ts";
+import { getLocalStorageAsJSON, setLocalStorageAsJSON } from "../../Helpers/localStorage.ts";
+import Modal from "../Modal/Modal.tsx";
+import Select from "../Select/Select.tsx";
 import * as Style from "./ModalListConfiguration.style";
 
 /**

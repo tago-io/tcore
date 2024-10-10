@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const svgr = require("./svgr");
-const esbuild = require("esbuild");
-const path = require("path");
-const buildPath = require("./buildPath");
-const version = require("../../../package.json").version;
+import svgr from "./svgr.js";
+import * as esbuild from "esbuild";
+import path from "node:path";
+import buildPath from "./buildPath.js";
+import { version } from "../../../package.json";
 
-require("./icon");
-require("./generateIndex");
+import "./icon.js";
+import "./generateIndex.js";
 
 const dev = process.argv.includes("--watch");
 

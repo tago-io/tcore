@@ -1,10 +1,10 @@
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { type MouseEvent, useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ReactNode } from "react-markdown/lib/react-markdown";
-import Button from "../Button/Button";
+import type { ReactNode } from "react-markdown/lib/react-markdown";
+import Button from "../Button/Button.tsx";
 import { EButton } from "../Button/Button.types";
-import Footer from "../Footer/Footer";
-import Icon from "../Icon/Icon";
+import Footer from "../Footer/Footer.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
 import * as Style from "./Modal.style";
 

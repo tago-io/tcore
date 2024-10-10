@@ -1,4 +1,4 @@
-import { ITag, zCron, zObjectID } from "@tago-io/tcore-sdk/types";
+import { type ITag, zCron, zObjectID } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 
 /**
@@ -164,12 +164,12 @@ interface IScheduleDataError {
 }
 
 export {
-  IConditionData,
-  IScheduleData,
-  IScheduleDataError,
-  IScheduleDataWeekdays,
-  TScheduleDataIntervalUnit,
-  TScheduleDataType,
+  type IConditionData,
+  type IScheduleData,
+  type IScheduleDataError,
+  type IScheduleDataWeekdays,
+  type TScheduleDataIntervalUnit,
+  type TScheduleDataType,
   zFrontAction,
   zFrontActionTagoIO,
   zFrontActionPost,

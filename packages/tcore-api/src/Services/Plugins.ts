@@ -1,15 +1,17 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import md5 from "md5";
-import { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettings } from "@tago-io/tcore-sdk/types";
+import type { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettings } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import semver from "semver";
-import Module from "../Plugins/Module/Module";
-import { DEV_BUILT_IN_PLUGINS, plugins, startPluginAndHandleErrors } from "../Plugins/Host";
-import Plugin from "../Plugins/Plugin/Plugin";
-import { io } from "../Socket/SocketServer";
-import { getMainSettings, getPluginSettings, setMainSettings } from "./Settings";
-import { getVersion } from "./System";
+import type Module from "../Plugins/Module/Module.ts";
+import { DEV_BUILT_IN_PLUGINS, plugins, startPluginAndHandleErrors } from "../Plugins/Host.ts";
+import Plugin from "../Plugins/Plugin/Plugin.ts";
+import { io } from "../Socket/SocketServer.ts";
+import { getMainSettings, getPluginSettings, setMainSettings } from "./Settings.ts";
+import { getVersion } from "./System.ts";
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
 interface IPluginPackage {
   name: string;
@@ -117,6 +119,8 @@ export async function listPluginFolders(): Promise<string[]> {
 }
 
 async function getInstalledInsidePlugins(plugins: string[], settings: ISettings) {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
   for (const folder of insidePlugins) {
     const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
@@ -165,6 +169,8 @@ export async function getPluginList(): Promise<any> {
  * Lists all the plugins directly main plugin folder.
  */
 export async function getAllInsidePlugins() {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
   const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
   const list: IPluginPackage[] = [];
   for (const folder of insidePlugins) {
@@ -569,9 +575,8 @@ export async function getMainFilesystemModule(): Promise<Module | null | undefin
     const module = plugins.get(pluginID)?.modules?.get(moduleID);
     if (module?.state === "started") {
       return module;
-    } else {
-      return null;
     }
+      return null;
   }
 
   return undefined;
@@ -650,10 +655,12 @@ export async function terminateAllPlugins(ignoreBuiltIns = true) {
     }
 
     // eslint-disable-next-line no-async-promise-executor
-    await new Promise<void>(async (resolve) => {
-      await plugin.stop(false, 3000).catch(() => null);
-      plugins.delete(plugin.id);
-      resolve();
+    await new Promise<void>((resolve) => {
+      (async () => {
+        await plugin.stop(false, 3000).catch(() => null);
+        plugins.delete(plugin.id);
+        resolve();
+      })();
     });
   }
 }

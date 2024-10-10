@@ -1,14 +1,14 @@
-import { IStatistic } from "@tago-io/tcore-sdk/types";
+import type { IStatistic } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { memo, useEffect, useRef, useState } from "react";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import store from "../../../System/Store";
-import TooltipText from "../../TooltipText/TooltipText";
-import EmptyMessage from "../../EmptyMessage/EmptyMessage";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import store from "../../../System/Store.tsx";
+import TooltipText from "../../TooltipText/TooltipText.tsx";
+import EmptyMessage from "../../EmptyMessage/EmptyMessage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
 import * as HomeStyle from "../Home.style";
-import RequestChart from "../RequestChart/RequestChart";
-import { getSocket } from "../../../System/Socket";
+import RequestChart from "../RequestChart/RequestChart.tsx";
+import { getSocket } from "../../../System/Socket.tsx";
 
 /**
  * Statistics section of the home page.
@@ -34,9 +34,9 @@ function Statistics() {
       setStatistics([...(statistics as IStatistic[])]);
     }
 
-    getSocket().on(`statistic::hourly`, onNewStatistic);
+    getSocket().on("statistic::hourly", onNewStatistic);
     return () => {
-      getSocket().off(`statistic::hourly`, onNewStatistic);
+      getSocket().off("statistic::hourly", onNewStatistic);
     };
   });
 

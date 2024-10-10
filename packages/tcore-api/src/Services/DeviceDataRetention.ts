@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
-import { logError } from "../Helpers/log";
-import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction";
-import { editDevice, getDeviceList } from "./Device";
+import { logError } from "../Helpers/log.ts";
+import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
+import { editDevice, getDeviceList } from "./Device.ts";
 
 /**
  * Interval to control the data removal interval.

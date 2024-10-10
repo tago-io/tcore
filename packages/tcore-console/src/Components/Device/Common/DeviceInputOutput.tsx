@@ -1,6 +1,6 @@
 import { useTheme } from "styled-components";
-import getDateTimeObject from "../../../Helpers/getDateTimeObject";
-import RelativeDate from "../../RelativeDate/RelativeDate";
+import getDateTimeObject from "../../../Helpers/getDateTimeObject.ts";
+import RelativeDate from "../../RelativeDate/RelativeDate.tsx";
 
 /**
  * Props.

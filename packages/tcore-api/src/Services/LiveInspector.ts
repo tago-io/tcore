@@ -1,9 +1,9 @@
-import { IDevice, ILiveInspectorMessageCreate, TGenericID, TLiveInspectorConnectionID } from "@tago-io/tcore-sdk/types";
+import type { IDevice, ILiveInspectorMessageCreate, TGenericID, TLiveInspectorConnectionID } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { DateTime } from "luxon";
 import { nanoid } from "nanoid";
-import { plugins } from "../Plugins/Host";
-import { io } from "../Socket/SocketServer";
-import { getDeviceInfo } from "./Device";
+import { plugins } from "../Plugins/Host.ts";
+import { io } from "../Socket/SocketServer.ts";
+import { getDeviceInfo } from "./Device.ts";
 
 /**
  */

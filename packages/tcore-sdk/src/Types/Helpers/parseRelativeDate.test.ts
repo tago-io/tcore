@@ -1,4 +1,4 @@
-import { convertDateToISO, parseRelativeDate } from "./parseRelativeDate";
+import { convertDateToISO, parseRelativeDate } from "./parseRelativeDate.ts";
 
 describe("convertDateToISO", () => {
   test("convert simple date", () => {

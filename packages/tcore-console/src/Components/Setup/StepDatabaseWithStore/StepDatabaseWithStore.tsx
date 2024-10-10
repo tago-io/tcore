@@ -1,4 +1,4 @@
-import { IPluginList } from "@tago-io/tcore-sdk/types";
+import type { IPluginList } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { useCallback, useEffect, useState } from "react";
 import { SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
@@ -13,15 +13,15 @@ import {
   Publisher,
   Tooltip,
   useApiRequest,
-} from "../../..";
-import selectPluginFile from "../../../Helpers/selectPluginFile";
-import getPluginStoreInstallURLs from "../../../Requests/getPluginStoreInstallURLs";
-import store from "../../../System/Store";
-import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL";
-import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
-import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
-import SetupForm from "../SetupForm/SetupForm";
+} from "../../../index.ts";
+import selectPluginFile from "../../../Helpers/selectPluginFile.ts";
+import getPluginStoreInstallURLs from "../../../Requests/getPluginStoreInstallURLs.ts";
+import store from "../../../System/Store.tsx";
+import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL.tsx";
+import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin.tsx";
+import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
 import * as Style from "./StepDatabaseWithStore.style";
 
 /**
@@ -173,13 +173,13 @@ function StepDatabaseWithStore(props: any) {
       if (a.id === SQLITE_PLUGIN_ID && b.id !== SQLITE_PLUGIN_ID) {
         // priority for sqlite plugin
         return -1;
-      } else if (a.id !== SQLITE_PLUGIN_ID && b.id === SQLITE_PLUGIN_ID) {
+      }if (a.id !== SQLITE_PLUGIN_ID && b.id === SQLITE_PLUGIN_ID) {
         // priority for sqlite plugin
         return 1;
-      } else if (a.publisher?.domain === "tago.io" && b.publisher?.domain !== "tago.io") {
+      }if (a.publisher?.domain === "tago.io" && b.publisher?.domain !== "tago.io") {
         // then, all TagoIO plugins
         return -1;
-      } else if (a.publisher?.domain !== "tago.io" && b.publisher?.domain === "tago.io") {
+      }if (a.publisher?.domain !== "tago.io" && b.publisher?.domain === "tago.io") {
         // then, all TagoIO plugins
         return 1;
       }

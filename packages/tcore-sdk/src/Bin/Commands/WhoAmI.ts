@@ -1,6 +1,6 @@
 import { Account } from "@tago-io/sdk";
 import chalk from "chalk";
-import { getConfigToken, oraLog } from "../Helpers";
+import { getConfigToken, oraLog } from "../Helpers.ts";
 
 /**
  * Logs which account the user is currently logged in as.

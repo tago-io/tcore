@@ -1,15 +1,15 @@
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { type MouseEvent, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useTheme } from "styled-components";
-import { IDevice, zDeviceCreate } from "@tago-io/tcore-sdk/types";
-import FormGroup from "../../../FormGroup/FormGroup";
+import { type IDevice, zDeviceCreate } from "@tago-io/tcore-sdk/types";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
-import BucketTypePicker from "../DeviceTypePicker/DeviceTypePicker";
-import createDevice from "../../../../Requests/createDevice";
-import DataRetention from "../../../Bucket/Common/DataRetention/DataRetention";
-import buildZodError from "../../../../Validation/buildZodError";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
+import BucketTypePicker from "../DeviceTypePicker/DeviceTypePicker.tsx";
+import createDevice from "../../../../Requests/createDevice.ts";
+import DataRetention from "../../../Bucket/Common/DataRetention/DataRetention.tsx";
+import buildZodError from "../../../../Validation/buildZodError.ts";
 
 /**
  * Props.
@@ -60,8 +60,8 @@ function ModalAddDevice(props: IModalAddDeviceProps) {
       }
 
       if (formatted.type !== "immutable") {
-        delete formatted.chunk_period;
-        delete formatted.chunk_retention;
+        formatted.chunk_period = undefined;
+        formatted.chunk_retention = undefined;
       }
 
       await zDeviceCreate.parseAsync(formatted);
@@ -84,8 +84,8 @@ function ModalAddDevice(props: IModalAddDeviceProps) {
     };
 
     if (formatted.type !== "immutable") {
-      delete formatted.chunk_period;
-      delete formatted.chunk_retention;
+      formatted.chunk_period = undefined;
+      formatted.chunk_retention = undefined;
     }
 
     const response = await createDevice(formatted);

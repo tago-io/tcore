@@ -1,5 +1,5 @@
-import Input from "../../../Input/Input";
-import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable";
+import Input from "../../../Input/Input.tsx";
+import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable.tsx";
 
 /**
  * Single item.

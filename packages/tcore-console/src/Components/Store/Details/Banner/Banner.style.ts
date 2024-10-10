@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { ButtonStyle, LinkStyle, PluginImageStyle } from "../../../..";
+import { ButtonStyle, LinkStyle, PluginImageStyle } from "../../../../index.ts";
 
 /**
  */

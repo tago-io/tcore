@@ -1,17 +1,17 @@
 import { useTheme } from "styled-components";
-import { IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
 import { useState, useCallback } from "react";
-import BooleanStatus from "../../BooleanStatus/BooleanStatus";
-import Button from "../../Button/Button";
+import BooleanStatus from "../../BooleanStatus/BooleanStatus.tsx";
+import Button from "../../Button/Button.tsx";
 import { EButton } from "../../Button/Button.types";
-import Icon from "../../Icon/Icon";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import ListPage from "../../ListPage/ListPage";
-import RelativeDate from "../../RelativeDate/RelativeDate";
-import DeviceInputOutput from "../Common/DeviceInputOutput";
-import getDeviceList from "../../../Requests/getDeviceList";
-import ModalAddDevice from "../Common/ModalAddDevice/ModalAddDevice";
-import getDeviceTypeName from "../../../Helpers/getDeviceTypeName";
+import ListPage from "../../ListPage/ListPage.tsx";
+import RelativeDate from "../../RelativeDate/RelativeDate.tsx";
+import DeviceInputOutput from "../Common/DeviceInputOutput.tsx";
+import getDeviceList from "../../../Requests/getDeviceList.ts";
+import ModalAddDevice from "../Common/ModalAddDevice/ModalAddDevice.tsx";
+import getDeviceTypeName from "../../../Helpers/getDeviceTypeName.ts";
 
 /**
  * The device's list page.

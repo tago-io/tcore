@@ -1,7 +1,7 @@
-import { IComputerUsage } from "@tago-io/tcore-sdk/types";
-import Icon from "../../Icon/Icon";
+import type { IComputerUsage } from "@tago-io/tcore-sdk/types";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Loading from "../../Loading/Loading";
+import Loading from "../../Loading/Loading.tsx";
 import * as Style from "./ComputerUsage.style";
 
 /**
@@ -29,15 +29,14 @@ function ComputerUsage(props: IComputerUsageProps) {
   const getIcon = (type: string) => {
     if (type === "memory") {
       return EIcon.memory;
-    } else if (type === "cpu") {
+    }if (type === "cpu") {
       return EIcon.microchip;
-    } else if (type === "disk") {
+    }if (type === "disk") {
       return EIcon.hdd;
-    } else if (type === "battery") {
+    }if (type === "battery") {
       return EIcon["battery-full"];
-    } else {
-      return EIcon.cog;
     }
+      return EIcon.cog;
   };
 
   /**

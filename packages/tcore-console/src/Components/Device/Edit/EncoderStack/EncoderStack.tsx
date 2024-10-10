@@ -1,13 +1,13 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "styled-components";
-import { IPluginClassListItem } from "@tago-io/tcore-sdk/types";
-import Button from "../../../Button/Button";
+import type { IPluginClassListItem } from "@tago-io/tcore-sdk/types";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import Icon from "../../../Icon/Icon";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import EmptyMessage from "../../../EmptyMessage/EmptyMessage";
+import EmptyMessage from "../../../EmptyMessage/EmptyMessage.tsx";
 import * as Style from "./EncoderStack.style";
-import ModalAddEncoder from "./ModalAddEncoder";
+import ModalAddEncoder from "./ModalAddEncoder.tsx";
 
 /**
  * Props.

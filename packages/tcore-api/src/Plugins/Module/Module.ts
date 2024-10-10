@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
+import type { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
-import { io } from "../../Socket/SocketServer";
-import { getPluginSettings } from "../../Services/Settings";
-import Plugin from "../Plugin/Plugin";
-import { checkMainDatabaseModuleHook } from "../../Services/Plugins";
+import { io } from "../../Socket/SocketServer.ts";
+import { getPluginSettings } from "../../Services/Settings.ts";
+import type Plugin from "../Plugin/Plugin.ts";
+import { checkMainDatabaseModuleHook } from "../../Services/Plugins.ts";
 
 /**
  * Class that manages a single module of a plugin.

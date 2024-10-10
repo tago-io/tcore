@@ -1,7 +1,7 @@
-import { INetworkInfo } from "@tago-io/tcore-sdk/types";
+import type { INetworkInfo } from "@tago-io/tcore-sdk/types";
 import { memo } from "react";
-import formatBytes from "../../../Helpers/formatBytes";
-import Icon from "../../Icon/Icon";
+import formatBytes from "../../../Helpers/formatBytes.ts";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
 import * as Style from "./Network.style";
 

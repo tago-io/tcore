@@ -1,4 +1,4 @@
-import { IAccount, IPluginList } from "@tago-io/tcore-sdk/types";
+import type { IAccount, IPluginList } from "@tago-io/tcore-sdk/types";
 import { observable, makeObservable } from "mobx";
 
 interface IStore {

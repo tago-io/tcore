@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { getSystemName } from "@tago-io/tcore-shared";
-import { pm2Connect, pm2Delete, pm2Disconnect, pm2GetApp } from "../Helpers/PM2";
-import { log } from "../Helpers/Log";
+import { pm2Connect, pm2Delete, pm2Disconnect, pm2GetApp } from "../Helpers/PM2.tsx";
+import { log } from "../Helpers/Log.tsx";
 
 /**
  * Stops the server if it is running through the PM2 daemon, and then logs the

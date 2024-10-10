@@ -1,14 +1,16 @@
-import fs from "fs";
-import vm from "vm";
-import { IDevice, IDeviceAddDataOptions } from "@tago-io/tcore-sdk/types";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
-import advancedFormat from "dayjs/plugin/advancedFormat";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import { logError } from "../Helpers/log";
-import { emitToLiveInspector } from "./LiveInspector";
-import { getDeviceParamList } from "./Device";
+import fs from "node:fs";
+import vm from "node:vm";
+import type { IDevice, IDeviceAddDataOptions } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { logError } from "../Helpers/log.ts";
+import { emitToLiveInspector } from "./LiveInspector.ts";
+import { getDeviceParamList } from "./Device.ts";
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const dayjs = require('dayjs');
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+const advancedFormat = require("dayjs/plugin/advancedFormat");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

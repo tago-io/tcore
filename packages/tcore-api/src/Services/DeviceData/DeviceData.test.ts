@@ -10,19 +10,19 @@ const invokeDatabaseFunction = jest.fn<any, any>((method: string) => {
 jest.mock("../../Plugins/invokeDatabaseFunction", () => ({ invokeDatabaseFunction }));
 
 import {
-  IDevice,
-  IDeviceAddDataOptions,
-  IDeviceData,
-  IDeviceDataCreate,
+  type IDevice,
+  type IDeviceAddDataOptions,
+  type IDeviceData,
+  type IDeviceDataCreate,
   zDeviceDataQuery,
-} from "@tago-io/tcore-sdk/types";
-import Module from "../../Plugins/Module/Module";
-import * as Device from "../Device";
-import * as Statistic from "../Statistic";
-import * as LiveInspector from "../LiveInspector";
-import * as PayloadParser from "../PayloadParserCodeExecution";
-import { plugins } from "../../Plugins/Host";
-import * as DeviceData from "./DeviceData";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
+import Module from "../../Plugins/Module/Module.ts";
+import * as Device from "../Device.ts";
+import * as Statistic from "../Statistic.ts";
+import * as LiveInspector from "../LiveInspector.ts";
+import * as PayloadParser from "../PayloadParserCodeExecution.ts";
+import { plugins } from "../../Plugins/Host.ts";
+import * as DeviceData from "./DeviceData.ts";
 
 beforeAll(() => {
   jest.useFakeTimers();
@@ -470,7 +470,7 @@ describe("applyPayloadEncoder", () => {
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
     await DeviceData.applyPayloadEncoder(device, "123");
 
-    expect(mock.mock.calls[0][1]).toEqual({ title: `Applied encoder Temp`, content: 1000 });
+    expect(mock.mock.calls[0][1]).toEqual({ title: "Applied encoder Temp", content: 1000 });
   });
 
   test("emits to live inspector using liveInspectorID", async () => {
@@ -485,7 +485,7 @@ describe("applyPayloadEncoder", () => {
     const device = { ...mutableDevice, encoder_stack: ["plugin1:module1"] };
     await DeviceData.applyPayloadEncoder(device, "123", options);
 
-    expect(mock.mock.calls[0][1]).toEqual({ title: `Applied encoder Temp`, content: "null" });
+    expect(mock.mock.calls[0][1]).toEqual({ title: "Applied encoder Temp", content: "null" });
     expect(mock.mock.calls[0][2]).toEqual(options.liveInspectorID);
   });
 });

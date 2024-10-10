@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import OptionsPicker from "../OptionsPicker/OptionsPicker";
+import OptionsPicker from "../OptionsPicker/OptionsPicker.tsx";
 import timezonesJSON from "./timezones.json";
 
 /**
@@ -47,9 +47,8 @@ function TimezonePicker(props: ITimezonePicker) {
     if (page === 1) {
       const queryTrim = query.toLowerCase().trim();
       return timezones.filter((x) => x.name.toLowerCase().trim().includes(queryTrim));
-    } else {
-      return [];
     }
+      return [];
   }, []);
 
   /**

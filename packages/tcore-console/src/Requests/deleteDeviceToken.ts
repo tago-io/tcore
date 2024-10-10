@@ -1,6 +1,6 @@
 import { Account } from "@tago-io/sdk";
-import { TGenericToken } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { TGenericToken } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.tsx";
 
 /**
  */

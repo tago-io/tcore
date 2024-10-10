@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { EIcon, icons } from "./Icon.types";
+import { type EIcon, icons } from "./Icon.types";
 import * as Style from "./Icon.style";
 
 /**
@@ -38,7 +38,7 @@ function Icon(props: IIcon) {
 
   return (
     <Style.Container isRotating={rotate} size={size} color={props.color}>
-      {Component?.ReactComponent ? (
+      {/* {Component?.ReactComponent ? (
         // For CRA projects, the svg can be imported manually by using the `ReactComponent`
         // object inside of the imported .svg. This won't work for the tcore-console project.
         <Component.ReactComponent width={size} height={size} />
@@ -46,7 +46,9 @@ function Icon(props: IIcon) {
         // The default import that is provided by the `@svg/core` library, this is the way that
         // tcore-console uses the svg element.
         <Component.default width={size} height={size} />
-      ) : null}
+      ) : null} */}
+      {/* <Component.default width={size} height={size} /> */}
+      {/*·TODO·fix·this·*/}
     </Style.Container>
   );
 }

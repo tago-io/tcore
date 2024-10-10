@@ -1,20 +1,20 @@
 import {
-  IAccountTokenCreate,
-  IAccountListQuery,
+  type IAccountTokenCreate,
+  type IAccountListQuery,
   zAccount,
-  IAccount,
+  type IAccount,
   zAccountTokenCreate,
   zAccountList,
-  IAccountList,
-  IAccountCreate,
+  type IAccountList,
+  type IAccountCreate,
   zAccountCreate,
-  TGenericID,
-  IAccountToken,
+  type TGenericID,
+  type IAccountToken,
   zAccountToken,
-} from "@tago-io/tcore-sdk/types";
+} from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { z } from "zod";
-import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction";
-import { compareAccountPasswordHash, encryptAccountPassword } from "./AccountPassword";
+import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction.ts";
+import { compareAccountPasswordHash, encryptAccountPassword } from "./AccountPassword.ts";
 
 /**
  * Logs into account and returns a token.
@@ -29,9 +29,8 @@ export async function login(username: string, password: string) {
   if (!passwordMatches) {
     if (account.password_hint) {
       throw new Error(`Invalid password. Your password hint is: ${account.password_hint}`);
-    } else {
-      throw new Error("Invalid credentials");
     }
+      throw new Error("Invalid credentials");
   }
 
   const token = await createAccountToken(account.id);
@@ -79,8 +78,8 @@ export async function getAccountByToken(token: string): Promise<IAccount> {
     throw new Error("Invalid Account Token");
   }
   const parsed = await zAccount.parseAsync(account);
-  delete (parsed as any).password;
-  delete (parsed as any).password_hint;
+  (parsed as any).password = undefined;
+  (parsed as any).password_hint = undefined;
   return parsed;
 }
 

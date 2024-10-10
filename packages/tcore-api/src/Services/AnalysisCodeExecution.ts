@@ -1,10 +1,10 @@
-import { spawn } from "child_process";
-import fs from "fs";
-import { ILog, TGenericID } from "@tago-io/tcore-sdk/types";
-import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction";
-import { io } from "../Socket/SocketServer";
-import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis";
-import { getMainSettings } from "./Settings";
+import { spawn } from "node:child_process";
+import fs from "node:fs";
+import type { ILog, TGenericID } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction.ts";
+import { io } from "../Socket/SocketServer.ts";
+import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis.ts";
+import { getMainSettings } from "./Settings.ts";
 
 /**
  * Adds a log into the log buffer of the application and triggers the socket
@@ -17,7 +17,7 @@ function addLog(error: boolean, id: TGenericID, message: string): void {
     timestamp: new Date(),
   };
 
-  io.to(`analysis#${id}`).emit(`analysis::console`, data);
+  io.to(`analysis#${id}`).emit("analysis::console", data);
 
   addAnalysisLog(id, data);
 }
@@ -39,7 +39,7 @@ export async function runAnalysis(id: string, data: any): Promise<void> {
       throw new Error(message);
     }
     if (!analysis.binary_path) {
-      const message = `Binary executable path is missing`;
+      const message = "Binary executable path is missing";
       throw new Error(message);
     }
     if (!analysis.file_path || !fs.existsSync(filePath)) {
@@ -83,7 +83,7 @@ export async function runAnalysis(id: string, data: any): Promise<void> {
     });
 
     const timeout = setTimeout(() => {
-      addLog(true, id, `Script execution took too long (60s)`);
+      addLog(true, id, "Script execution took too long (60s)");
       child.kill();
     }, 60 * 1000);
 

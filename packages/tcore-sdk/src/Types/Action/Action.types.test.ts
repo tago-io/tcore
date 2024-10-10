@@ -1,13 +1,13 @@
 import {
-  IActionTypePost,
-  IActionTypeScript,
-  IActionTypeTagoIO,
+  type IActionTypePost,
+  type IActionTypeScript,
+  type IActionTypeTagoIO,
   zActionTypePost,
   zActionTypeScript,
   zActionTypeTagoIO,
-} from "..";
-import { validateResourceID } from "../../Shared/ResourceID";
-import { zActionCreate } from "./Action.types";
+} from "../index.ts";
+import { validateResourceID } from "../../Shared/ResourceID.ts";
+import { zActionCreate } from "./Action.types.ts";
 
 describe("zActionCreate", () => {
   test("parses simple object", () => {

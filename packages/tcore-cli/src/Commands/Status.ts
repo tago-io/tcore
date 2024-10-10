@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { getSystemName } from "@tago-io/tcore-shared";
-import { log } from "../Helpers/Log";
-import { pm2Connect, pm2Disconnect, pm2GetApp } from "../Helpers/PM2";
+import { log } from "../Helpers/Log.tsx";
+import { pm2Connect, pm2Disconnect, pm2GetApp } from "../Helpers/PM2.tsx";
 
 /**
  * Prints the status of the server (started/stopped).

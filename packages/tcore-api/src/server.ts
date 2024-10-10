@@ -1,37 +1,42 @@
-import { createServer } from "http";
-import path from "path";
+import { createServer } from "node:http";
+import path from "node:path";
 import express from "express";
 import cors from "cors";
 import chalk from "chalk";
 import compression from "compression";
 import method_override from "method-override";
 import { getSystemName } from "@tago-io/tcore-shared";
-import { startAllPlugins } from "./Plugins/Host";
-import AccountController from "./Controllers/Account/Account";
-import SystemController from "./Controllers/System";
-import DeviceController from "./Controllers/Device/Device";
-import ActionController from "./Controllers/Action";
-import AnalysisController from "./Controllers/Analysis";
-import SummaryController from "./Controllers/Summary";
-import PluginsController, { resolvePluginImage, resolvePluginImage2 } from "./Controllers/Plugins";
-import FileController from "./Controllers/File";
-import LogsController from "./Controllers/Logs";
-import DeviceDataController from "./Controllers/DeviceData/DeviceData";
-import TagController from "./Controllers/Tag";
-import SettingsController from "./Controllers/Settings";
-import StatisticController from "./Controllers/Statistic";
-import { getMainSettings } from "./Services/Settings";
-import HardwareController from "./Controllers/Hardware";
-import { setupSocketServer } from "./Socket/SocketServer";
-import { shutdown } from "./Helpers/shutdown";
-import { getModuleList } from "./Services/Plugins";
-import { startCallbackInterval } from "./Plugins/Worker/Worker";
-import { startActionScheduleTimer } from "./Services/ActionScheduler";
-import { logSystemStart, oraLog, oraLogError } from "./Helpers/log";
-import { startDataRetentionTimer } from "./Services/DeviceDataRetention";
+import { startAllPlugins } from "./Plugins/Host.ts";
+import AccountController from "./Controllers/Account/Account.ts";
+import SystemController from "./Controllers/System.ts";
+import DeviceController from "./Controllers/Device/Device.ts";
+import ActionController from "./Controllers/Action.ts";
+import AnalysisController from "./Controllers/Analysis.ts";
+import SummaryController from "./Controllers/Summary.ts";
+import PluginsController, { resolvePluginImage, resolvePluginImage2 } from "./Controllers/Plugins.ts";
+import FileController from "./Controllers/File.ts";
+import LogsController from "./Controllers/Logs.ts";
+import DeviceDataController from "./Controllers/DeviceData/DeviceData.ts";
+import TagController from "./Controllers/Tag.ts";
+import SettingsController from "./Controllers/Settings.ts";
+import StatisticController from "./Controllers/Statistic.ts";
+import { getMainSettings } from "./Services/Settings.ts";
+import HardwareController from "./Controllers/Hardware.ts";
+import { setupSocketServer } from "./Socket/SocketServer.ts";
+import { shutdown } from "./Helpers/shutdown.ts";
+import { getModuleList } from "./Services/Plugins.ts";
+import { startCallbackInterval } from "./Plugins/Worker/Worker.ts";
+import { startActionScheduleTimer } from "./Services/ActionScheduler.ts";
+import { logSystemStart, oraLog, oraLogError } from "./Helpers/log.ts";
+import { startDataRetentionTimer } from "./Services/DeviceDataRetention.ts";
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
 
 const app = express();
 const httpServer = createServer(app);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const consolePath = path.join(__dirname, "../../tcore-console/build");
 
 /**
@@ -146,7 +151,7 @@ async function listenOnApplicationPort() {
     })
     .on("error", () => {
       oraLogError("api", chalk.redBright(`Could not start ${systemName} on port ${port}`));
-      oraLogError("api", chalk.redBright(`Check if the port is not being used by another application`));
+      oraLogError("api", chalk.redBright("Check if the port is not being used by another application"));
       process.exit(1);
     });
 }
@@ -178,3 +183,4 @@ const watchMode = process.argv.some((x) => x.includes("ts-node"));
 if (watchMode) {
   startServer();
 }
+startServer();

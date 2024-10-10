@@ -1,8 +1,8 @@
-import { ITag } from "@tago-io/tcore-sdk/types";
-import Accordion from "../Accordion/Accordion";
-import { EIcon } from "../Icon/Icon.types";
-import RowManipulator from "../RowManipulator/RowManipulator";
-import Select, { ISelectOption } from "../Select/Select";
+import type { ITag } from "@tago-io/tcore-sdk/types";
+import Accordion from "../Accordion/Accordion.tsx";
+import type { EIcon } from "../Icon/Icon.types";
+import RowManipulator from "../RowManipulator/RowManipulator.tsx";
+import Select, { type ISelectOption } from "../Select/Select.tsx";
 
 /**
  * Props.

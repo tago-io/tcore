@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { ActionCreateInfo } from "@tago-io/sdk/out/modules/Account/actions.types";
-import { IActionCreate, TGenericID } from "@tago-io/tcore-sdk/types";
-import store from "../../System/Store";
+import type { ActionCreateInfo } from "@tago-io/sdk/out/modules/Account/actions.types";
+import type { IActionCreate, TGenericID } from "@tago-io/tcore-sdk/types";
+import store from "../../System/Store.tsx";
 
 /**
  */

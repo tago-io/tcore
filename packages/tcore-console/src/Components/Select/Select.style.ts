@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import FormControlStyles from "../Styles/FormControlStyles";
+import FormControlStyles from "../Styles/FormControlStyles.tsx";
 
 export const Container = styled.select`
   ${FormControlStyles}

@@ -1,5 +1,5 @@
-import zlib from "zlib";
-import fs from "fs";
+import zlib from "node:zlib";
+import fs from "node:fs";
 import tar from "tar";
 
 /**

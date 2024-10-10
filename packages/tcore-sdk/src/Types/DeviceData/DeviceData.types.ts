@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { DateTime } from "luxon";
-import { generateResourceID } from "../../Shared/ResourceID";
-import { zObjectID } from "../Common/Common.types";
-import { parseRelativeDate, convertDateToISO } from "../Helpers/parseRelativeDate";
-import removeNullValues from "../Helpers/removeNullValues";
+import { generateResourceID } from "../../Shared/ResourceID.ts";
+import { zObjectID } from "../Common/Common.types.ts";
+import { parseRelativeDate, convertDateToISO } from "../Helpers/parseRelativeDate.ts";
+import removeNullValues from "../Helpers/removeNullValues.ts";
 
 /**
  * Checks if a given value is indeed a date or not.
@@ -95,11 +95,10 @@ const zDeviceDataCreateLocation = zDeviceDataLocationCoordinates
   .transform((x: any): IDeviceDataLocationCoordinates | undefined => {
     if (!x) {
       return undefined;
-    } else if (Array.isArray(x.coordinates)) {
+    }if (Array.isArray(x.coordinates)) {
       return x;
-    } else {
-      return { type: "Point", coordinates: [x.lng, x.lat] };
     }
+      return { type: "Point", coordinates: [x.lng, x.lat] };
   });
 
 /**

@@ -1,29 +1,29 @@
 import {
-  IAction,
-  IActionCreate,
-  IPluginConfigField,
-  IPluginModuleList,
+  type IAction,
+  type IActionCreate,
+  type IPluginConfigField,
+  type IPluginModuleList,
   zName,
 } from "@tago-io/tcore-sdk/types";
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { type MouseEvent, useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { useTheme } from "styled-components";
-import { useApiRequest } from "../../../..";
-import validateConfigFields from "../../../../Helpers/validateConfigFields";
-import createAction from "../../../../Requests/createAction/createAction";
-import buildZodError from "../../../../Validation/buildZodError";
-import FormGroup from "../../../FormGroup/FormGroup";
+import { useApiRequest } from "../../../../index.ts";
+import validateConfigFields from "../../../../Helpers/validateConfigFields.ts";
+import createAction from "../../../../Requests/createAction/createAction.ts";
+import buildZodError from "../../../../Validation/buildZodError.ts";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 import {
   zFrontAction,
   zFrontActionTagoIO,
   zFrontActionPost,
   zFrontActionScript,
 } from "../../Action.interface";
-import ActionFields from "../ActionFields/ActionFields";
-import TriggerRadio from "../TriggerRadio/TriggerRadio";
+import ActionFields from "../ActionFields/ActionFields.tsx";
+import TriggerRadio from "../TriggerRadio/TriggerRadio.tsx";
 
 interface IModalAddAction {
   onClose: () => void;

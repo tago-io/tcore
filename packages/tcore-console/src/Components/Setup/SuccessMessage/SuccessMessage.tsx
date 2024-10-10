@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
 import { useState, useCallback } from "react";
-import { Button, EButton, EIcon, Icon } from "../../..";
+import { Button, EButton, EIcon, Icon } from "../../../index.ts";
 import * as Style from "./SuccessMessage.style";
 
 /**

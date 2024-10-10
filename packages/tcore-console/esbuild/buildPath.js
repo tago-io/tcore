@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require("path");
+import path from "node:path";
 
 const buildPath = path.join(__dirname, "../build");
 
-module.exports = buildPath;
+export default buildPath;

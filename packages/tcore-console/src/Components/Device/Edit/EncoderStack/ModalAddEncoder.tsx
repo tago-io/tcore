@@ -1,6 +1,6 @@
-import { IPluginClassListItem } from "@tago-io/tcore-sdk/types";
+import type { IPluginClassListItem } from "@tago-io/tcore-sdk/types";
 import { memo, useCallback, useState } from "react";
-import Modal from "../../../Modal/Modal";
+import Modal from "../../../Modal/Modal.tsx";
 import * as Style from "./ModalAddEncoder.style";
 
 /**

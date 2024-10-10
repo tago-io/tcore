@@ -1,6 +1,6 @@
-import { Application } from "express";
-import { getSummary } from "../Services/Summary";
-import APIController, { ISetupController, warm } from "./APIController";
+import type { Application } from "express";
+import { getSummary } from "../Services/Summary.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Retrieves the summary information.

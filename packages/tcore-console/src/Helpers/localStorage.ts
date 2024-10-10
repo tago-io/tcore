@@ -30,7 +30,7 @@ export function getLocalStorageAsBoolean(key: string, fallback = false): boolean
     const value = localStorage.getItem(key);
     if (value === "false") {
       return false;
-    } else if (value === "true") {
+    }if (value === "true") {
       return true;
     }
     return fallback as boolean;

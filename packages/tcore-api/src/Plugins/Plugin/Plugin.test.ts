@@ -1,9 +1,9 @@
-import path from "path";
-import { plugins } from "../Host";
-import Module from "../Module/Module";
-import Validator from "../Validator/Validator";
-import { callbackInterval } from "../Worker/Worker";
-import Plugin from "./Plugin";
+import path from "node:path";
+import { plugins } from "../Host.ts";
+import type Module from "../Module/Module.ts";
+import Validator from "../Validator/Validator.ts";
+import { callbackInterval } from "../Worker/Worker.ts";
+import Plugin from "./Plugin.ts";
 
 afterAll(() => {
   if (callbackInterval) {

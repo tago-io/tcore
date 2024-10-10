@@ -1,5 +1,5 @@
 import styled, { keyframes } from "styled-components";
-import { fonts } from "../../../../../theme";
+import { fonts } from "../../../../../theme.ts";
 
 const bobbingAnimation = keyframes`
   from { top: 10px }

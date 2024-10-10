@@ -1,7 +1,7 @@
-import { Application } from "express";
+import type { Application } from "express";
 import { z } from "zod";
-import { getTagKeys } from "../Services/Tag";
-import APIController, { ISetupController, warm } from "./APIController";
+import { getTagKeys } from "../Services/Tag.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Configuration for ID in the URL.

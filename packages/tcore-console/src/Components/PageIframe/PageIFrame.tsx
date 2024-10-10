@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
-import { ModalUninstallPlugin } from "../..";
-import setDocumentTitle from "../../Helpers/setDocumentTitle";
-import uninstallPlugin from "../../Requests/uninstallPlugin";
-import ModalInstallPlugin from "../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
+import { ModalUninstallPlugin } from "../../index.ts";
+import setDocumentTitle from "../../Helpers/setDocumentTitle.ts";
+import uninstallPlugin from "../../Requests/uninstallPlugin.ts";
+import ModalInstallPlugin from "../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin.tsx";
 
 /**
  * Props.

@@ -1,4 +1,4 @@
-import { IPluginConfigField } from "@tago-io/tcore-sdk/types";
+import type { IPluginConfigField } from "@tago-io/tcore-sdk/types";
 
 /**
  * Validates a `string-list` plugin field.

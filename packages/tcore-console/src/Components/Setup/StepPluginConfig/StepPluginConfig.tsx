@@ -1,16 +1,16 @@
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { useCallback, useEffect, useState } from "react";
-import { IPlugin } from "@tago-io/tcore-sdk/types";
-import { EButton, EIcon, EmptyMessage, FormGroup, Loading } from "../../..";
-import editPluginSettings from "../../../Requests/editPluginSettings";
-import editSettings from "../../../Requests/editSettings";
-import SuccessMessage from "../SuccessMessage/SuccessMessage";
-import PluginConfigFields from "../../Plugins/Common/PluginConfigFields/PluginConfigFields";
-import Status from "../../Plugins/Common/Status/Status";
-import SetupForm from "../SetupForm/SetupForm";
-import { promiseDelay } from "../../../Helpers/promiseDelay";
-import getPluginInfo from "../../../Requests/getPluginInfo";
-import validateConfigFields from "../../../Helpers/validateConfigFields";
+import type { IPlugin } from "@tago-io/tcore-sdk/types";
+import { EButton, EIcon, EmptyMessage, FormGroup, Loading } from "../../../index.ts";
+import editPluginSettings from "../../../Requests/editPluginSettings.ts";
+import editSettings from "../../../Requests/editSettings.ts";
+import SuccessMessage from "../SuccessMessage/SuccessMessage.tsx";
+import PluginConfigFields from "../../Plugins/Common/PluginConfigFields/PluginConfigFields.tsx";
+import Status from "../../Plugins/Common/Status/Status.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
+import { promiseDelay } from "../../../Helpers/promiseDelay.ts";
+import getPluginInfo from "../../../Requests/getPluginInfo.ts";
+import validateConfigFields from "../../../Helpers/validateConfigFields.ts";
 
 /**
  */
@@ -161,12 +161,12 @@ function StepPluginConfig(props: IStepPluginConfigProps) {
   }, [pluginID]);
 
   const hasDatabaseModule =
-    plugin && plugin.modules && plugin.modules.some((x) => x.type === "database");
+    plugin?.modules?.some((x) => x.type === "database");
 
   return (
     <SetupForm
-      title={title ?? `Plugin Configuration`}
-      description={description ?? `Adjust the settings of your main Database Plugin`}
+      title={title ?? "Plugin Configuration"}
+      description={description ?? "Adjust the settings of your main Database Plugin"}
       loading={load}
       onRenderAfterFooter={renderSuccessMessage}
       buttons={[

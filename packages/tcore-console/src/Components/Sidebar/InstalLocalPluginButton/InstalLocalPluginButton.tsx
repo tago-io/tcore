@@ -2,14 +2,14 @@ import { useCallback, useMemo, useState } from "react";
 import { getSystemName } from "@tago-io/tcore-shared";
 import axios from "axios";
 import type { ISettings } from "@tago-io/tcore-sdk/types";
-import Button from "../../Button/Button";
-import Icon from "../../Icon/Icon";
+import Button from "../../Button/Button.tsx";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Tooltip from "../../Tooltip/Tooltip";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import store from "../../../System/Store";
-import { getLocalStorage } from "../../../Helpers/localStorage";
-import ModalFileSelect from "../../ModalFileSelect/ModalFileSelect";
+import Tooltip from "../../Tooltip/Tooltip.tsx";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import store from "../../../System/Store.tsx";
+import { getLocalStorage } from "../../../Helpers/localStorage.ts";
+import ModalFileSelect from "../../ModalFileSelect/ModalFileSelect.tsx";
 import * as Style from "./InstalLocalPluginButton.style";
 /**
  * This component handles the installation of a plugin.

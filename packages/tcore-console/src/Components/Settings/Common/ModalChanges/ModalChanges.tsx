@@ -1,5 +1,5 @@
 import { EButton } from "../../../Button/Button.types";
-import Modal from "../../../Modal/Modal";
+import Modal from "../../../Modal/Modal.tsx";
 
 /**
  * Props.

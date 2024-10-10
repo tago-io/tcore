@@ -1,10 +1,11 @@
-import { IncomingHttpHeaders } from "http";
-import express, { Request, Response } from "express";
-import { ZodTypeAny } from "zod";
-import { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
-import { getDeviceByToken, getDeviceToken } from "../Services/Device";
-import { getAccountToken } from "../Services/Account/Account";
-import { checkMasterPassword } from "../Services/Settings";
+import type { IncomingHttpHeaders } from "node:http";
+import type express from "express";
+import type { Request, Response } from "express";
+import type { ZodTypeAny } from "zod";
+import type { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { getDeviceByToken, getDeviceToken } from "../Services/Device.ts";
+import { getAccountToken } from "../Services/Account/Account.ts";
+import { checkMasterPassword } from "../Services/Settings.ts";
 
 type TResourceType = "device" | "account";
 type TPermission = "full" | "write" | "read";
@@ -32,11 +33,11 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
   /**
    * Status for Request with Success [default=200].
    */
-  protected successStatus: number = 200;
+  protected successStatus = 200;
   /**
    * Status for Request with Error [default=400].
    */
-  protected failStatus: number = 400;
+  protected failStatus = 400;
   /**
    * This is the response of the request.
    */
@@ -44,7 +45,7 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
   /**
    * Add {status; result; message} on requests [default=true].
    */
-  protected useBodyWrapper: boolean = true;
+  protected useBodyWrapper = true;
   /**
    * This will contain the parsed version of `req.body`.
    */
@@ -61,7 +62,7 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
   protected readonly files: any;
   protected readonly requestIP: string;
   protected readonly origin: string;
-  protected readonly rawToken: string | void;
+  protected readonly rawToken: string | undefined;
 
   abstract setup: ISetupController;
 
@@ -210,7 +211,7 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
 
   /**
    */
-  private getToken(headers: IncomingHttpHeaders): string | void {
+  private getToken(headers: IncomingHttpHeaders): string | undefined {
     if (!headers || typeof headers !== "object") {
       headers = {};
     }
@@ -266,4 +267,4 @@ function warm(APIControllerInstance: { new (...args: any): APIController<any, an
 }
 
 export default APIController;
-export { warm, ISetupToken, ISetupController };
+export { warm, type ISetupToken, type ISetupController };

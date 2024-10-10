@@ -1,4 +1,4 @@
-import removeNullValues from "./removeNullValues";
+import removeNullValues from "./removeNullValues.ts";
 
 describe("removeNullValues", () => {
   test("process simple object", () => {

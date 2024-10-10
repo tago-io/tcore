@@ -1,6 +1,6 @@
-import { Application } from "express";
-import { getHourlyStatistics } from "../Services/Statistic";
-import APIController, { ISetupController, warm } from "./APIController";
+import type { Application } from "express";
+import { getHourlyStatistics } from "../Services/Statistic.ts";
+import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
  * Retrieves all statistics from the last hour.

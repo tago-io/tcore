@@ -1,18 +1,18 @@
-import path from "path";
-import fs from "fs";
-import crypto from "crypto";
+import path from "node:path";
+import fs from "node:fs";
+import crypto from "node:crypto";
 import chalk from "chalk";
 import ora from "ora";
 import { Account } from "@tago-io/sdk";
 import ini from "ini";
-import { CONFIG_FILEPATH } from "./Constants";
+import { CONFIG_FILEPATH } from "./Constants.ts";
 
 /**
  * Creates an ora spinner with the sdk prefix.
  */
 function oraLog(...args: any[]) {
   const spinner = ora(...args);
-  spinner.prefixText = chalk.magentaBright(`[TCore SDK]`);
+  spinner.prefixText = chalk.magentaBright("[TCore SDK]");
   return spinner;
 }
 
@@ -28,7 +28,7 @@ function formatBytes(bytes: number) {
   const dm = 2;
   const sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
+  return `${Number.parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
 }
 
 /**

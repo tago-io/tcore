@@ -1,4 +1,4 @@
-const { ServiceModule } = require("@tago-io/tcore-sdk");
+import { ServiceModule } from "@tago-io/tcore-sdk";
 
 const service = new ServiceModule({ id: "hello", name: "world" });
 

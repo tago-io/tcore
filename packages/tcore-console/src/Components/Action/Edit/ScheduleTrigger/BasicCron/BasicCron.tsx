@@ -1,14 +1,14 @@
 import { useCallback } from "react";
 import { DateTime } from "luxon";
-import { EIcon, FormGroup, Input } from "../../../../..";
-import Select from "../../../../Select/Select";
-import FlexRow from "../../../../FlexRow/FlexRow";
-import InputTime from "../../../../InputTime/InputTime";
+import { EIcon, FormGroup, Input } from "../../../../../index.ts";
+import Select from "../../../../Select/Select.tsx";
+import FlexRow from "../../../../FlexRow/FlexRow.tsx";
+import InputTime from "../../../../InputTime/InputTime.tsx";
 import * as Style from "../RecurrenceOptions.style";
-import WeekdayButton from "../WeekdayButton/WeekdayButton";
-import { getCronFromScheduleData } from "../../Logic/getCronFromScheduleData";
-import CronTooComplexMessage from "../MessageCronTooComplex/MessageCronTooComplex";
-import { IScheduleData } from "../../../Action.interface";
+import WeekdayButton from "../WeekdayButton/WeekdayButton.tsx";
+import { getCronFromScheduleData } from "../../Logic/getCronFromScheduleData.ts";
+import CronTooComplexMessage from "../MessageCronTooComplex/MessageCronTooComplex.tsx";
+import type { IScheduleData } from "../../../Action.interface";
 
 /**
  * Props.
@@ -152,7 +152,7 @@ function BasicCron(props: IBasicCron) {
                 { value: "30", label: "30" },
                 { value: "31", label: "31" },
               ]}
-            ></Select>
+            />
           </FormGroup>
         </Style.Field>
       )}

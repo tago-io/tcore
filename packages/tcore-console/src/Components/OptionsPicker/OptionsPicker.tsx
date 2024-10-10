@@ -1,10 +1,11 @@
-import React, { ReactNode, useState, useRef, useEffect, useCallback, memo } from "react";
+import type React from "react";
+import { type ReactNode, useState, useRef, useEffect, useCallback, memo } from "react"
 import { unstable_batchedUpdates } from "react-dom";
-import ErrorMessage from "../ErrorMessage/ErrorMessage";
-import Icon from "../Icon/Icon";
+import ErrorMessage from "../ErrorMessage/ErrorMessage.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import Input from "../Input/Input";
-import Loading from "../Loading/Loading";
+import Input from "../Input/Input.tsx";
+import Loading from "../Loading/Loading.tsx";
 import * as Style from "./OptionsPicker.style";
 
 /**
@@ -204,19 +205,18 @@ function OptionsPicker<T = any>(props: IOptionsPicker<T>) {
           <Icon rotate size="13px" icon={EIcon.spinner} />
         </Style.IconContainer>
       );
-    } else if (value) {
+    }if (value) {
       return (
         <Style.IconContainer clickable onClick={clear}>
           <Icon size="13px" icon={EIcon.times} />
         </Style.IconContainer>
       );
-    } else {
+    }
       return (
         <Style.IconContainer>
           <Icon size="15px" icon={EIcon["caret-down"]} />
         </Style.IconContainer>
       );
-    }
   };
 
   /**

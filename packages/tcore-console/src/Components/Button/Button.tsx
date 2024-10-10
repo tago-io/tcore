@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { type ButtonHTMLAttributes, forwardRef } from "react";
 import { EButton } from "./Button.types";
 import * as Style from "./Button.style";
 

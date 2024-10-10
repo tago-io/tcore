@@ -1,12 +1,12 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import JSZip from "jszip";
 import axios, { AxiosError } from "axios";
 import chalk from "chalk";
-import { THardwareTarget } from "../../Types";
-import { getConfigToken, oraLog, validateConfigToken } from "../Helpers";
-import { DEFAULT_OUT_FOLDERNAME } from "../Constants";
-import { IPackArgs, pack } from "./Pack";
+import type { THardwareTarget } from "../../Types.ts";
+import { getConfigToken, oraLog, validateConfigToken } from "../Helpers.ts";
+import { DEFAULT_OUT_FOLDERNAME } from "../Constants.ts";
+import { type IPackArgs, pack } from "./Pack.ts";
 
 /**
  * Arguments from the CLI.
@@ -79,8 +79,8 @@ async function uploadZip(args: IPublishArgs, buffer: Buffer) {
     url,
     method: "PUT",
     data: buffer,
-    maxContentLength: Infinity,
-    maxBodyLength: Infinity,
+    maxContentLength: Number.POSITIVE_INFINITY,
+    maxBodyLength: Number.POSITIVE_INFINITY,
   });
 }
 
@@ -137,7 +137,7 @@ async function publish(args: IPublishArgs) {
       oraLog(`visible:  ${visible}`).succeed();
     }
 
-    console.log(`${chalk.magentaBright("[TCore SDK]")} ${chalk.magenta(`=====================`)}`);
+    console.log(`${chalk.magentaBright("[TCore SDK]")} ${chalk.magenta("=====================")}`);
 
     spinner.start("Generating zip file");
 

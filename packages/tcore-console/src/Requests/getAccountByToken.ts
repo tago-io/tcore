@@ -1,5 +1,5 @@
 import { Account } from "@tago-io/sdk";
-import { IAccount } from "@tago-io/tcore-sdk/types";
+import type { IAccount } from "@tago-io/tcore-sdk/types";
 
 /**
  * Gets the account by token.

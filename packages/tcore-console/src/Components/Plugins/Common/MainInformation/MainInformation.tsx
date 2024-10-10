@@ -1,7 +1,7 @@
-import { TPluginState } from "@tago-io/tcore-sdk/types";
-import Capitalize from "../../../Capitalize/Capitalize";
-import RelativeDate from "../../../RelativeDate/RelativeDate";
-import Publisher from "../Publisher/Publisher";
+import type { TPluginState } from "@tago-io/tcore-sdk/types";
+import Capitalize from "../../../Capitalize/Capitalize.tsx";
+import RelativeDate from "../../../RelativeDate/RelativeDate.tsx";
+import Publisher from "../Publisher/Publisher.tsx";
 import * as Style from "./MainInformation.style";
 
 /**

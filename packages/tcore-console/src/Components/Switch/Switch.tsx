@@ -1,5 +1,5 @@
-import { ReactNode, memo } from "react";
-import { ESwitchSize } from "./Switch.types";
+import { type ReactNode, memo } from "react";
+import type { ESwitchSize } from "./Switch.types";
 import * as Style from "./Switch.style";
 
 /**

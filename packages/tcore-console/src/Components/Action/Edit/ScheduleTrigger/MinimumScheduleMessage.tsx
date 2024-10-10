@@ -1,6 +1,6 @@
-import * as React from "react";
+import type * as React from "react";
 import { useTheme } from "styled-components";
-import { FormGroup } from "../../../..";
+import { FormGroup } from "../../../../index.ts";
 
 function MinimumScheduleMessage(props: any) {
   const theme = useTheme();

@@ -1,4 +1,4 @@
-import { TDeviceType } from "@tago-io/tcore-sdk/types";
+import type { TDeviceType } from "@tago-io/tcore-sdk/types";
 
 /**
  * Returns the `pretty` name of the type of the bucket.
@@ -6,9 +6,8 @@ import { TDeviceType } from "@tago-io/tcore-sdk/types";
 function getDeviceTypeName(type?: TDeviceType | null) {
   if (type === "mutable") {
     return "Managed Data Optimized (Mutable)";
-  } else {
-    return "Device Data Optimized (Immutable)";
   }
+    return "Device Data Optimized (Immutable)";
 }
 
 export default getDeviceTypeName;

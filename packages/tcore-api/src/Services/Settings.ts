@@ -1,15 +1,15 @@
-import path from "path";
-import fs from "fs";
-import os from "os";
-import type { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
+import path from "node:path";
+import fs from "node:fs";
+import os from "node:os";
+import type { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
-import { log } from "..";
-import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host";
-import { loadYml, saveYml } from "../Helpers/Yaml";
-import { rmdir } from "../Helpers/Files";
-import { compareAccountPasswordHash } from "./Account/AccountPassword";
-import { startPluginModule } from "./Plugins";
-import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword";
+import { log } from "../index.ts";
+import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host.ts";
+import { loadYml, saveYml } from "../Helpers/Yaml.ts";
+import { rmdir } from "../Helpers/Files.ts";
+import { compareAccountPasswordHash } from "./Account/AccountPassword.ts";
+import { startPluginModule } from "./Plugins.ts";
+import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword.ts";
 
 /**
  * Folder name to save the settings.

@@ -1,8 +1,8 @@
-import { IDevice, TGenericID } from "@tago-io/tcore-sdk/types";
+import type { IDevice, TGenericID } from "@tago-io/tcore-sdk/types";
 import { useCallback } from "react";
-import getDeviceInfo from "../../../../Requests/getDeviceInfo";
-import getDeviceList from "../../../../Requests/getDeviceList";
-import OptionsPicker from "../../../OptionsPicker/OptionsPicker";
+import getDeviceInfo from "../../../../Requests/getDeviceInfo.ts";
+import getDeviceList from "../../../../Requests/getDeviceList.ts";
+import OptionsPicker from "../../../OptionsPicker/OptionsPicker.tsx";
 
 /**
  * Props.

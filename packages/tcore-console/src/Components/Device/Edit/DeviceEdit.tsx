@@ -1,11 +1,11 @@
 import {
-  IDevice,
-  ILiveInspectorMessage,
-  IDeviceParameter,
-  IDeviceToken,
+  type IDevice,
+  type ILiveInspectorMessage,
+  type IDeviceParameter,
+  type IDeviceToken,
   zDevice,
   zDeviceParameter,
-  IPluginClassListItem,
+  type IPluginClassListItem,
 } from "@tago-io/tcore-sdk/types";
 import cloneDeep from "lodash.clonedeep";
 import { useEffect, useCallback, useState, useRef } from "react";
@@ -13,29 +13,29 @@ import { useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
 import { z } from "zod";
 import { observer } from "mobx-react";
-import normalizeTags from "../../../Helpers/normalizeTags";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import buildZodError from "../../../Validation/buildZodError";
-import EditPage from "../../EditPage/EditPage";
-import Icon from "../../Icon/Icon";
+import normalizeTags from "../../../Helpers/normalizeTags.ts";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import buildZodError from "../../../Validation/buildZodError.ts";
+import EditPage from "../../EditPage/EditPage.tsx";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Switch from "../../Switch/Switch";
-import TagsTab from "../../Tags/TagsTab";
-import DeviceInputOutput from "../Common/DeviceInputOutput";
-import normalizeConfigParameters from "../Helpers/normalizeConfigParameters";
-import { IInspectorData } from "../Common/LiveInspector/LiveInspector.types";
-import setDeviceParams from "../../../Requests/setDeviceParams";
-import createDeviceToken from "../../../Requests/createDeviceToken";
-import deleteDevice from "../../../Requests/deleteDevice";
-import deleteDeviceToken from "../../../Requests/deleteDeviceToken";
-import editDevice from "../../../Requests/editDevice";
-import { setLocalStorageAsJSON } from "../../../Helpers/localStorage";
-import getDeviceTypeName from "../../../Helpers/getDeviceTypeName";
-import { getSocket } from "../../../System/Socket";
-import ConfigParametersTab from "./ConfigParametersTab/ConfigParametersTab";
-import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab";
-import LiveInspectorTab from "./LiveInspectorTab/LiveInspectorTab";
-import MoreTab from "./MoreTab/MoreTab";
+import Switch from "../../Switch/Switch.tsx";
+import TagsTab from "../../Tags/TagsTab.tsx";
+import DeviceInputOutput from "../Common/DeviceInputOutput.tsx";
+import normalizeConfigParameters from "../Helpers/normalizeConfigParameters.ts";
+import type { IInspectorData } from "../Common/LiveInspector/LiveInspector.types";
+import setDeviceParams from "../../../Requests/setDeviceParams.ts";
+import createDeviceToken from "../../../Requests/createDeviceToken.ts";
+import deleteDevice from "../../../Requests/deleteDevice.ts";
+import deleteDeviceToken from "../../../Requests/deleteDeviceToken.ts";
+import editDevice from "../../../Requests/editDevice.ts";
+import { setLocalStorageAsJSON } from "../../../Helpers/localStorage.ts";
+import getDeviceTypeName from "../../../Helpers/getDeviceTypeName.ts";
+import { getSocket } from "../../../System/Socket.tsx";
+import ConfigParametersTab from "./ConfigParametersTab/ConfigParametersTab.tsx";
+import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab.tsx";
+import LiveInspectorTab from "./LiveInspectorTab/LiveInspectorTab.tsx";
+import MoreTab from "./MoreTab/MoreTab.tsx";
 
 /**
  * The device's edit page.

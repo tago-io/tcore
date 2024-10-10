@@ -1,5 +1,5 @@
-import { IDatabaseDeviceDataCreate, IModuleSetupWithoutType, TGenericID, TDeviceType } from "../../Types";
-import TCoreModule from "../TCoreModule/TCoreModule";
+import { type IDatabaseDeviceDataCreate, type IModuleSetupWithoutType, type TGenericID, TDeviceType } from "../../Types.ts";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows the creation of a new queue plugin.

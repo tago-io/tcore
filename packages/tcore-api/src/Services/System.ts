@@ -1,8 +1,7 @@
-// @ts-ignore
-import pkg from "../../../../package.json";
-import { getAccountAmount } from "./Account/Account";
-import { getMainDatabaseModule } from "./Plugins";
-import { getMainSettings } from "./Settings";
+import pkg from "../../../../package.json" with { type: "json" };
+import { getAccountAmount } from "./Account/Account.ts";
+import { getMainDatabaseModule } from "./Plugins.ts";
+import { getMainSettings } from "./Settings.ts";
 
 /**
  * Retrieves the version of the tcore application.
