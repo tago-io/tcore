@@ -230,6 +230,9 @@ class Plugin {
   public static async returnFullDescription(folder: string, relativePath: string) {
     const fullPath = path.join(folder, relativePath);
     const data = fs.readFileSync(fullPath, "utf8");
+    if (!data) {
+      return "";
+    }
     return data;
   }
 }

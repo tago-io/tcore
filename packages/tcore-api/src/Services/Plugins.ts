@@ -122,15 +122,16 @@ async function getInstalledInsidePlugins(plugins: string[], settings: ISettings)
     const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
     const getPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
 
-    if (getPackage) {
-      const isInstalled = settings.installed_plugins?.includes(md5(getPackage.name));
-      const isInstalledDatabasePlugin = settings.database_plugin?.split(":")[0] === md5(getPackage.name);
-      const isDatabase = getPackage?.tcore?.types?.includes("database");
-      const isStore = getPackage?.tcore?.store;
+    if (!getPackage) {
+      continue;
+    }
+    const isInstalled = settings.installed_plugins?.includes(md5(getPackage.name));
+    const isInstalledDatabasePlugin = settings.database_plugin?.split(":")[0] === md5(getPackage.name);
+    const isDatabase = getPackage?.tcore?.types?.includes("database");
+    const isStore = getPackage?.tcore?.store;
 
-      if (isInstalled || isInstalledDatabasePlugin || (isDatabase && !settings.database_plugin) || isStore) {
-        plugins.push(fullPath);
-      }
+    if (isInstalled || isInstalledDatabasePlugin || (isDatabase && !settings.database_plugin) || isStore) {
+      plugins.push(fullPath);
     }
   }
 }
