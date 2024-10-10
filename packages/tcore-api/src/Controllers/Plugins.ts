@@ -1,7 +1,7 @@
 import path from "path";
 import os from "os";
 import { Request, Response, Application } from "express";
-import { string, z } from "zod";
+import { z } from "zod";
 import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
 import multer from "multer";
 import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
