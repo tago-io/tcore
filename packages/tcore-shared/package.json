@@ -9,6 +9,5 @@
     "build": "rm -rf ./build; tsc"
   },
   "dependencies": {
-    "@tago-io/tcore-sdk": "*"
   }
 }
