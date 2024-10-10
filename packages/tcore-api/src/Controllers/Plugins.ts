@@ -352,7 +352,6 @@ class AddExternalPlugin extends APIController<z.infer<typeof zBodyFolderParser>,
   };
 
   public async main() {
-    console.log("this.bodyParams", this.bodyParams.folder);
     this.body = await addExternalPlugin(this.bodyParams.folder);
   }
 }
