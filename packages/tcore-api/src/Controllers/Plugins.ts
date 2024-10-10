@@ -1,7 +1,7 @@
 import path from "path";
 import os from "os";
 import { Request, Response, Application } from "express";
-import { z } from "zod";
+import { string, z } from "zod";
 import { IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
 import multer from "multer";
 import { getMainSettings, setPluginModulesSettings } from "../Services/Settings";
@@ -22,6 +22,7 @@ import {
   getAllInstalledPlugins,
   activatePlugin,
   deactivatePlugin,
+  addExternalPlugin,
 } from "../Services/Plugins";
 import { uninstallPlugin } from "../Plugins/Uninstall";
 import APIController, { ISetupController, warm } from "./APIController";
@@ -38,6 +39,13 @@ const zURLParamsID = z.object({
  */
 const zQueryStringType = z.object({
   type: zPluginType.nullish(),
+});
+
+/**
+ * Configuration of a `folder` property in the body param.
+ */
+const zBodyFolderParser = z.object({
+  folder: z.string(),
 });
 
 /**
@@ -335,6 +343,21 @@ class DeactivatePlugin extends APIController<void, void, IURLParamsID> {
 }
 
 /**
+ * Add an external plugin
+ */
+class AddExternalPlugin extends APIController<z.infer<typeof zBodyFolderParser>, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+    zBodyParser: zBodyFolderParser,
+  };
+
+  public async main() {
+    console.log("this.bodyParams", this.bodyParams.folder);
+    this.body = await addExternalPlugin(this.bodyParams.folder);
+  }
+}
+
+/**
  * Gets the info of the main database plugin (if it is set).
  */
 class GetDatabasePluginInfo extends APIController<void, void, void> {
@@ -434,6 +457,7 @@ export default (app: Application) => {
   app.get("/plugins/installed", warm(InstalledPlugins));
   app.post("/plugins/activate/:id", warm(ActivatePlugin));
   app.post("/plugins/deactivate/:id", warm(DeactivatePlugin));
+  app.post("/plugin/addexternalplugin", warm(AddExternalPlugin));
   app.post("/plugin/:id/reload", warm(ReloadPlugin));
   app.post("/plugin/:pluginID/:moduleID/call", warm(InvokeOnCallModule));
   app.post("/plugin/:pluginID/:moduleID/start", warm(StartPluginModule));

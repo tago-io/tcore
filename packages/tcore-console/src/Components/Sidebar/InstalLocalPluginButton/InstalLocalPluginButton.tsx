@@ -3,24 +3,18 @@ import { getSystemName } from "@tago-io/tcore-shared";
 import axios from "axios";
 import type { ISettings } from "@tago-io/tcore-sdk/types";
 import Button from "../../Button/Button";
-import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
 import Icon from "../../Icon/Icon";
 import { EIcon } from "../../Icon/Icon.types";
 import Tooltip from "../../Tooltip/Tooltip";
-import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
-import FileSelect from "../../FileSelect/FileSelect";
 import useApiRequest from "../../../Helpers/useApiRequest";
 import store from "../../../System/Store";
 import { getLocalStorage } from "../../../Helpers/localStorage";
+import ModalFileSelect from "../../ModalFileSelect/ModalFileSelect";
 import * as Style from "./InstalLocalPluginButton.style";
 /**
  * This component handles the installation of a plugin.
  */
 function InstallLocalPluginButton() {
-  const [modalUpload, setModalUpload] = useState(false);
-  const [modalInstall, setModalInstall] = useState(false);
-  const [file, setFile] = useState<File>();
-  const [filePath, setFilePath] = useState("");
   const [modalSelectFolder, setModalSelectFolder] = useState(false);
   const { data: settings } = useApiRequest<ISettings>("/mainsettings");
   const token = getLocalStorage("token", "") as string;
@@ -28,79 +22,49 @@ function InstallLocalPluginButton() {
   const headers = useMemo(() => ({ token, masterPassword }), [token, masterPassword]);
 
   /**
-   * Opens the file selector modal.
+   * Opens the folder selector modal.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const activateModalFile = useCallback(() => {
+  const activateModalFolder = useCallback(() => {
     setModalSelectFolder(true);
   }, []);
 
   /**
-   * Closes the file selector modal.
+   * Close the folder selector modal.
    */
-  const deactivateModalFile = useCallback(() => {
-    setModalUpload(false);
-  }, []);
-
-  /**
-   * Opens the install modal.
-   */
-  const activateModalInstall = useCallback((path: string) => {
-    setFilePath(path);
-    setModalInstall(true);
-  }, []);
-
-  /**
-   * Closes the install modal.
-   */
-  const deactivateModalInstall = useCallback(() => {
-    setModalInstall(false);
-    window.location.reload();
+  const deactivateModalFolder = useCallback(() => {
+    setModalSelectFolder(false);
   }, []);
 
   /**
    * Add plugin folder to the property custom_plugins.
    */
-  const addFolder = useCallback(() => {
-    axios.put("/settings", { settings }, { headers });
-  }, [headers, settings]);
+  const addFolder = useCallback(
+    (folder) => {
+      axios.post("/plugin/addexternalplugin", { folder }, { headers });
+    },
+    [headers]
+  );
 
   return (
     <>
       <Style.Container>
         <Tooltip text="Install local plugin">
-          <Button onClick={activateModalFile}>
+          <Button onClick={activateModalFolder}>
             <Icon icon={EIcon["puzzle-piece"]} size="15px" />
           </Button>
         </Tooltip>
       </Style.Container>
 
-      {modalUpload && (
-        <ModalUploadPlugin
-          file={file as File}
-          onClose={deactivateModalFile}
-          onUpload={activateModalInstall}
-        />
-      )}
-
-      {modalInstall && (
-        <ModalInstallPlugin
-          pluginName={file?.name}
-          source={filePath}
-          onClose={deactivateModalInstall}
-        />
-      )}
-
       {modalSelectFolder && (
-        <FileSelect
-          error={false}
-          modalMessage={`Select a folder of your plugin of ${getSystemName()}.`}
-          onChange={addFolder}
+        <ModalFileSelect
+          accept={""}
           onlyFolders={true}
-          placeholder="e.g. /users/tcore-plugins"
-          value={settings?.settings_folder || ""}
-          disabled={false}
-          useLocalFs
+          defaultFilePath={settings?.settings_folder}
+          message={`Select a folder of your plugin of ${getSystemName()}.`}
+          onClose={deactivateModalFolder}
+          onConfirm={addFolder}
+          useLocalFs={true}
+          title="Select a folder"
         />
       )}
     </>

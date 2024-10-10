@@ -260,6 +260,26 @@ export async function deactivatePlugin(pluginID: string) {
 }
 
 /**
+ * Install an external plugin by it's folder.
+ */
+export async function addExternalPlugin(folder: string) {
+  const settings = await getMainSettings();
+
+  if (!settings.custom_plugins) {
+    settings.custom_plugins = [];
+  }
+  if (!settings.custom_plugins.includes(folder)) {
+    settings.custom_plugins.push(folder);
+    await setMainSettings(settings);
+    const pluginPackage = await Plugin.getPackageAsync(folder).catch(() => null);
+    if (!pluginPackage) {
+      return Promise.reject("Invalid Plugin");
+    }
+    await startPluginAndHandleErrors(folder);
+  }
+}
+
+/**
  * Indicates if there is at least one COMPATIBLE database plugin installed.
  */
 export async function hasDBPluginInstalled(): Promise<boolean> {
