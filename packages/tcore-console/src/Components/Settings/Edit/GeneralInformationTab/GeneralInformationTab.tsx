@@ -1,4 +1,4 @@
-import { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
+import type { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
 import { observer } from "mobx-react";
 import { useState } from "react";
@@ -6,7 +6,6 @@ import { Button, EButton, Icon } from "../../../..";
 import useApiRequest from "../../../../Helpers/useApiRequest";
 import store from "../../../../System/Store";
 import Col from "../../../Col/Col";
-import FileSelect from "../../../FileSelect/FileSelect";
 import FormDivision from "../../../FormDivision/FormDivision";
 import FormGroup from "../../../FormGroup/FormGroup";
 import { EIcon } from "../../../Icon/Icon.types";
@@ -136,7 +135,6 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
 
         <Col size="6">
           <FormDivision icon={EIcon["puzzle-piece"]} title="Plugin Settings" />
-
           <FormGroup
             tooltip={`The plugin that will be used as the main database for ${getSystemName()}.`}
             icon={EIcon.database}

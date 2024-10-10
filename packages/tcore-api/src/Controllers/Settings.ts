@@ -101,11 +101,26 @@ class GetSettingsInfo extends APIController<void, void, void> {
 }
 
 /**
+ * Retrieves only main settings.
+ */
+class GetMainSettingsInfo extends APIController<void, void, void> {
+  setup: ISetupController = {
+    allowTokens: [{ permission: "read", resource: "account" }],
+  };
+
+  public async main() {
+    const settings = await getMainSettings();
+    this.body = settings;
+  }
+}
+
+/**
  * Exports the routes of the device.
  */
 export default (app: Application) => {
   app.put("/settings", warm(EditSettings));
   app.get("/settings", warm(GetSettingsInfo));
+  app.get("/mainsettings", warm(GetMainSettingsInfo));
   app.post("/check-master-password", warm(CheckMasterPassword));
   app.post("/settings/master/password", warm(SetMasterPassword));
   app.post("/settings/reset", warm(DoFactoryReset));
