@@ -48,7 +48,7 @@
     "ts-jest": "^28.0.3"
   },
   "dependencies": {
-    "@tago-io/tcore-sdk": "^0.4.2",
+    "@tago-io/tcore-sdk": "0.7.2",
     "@types/jest": "^27.5.1",
     "jest": "^28.1.0"
   }

@@ -37,7 +37,7 @@
     "migrate": "knex migrate:make --client=pg --migrations-directory=src/Migrations"
   },
   "dependencies": {
-    "@tago-io/tcore-sdk": "0.6.1-alpha.0",
+    "@tago-io/tcore-sdk": "0.7.2",
     "esbuild": "0.14.29",
     "knex": "^0.95.10",
     "pg": "^8.7.3",

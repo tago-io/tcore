@@ -25,6 +25,6 @@
   },
   "dependencies": {
     "systeminformation": "5.9.7",
-    "@tago-io/tcore-sdk": "*"
+    "@tago-io/tcore-sdk": "0.7.2"
   }
 }

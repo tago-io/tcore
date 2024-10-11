@@ -34,7 +34,7 @@
     "build": "npm run linter; rm -rf ./build; node esbuild/build.js"
   },
   "dependencies": {
-    "@tago-io/tcore-sdk": "0.5.0",
+    "@tago-io/tcore-sdk": "0.7.2",
     "axios": "^0.26.1",
     "body-parser": "^1.19.2",
     "express": "^4.17.3"
