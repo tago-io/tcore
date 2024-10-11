@@ -1,7 +1,8 @@
-import fs from "node:fs";
-import buildPath from "./buildPath.js";
-import { version } from "../../../package.json";
-import { getSystemName } from "@tago-io/tcore-shared";
+/* eslint-disable @typescript-eslint/no-var-requires */
+const fs = require("fs");
+const buildPath = require("./buildPath");
+const version = require("../../../package.json").version;
+const { getSystemName } = require("@tago-io/tcore-shared");
 
 const temp = `
 <!DOCTYPE html>

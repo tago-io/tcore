@@ -1,11 +1,12 @@
-import svgr from "./svgr.js";
-import * as esbuild from "esbuild";
-import path from "node:path";
-import buildPath from "./buildPath.js";
-import { version } from "../../../package.json";
+/* eslint-disable @typescript-eslint/no-var-requires */
+const svgr = require("./svgr");
+const esbuild = require("esbuild");
+const path = require("path");
+const buildPath = require("./buildPath");
+const version = require("../../../package.json").version;
 
-import "./icon.js";
-import "./generateIndex.js";
+require("./icon");
+require("./generateIndex");
 
 const dev = process.argv.includes("--watch");
 
@@ -23,11 +24,13 @@ esbuild
     minify: !dev,
     publicPath: "/console",
     sourcemap: dev,
-    watch: dev ? {
-      onRebuild: () => {
-        console.log("✔ Detected changes and rebuilt tcore-console");
-      }
-    } : null,
+    watch: dev
+      ? {
+          onRebuild: () => {
+            console.log("✔ Detected changes and rebuilt tcore-console");
+          },
+        }
+      : null,
     external: ["path"],
     plugins: [svgr()],
     loader: {

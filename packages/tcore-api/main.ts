@@ -37,7 +37,7 @@ const httpServer = createServer(app);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const consolePath = path.join(__dirname, "../../tcore-console/build");
+const consolePath = path.join(__dirname, "../../standalone/tcore-console/build");
 
 /**
  * Sets up express and its configuration.
@@ -179,10 +179,7 @@ export async function startServer() {
   process.on("SIGINT", () => shutdown(httpServer));
 }
 
-const watchMode = process.argv.some((x) => x.includes("ts-node"));
+const watchMode = process.argv.join(" ").includes("tcore-api/main.ts");
 if (watchMode) {
   startServer();
 }
-// startServer();
-//
-console.log(process.argv)

@@ -121,9 +121,9 @@ export async function listPluginFolders(): Promise<string[]> {
 async function getInstalledInsidePlugins(plugins: string[], settings: ISettings) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
   for (const folder of insidePlugins) {
-    const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
+    const fullPath = path.join(__dirname, "../../..", "plugins", folder);
     const getPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
 
     if (!getPackage) {
@@ -171,10 +171,10 @@ export async function getPluginList(): Promise<any> {
 export async function getAllInsidePlugins() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../../..", "plugins"));
+  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
   const list: IPluginPackage[] = [];
   for (const folder of insidePlugins) {
-    const fullPath = path.join(__dirname, "../../../..", "plugins", folder);
+    const fullPath = path.join(__dirname, "../../..", "plugins", folder);
     const pluginPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
 
     if (pluginPackage) {
@@ -576,7 +576,7 @@ export async function getMainFilesystemModule(): Promise<Module | null | undefin
     if (module?.state === "started") {
       return module;
     }
-      return null;
+    return null;
   }
 
   return undefined;

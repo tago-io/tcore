@@ -1,5 +1,6 @@
-import fs from "node:fs";
-import path from "node:path";
+/* eslint-disable @typescript-eslint/no-var-requires */
+const fs = require("fs");
+const path = require("path");
 
 // lists all files in the icons folder
 const files = fs.readdirSync(path.join(__dirname, "../assets/icons"));
@@ -26,7 +27,10 @@ const template = [
   "const icons = {",
   files
     .filter((x) => !x.startsWith(".")) // can't start with a dot
-    .map((x) => `  "${x.replace(".svg", "")}": import("../../../assets/icons/${x}"),`) // map the output to be an enum field
+    .map(
+      (x) =>
+        `  "${x.replace(".svg", "")}": require("../../../assets/icons/${x}"),`,
+    ) // map the output to be an enum field
     .join("\n"),
   "}",
   "",

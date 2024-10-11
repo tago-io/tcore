@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "noImplicitAny": true,
-    "declaration": true
+    "declaration": true,
+    "allowImportingTsExtensions": true
   },
   "include": [
     "types/styled.d.ts",
