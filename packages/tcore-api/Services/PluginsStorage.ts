@@ -1,4 +1,4 @@
-import { zPluginStorageItemSet } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { zPluginStorageItemSet } from "@tago-io/tcore-sdk/types";
 import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
 /**

@@ -5,7 +5,7 @@ import {
   zActionEdit,
   type IActionCreate,
   zActionCreate,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
 import { createAction, deleteAction, editAction, getActionInfo, getActionList } from "../Services/Action.ts";

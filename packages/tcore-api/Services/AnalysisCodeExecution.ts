@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
-import type { ILog, TGenericID } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { ILog, TGenericID } from "@tago-io/tcore-sdk/types";
 import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction.ts";
 import { io } from "../Socket/SocketServer.ts";
 import { addAnalysisLog, editAnalysis, getAnalysisInfo } from "./Analysis.ts";

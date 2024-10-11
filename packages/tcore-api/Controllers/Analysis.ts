@@ -7,7 +7,7 @@ import {
   zAnalysisCreate,
   type IAnalysisEdit,
   zAnalysisEdit,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import { runAnalysis } from "../Services/AnalysisCodeExecution.ts";
 import {
   createAnalysis,

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import vm from "node:vm";
-import type { IDevice, IDeviceAddDataOptions } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IDevice, IDeviceAddDataOptions } from "@tago-io/tcore-sdk/types";
 import { logError } from "../Helpers/log.ts";
 import { emitToLiveInspector } from "./LiveInspector.ts";
 import { getDeviceParamList } from "./Device.ts";

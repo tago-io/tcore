@@ -1,6 +1,6 @@
 import os from "node:os";
 import si from "systeminformation";
-import type { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/types";
 import { formatBytes } from "../Helpers/formatBytes.ts";
 
 /**

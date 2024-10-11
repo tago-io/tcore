@@ -15,7 +15,7 @@ import {
   type IDeviceData,
   type IDeviceDataCreate,
   zDeviceDataQuery,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import Module from "../../Plugins/Module/Module.ts";
 import * as Device from "../Device.ts";
 import * as Statistic from "../Statistic.ts";

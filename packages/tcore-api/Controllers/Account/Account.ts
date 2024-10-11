@@ -1,6 +1,6 @@
 import type { Application } from "express";
 import { z } from "zod";
-import { type IAccountCreate, zAccountCreate } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { type IAccountCreate, zAccountCreate } from "@tago-io/tcore-sdk/types";
 import { createAccount, getAccountByToken, login } from "../../Services/Account/Account.ts";
 import APIController, { type ISetupController, warm } from "../APIController.ts";
 

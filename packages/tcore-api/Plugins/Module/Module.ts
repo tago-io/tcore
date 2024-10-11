@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import type { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import { io } from "../../Socket/SocketServer.ts";
 import { getPluginSettings } from "../../Services/Settings.ts";

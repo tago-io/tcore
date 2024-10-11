@@ -3,7 +3,7 @@ import path from "node:path";
 import { Worker as WorkerThread } from "node:worker_threads";
 import EventEmitter from "node:events";
 import fs from "node:fs";
-import type { IModuleSetup, IPluginMessage } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IModuleSetup, IPluginMessage } from "@tago-io/tcore-sdk/types";
 import { nanoid } from "nanoid";
 import { getPluginSettings } from "../../Services/Settings.ts";
 import { getActionList, invokeActionOnTriggerChange } from "../../Services/Action.ts";

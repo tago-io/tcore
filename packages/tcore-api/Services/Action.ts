@@ -15,7 +15,7 @@ import {
   zActionEdit,
   zActionList,
   zActionListQuery,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import axios from "axios";
 import splitColon from "../Helpers/splitColon.ts";
 import { plugins } from "../Plugins/Host.ts";

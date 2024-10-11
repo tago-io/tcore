@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import md5 from "md5";
-import type { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettings } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
 import semver from "semver";
 import type Module from "../Plugins/Module/Module.ts";

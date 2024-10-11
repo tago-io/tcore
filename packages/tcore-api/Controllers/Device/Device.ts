@@ -11,7 +11,7 @@ import {
   zDeviceListQuery,
   zDeviceParameterCreate,
   zDeviceTokenListQuery,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import {
   createDevice,
   createDeviceToken,

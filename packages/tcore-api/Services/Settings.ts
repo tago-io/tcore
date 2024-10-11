@@ -1,7 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import os from "node:os";
-import type { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
 import { log } from "../index.ts";
 import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host.ts";

@@ -1,4 +1,4 @@
-import type { IPluginFilesystemItem } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IPluginFilesystemItem } from "@tago-io/tcore-sdk/types";
 import { invokeFilesystemFunction } from "../Plugins/invokeFilesystemFunction.ts";
 import { getModuleList } from "./Plugins.ts";
 

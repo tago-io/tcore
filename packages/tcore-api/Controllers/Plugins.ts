@@ -2,7 +2,7 @@ import path from "node:path";
 import os from "node:os";
 import type { Request, Response, Application } from "express";
 import { z } from "zod";
-import { type IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { type IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
 import multer from "multer";
 import { getMainSettings, setPluginModulesSettings } from "../Services/Settings.ts";
 import { plugins } from "../Plugins/Host.ts";

@@ -11,7 +11,7 @@ import {
   zDeviceDataUpdate,
   type IDeviceChunkPeriod,
   type IDeviceDataCreate,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { DateTime } from "luxon";
 import removeNullValues from "../../Helpers/removeNullValues.ts";

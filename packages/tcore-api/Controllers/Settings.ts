@@ -1,4 +1,4 @@
-import { type ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { type ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
 import { checkMainDatabaseModuleHook } from "../Services/Plugins.ts";

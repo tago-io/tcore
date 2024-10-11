@@ -1,4 +1,4 @@
-import { type IStatistic, type IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { type IStatistic, type IStatisticCreate, zStatistic } from "@tago-io/tcore-sdk/types";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { io } from "../Socket/SocketServer.ts";

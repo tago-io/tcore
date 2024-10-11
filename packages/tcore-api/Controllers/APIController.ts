@@ -2,7 +2,7 @@ import type { IncomingHttpHeaders } from "node:http";
 import type express from "express";
 import type { Request, Response } from "express";
 import type { ZodTypeAny } from "zod";
-import type { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
 import { getDeviceByToken, getDeviceToken } from "../Services/Device.ts";
 import { getAccountToken } from "../Services/Account/Account.ts";
 import { checkMasterPassword } from "../Services/Settings.ts";

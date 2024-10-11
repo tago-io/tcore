@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import semver from "semver";
-import { type IModuleSetup, zPluginPackageTCore } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { type IModuleSetup, zPluginPackageTCore } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
 import type Plugin from "../Plugin/Plugin.ts";
 import pkg from "../../package.json" with { type: "json" };

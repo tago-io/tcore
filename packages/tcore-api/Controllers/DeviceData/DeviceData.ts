@@ -1,6 +1,6 @@
 import type { Application } from "express";
 import { z } from "zod";
-import { type IDeviceDataQuery, zDeviceDataQuery } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import { type IDeviceDataQuery, zDeviceDataQuery } from "@tago-io/tcore-sdk/types";
 import {
   addDeviceDataByDevice,
   deleteDeviceData,

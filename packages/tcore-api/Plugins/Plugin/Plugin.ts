@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import path from "node:path";
 import fs from "node:fs";
-import type { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/src/Types/index.ts";
+import type { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log.ts";
 import { setPluginDisabledSettings } from "../../Services/Settings.ts";

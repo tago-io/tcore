@@ -21,7 +21,7 @@ import {
   zDeviceParameterCreate,
   zDeviceToken,
   zDeviceTokenCreate,
-} from "@tago-io/tcore-sdk/src/Types/index.ts";
+} from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 
