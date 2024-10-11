@@ -98,9 +98,11 @@ export async function listPluginFolders(): Promise<string[]> {
   if (customPluginsFolders && customPluginsFolders.length > 0) {
     for (const customFolder of customPluginsFolders) {
       const hasPackage = await Plugin.getPackageAsync(customFolder).catch(() => null);
-      if (hasPackage) {
-        plugins.push(customFolder);
+      if (!hasPackage) {
+        console.error(`Invalid plugin package in folder: ${customFolder}`);
+        process.exit(1);
       }
+      plugins.push(customFolder);
     }
   }
 
