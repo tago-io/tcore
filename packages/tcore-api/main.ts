@@ -183,4 +183,6 @@ const watchMode = process.argv.some((x) => x.includes("ts-node"));
 if (watchMode) {
   startServer();
 }
-startServer();
+// startServer();
+//
+console.log(process.argv)

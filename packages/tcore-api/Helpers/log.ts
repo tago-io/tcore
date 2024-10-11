@@ -6,8 +6,7 @@ import { getMainSettings } from "../Services/Settings.ts";
 import { plugins } from "../Plugins/Host.ts";
 import { io } from "../Socket/SocketServer.ts";
 import { getLocalIPs } from "../Services/Hardware.ts";
-// @ts-ignore
-import pkg from "../../../../package.json" with { type: "json" };
+import pkg from "../../../package.json" with { type: "json" };
 
 /**
  * Contains a history of all logs in the application and in the plugins.

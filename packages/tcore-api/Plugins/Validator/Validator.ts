@@ -3,8 +3,7 @@ import semver from "semver";
 import { type IModuleSetup, zPluginPackageTCore } from "@tago-io/tcore-sdk/src/Types/index.ts";
 import { getSystemName } from "@tago-io/tcore-shared";
 import type Plugin from "../Plugin/Plugin.ts";
-// @ts-ignore
-import pkg from "../../../package.json" with { type: "json" };
+import pkg from "../../package.json" with { type: "json" };
 
 /**
  */

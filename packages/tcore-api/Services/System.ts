@@ -1,4 +1,4 @@
-import pkg from "../../../../package.json" with { type: "json" };
+import pkg from "../../../package.json" with { type: "json" };
 import { getAccountAmount } from "./Account/Account.ts";
 import { getMainDatabaseModule } from "./Plugins.ts";
 import { getMainSettings } from "./Settings.ts";

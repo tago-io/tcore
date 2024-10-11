@@ -1,5 +1,5 @@
 import { uninstallPlugin, uninstallPluginByFolder } from "./Plugins/Uninstall.ts";
-import { startServer } from "./server.ts";
+import { startServer } from "./main.ts";
 import { log, logError, logSystemStart } from "./Helpers/log.ts";
 import { getPlatformAndArch } from "./Helpers/Platform.ts";
 import { downloadFile } from "./Helpers/Download.ts";

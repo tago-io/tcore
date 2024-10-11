@@ -11,11 +11,6 @@
   },
   "type": "module",
   "workspaces": [
-    "packages/tcore-sdk",
-    "packages/tcore-shared",
-    "packages/tcore-console",
-    "packages/tcore-api",
-    "packages/tcore-cli",
     "packages/*"
   ],
   "keywords": [
@@ -31,27 +26,6 @@
     "type": "git",
     "url": "git+https://github.com/tago-io/tcore.git"
   },
-  "scripts": {
-    "shared:watch": "npm run watch -w @tago-io/tcore-shared",
-    "shared:tsc": "npm run tsc:watch -w @tago-io/tcore-shared",
-    "console:test": "npm run test -w @tago-io/tcore-console",
-    "console:watch": "npm run watch -w @tago-io/tcore-console",
-    "console:tsc": "npm run tsc:watch -w @tago-io/tcore-console",
-    "sdk:test": "npm run test -w @tago-io/tcore-sdk",
-    "sdk:watch": "npm run watch -w @tago-io/tcore-sdk",
-    "sdk:tsc": "npm run tsc:watch -w @tago-io/tcore-sdk",
-    "api:test": "npm run test -w @tago-io/tcore-api",
-    "api:watch": "npm run watch -w @tago-io/tcore-api",
-    "api:tsc": "npm run tsc:watch -w @tago-io/tcore-api",
-    "cli:tsc": "npm run tsc:watch -w @tago-io/tcore-cli",
-    "watch": "concurrently \"npm:*:watch\"",
-    "tsc": "concurrently \"npm:*:tsc\"",
-    "test": "npm run test -ws --if-present",
-    "linter": "npm run linter -ws --if-present",
-    "build": "npm run build -ws --if-present",
-    "pack": "npm run pack -ws --if-present",
-    "plugin:add": "npm run plugin:add -ws --if-present"
-  },
   "dependencies": {
     "@tago-io/sdk": "10.4.4",
     "axios": "0.24.0",
@@ -62,6 +36,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.3",
     "@swc-node/register": "1.10.9",
+    "@tago-io/tcore-sdk": "0.7.2",
     "@types/jest": "29.5.13",
     "@types/luxon": "3.4.2",
     "@types/node": "20.14.8",
