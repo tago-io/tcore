@@ -36,7 +36,8 @@
     "ora": "8.1.0",
     "semver": "7.6.3",
     "uuid": "10.0.0",
-    "zod": "3.23.8"
+    "zod": "3.23.8",
+    "systeminformation": "5.23.5"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.3",
