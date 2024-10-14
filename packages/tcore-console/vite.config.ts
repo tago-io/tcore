@@ -6,23 +6,23 @@ import { fileURLToPath } from "node:url";
 
 import pkg from "../../package.json" with { type: "json" };
 
-const __filename = fileURLToPath(import.meta.url);
-const dirname_ = dirname(__filename);
-
-const buildPath = join(dirname_, "./build");
+const filename = fileURLToPath(import.meta.url);
+const buildPath = join(dirname(filename), "./build");
 const version = pkg.version;
-
-console.log("buildPath", buildPath);
-console.log("version", version);
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [svgr(), react()],
+  plugins: [
+    svgr({
+      svgrOptions: { icon: true },
+      include: ["**/*.svg", "**/*.svg?react"],
+      exclude: [],
+    }),
+    react(),
+  ],
   base: "/console",
   build: {
-    outDir: `${buildPath}/tcore-v${version}.js`,
-    rollupOptions: {
-      external: ["@tago-io/tcore-shared", "luxon"],
-    },
+    sourcemap: true,
+    outDir: `${buildPath}/tcore-v${version}`,
   },
 });
