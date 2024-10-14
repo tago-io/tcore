@@ -13,7 +13,11 @@ const zURLParamsID = z.object({
 /**
  * Retrieves all the tag keys of a resource type.
  */
-class GetTagKeys extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetTagKeys extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,

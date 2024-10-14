@@ -48,7 +48,9 @@ export async function getAnalysisLogs(analysisID: TGenericID): Promise<ILog[]> {
 /**
  * Lists all the analyses.
  */
-export async function getAnalysisList(query: IAnalysisListQuery): Promise<IAnalysisList> {
+export async function getAnalysisList(
+  query: IAnalysisListQuery,
+): Promise<IAnalysisList> {
   const params = await zAnalysisListQuery.parseAsync(query);
   const response = await invokeDatabaseFunction("getAnalysisList", params);
   const parsed = await zAnalysisList.parseAsync(response);
@@ -59,7 +61,10 @@ export async function getAnalysisList(query: IAnalysisListQuery): Promise<IAnaly
  * Retrieves all the information of a single analysis.
  */
 export async function getAnalysisInfo(id: TGenericID): Promise<IAnalysis> {
-  const analysis = (await invokeDatabaseFunction("getAnalysisInfo", id)) as IAnalysis;
+  const analysis = (await invokeDatabaseFunction(
+    "getAnalysisInfo",
+    id,
+  )) as IAnalysis;
   if (!analysis) {
     throw new Error("Invalid Analysis ID");
   }
@@ -73,7 +78,10 @@ export async function getAnalysisInfo(id: TGenericID): Promise<IAnalysis> {
 /**
  * Edits a single analysis.
  */
-export async function editAnalysis(id: TGenericID, analysis: IAnalysisEdit): Promise<void> {
+export async function editAnalysis(
+  id: TGenericID,
+  analysis: IAnalysisEdit,
+): Promise<void> {
   await validateAnalysisID(id);
   const parsed = await zAnalysisEdit.parseAsync(analysis);
   await invokeDatabaseFunction("editAnalysis", id, parsed);
@@ -98,7 +106,9 @@ export async function deleteAnalysisLogs(id: TGenericID): Promise<void> {
 /**
  * Creates a new analysis.
  */
-export async function createAnalysis(analysis: IAnalysisCreate): Promise<TGenericID> {
+export async function createAnalysis(
+  analysis: IAnalysisCreate,
+): Promise<TGenericID> {
   const parsed = await zAnalysisCreate.parseAsync(analysis);
   await invokeDatabaseFunction("createAnalysis", parsed);
   return parsed.id;

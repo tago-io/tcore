@@ -1,5 +1,3 @@
-import type { Application } from "express";
-import { z } from "zod";
 import {
   type IDeviceCreate,
   type IDeviceEdit,
@@ -12,6 +10,8 @@ import {
   zDeviceParameterCreate,
   zDeviceTokenListQuery,
 } from "@tago-io/tcore-sdk/types";
+import type { Application } from "express";
+import { z } from "zod";
 import {
   createDevice,
   createDeviceToken,
@@ -24,7 +24,10 @@ import {
   getDeviceTokenList,
   setDeviceParams,
 } from "../../Services/Device.ts";
-import APIController, { type ISetupController, warm } from "../APIController.ts";
+import APIController, {
+  type ISetupController,
+  warm,
+} from "../APIController.ts";
 
 /**
  * Configuration for ID in the URL.
@@ -36,7 +39,11 @@ const zURLParamsID = z.object({
 /**
  * Deletes a token of a device.
  */
-class DeleteDeviceToken extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class DeleteDeviceToken extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -50,7 +57,11 @@ class DeleteDeviceToken extends APIController<void, void, z.infer<typeof zURLPar
 /**
  * Overrides or edits device parameters.
  */
-class SetDeviceParams extends APIController<IDeviceParameterCreate[], void, z.infer<typeof zURLParamsID>> {
+class SetDeviceParams extends APIController<
+  IDeviceParameterCreate[],
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -65,7 +76,11 @@ class SetDeviceParams extends APIController<IDeviceParameterCreate[], void, z.in
 /**
  * Lists all the tokens of a device.
  */
-class GetDeviceParamList extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetDeviceParamList extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -87,7 +102,10 @@ class CreateDeviceToken extends APIController<any, void, void> {
   };
 
   public async main() {
-    const response = await createDeviceToken(this.bodyParams?.device, this.bodyParams);
+    const response = await createDeviceToken(
+      this.bodyParams?.device,
+      this.bodyParams,
+    );
     this.body = response;
   }
 }
@@ -95,7 +113,11 @@ class CreateDeviceToken extends APIController<any, void, void> {
 /**
  * Lists all the tokens of a device.
  */
-class ListDeviceTokens extends APIController<void, IDeviceTokenListQuery, z.infer<typeof zURLParamsID>> {
+class ListDeviceTokens extends APIController<
+  void,
+  IDeviceTokenListQuery,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zDeviceTokenListQuery,
@@ -103,7 +125,10 @@ class ListDeviceTokens extends APIController<void, IDeviceTokenListQuery, z.infe
   };
 
   public async main() {
-    const response = await getDeviceTokenList(this.urlParams.id, this.queryStringParams);
+    const response = await getDeviceTokenList(
+      this.urlParams.id,
+      this.queryStringParams,
+    );
     this.body = response;
   }
 }
@@ -126,7 +151,11 @@ class ListDevices extends APIController<void, IDeviceListQuery, void> {
 /**
  * Retrieves all the information of a single device.
  */
-class GetDeviceInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetDeviceInfo extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -141,7 +170,11 @@ class GetDeviceInfo extends APIController<void, void, z.infer<typeof zURLParamsI
 /**
  * Deletes a single device.
  */
-class DeleteDevice extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class DeleteDevice extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -155,7 +188,11 @@ class DeleteDevice extends APIController<void, void, z.infer<typeof zURLParamsID
 /**
  * Edits a single device.
  */
-class EditDevice extends APIController<IDeviceEdit, void, z.infer<typeof zURLParamsID>> {
+class EditDevice extends APIController<
+  IDeviceEdit,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zDeviceEdit,

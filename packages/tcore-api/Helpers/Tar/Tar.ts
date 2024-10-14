@@ -1,11 +1,15 @@
-import zlib from "node:zlib";
 import fs from "node:fs";
-import tar from "tar";
+import zlib from "node:zlib";
+import { extract, list } from "tar";
 
 /**
  * Extracts a tar into a folder.
  */
-export async function extractTar(tarPath: string, destination: string, useGzip = false): Promise<void> {
+export async function extractTar(
+  tarPath: string,
+  destination: string,
+  useGzip = false,
+): Promise<void> {
   // creates the destination folder if it doesn't exist
   await fs.promises.mkdir(destination, { recursive: true });
 
@@ -17,7 +21,7 @@ export async function extractTar(tarPath: string, destination: string, useGzip =
     }
 
     stream
-      .pipe(tar.extract({ C: destination }))
+      .pipe(extract({ C: destination }))
       .on("error", reject)
       .on("finish", resolve);
   });
@@ -26,7 +30,10 @@ export async function extractTar(tarPath: string, destination: string, useGzip =
 /**
  * Peeks a tar file without extracting it.
  */
-export async function peekTarFile(tarPath: string, fileName: string): Promise<Uint8Array[]> {
+export async function peekTarFile(
+  tarPath: string,
+  fileName: string,
+): Promise<Uint8Array[]> {
   const data: Uint8Array[] = [];
 
   /**
@@ -39,6 +46,6 @@ export async function peekTarFile(tarPath: string, fileName: string): Promise<Ui
   };
 
   return await new Promise((resolve) => {
-    tar.list({ file: tarPath, onentry: onEntry }, [], () => resolve(data));
+    list({ file: tarPath, onentry: onEntry }, [], () => resolve(data));
   });
 }

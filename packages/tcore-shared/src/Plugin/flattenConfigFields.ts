@@ -2,7 +2,9 @@ import type { IPluginConfigField } from "@tago-io/tcore-sdk/types";
 
 /**
  */
-function flattenConfigFields(configs: IPluginConfigField[]): IPluginConfigField[] {
+function flattenConfigFields(
+  configs: IPluginConfigField[],
+): IPluginConfigField[] {
   const data: IPluginConfigField[] = [];
 
   for (const field of configs) {

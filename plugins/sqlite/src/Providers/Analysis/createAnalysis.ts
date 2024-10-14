@@ -1,10 +1,12 @@
-import { IDatabaseCreateAnalysisData } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { IDatabaseCreateAnalysisData } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Creates a new analysis.
  */
-async function createAnalysis(data: IDatabaseCreateAnalysisData): Promise<void> {
+async function createAnalysis(
+  data: IDatabaseCreateAnalysisData,
+): Promise<void> {
   const object = { ...data };
 
   if (object.variables) {

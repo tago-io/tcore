@@ -38,7 +38,9 @@ export const validateDeviceID = async (deviceID: TGenericID): Promise<void> => {
 /**
  * Retrieves a device token.
  */
-export async function getDeviceToken(token: string): Promise<IDeviceToken | null> {
+export async function getDeviceToken(
+  token: string,
+): Promise<IDeviceToken | null> {
   if (!token) {
     throw new Error("Invalid Device Token");
   }
@@ -60,7 +62,10 @@ export async function deleteDeviceParam(id: TGenericID): Promise<void> {
 /**
  * Overrides or edits device parameters.
  */
-export async function setDeviceParams(deviceID: TGenericID, parameters: IDeviceParameterCreate[]): Promise<void> {
+export async function setDeviceParams(
+  deviceID: TGenericID,
+  parameters: IDeviceParameterCreate[],
+): Promise<void> {
   await validateDeviceID(deviceID);
   const parsed = await z.array(zDeviceParameterCreate).parseAsync(parameters);
   await invokeDatabaseFunction("setDeviceParams", deviceID, parsed);
@@ -69,9 +74,16 @@ export async function setDeviceParams(deviceID: TGenericID, parameters: IDeviceP
 /**
  * Gets all the parameters of a device.
  */
-export async function getDeviceParamList(deviceID: TGenericID, sentStatus?: boolean) {
+export async function getDeviceParamList(
+  deviceID: TGenericID,
+  sentStatus?: boolean,
+) {
   await validateDeviceID(deviceID);
-  const response = await invokeDatabaseFunction("getDeviceParamList", deviceID, sentStatus);
+  const response = await invokeDatabaseFunction(
+    "getDeviceParamList",
+    deviceID,
+    sentStatus,
+  );
   const parsed = await z.array(zDeviceParameter).parseAsync(response);
   return parsed;
 }
@@ -88,7 +100,7 @@ export async function deleteDeviceToken(token: TGenericToken): Promise<void> {
  */
 export async function createDeviceToken(
   deviceID: TGenericID,
-  data: IDeviceTokenCreate
+  data: IDeviceTokenCreate,
 ): Promise<IDeviceTokenCreateResponse> {
   await validateDeviceID(deviceID);
 
@@ -105,9 +117,16 @@ export async function createDeviceToken(
 /**
  * Lists all the tokens of a device.
  */
-export async function getDeviceTokenList(deviceID: TGenericID, query: IDeviceTokenListQuery): Promise<IDeviceToken[]> {
+export async function getDeviceTokenList(
+  deviceID: TGenericID,
+  query: IDeviceTokenListQuery,
+): Promise<IDeviceToken[]> {
   await validateDeviceID(deviceID);
-  const response = await invokeDatabaseFunction("getDeviceTokenList", deviceID, query);
+  const response = await invokeDatabaseFunction(
+    "getDeviceTokenList",
+    deviceID,
+    query,
+  );
   return response;
 }
 
@@ -131,7 +150,9 @@ export async function getDeviceByToken(token: TGenericToken): Promise<IDevice> {
 /**
  * Lists all the devices.
  */
-export async function getDeviceList(query: IDeviceListQuery): Promise<IDeviceList> {
+export async function getDeviceList(
+  query: IDeviceListQuery,
+): Promise<IDeviceList> {
   const queryParsed = await zDeviceListQuery.parseAsync(query);
   const response = await invokeDatabaseFunction("getDeviceList", queryParsed);
   const parsed = await zDeviceList.parseAsync(response);
@@ -159,7 +180,10 @@ export const getDeviceInfo = async (id: TGenericID): Promise<IDevice> => {
 /**
  * Edits a single device.
  */
-export const editDevice = async (id: TGenericID, device: IDeviceEdit): Promise<void> => {
+export const editDevice = async (
+  id: TGenericID,
+  device: IDeviceEdit,
+): Promise<void> => {
   await validateDeviceID(id);
   const parsed = await zDeviceEdit.parseAsync(device);
   await invokeDatabaseFunction("editDevice", id, parsed);
@@ -176,12 +200,17 @@ export async function deleteDevice(id: TGenericID): Promise<void> {
 /**
  * Creates a new device.
  */
-export async function createDevice(data: IDeviceCreate): Promise<ICreateDeviceResponse> {
+export async function createDevice(
+  data: IDeviceCreate,
+): Promise<ICreateDeviceResponse> {
   const parsed = await zDeviceCreate.parseAsync(data);
 
   await invokeDatabaseFunction("createDevice", parsed);
 
-  const token = await createDeviceToken(parsed.id, { name: "Default", expire_time: "never" });
+  const token = await createDeviceToken(parsed.id, {
+    name: "Default",
+    expire_time: "never",
+  });
 
   return {
     device_id: parsed.id,

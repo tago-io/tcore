@@ -1,11 +1,16 @@
-import { IAction, TGenericID } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { IAction, TGenericID } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves all the information of an action.
  */
 async function getActionInfo(actionID: TGenericID): Promise<IAction | null> {
-  const response = await knexClient.select().select("*").from("action").where("id", actionID).first();
+  const response = await knexClient
+    .select()
+    .select("*")
+    .from("action")
+    .where("id", actionID)
+    .first();
 
   if (response) {
     response.active = Boolean(response.active);

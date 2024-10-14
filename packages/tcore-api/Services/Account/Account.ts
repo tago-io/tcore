@@ -1,20 +1,23 @@
 import {
-  type IAccountTokenCreate,
-  type IAccountListQuery,
-  zAccount,
   type IAccount,
-  zAccountTokenCreate,
-  zAccountList,
-  type IAccountList,
   type IAccountCreate,
-  zAccountCreate,
-  type TGenericID,
+  type IAccountList,
+  type IAccountListQuery,
   type IAccountToken,
+  type IAccountTokenCreate,
+  type TGenericID,
+  zAccount,
+  zAccountCreate,
+  zAccountList,
   zAccountToken,
+  zAccountTokenCreate,
 } from "@tago-io/tcore-sdk/types";
 import { z } from "zod";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction.ts";
-import { compareAccountPasswordHash, encryptAccountPassword } from "./AccountPassword.ts";
+import {
+  compareAccountPasswordHash,
+  encryptAccountPassword,
+} from "./AccountPassword.ts";
 
 /**
  * Logs into account and returns a token.
@@ -25,12 +28,17 @@ export async function login(username: string, password: string) {
     throw new Error("Invalid credentials");
   }
 
-  const passwordMatches = await compareAccountPasswordHash(password, account.password);
+  const passwordMatches = await compareAccountPasswordHash(
+    password,
+    account.password,
+  );
   if (!passwordMatches) {
     if (account.password_hint) {
-      throw new Error(`Invalid password. Your password hint is: ${account.password_hint}`);
+      throw new Error(
+        `Invalid password. Your password hint is: ${account.password_hint}`,
+      );
     }
-      throw new Error("Invalid credentials");
+    throw new Error("Invalid credentials");
   }
 
   const token = await createAccountToken(account.id);
@@ -40,8 +48,13 @@ export async function login(username: string, password: string) {
 /**
  * Retrieves an account by username.
  */
-export async function getAccountByUsername(username: string): Promise<IAccount | null> {
-  const account = await invokeDatabaseFunction("getAccountByUsername", username);
+export async function getAccountByUsername(
+  username: string,
+): Promise<IAccount | null> {
+  const account = await invokeDatabaseFunction(
+    "getAccountByUsername",
+    username,
+  );
   if (account) {
     const parsed = await zAccount.parseAsync(account);
     return parsed;
@@ -86,7 +99,9 @@ export async function getAccountByToken(token: string): Promise<IAccount> {
 /**
  * Retrieves an account token.
  */
-export async function getAccountToken(token: string): Promise<IAccountToken | null> {
+export async function getAccountToken(
+  token: string,
+): Promise<IAccountToken | null> {
   if (!token) {
     throw new Error("Invalid Account Token");
   }
@@ -101,7 +116,10 @@ export async function getAccountToken(token: string): Promise<IAccountToken | nu
 /**
  * Creates a new account token.
  */
-export async function createAccountToken(accountID: TGenericID, data?: IAccountTokenCreate): Promise<string> {
+export async function createAccountToken(
+  accountID: TGenericID,
+  data?: IAccountTokenCreate,
+): Promise<string> {
   const parsed = await zAccountTokenCreate.parseAsync(data || {});
   await invokeDatabaseFunction("createAccountToken", accountID, parsed);
   return parsed.token;
@@ -110,7 +128,9 @@ export async function createAccountToken(accountID: TGenericID, data?: IAccountT
 /**
  * Retrieves the account list.
  */
-export async function getAccountList(query: IAccountListQuery): Promise<IAccountList> {
+export async function getAccountList(
+  query: IAccountListQuery,
+): Promise<IAccountList> {
   const response = await invokeDatabaseFunction("getAccountList", query);
   const parsed = await zAccountList.parseAsync(response);
   return parsed;

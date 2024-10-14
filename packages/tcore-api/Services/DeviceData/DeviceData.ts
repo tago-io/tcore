@@ -1,29 +1,34 @@
 import {
-  type TGenericID,
-  type IDeviceDataQuery,
-  type IDeviceData,
-  zDeviceDataCreate,
-  zDeviceData,
-  zDeviceDataQuery,
   type IDevice,
-  generateResourceID,
   type IDeviceAddDataOptions,
-  zDeviceDataUpdate,
   type IDeviceChunkPeriod,
+  type IDeviceData,
   type IDeviceDataCreate,
+  type IDeviceDataQuery,
+  type TGenericID,
+  generateResourceID,
+  zDeviceData,
+  zDeviceDataCreate,
+  zDeviceDataQuery,
+  zDeviceDataUpdate,
 } from "@tago-io/tcore-sdk/types";
-import { z } from "zod";
 import { DateTime } from "luxon";
+import { z } from "zod";
 import removeNullValues from "../../Helpers/removeNullValues.ts";
 import splitColon from "../../Helpers/splitColon.ts";
 import { plugins } from "../../Plugins/Host.ts";
 import { invokeDatabaseFunction } from "../../Plugins/invokeDatabaseFunction.ts";
-import { editAction, getActionList, getConditionTriggerMatchingData, triggerAction } from "../Action.ts";
+import {
+  editAction,
+  getActionList,
+  getConditionTriggerMatchingData,
+  triggerAction,
+} from "../Action.ts";
 import { editDevice, getDeviceInfo } from "../Device.ts";
-import { addStatistic } from "../Statistic.ts";
-import { runPayloadParser } from "../PayloadParserCodeExecution.ts";
 import { emitToLiveInspector, getLiveInspectorID } from "../LiveInspector.ts";
+import { runPayloadParser } from "../PayloadParserCodeExecution.ts";
 import { getMainQueueModule, triggerHooks } from "../Plugins.ts";
+import { addStatistic } from "../Statistic.ts";
 
 const LIMIT_DATA_ON_MUTABLE = 50_000;
 const MAXIMUM_MONTH_RANGE = 1.1;
@@ -60,9 +65,15 @@ export async function emptyDevice(deviceID: TGenericID) {
 /**
  * Retrieves the data amount in a device.
  */
-export const getDeviceDataAmount = async (deviceID: TGenericID): Promise<number> => {
+export const getDeviceDataAmount = async (
+  deviceID: TGenericID,
+): Promise<number> => {
   const device = await getDeviceInfo(deviceID);
-  const response = await invokeDatabaseFunction("getDeviceDataAmount", deviceID, device.type);
+  const response = await invokeDatabaseFunction(
+    "getDeviceDataAmount",
+    deviceID,
+    device.type,
+  );
   const parsed = await z.number().parseAsync(response);
   return parsed;
 };
@@ -70,7 +81,10 @@ export const getDeviceDataAmount = async (deviceID: TGenericID): Promise<number>
 /**
  * Triggers all the actions related to the device that just sent the last data insert.
  */
-export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]): Promise<void> => {
+export const triggerActions = async (
+  deviceID: TGenericID,
+  data: IDeviceData[],
+): Promise<void> => {
   const device = await getDeviceInfo(deviceID);
   const actions = await getActionList({
     filter: { active: true, type: "condition" },
@@ -89,14 +103,18 @@ export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]):
     if (action.lock) {
       // action is locked, meaning we need to find a condition which can
       // release/unlock the action
-      const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsUnlock, device, x));
+      const dataItem = data.find((x) =>
+        getConditionTriggerMatchingData(conditionsUnlock, device, x),
+      );
       if (dataItem) {
         await editAction(action.id, { lock: false });
       }
     } else {
       // action is unlocked, meaning we need to find a condition
       // which can trigger the action
-      const dataItem = data.find((x) => getConditionTriggerMatchingData(conditionsLock, device, x));
+      const dataItem = data.find((x) =>
+        getConditionTriggerMatchingData(conditionsLock, device, x),
+      );
       if (dataItem) {
         await triggerAction(action.id, data);
         await editAction(action.id, { lock: hasLocker });
@@ -111,7 +129,7 @@ export const triggerActions = async (deviceID: TGenericID, data: IDeviceData[]):
 export const applyPayloadEncoder = async (
   device: IDevice,
   data: any,
-  options?: IDeviceAddDataOptions
+  options?: IDeviceAddDataOptions,
 ): Promise<any> => {
   const stack = device.encoder_stack || [];
 
@@ -121,14 +139,22 @@ export const applyPayloadEncoder = async (
       const [pluginID, moduleID] = splitColon(encoder);
       const plugin = plugins.get(pluginID);
       if (!plugin) {
-        emitToLiveInspector(device, { title: "Encoder plugin not found", content: pluginID }, options?.liveInspectorID);
+        emitToLiveInspector(
+          device,
+          { title: "Encoder plugin not found", content: pluginID },
+          options?.liveInspectorID,
+        );
         continue;
       }
 
       const module = plugin.modules.get(moduleID);
 
       if (!module) {
-        emitToLiveInspector(device, { title: "Encoder module not found", content: moduleID }, options?.liveInspectorID);
+        emitToLiveInspector(
+          device,
+          { title: "Encoder module not found", content: moduleID },
+          options?.liveInspectorID,
+        );
         continue;
       }
 
@@ -139,11 +165,15 @@ export const applyPayloadEncoder = async (
           title: `Applied encoder ${module.name}`,
           content: lastData || "null",
         },
-        options?.liveInspectorID
+        options?.liveInspectorID,
       );
     } catch (ex: any) {
       const content = ex?.message || ex?.toString?.() || "Unknown error";
-      emitToLiveInspector(device, { title: "Error while encoding data", content }, options?.liveInspectorID);
+      emitToLiveInspector(
+        device,
+        { title: "Error while encoding data", content },
+        options?.liveInspectorID,
+      );
     }
   }
 
@@ -153,7 +183,11 @@ export const applyPayloadEncoder = async (
 /**
  * Checks if the immutable `time` is out of range.
  */
-function isImmutableTimeOutOfRange(time: Date, period: IDeviceChunkPeriod, retention: number) {
+function isImmutableTimeOutOfRange(
+  time: Date,
+  period: IDeviceChunkPeriod,
+  retention: number,
+) {
   const date = DateTime.fromJSDate(time);
   const startDate = DateTime.utc()
     .minus({ [period]: retention })
@@ -175,7 +209,9 @@ async function validateMutableDataAmount(device: IDevice) {
   if (device.type === "mutable") {
     const amount = await getDeviceDataAmount(device.id);
     if (amount >= LIMIT_DATA_ON_MUTABLE) {
-      throw new Error(`The device has reached the limit of ${LIMIT_DATA_ON_MUTABLE} data registers`);
+      throw new Error(
+        `The device has reached the limit of ${LIMIT_DATA_ON_MUTABLE} data registers`,
+      );
     }
   }
 }
@@ -187,7 +223,11 @@ async function validateMutableDataAmount(device: IDevice) {
 async function validateImmutableTimeRange(device: IDevice, items: any) {
   for (const item of items) {
     if (device.type === "immutable" && device.chunk_period) {
-      const outOfRage = isImmutableTimeOutOfRange(item.time, device.chunk_period, device.chunk_retention || 0);
+      const outOfRage = isImmutableTimeOutOfRange(
+        item.time,
+        device.chunk_period,
+        device.chunk_retention || 0,
+      );
 
       if (!outOfRage.isOk) {
         const title = `Time must be between ${outOfRage.startDate} and ${outOfRage.endDate}`;
@@ -238,7 +278,11 @@ async function formatChunkTimestamp(device: IDevice, data: any) {
  * @param {IDevice} device Device object who sent the data.
  * @param {any} data Data to be inserted.
  */
-export const addDeviceDataByDevice = async (device: IDevice, data: any, options?: IDeviceAddDataOptions) => {
+export const addDeviceDataByDevice = async (
+  device: IDevice,
+  data: any,
+  options?: IDeviceAddDataOptions,
+) => {
   if (!device || !device.active) {
     throw new Error("Device not found or inactive");
   }
@@ -266,7 +310,11 @@ export const addDeviceDataByDevice = async (device: IDevice, data: any, options?
 
   await validateImmutableTimeRange(device, items);
 
-  await emitToLiveInspector(device, { title: "Raw Payload", content: data }, options.liveInspectorID);
+  await emitToLiveInspector(
+    device,
+    { title: "Raw Payload", content: data },
+    options.liveInspectorID,
+  );
 
   items = await applyZodDeviceData(items);
   items = await formatChunkTimestamp(device, items);
@@ -315,7 +363,11 @@ async function addDataToQueue(device: IDevice, data: any) {
  * @param {TGenericID} deviceID ID of the device who sent the data.
  * @param {any} data Data to be inserted.
  */
-export async function addDeviceData(deviceID: TGenericID, data: any, options?: { forceDBInsert: boolean }) {
+export async function addDeviceData(
+  deviceID: TGenericID,
+  data: any,
+  options?: { forceDBInsert: boolean },
+) {
   const device = await getDeviceInfo(deviceID);
 
   if (options?.forceDBInsert) {
@@ -336,7 +388,9 @@ export async function editDeviceData(deviceID: TGenericID, data: any[]) {
   const payload = [data].flat();
   const amount = Array.isArray(payload) ? payload.length : 1;
   if (amount > 25) {
-    throw new Error("You have exceeded the maximum number of 25 items in a single request");
+    throw new Error(
+      "You have exceeded the maximum number of 25 items in a single request",
+    );
   }
 
   for (let i = 0; i < payload.length; i++) {
@@ -347,7 +401,12 @@ export async function editDeviceData(deviceID: TGenericID, data: any[]) {
     payload[i] = parsed;
   }
 
-  return await invokeDatabaseFunction("editDeviceData", deviceID, device.id, payload);
+  return await invokeDatabaseFunction(
+    "editDeviceData",
+    deviceID,
+    device.id,
+    payload,
+  );
 }
 
 /**
@@ -355,7 +414,7 @@ export async function editDeviceData(deviceID: TGenericID, data: any[]) {
  */
 export const getDeviceDataByDevice = async (
   device: IDevice,
-  query?: IDeviceDataQuery
+  query?: IDeviceDataQuery,
 ): Promise<IDeviceData[] | number> => {
   if (!query) {
     query = {};
@@ -364,66 +423,143 @@ export const getDeviceDataByDevice = async (
   query = zDeviceDataQuery.parse(query) as IDeviceDataQuery;
 
   if (device.type === "immutable" && query.ids?.length) {
-    throw new Error("Filter using ID(s) is not supported on Immutable Storage Type");
+    throw new Error(
+      "Filter using ID(s) is not supported on Immutable Storage Type",
+    );
   }
 
   if (query.query === "count") {
-    return await invokeDatabaseFunction("getDeviceDataCount", device.id, device.type, query);
-  }if (query.query === "avg") {
-    await validateMonthRange(query);
-    return await invokeDatabaseFunction("getDeviceDataAvg", device.id, device.type, query);
-  }if (query.query === "sum") {
-    await validateMonthRange(query);
-    return await invokeDatabaseFunction("getDeviceDataSum", device.id, device.type, query);
+    return await invokeDatabaseFunction(
+      "getDeviceDataCount",
+      device.id,
+      device.type,
+      query,
+    );
   }
-    let response: any[] = [];
+  if (query.query === "avg") {
+    await validateMonthRange(query);
+    return await invokeDatabaseFunction(
+      "getDeviceDataAvg",
+      device.id,
+      device.type,
+      query,
+    );
+  }
+  if (query.query === "sum") {
+    await validateMonthRange(query);
+    return await invokeDatabaseFunction(
+      "getDeviceDataSum",
+      device.id,
+      device.type,
+      query,
+    );
+  }
+  let response: any[] = [];
 
-    if (!query.query || query.query === "defaultQ") {
-      response = await invokeDatabaseFunction("getDeviceDataDefaultQ", device.id, device.type, query);
-    } else if (query.query === "last_value") {
-      response = await invokeDatabaseFunction("getDeviceDataLastValue", device.id, device.type, query);
-    } else if (query.query === "last_location") {
-      response = await invokeDatabaseFunction("getDeviceDataLastLocation", device.id, device.type, query);
-    } else if (query.query === "last_item") {
-      response = await invokeDatabaseFunction("getDeviceDataLastItem", device.id, device.type, query);
-    } else if (query.query === "last_insert") {
-      response = await invokeDatabaseFunction("getDeviceDataLastInsert", device.id, device.type, query);
-    } else if (query.query === "first_value") {
-      response = await invokeDatabaseFunction("getDeviceDataFirstValue", device.id, device.type, query);
-    } else if (query.query === "first_location") {
-      response = await invokeDatabaseFunction("getDeviceDataFirstLocation", device.id, device.type, query);
-    } else if (query.query === "first_item") {
-      response = await invokeDatabaseFunction("getDeviceDataFirstItem", device.id, device.type, query);
-    } else if (query.query === "first_insert") {
-      response = await invokeDatabaseFunction("getDeviceDataFirstInsert", device.id, device.type, query);
-    } else if (query.query === "min") {
-      await validateMonthRange(query);
-      response = await invokeDatabaseFunction("getDeviceDataMin", device.id, device.type, query);
-    } else if (query.query === "max") {
-      await validateMonthRange(query);
-      response = await invokeDatabaseFunction("getDeviceDataMax", device.id, device.type, query);
+  if (!query.query || query.query === "defaultQ") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataDefaultQ",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "last_value") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataLastValue",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "last_location") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataLastLocation",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "last_item") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataLastItem",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "last_insert") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataLastInsert",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "first_value") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataFirstValue",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "first_location") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataFirstLocation",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "first_item") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataFirstItem",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "first_insert") {
+    response = await invokeDatabaseFunction(
+      "getDeviceDataFirstInsert",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "min") {
+    await validateMonthRange(query);
+    response = await invokeDatabaseFunction(
+      "getDeviceDataMin",
+      device.id,
+      device.type,
+      query,
+    );
+  } else if (query.query === "max") {
+    await validateMonthRange(query);
+    response = await invokeDatabaseFunction(
+      "getDeviceDataMax",
+      device.id,
+      device.type,
+      query,
+    );
+  }
+
+  for (let i = 0; i < response.length; i++) {
+    response[i].device = device.id;
+    response[i].group = response[i].group || response[i].serie;
+    response[i] = removeNullValues(response[i]);
+    if (!query.details) {
+      response[i].created_at = undefined;
     }
+  }
 
-    for (let i = 0; i < response.length; i++) {
-      response[i].device = device.id;
-      response[i].group = response[i].group || response[i].serie;
-      response[i] = removeNullValues(response[i]);
-      if (!query.details) {
-        response[i].created_at = undefined;
-      }
-    }
+  let items: any = await z.array(zDeviceData).parseAsync(response);
+  items = await z.array(zDeviceData).parseAsync(items);
 
-    let items: any = await z.array(zDeviceData).parseAsync(response);
-    items = await z.array(zDeviceData).parseAsync(items);
+  await addStatistic({ output: items.length });
 
-    await addStatistic({ output: items.length });
-
-    return items;
+  return items;
 };
 
 /**
  */
-export const getDeviceData = async (id: TGenericID, query?: IDeviceDataQuery) => {
+export const getDeviceData = async (
+  id: TGenericID,
+  query?: IDeviceDataQuery,
+) => {
   const device = await getDeviceInfo(id);
   return await getDeviceDataByDevice(device, query);
 };
@@ -432,7 +568,10 @@ export const getDeviceData = async (id: TGenericID, query?: IDeviceDataQuery) =>
  * Deletes data from a device.
  * @returns {number} The amount of data deleted from the device.
  */
-export async function deleteDeviceData(id: TGenericID, query?: IDeviceDataQuery): Promise<number> {
+export async function deleteDeviceData(
+  id: TGenericID,
+  query?: IDeviceDataQuery,
+): Promise<number> {
   const device = await getDeviceInfo(id);
   if (device.type === "immutable") {
     throw new Error("Data in immutable devices cannot be deleted");
@@ -458,9 +597,13 @@ async function validateMonthRange(query: IDeviceDataQuery) {
 
   const startDate = query.start_date as Date;
   const endDate = query.end_date || new Date();
-  const diff = DateTime.fromJSDate(endDate).diff(DateTime.fromJSDate(startDate), "months").toObject();
+  const diff = DateTime.fromJSDate(endDate)
+    .diff(DateTime.fromJSDate(startDate), "months")
+    .toObject();
   const value = diff.months || 0;
   if (value > MAXIMUM_MONTH_RANGE) {
-    throw new Error(`The maximum range for ${query.query} is 1 month between start_end and end_date`);
+    throw new Error(
+      `The maximum range for ${query.query} is 1 month between start_end and end_date`,
+    );
   }
 }

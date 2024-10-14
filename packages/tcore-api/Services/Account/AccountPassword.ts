@@ -1,4 +1,7 @@
-import { scrypt as scryptNoPromise, randomBytes as randomBytesNoPromise } from "node:crypto";
+import {
+  randomBytes as randomBytesNoPromise,
+  scrypt as scryptNoPromise,
+} from "node:crypto";
 import { promisify } from "node:util";
 
 const scrypt = promisify(scryptNoPromise);
@@ -22,7 +25,10 @@ async function encryptAccountPassword(password: string): Promise<string> {
 /**
  * Compares a plain text password and a hashed password.
  */
-async function compareAccountPasswordHash(password: string | undefined, hash: string): Promise<boolean> {
+async function compareAccountPasswordHash(
+  password: string | undefined,
+  hash: string,
+): Promise<boolean> {
   if (typeof password !== "string" || password.length > 100) {
     return Promise.reject("Password should be less than 100 character");
   }

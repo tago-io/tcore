@@ -1,5 +1,5 @@
-import { ITag, TDatabaseGetTagKeysType } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { ITag, TDatabaseGetTagKeysType } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves all the tag keys of a resource type.

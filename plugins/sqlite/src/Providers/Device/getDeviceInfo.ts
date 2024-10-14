@@ -1,11 +1,16 @@
-import { IDevice, TGenericID } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { IDevice, TGenericID } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves all the information of a device.
  */
 async function getDeviceInfo(deviceID: TGenericID): Promise<IDevice | null> {
-  const response = await knexClient.select().select("*").from("device").where("id", deviceID).first();
+  const response = await knexClient
+    .select()
+    .select("*")
+    .from("device")
+    .where("id", deviceID)
+    .first();
 
   if (response) {
     response.active = Boolean(response.active);

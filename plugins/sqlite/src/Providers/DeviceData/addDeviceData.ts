@@ -1,5 +1,9 @@
-import { IDatabaseDeviceDataCreate, TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
+import type {
+  IDatabaseDeviceDataCreate,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
 
 /**
  * Adds a data item into a device.
@@ -7,7 +11,7 @@ import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
 async function addDeviceData(
   deviceID: TGenericID,
   type: TDeviceType,
-  data: IDatabaseDeviceDataCreate[]
+  data: IDatabaseDeviceDataCreate[],
 ): Promise<void> {
   const client = await getDeviceConnection(deviceID, type);
 

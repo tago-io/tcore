@@ -1,6 +1,10 @@
 import type { Application } from "express";
 import { getPlatformAndArch } from "../Helpers/Platform.ts";
-import { getComputerUsage, getNetworkInfo, getOSInfo } from "../Services/Hardware.ts";
+import {
+  getComputerUsage,
+  getNetworkInfo,
+  getOSInfo,
+} from "../Services/Hardware.ts";
 import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**

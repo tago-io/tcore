@@ -1,10 +1,16 @@
-import { IDatabaseEditActionData, TGenericID } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type {
+  IDatabaseEditActionData,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Edits an action.
  */
-async function editAction(actionID: TGenericID, data: IDatabaseEditActionData): Promise<void> {
+async function editAction(
+  actionID: TGenericID,
+  data: IDatabaseEditActionData,
+): Promise<void> {
   const object = { ...data };
 
   if (object.trigger) {

@@ -1,17 +1,32 @@
 import fs from "node:fs";
 import path from "node:path";
-import md5 from "md5";
-import type { IPlugin, TGenericID, TPluginType, IPluginList, IPluginListItem, ISettings } from "@tago-io/tcore-sdk/types";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import type {
+  IPlugin,
+  IPluginList,
+  IPluginListItem,
+  ISettings,
+  TGenericID,
+  TPluginType,
+} from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
+import md5 from "md5";
 import semver from "semver";
+import {
+  DEV_BUILT_IN_PLUGINS,
+  plugins,
+  startPluginAndHandleErrors,
+} from "../Plugins/Host.ts";
 import type Module from "../Plugins/Module/Module.ts";
-import { DEV_BUILT_IN_PLUGINS, plugins, startPluginAndHandleErrors } from "../Plugins/Host.ts";
 import Plugin from "../Plugins/Plugin/Plugin.ts";
 import { io } from "../Socket/SocketServer.ts";
-import { getMainSettings, getPluginSettings, setMainSettings } from "./Settings.ts";
+import {
+  getMainSettings,
+  getPluginSettings,
+  setMainSettings,
+} from "./Settings.ts";
 import { getVersion } from "./System.ts";
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
 
 interface IPluginPackage {
   name: string;
@@ -99,7 +114,9 @@ export async function listPluginFolders(): Promise<string[]> {
 
   if (customPluginsFolders && customPluginsFolders.length > 0) {
     for (const customFolder of customPluginsFolders) {
-      const hasPackage = await Plugin.getPackageAsync(customFolder).catch(() => null);
+      const hasPackage = await Plugin.getPackageAsync(customFolder).catch(
+        () => null,
+      );
       if (hasPackage) {
         plugins.push(customFolder);
       }
@@ -118,10 +135,15 @@ export async function listPluginFolders(): Promise<string[]> {
   return plugins;
 }
 
-async function getInstalledInsidePlugins(plugins: string[], settings: ISettings) {
+async function getInstalledInsidePlugins(
+  plugins: string[],
+  settings: ISettings,
+) {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
+  const insidePlugins = await fs.promises.readdir(
+    path.join(__dirname, "../../..", "plugins"),
+  );
   for (const folder of insidePlugins) {
     const fullPath = path.join(__dirname, "../../..", "plugins", folder);
     const getPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
@@ -129,12 +151,20 @@ async function getInstalledInsidePlugins(plugins: string[], settings: ISettings)
     if (!getPackage) {
       continue;
     }
-    const isInstalled = settings.installed_plugins?.includes(md5(getPackage.name));
-    const isInstalledDatabasePlugin = settings.database_plugin?.split(":")[0] === md5(getPackage.name);
+    const isInstalled = settings.installed_plugins?.includes(
+      md5(getPackage.name),
+    );
+    const isInstalledDatabasePlugin =
+      settings.database_plugin?.split(":")[0] === md5(getPackage.name);
     const isDatabase = getPackage?.tcore?.types?.includes("database");
     const isStore = getPackage?.tcore?.store;
 
-    if (isInstalled || isInstalledDatabasePlugin || (isDatabase && !settings.database_plugin) || isStore) {
+    if (
+      isInstalled ||
+      isInstalledDatabasePlugin ||
+      (isDatabase && !settings.database_plugin) ||
+      isStore
+    ) {
       plugins.push(fullPath);
     }
   }
@@ -171,11 +201,15 @@ export async function getPluginList(): Promise<any> {
 export async function getAllInsidePlugins() {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = dirname(__filename);
-  const insidePlugins = await fs.promises.readdir(path.join(__dirname, "../../..", "plugins"));
+  const insidePlugins = await fs.promises.readdir(
+    path.join(__dirname, "../../..", "plugins"),
+  );
   const list: IPluginPackage[] = [];
   for (const folder of insidePlugins) {
     const fullPath = path.join(__dirname, "../../..", "plugins", folder);
-    const pluginPackage = await Plugin.getPackageAsync(fullPath).catch(() => null);
+    const pluginPackage = await Plugin.getPackageAsync(fullPath).catch(
+      () => null,
+    );
 
     if (pluginPackage) {
       const isStore = pluginPackage?.tcore?.store;
@@ -185,7 +219,10 @@ export async function getAllInsidePlugins() {
           id: md5(pluginPackage.name),
           version: pluginPackage.version,
           short_description: pluginPackage.tcore.short_description,
-          full_description_url: await Plugin.returnFullDescription(fullPath, pluginPackage.tcore.full_description),
+          full_description_url: await Plugin.returnFullDescription(
+            fullPath,
+            pluginPackage.tcore.full_description,
+          ),
           logo_url: `/images/${md5(pluginPackage.name)}/icon`,
           fullPath: fullPath,
           icon: pluginPackage.tcore.icon,
@@ -249,7 +286,9 @@ export async function deactivatePlugin(pluginID: string) {
   const settings = await getMainSettings();
 
   if (settings.installed_plugins?.includes(pluginID)) {
-    settings.installed_plugins = settings.installed_plugins.filter((id) => id !== pluginID);
+    settings.installed_plugins = settings.installed_plugins.filter(
+      (id) => id !== pluginID,
+    );
     await setMainSettings(settings);
     const plugins = await getAllInsidePlugins();
     const plugin = plugins.find((x: any) => x.id === pluginID);
@@ -278,7 +317,9 @@ export async function addExternalPlugin(folder: string) {
   if (!settings.custom_plugins.includes(folder)) {
     settings.custom_plugins.push(folder);
     await setMainSettings(settings);
-    const pluginPackage = await Plugin.getPackageAsync(folder).catch(() => null);
+    const pluginPackage = await Plugin.getPackageAsync(folder).catch(
+      () => null,
+    );
     if (!pluginPackage) {
       return Promise.reject("Invalid Plugin");
     }
@@ -316,7 +357,9 @@ export async function getAllPluginList(): Promise<any> {
 
   if (settings.custom_plugins) {
     for (const customPluginFolder of settings.custom_plugins) {
-      const pkg = await Plugin.getPackageAsync(customPluginFolder).catch(() => null);
+      const pkg = await Plugin.getPackageAsync(customPluginFolder).catch(
+        () => null,
+      );
       if (!pkg) {
         continue;
       }
@@ -345,7 +388,11 @@ export async function getAllPluginList(): Promise<any> {
   return result;
 }
 
-export async function showModuleMessage(pluginID: string, moduleID: string, message?: any) {
+export async function showModuleMessage(
+  pluginID: string,
+  moduleID: string,
+  message?: any,
+) {
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);
   if (module) {
@@ -363,7 +410,8 @@ export async function checkMainDatabaseModuleHook() {
   const split = String(mainSettings.database_plugin).split(":");
   const plugin = plugins.get(split[0]);
   const module = plugin?.modules?.get(split[1]);
-  const mainDatabaseIsLoaded = mainSettings.database_plugin && plugin && module?.state === "started";
+  const mainDatabaseIsLoaded =
+    mainSettings.database_plugin && plugin && module?.state === "started";
   if (mainDatabaseIsLoaded) {
     triggerHooks("onMainDatabaseModuleLoaded");
   }
@@ -473,7 +521,9 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
   const settings = await getPluginSettings(id);
 
   const modules = [...plugin.modules.values()].map((module) => {
-    const moduleSettings = settings?.modules?.find((y) => y.id === module.setup.id);
+    const moduleSettings = settings?.modules?.find(
+      (y) => y.id === module.setup.id,
+    );
     const moduleValues = moduleSettings?.values || {};
 
     const moduleFields = flattenConfigFields(module.setup.configs || []);
@@ -481,9 +531,15 @@ export async function getPluginInfo(id: TGenericID): Promise<IPlugin | null> {
       // we override the default value of the config field to use the last
       // inserted value or the actual default from the module configuration
       if ("field" in field) {
-        if (moduleValues[field.field] !== null && moduleValues[field.field] !== undefined) {
+        if (
+          moduleValues[field.field] !== null &&
+          moduleValues[field.field] !== undefined
+        ) {
           (field as any).defaultValue = moduleValues[field.field];
-        } else if ((field as any).defaultValue === undefined || (field as any).defaultValue === null) {
+        } else if (
+          (field as any).defaultValue === undefined ||
+          (field as any).defaultValue === null
+        ) {
           (field as any).defaultValue = "";
         }
       }
@@ -565,7 +621,9 @@ export async function getMainQueueModule(): Promise<Module | null> {
 /**
  * TODO
  */
-export async function getMainFilesystemModule(): Promise<Module | null | undefined> {
+export async function getMainFilesystemModule(): Promise<
+  Module | null | undefined
+> {
   const settings = await getMainSettings();
   const pluginID = String(settings.filesystem_plugin).split(":")?.[0];
   const moduleID = String(settings.filesystem_plugin).split(":")?.[1];
@@ -616,7 +674,11 @@ export function getPluginModuleInfo(pluginID: string, moduleID: string): any {
 /**
  * Invokes a plugin module's onCall function.
  */
-export async function invokeOnCallModule(pluginID: string, moduleID: string, data?: any) {
+export async function invokeOnCallModule(
+  pluginID: string,
+  moduleID: string,
+  data?: any,
+) {
   const plugin = plugins.get(pluginID);
   const module = plugin?.modules.get(moduleID);
   if (!module) {

@@ -1,6 +1,6 @@
 import os from "node:os";
-import si from "systeminformation";
 import type { IComputerUsage, INetworkInfo } from "@tago-io/tcore-sdk/types";
+import si from "systeminformation";
 import { formatBytes } from "../Helpers/formatBytes.ts";
 
 /**
@@ -110,7 +110,9 @@ export async function getSwapUsage(): Promise<IComputerUsage | undefined> {
 export async function getNetworkInfo(): Promise<INetworkInfo[]> {
   const stats = await si.networkStats();
   const interfaces = await si.networkInterfaces();
-  const interfacesWithIP = [...interfaces.filter((x) => x.ip4 && x.ip4 !== "127.0.0.1")];
+  const interfacesWithIP = [
+    ...interfaces.filter((x) => x.ip4 && x.ip4 !== "127.0.0.1"),
+  ];
 
   return interfacesWithIP.map((x) => {
     const stat = stats.find((y) => y.iface === x.iface);
@@ -181,7 +183,13 @@ export async function getBatteryUsage(): Promise<IComputerUsage | undefined> {
  * Some statistics may not be available on all systems.
  */
 export async function getComputerUsage(): Promise<IComputerUsage[]> {
-  const usages = await Promise.all([getCPUUsage(), getRAMUsage(), getSwapUsage(), getBatteryUsage(), getDiskUsages()]);
+  const usages = await Promise.all([
+    getCPUUsage(),
+    getRAMUsage(),
+    getSwapUsage(),
+    getBatteryUsage(),
+    getDiskUsages(),
+  ]);
   const filtered = usages.flat().filter((x) => x) as IComputerUsage[];
   return filtered;
 }

@@ -1,4 +1,4 @@
-import { knexClient } from "../../knex";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves the amount of accounts registered.

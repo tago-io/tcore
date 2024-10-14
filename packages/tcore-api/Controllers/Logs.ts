@@ -13,7 +13,11 @@ const zURLParamsID = z.object({
 /**
  * Retrieves all the information of a single log channel.
  */
-class GetLogChannelInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetLogChannelInfo extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,

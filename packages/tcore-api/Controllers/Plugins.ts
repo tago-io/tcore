@@ -1,30 +1,36 @@
-import path from "node:path";
 import os from "node:os";
-import type { Request, Response, Application } from "express";
-import { z } from "zod";
-import { type IActionTypeModuleSetup, zPluginType } from "@tago-io/tcore-sdk/types";
-import multer from "multer";
-import { getMainSettings, setPluginModulesSettings } from "../Services/Settings.ts";
-import { plugins } from "../Plugins/Host.ts";
+import path from "node:path";
 import {
-  getPluginInfo,
-  getLoadedPluginList,
-  getModuleList,
-  startPluginModule,
-  stopPluginModule,
-  enablePlugin,
+  type IActionTypeModuleSetup,
+  zPluginType,
+} from "@tago-io/tcore-sdk/types";
+import type { Application, Request, Response } from "express";
+import multer from "multer";
+import { z } from "zod";
+import { plugins } from "../Plugins/Host.ts";
+import { uninstallPlugin } from "../Plugins/Uninstall.ts";
+import {
+  activatePlugin,
+  addExternalPlugin,
+  deactivatePlugin,
   disablePlugin,
-  startPlugin,
-  stopPlugin,
-  reloadPlugin,
-  invokeOnCallModule,
+  enablePlugin,
   getAllInsidePlugins,
   getAllInstalledPlugins,
-  activatePlugin,
-  deactivatePlugin,
-  addExternalPlugin,
+  getLoadedPluginList,
+  getModuleList,
+  getPluginInfo,
+  invokeOnCallModule,
+  reloadPlugin,
+  startPlugin,
+  startPluginModule,
+  stopPlugin,
+  stopPluginModule,
 } from "../Services/Plugins.ts";
-import { uninstallPlugin } from "../Plugins/Uninstall.ts";
+import {
+  getMainSettings,
+  setPluginModulesSettings,
+} from "../Services/Settings.ts";
 import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
@@ -52,7 +58,9 @@ const zBodyFolderParser = z.object({
  * Configuration for query strings of the uninstall route.
  */
 const zUninstallQueryString = z.object({
-  keep_data: z.preprocess((e) => e === "true" || e === "1", z.boolean()).optional(),
+  keep_data: z
+    .preprocess((e) => e === "true" || e === "1", z.boolean())
+    .optional(),
 });
 
 type IURLParamsID = z.infer<typeof zURLParamsID>;
@@ -60,7 +68,11 @@ type IURLParamsID = z.infer<typeof zURLParamsID>;
 /**
  * Lists all the database plugins.
  */
-class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQueryString>, IURLParamsID> {
+class UninstallPlugin extends APIController<
+  void,
+  z.infer<typeof zUninstallQueryString>,
+  IURLParamsID
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -76,7 +88,11 @@ class UninstallPlugin extends APIController<void, z.infer<typeof zUninstallQuery
 /**
  * Lists all modules or modules from a specific type.
  */
-class ListModules extends APIController<void, z.infer<typeof zQueryStringType>, void> {
+class ListModules extends APIController<
+  void,
+  z.infer<typeof zQueryStringType>,
+  void
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zQueryStringType,
@@ -120,7 +136,11 @@ class InvokeOnCallModule extends APIController<void, void, any> {
   };
 
   public async main() {
-    const response = await invokeOnCallModule(this.urlParams.pluginID, this.urlParams.moduleID, this.bodyParams);
+    const response = await invokeOnCallModule(
+      this.urlParams.pluginID,
+      this.urlParams.moduleID,
+      this.bodyParams,
+    );
     this.body = response;
   }
 }
@@ -345,7 +365,11 @@ class DeactivatePlugin extends APIController<void, void, IURLParamsID> {
 /**
  * Add an external plugin
  */
-class AddExternalPlugin extends APIController<z.infer<typeof zBodyFolderParser>, void, void> {
+class AddExternalPlugin extends APIController<
+  z.infer<typeof zBodyFolderParser>,
+  void,
+  void
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zBodyParser: zBodyFolderParser,
@@ -389,11 +413,14 @@ export async function resolvePluginImage(req: Request, res: Response) {
       // icon for the action type
       const module = plugin.modules.get(identifier);
       const option = (module?.setup as any as IActionTypeModuleSetup)?.option;
-      fullImagePath = option?.icon?.replace("$PLUGIN_FOLDER$", plugin.folder) || "";
+      fullImagePath =
+        option?.icon?.replace("$PLUGIN_FOLDER$", plugin.folder) || "";
     }
   } else {
     const pluginsStore = await getAllInsidePlugins();
-    const pluginStore = pluginsStore.find((x: any) => x.id === req.params.plugin);
+    const pluginStore = pluginsStore.find(
+      (x: any) => x.id === req.params.plugin,
+    );
     if (pluginStore) {
       if (type === "icon") {
         fullImagePath = path.join(pluginStore.fullPath, pluginStore.icon);
@@ -419,7 +446,9 @@ export async function resolvePluginImage2(req: Request, res: Response) {
   const plugin = plugins.get(pluginID);
   if (!plugin) {
     const pluginsStore = await getAllInsidePlugins();
-    const pluginStore = pluginsStore.find((x: any) => x.id === req.params.plugin);
+    const pluginStore = pluginsStore.find(
+      (x: any) => x.id === req.params.plugin,
+    );
     if (pluginStore) {
       const imgPath = split.join(path.sep);
       const fullImagePath = path.join(pluginStore.fullPath, imgPath);
@@ -443,7 +472,9 @@ export async function resolvePluginImage2(req: Request, res: Response) {
  * Exports the plugin routes.
  */
 export default (app: Application) => {
-  const upload = multer({ dest: path.join(os.tmpdir(), "tcore-plugin-download") });
+  const upload = multer({
+    dest: path.join(os.tmpdir(), "tcore-plugin-download"),
+  });
   app.post("/plugin/upload", upload.single("plugin"), warm(UploadPlugin));
 
   app.get("/module", warm(ListModules));

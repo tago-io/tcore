@@ -1,14 +1,13 @@
+import {
+  type IAnalysisCreate,
+  type IAnalysisEdit,
+  type IAnalysisListQuery,
+  zAnalysisCreate,
+  zAnalysisEdit,
+  zAnalysisListQuery,
+} from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
-import {
-  zAnalysisListQuery,
-  type IAnalysisListQuery,
-  type IAnalysisCreate,
-  zAnalysisCreate,
-  type IAnalysisEdit,
-  zAnalysisEdit,
-} from "@tago-io/tcore-sdk/types";
-import { runAnalysis } from "../Services/AnalysisCodeExecution.ts";
 import {
   createAnalysis,
   deleteAnalysis,
@@ -17,6 +16,7 @@ import {
   getAnalysisInfo,
   getAnalysisList,
 } from "../Services/Analysis.ts";
+import { runAnalysis } from "../Services/AnalysisCodeExecution.ts";
 import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
@@ -44,7 +44,11 @@ class ListAnalyses extends APIController<void, IAnalysisListQuery, void> {
 /**
  * Retrieves all the information of a single analysis.
  */
-class GetAnalysisInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetAnalysisInfo extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -59,7 +63,11 @@ class GetAnalysisInfo extends APIController<void, void, z.infer<typeof zURLParam
 /**
  * Deletes a single analysis.
  */
-class DeleteAnalysis extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class DeleteAnalysis extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -73,7 +81,11 @@ class DeleteAnalysis extends APIController<void, void, z.infer<typeof zURLParams
 /**
  * Deletes all logs of an analysis.
  */
-class DeleteAnalysisLogs extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class DeleteAnalysisLogs extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -87,7 +99,11 @@ class DeleteAnalysisLogs extends APIController<void, void, z.infer<typeof zURLPa
 /**
  * Runs a single analysis.
  */
-class RunAnalysis extends APIController<any, void, z.infer<typeof zURLParamsID>> {
+class RunAnalysis extends APIController<
+  any,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -102,7 +118,11 @@ class RunAnalysis extends APIController<any, void, z.infer<typeof zURLParamsID>>
 /**
  * Edits the information of a single analysis.
  */
-class EditAnalysis extends APIController<IAnalysisEdit, void, z.infer<typeof zURLParamsID>> {
+class EditAnalysis extends APIController<
+  IAnalysisEdit,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zAnalysisEdit,

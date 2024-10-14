@@ -1,8 +1,15 @@
+import { type IAccountCreate, zAccountCreate } from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
-import { type IAccountCreate, zAccountCreate } from "@tago-io/tcore-sdk/types";
-import { createAccount, getAccountByToken, login } from "../../Services/Account/Account.ts";
-import APIController, { type ISetupController, warm } from "../APIController.ts";
+import {
+  createAccount,
+  getAccountByToken,
+  login,
+} from "../../Services/Account/Account.ts";
+import APIController, {
+  type ISetupController,
+  warm,
+} from "../APIController.ts";
 
 const zAccountLoginBody = z.object({
   username: z.string(),
@@ -12,7 +19,11 @@ const zAccountLoginBody = z.object({
 /**
  * Lists all the database plugins.
  */
-class AccountLogin extends APIController<z.infer<typeof zAccountLoginBody>, void, void> {
+class AccountLogin extends APIController<
+  z.infer<typeof zAccountLoginBody>,
+  void,
+  void
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "any", resource: "anonymous" }],
     zBodyParser: zAccountLoginBody,

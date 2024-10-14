@@ -23,14 +23,17 @@ function sortFiles(children: IPluginFilesystemItem[]) {
 
 /**
  */
-export async function getFileList(folderPath: string, preferLocalFs?: boolean): Promise<IPluginFilesystemItem[]> {
+export async function getFileList(
+  folderPath: string,
+  preferLocalFs?: boolean,
+): Promise<IPluginFilesystemItem[]> {
   if (preferLocalFs) {
     const localFilesystem = getModuleList("filesystem")[0];
     const result = await localFilesystem.invoke("resolveFolder", folderPath);
     sortFiles(result as IPluginFilesystemItem[]);
     return result as IPluginFilesystemItem[];
   }
-    const result = await invokeFilesystemFunction("resolveFolder", folderPath);
-    sortFiles(result);
-    return result;
+  const result = await invokeFilesystemFunction("resolveFolder", folderPath);
+  sortFiles(result);
+  return result;
 }

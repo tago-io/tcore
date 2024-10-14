@@ -1,14 +1,20 @@
 import {
-  zActionListQuery,
-  type IActionListQuery,
-  type IActionEdit,
-  zActionEdit,
   type IActionCreate,
+  type IActionEdit,
+  type IActionListQuery,
   zActionCreate,
+  zActionEdit,
+  zActionListQuery,
 } from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
-import { createAction, deleteAction, editAction, getActionInfo, getActionList } from "../Services/Action.ts";
+import {
+  createAction,
+  deleteAction,
+  editAction,
+  getActionInfo,
+  getActionList,
+} from "../Services/Action.ts";
 import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 /**
@@ -36,7 +42,11 @@ class ListActions extends APIController<void, IActionListQuery, void> {
 /**
  * Retrieves all the information of a single action.
  */
-class GetActionInfo extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetActionInfo extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -51,7 +61,11 @@ class GetActionInfo extends APIController<void, void, z.infer<typeof zURLParamsI
 /**
  * Deletes a single action.
  */
-class DeleteAction extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class DeleteAction extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -65,7 +79,11 @@ class DeleteAction extends APIController<void, void, z.infer<typeof zURLParamsID
 /**
  * Edits the information of a single action.
  */
-class EditAction extends APIController<IActionEdit, void, z.infer<typeof zURLParamsID>> {
+class EditAction extends APIController<
+  IActionEdit,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: zActionEdit,

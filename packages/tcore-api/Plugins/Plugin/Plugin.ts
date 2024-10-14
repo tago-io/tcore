@@ -1,16 +1,20 @@
+import fs from "node:fs";
 /* eslint-disable no-unused-vars */
 import path from "node:path";
-import fs from "node:fs";
-import type { IPluginPublisher, TPluginState, TPluginType } from "@tago-io/tcore-sdk/types";
+import type {
+  IPluginPublisher,
+  TPluginState,
+  TPluginType,
+} from "@tago-io/tcore-sdk/types";
 import md5 from "md5";
 import { logError } from "../../Helpers/log.ts";
 import { setPluginDisabledSettings } from "../../Services/Settings.ts";
 import { io } from "../../Socket/SocketServer.ts";
+import { DEV_BUILT_IN_PLUGINS } from "../Host.ts";
 import type M from "../Module/Module.ts";
+import { generatePluginID } from "../PluginID.ts";
 import Validator from "../Validator/Validator.ts";
 import Worker from "../Worker/Worker.ts";
-import { generatePluginID } from "../PluginID.ts";
-import { DEV_BUILT_IN_PLUGINS } from "../Host.ts";
 
 /**
  */
@@ -130,7 +134,10 @@ class Plugin {
       // plugin will be destroyed forcefully
       const rejectTimeout = setTimeout(() => {
         this.stop(true);
-        logError("api", `Plugin "${this.tcoreName}" exceeded the shutdown timeout and was terminated.`);
+        logError(
+          "api",
+          `Plugin "${this.tcoreName}" exceeded the shutdown timeout and was terminated.`,
+        );
       }, timeout);
 
       for (const module of this.modules.values()) {
@@ -229,7 +236,10 @@ class Plugin {
 
   /**
    */
-  public static async returnFullDescription(folder: string, relativePath: string) {
+  public static async returnFullDescription(
+    folder: string,
+    relativePath: string,
+  ) {
     const fullPath = path.join(folder, relativePath);
     const data = fs.readFileSync(fullPath, "utf8");
     if (!data) {

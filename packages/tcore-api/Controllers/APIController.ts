@@ -1,10 +1,10 @@
 import type { IncomingHttpHeaders } from "node:http";
+import type { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
 import type express from "express";
 import type { Request, Response } from "express";
 import type { ZodTypeAny } from "zod";
-import type { IAccountToken, IDeviceToken } from "@tago-io/tcore-sdk/types";
-import { getDeviceByToken, getDeviceToken } from "../Services/Device.ts";
 import { getAccountToken } from "../Services/Account/Account.ts";
+import { getDeviceByToken, getDeviceToken } from "../Services/Device.ts";
 import { checkMasterPassword } from "../Services/Settings.ts";
 
 type TResourceType = "device" | "account";
@@ -29,7 +29,11 @@ interface ISetupController {
 
 /**
  */
-abstract class APIController<BodyParams = any, QueryStringParams = any, URLParams = any> {
+abstract class APIController<
+  BodyParams = any,
+  QueryStringParams = any,
+  URLParams = any,
+> {
   /**
    * Status for Request with Success [default=200].
    */
@@ -83,9 +87,14 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
   };
 
   // eslint-disable-next-line no-unused-vars
-  constructor(protected readonly req: Request, protected readonly res: Response) {
+  constructor(
+    protected readonly req: Request,
+    protected readonly res: Response,
+  ) {
     this.files = (req as any).files;
-    this.requestIP = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress);
+    this.requestIP = String(
+      req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+    );
     this.origin = req.headers.origin || "unknown";
     this.rawToken = this.getToken(req.headers);
 
@@ -112,26 +121,39 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
     try {
       if (this.setup.zBodyParser) {
         errorOn = "Body parameters";
-        this.bodyParams = await this.setup.zBodyParser.parseAsync(this.req.body);
+        this.bodyParams = await this.setup.zBodyParser.parseAsync(
+          this.req.body,
+        );
       }
 
       if (this.setup.zQueryStringParser) {
         errorOn = "Query String parameters";
-        this.queryStringParams = await this.setup.zQueryStringParser.parseAsync(this.req.query);
+        this.queryStringParams = await this.setup.zQueryStringParser.parseAsync(
+          this.req.query,
+        );
       }
 
       if (this.setup.zURLParamsParser) {
         errorOn = "URL parameters";
-        this.urlParams = await this.setup.zURLParamsParser.parseAsync(this.req.params);
+        this.urlParams = await this.setup.zURLParamsParser.parseAsync(
+          this.req.params,
+        );
       }
     } catch (error: any) {
       this.req.statusCode = this.failStatus;
 
       if (error?.flatten) {
         const zodError = error.flatten()?.fieldErrors;
-        this.res.json({ status: false, message: `Error on ${errorOn}`, field_errors: zodError });
+        this.res.json({
+          status: false,
+          message: `Error on ${errorOn}`,
+          field_errors: zodError,
+        });
       } else {
-        this.res.json({ status: false, message: `Internal Error (${Date.now()})` });
+        this.res.json({
+          status: false,
+          message: `Internal Error (${Date.now()})`,
+        });
       }
       return;
     }
@@ -155,7 +177,11 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
     } else {
       if (this.body?.flatten) {
         const zodError = this.body?.flatten()?.fieldErrors;
-        this.res.json({ status: false, message: "Error on object parse", field_errors: zodError });
+        this.res.json({
+          status: false,
+          message: "Error on object parse",
+          field_errors: zodError,
+        });
       } else if (typeof this.body === "string") {
         this.res.json({ status: false, message: String(this.body) });
       } else if (this.body instanceof Error) {
@@ -173,7 +199,9 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
     let accountToken: IAccountToken | null = null;
     let deviceToken: IDeviceToken | null = null;
 
-    const containAnonymousToken = this.setup.allowTokens.some((x) => x.resource === "anonymous");
+    const containAnonymousToken = this.setup.allowTokens.some(
+      (x) => x.resource === "anonymous",
+    );
     if (containAnonymousToken) {
       // valid by default
       return;
@@ -182,14 +210,21 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
     for (const allowed of this.setup.allowTokens || []) {
       if (allowed.resource === "account") {
         if (!accountToken) {
-          accountToken = await getAccountToken(this.rawToken as string).catch(() => null);
+          accountToken = await getAccountToken(this.rawToken as string).catch(
+            () => null,
+          );
         }
-        if (accountToken?.permission === "full" || accountToken?.permission === allowed.permission) {
+        if (
+          accountToken?.permission === "full" ||
+          accountToken?.permission === allowed.permission
+        ) {
           // valid permission
           return;
         }
         if (this.req.headers.masterpassword) {
-          const matches = await checkMasterPassword(this.req.headers.masterpassword as string);
+          const matches = await checkMasterPassword(
+            this.req.headers.masterpassword as string,
+          );
           if (matches) {
             return;
           }
@@ -197,9 +232,14 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
       }
       if (allowed.resource === "device") {
         if (!deviceToken) {
-          deviceToken = await getDeviceToken(this.rawToken as string).catch(() => null);
+          deviceToken = await getDeviceToken(this.rawToken as string).catch(
+            () => null,
+          );
         }
-        if (deviceToken?.permission === "full" || deviceToken?.permission === allowed.permission) {
+        if (
+          deviceToken?.permission === "full" ||
+          deviceToken?.permission === allowed.permission
+        ) {
           // valid permission
           return;
         }
@@ -260,8 +300,14 @@ abstract class APIController<BodyParams = any, QueryStringParams = any, URLParam
 }
 
 // eslint-disable-next-line no-unused-vars
-function warm(APIControllerInstance: { new (...args: any): APIController<any, any, any> }) {
-  return (req: express.Request, res: express.Response, next?: express.NextFunction) => {
+function warm(APIControllerInstance: {
+  new (...args: any): APIController<any, any, any>;
+}) {
+  return (
+    req: express.Request,
+    res: express.Response,
+    next?: express.NextFunction,
+  ) => {
     return new APIControllerInstance(req, res, next);
   };
 }

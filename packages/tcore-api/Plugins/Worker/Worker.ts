@@ -1,15 +1,18 @@
+import EventEmitter from "node:events";
+import fs from "node:fs";
 /* eslint-disable no-unused-vars */
 import path from "node:path";
 import { Worker as WorkerThread } from "node:worker_threads";
-import EventEmitter from "node:events";
-import fs from "node:fs";
 import type { IModuleSetup, IPluginMessage } from "@tago-io/tcore-sdk/types";
 import { nanoid } from "nanoid";
-import { getPluginSettings } from "../../Services/Settings.ts";
-import { getActionList, invokeActionOnTriggerChange } from "../../Services/Action.ts";
 import { log, logError } from "../../Helpers/log.ts";
-import type Plugin from "../Plugin/Plugin.ts";
+import {
+  getActionList,
+  invokeActionOnTriggerChange,
+} from "../../Services/Action.ts";
+import { getPluginSettings } from "../../Services/Settings.ts";
 import Module from "../Module/Module.ts";
+import type Plugin from "../Plugin/Plugin.ts";
 import executePluginRequest from "../executePluginRequest.ts";
 
 /**
@@ -166,8 +169,13 @@ class Worker extends EventEmitter {
 
     // TODO improve
     if (setup.type === "action-trigger") {
-      const actions = await getActionList({ amount: 99899, fields: ["type", "trigger"] }).catch(() => null);
-      const filtered = actions?.filter((x) => x.type === `${this.plugin.id}:${setup.id}`);
+      const actions = await getActionList({
+        amount: 99899,
+        fields: ["type", "trigger"],
+      }).catch(() => null);
+      const filtered = actions?.filter(
+        (x) => x.type === `${this.plugin.id}:${setup.id}`,
+      );
       for (const item of filtered || []) {
         invokeActionOnTriggerChange(item.id, item.type as string, item.trigger);
       }
@@ -222,10 +230,24 @@ class Worker extends EventEmitter {
     const { method, connectionID } = message;
     try {
       const args = [message.params].flat();
-      const params = await executePluginRequest(this.plugin.id, method, ...args);
-      this.worker?.postMessage({ event: "apiMethodResponse", connectionID, method, params });
+      const params = await executePluginRequest(
+        this.plugin.id,
+        method,
+        ...args,
+      );
+      this.worker?.postMessage({
+        event: "apiMethodResponse",
+        connectionID,
+        method,
+        params,
+      });
     } catch (error) {
-      this.worker?.postMessage({ event: "apiMethodResponse", connectionID, method, error });
+      this.worker?.postMessage({
+        event: "apiMethodResponse",
+        connectionID,
+        method,
+        error,
+      });
     }
   }
 }

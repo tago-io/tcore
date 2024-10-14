@@ -1,4 +1,4 @@
-import { knexClient } from "../knex";
+import { knexClient } from "../knex.ts";
 
 /**
  * Applies the `tags` filter.
@@ -21,13 +21,13 @@ function applyTagFilter(query: any, filter: any, resourceName: string) {
           `"${knexClient
             .raw(":value", { value: item.key.replace(/\*/g, "%") })
             .toString()
-            .slice(1, -1)}"`
+            .slice(1, -1)}"`,
         ),
         value: knexClient.raw(
           `"${knexClient
             .raw(":value", { value: item.value.replace(/\*/g, "%") })
             .toString()
-            .slice(1, -1)}"`
+            .slice(1, -1)}"`,
         ),
       });
     } else if (item.key) {

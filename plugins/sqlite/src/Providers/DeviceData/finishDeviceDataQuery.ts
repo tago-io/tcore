@@ -1,12 +1,15 @@
-import { IDeviceData, IDatabaseGetDeviceDataQuery } from "@tago-io/tcore-sdk/types";
-import { Knex } from "knex";
+import type {
+  IDatabaseGetDeviceDataQuery,
+  IDeviceData,
+} from "@tago-io/tcore-sdk/types";
+import type { Knex } from "knex";
 
 /**
  */
 async function finishBucketDataQuery(
   client: Knex,
   knex: Knex.QueryBuilder<any, any>,
-  query: IDatabaseGetDeviceDataQuery
+  query: IDatabaseGetDeviceDataQuery,
 ): Promise<IDeviceData[]> {
   const { start_date, end_date, values, groups, ids } = query;
   let { variables } = query;

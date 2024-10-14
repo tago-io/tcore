@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 import {
   type IAction,
   type IActionCreate,
@@ -21,10 +22,9 @@ import splitColon from "../Helpers/splitColon.ts";
 import { plugins } from "../Plugins/Host.ts";
 import { invokeDatabaseFunction } from "../Plugins/invokeDatabaseFunction.ts";
 import { runAnalysis } from "./AnalysisCodeExecution.ts";
-import { addDeviceData } from "./DeviceData/DeviceData.ts";
 import { getDeviceByToken } from "./Device.ts";
+import { addDeviceData } from "./DeviceData/DeviceData.ts";
 import { getModuleList } from "./Plugins.ts";
-import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
 const { Device } = require("@tago-io/sdk");
 
@@ -34,7 +34,8 @@ const { Device } = require("@tago-io/sdk");
 function fixConditionTriggerValue(type: string, rawValue: any) {
   let value: any;
   if (type === "number") value = Number(rawValue) || 0;
-  else if (type === "boolean") value = rawValue && rawValue !== "false" && rawValue !== "0";
+  else if (type === "boolean")
+    value = rawValue && rawValue !== "false" && rawValue !== "0";
   else value = String(rawValue);
   return value;
 }
@@ -57,7 +58,8 @@ export function getActionTriggers(): any[] {
   const modules = getModuleList("action-trigger");
 
   for (const module of modules) {
-    const option = (module.setup as unknown as IActionTriggerModuleSetup).option;
+    const option = (module.setup as unknown as IActionTriggerModuleSetup)
+      .option;
 
     const type: any = {
       configs: option.configs || [],
@@ -81,7 +83,10 @@ export function getActionTypes(): IActionOption[] {
 
   for (const module of modules) {
     const option = (module.setup as unknown as IActionTypeModuleSetup).option;
-    options.push({ ...option, id: `${module.plugin.id}:${module.setup.id}` } as any);
+    options.push({
+      ...option,
+      id: `${module.plugin.id}:${module.setup.id}`,
+    } as any);
   }
 
   return options;
@@ -90,7 +95,9 @@ export function getActionTypes(): IActionOption[] {
 /**
  * Lists all the actions.
  */
-export const getActionList = async (query: IActionListQuery): Promise<IActionList> => {
+export const getActionList = async (
+  query: IActionListQuery,
+): Promise<IActionList> => {
   const queryParsed = await zActionListQuery.parseAsync(query);
   const response = await invokeDatabaseFunction("getActionList", queryParsed);
   const parsed = await zActionList.parseAsync(response);
@@ -111,21 +118,41 @@ export async function getActionInfo(id: TGenericID): Promise<IAction> {
 
 /**
  */
-export function getConditionTriggerMatchingData(triggers: any[], device: IDevice, data: IDeviceData): boolean {
+export function getConditionTriggerMatchingData(
+  triggers: any[],
+  device: IDevice,
+  data: IDeviceData,
+): boolean {
   for (const trigger of triggers) {
     const itemValue = data.value as any;
 
-    const triggerValue = fixConditionTriggerValue(trigger.value_type, trigger.value);
-    const triggerSecondValue = fixConditionTriggerValue(trigger.value_type, trigger.second_value);
+    const triggerValue = fixConditionTriggerValue(
+      trigger.value_type,
+      trigger.value,
+    );
+    const triggerSecondValue = fixConditionTriggerValue(
+      trigger.value_type,
+      trigger.second_value,
+    );
 
-    const hasTagsMatch = device.tags.some((x) => x.key === trigger.tag_key && x.value === trigger.tag_value);
+    const hasTagsMatch = device.tags.some(
+      (x) => x.key === trigger.tag_key && x.value === trigger.tag_value,
+    );
 
-    if ((device.id === trigger.device || hasTagsMatch) && data.variable === trigger.variable) {
+    if (
+      (device.id === trigger.device || hasTagsMatch) &&
+      data.variable === trigger.variable
+    ) {
       if (trigger.is === "=" && itemValue === triggerValue) return true;
       if (trigger.is === "!" && itemValue !== triggerValue) return true;
       if (trigger.is === "<" && itemValue < triggerValue) return true;
       if (trigger.is === ">" && itemValue > triggerValue) return true;
-      if (trigger.is === "><" && itemValue > triggerValue && itemValue < triggerSecondValue) return true;
+      if (
+        trigger.is === "><" &&
+        itemValue > triggerValue &&
+        itemValue < triggerSecondValue
+      )
+        return true;
       if (trigger.is === "*") return true;
     }
   }
@@ -161,7 +188,10 @@ export async function triggerAction(id: TGenericID, data?: any): Promise<void> {
 /**
  * Triggers an action that redirects data to TagoIO.
  */
-async function triggerActionTagoIOType(action: IAction, data: any): Promise<void> {
+async function triggerActionTagoIOType(
+  action: IAction,
+  data: any,
+): Promise<void> {
   const token = action?.action?.token;
   if (!token) {
     return;
@@ -176,7 +206,10 @@ async function triggerActionTagoIOType(action: IAction, data: any): Promise<void
  * @param {IAction} action The action to be triggered.
  * @param {any} data The data to be passed as parameter to the analyses.
  */
-async function triggerActionPostType(action: IAction, data: any): Promise<void> {
+async function triggerActionPostType(
+  action: IAction,
+  data: any,
+): Promise<void> {
   if (!action?.action?.url) {
     return;
   }
@@ -198,7 +231,10 @@ async function triggerActionPostType(action: IAction, data: any): Promise<void> 
     }
   }
 
-  if (action.action.http_post_fallback_enabled && action.action.fallback_token) {
+  if (
+    action.action.http_post_fallback_enabled &&
+    action.action.fallback_token
+  ) {
     const device = await getDeviceByToken(action.action.fallback_token);
     await addDeviceData(device.id, data);
   }
@@ -209,7 +245,10 @@ async function triggerActionPostType(action: IAction, data: any): Promise<void> 
  * @param {IAction} action The action to be triggered.
  * @param {any} data The data to be passed as parameter to the script.
  */
-async function triggerActionScriptType(action: IAction, data: any): Promise<void> {
+async function triggerActionScriptType(
+  action: IAction,
+  data: any,
+): Promise<void> {
   const script = action?.action?.script || [];
   for (const analysis of script) {
     runAnalysis(analysis, data).catch(() => null);
@@ -221,7 +260,10 @@ async function triggerActionScriptType(action: IAction, data: any): Promise<void
  * @param {IAction} action The action to be triggered.
  * @param {any} data The data to be passed as parameter to the onCall of the action.
  */
-async function triggerActionPluginType(action: IAction, data: any): Promise<void> {
+async function triggerActionPluginType(
+  action: IAction,
+  data: any,
+): Promise<void> {
   const actionObject = action.action;
   if (!actionObject.type?.includes(":")) {
     return;
@@ -238,7 +280,11 @@ async function triggerActionPluginType(action: IAction, data: any): Promise<void
 /**
  * Invokes the `onTriggerChange` in the `action-trigger` plugins.
  */
-export async function invokeActionOnTriggerChange(id: TGenericID, actionType: string, actionTrigger: any) {
+export async function invokeActionOnTriggerChange(
+  id: TGenericID,
+  actionType: string,
+  actionTrigger: any,
+) {
   const modules = getModuleList("action-trigger");
 
   for (const module of modules) {
@@ -255,13 +301,17 @@ export async function invokeActionOnTriggerChange(id: TGenericID, actionType: st
 /**
  * Edits a single action.
  */
-export async function editAction(id: TGenericID, action: IActionEdit): Promise<void> {
+export async function editAction(
+  id: TGenericID,
+  action: IActionEdit,
+): Promise<void> {
   const oldAction = await getActionInfo(id);
 
   const parsed = await zActionEdit.parseAsync(action);
   await invokeDatabaseFunction("editAction", id, parsed);
 
-  const triggerChanged = JSON.stringify(oldAction.trigger) !== JSON.stringify(parsed.trigger);
+  const triggerChanged =
+    JSON.stringify(oldAction.trigger) !== JSON.stringify(parsed.trigger);
   if (parsed.trigger && triggerChanged) {
     await invokeActionOnTriggerChange(id, oldAction.type, action.trigger);
   }

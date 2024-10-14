@@ -1,6 +1,11 @@
-import { IDeviceData, IDatabaseGetDeviceDataQuery, TGenericID, TDeviceType } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
-import finishBucketDataQuery from "./finishDeviceDataQuery";
+import type {
+  IDatabaseGetDeviceDataQuery,
+  IDeviceData,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
+import finishBucketDataQuery from "./finishDeviceDataQuery.ts";
 
 /**
  * Retrieves the last value of a variable from a device.
@@ -8,11 +13,14 @@ import finishBucketDataQuery from "./finishDeviceDataQuery";
 async function getDeviceDataLastValue(
   deviceID: TGenericID,
   type: TDeviceType,
-  query: IDatabaseGetDeviceDataQuery
+  query: IDatabaseGetDeviceDataQuery,
 ): Promise<IDeviceData[]> {
   const client = await getDeviceConnection(deviceID, type);
 
-  const knexQuery = client.whereNotNull("value").orderBy("time", "DESC").limit(1);
+  const knexQuery = client
+    .whereNotNull("value")
+    .orderBy("time", "DESC")
+    .limit(1);
 
   return finishBucketDataQuery(client, knexQuery, query);
 }

@@ -14,14 +14,21 @@ const zQueryStringPath = z.object({
 /**
  * Lists all the files.
  */
-class GetFileList extends APIController<void, z.infer<typeof zQueryStringPath>, void> {
+class GetFileList extends APIController<
+  void,
+  z.infer<typeof zQueryStringPath>,
+  void
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zQueryStringPath,
   };
 
   public async main() {
-    this.body = await getFileList(this.queryStringParams.path, this.queryStringParams.local_fs);
+    this.body = await getFileList(
+      this.queryStringParams.path,
+      this.queryStringParams.local_fs,
+    );
   }
 }
 

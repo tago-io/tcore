@@ -1,9 +1,9 @@
 import type { Server } from "node:http";
-import { Server as SocketServer, type Socket } from "socket.io";
 import type { TGenericID } from "@tago-io/tcore-sdk/types";
+import { type Socket, Server as SocketServer } from "socket.io";
+import { getAccountToken } from "../Services/Account/Account.ts";
 import { editDevice } from "../Services/Device.ts";
 import { checkMasterPassword } from "../index.ts";
-import { getAccountToken } from "../Services/Account/Account.ts";
 
 /**
  * Socket server instance.
@@ -16,11 +16,15 @@ export let io: SocketServer;
  */
 async function validateToken(socket: Socket): Promise<boolean> {
   if (socket.handshake.query.masterPassword) {
-    const valid = await checkMasterPassword(socket.handshake.query.masterPassword as string);
+    const valid = await checkMasterPassword(
+      socket.handshake.query.masterPassword as string,
+    );
     return valid;
   }
   if (socket.handshake.query.token) {
-    const token = await getAccountToken(socket.handshake.query.token as string).catch(() => null);
+    const token = await getAccountToken(
+      socket.handshake.query.token as string,
+    ).catch(() => null);
     const valid = !!token;
     return valid;
   }

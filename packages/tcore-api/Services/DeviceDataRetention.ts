@@ -46,9 +46,16 @@ async function triggerDataRetentionCheck() {
         .endOf(device.chunk_period)
         .toJSDate();
 
-      await invokeDatabaseFunction("applyDeviceDataRetention", device.id, device.type, { date: dateToRemove });
+      await invokeDatabaseFunction(
+        "applyDeviceDataRetention",
+        device.id,
+        device.type,
+        { date: dateToRemove },
+      );
 
-      await editDevice(device.id, { last_retention: new Date() }).catch(console.error);
+      await editDevice(device.id, { last_retention: new Date() }).catch(
+        console.error,
+      );
     }
   } catch (ex: any) {
     const err = ex?.message || ex?.toString?.() || ex;
@@ -75,4 +82,8 @@ function stopDataRetentionTimer() {
   }
 }
 
-export { stopDataRetentionTimer, startDataRetentionTimer, triggerDataRetentionCheck };
+export {
+  stopDataRetentionTimer,
+  startDataRetentionTimer,
+  triggerDataRetentionCheck,
+};

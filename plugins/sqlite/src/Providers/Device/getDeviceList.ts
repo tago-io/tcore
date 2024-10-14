@@ -1,13 +1,18 @@
-import { IDatabaseDeviceListQuery, IDeviceList } from "@tago-io/tcore-sdk/types";
-import applyQueryPagination from "../../Helpers/applyQueryPagination";
-import replaceFilterWildCards from "../../Helpers/replaceFilterWildcards";
-import applyTagFilter from "../../Helpers/applyTagFilter";
-import { knexClient } from "../../knex";
+import type {
+  IDatabaseDeviceListQuery,
+  IDeviceList,
+} from "@tago-io/tcore-sdk/types";
+import applyQueryPagination from "../../Helpers/applyQueryPagination.ts";
+import applyTagFilter from "../../Helpers/applyTagFilter.ts";
+import replaceFilterWildCards from "../../Helpers/replaceFilterWildcards.ts";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves a list of devices.
  */
-async function getDeviceList(query: IDatabaseDeviceListQuery): Promise<IDeviceList> {
+async function getDeviceList(
+  query: IDatabaseDeviceListQuery,
+): Promise<IDeviceList> {
   const { page, amount, orderBy, fields, filter } = query;
   const pagination = applyQueryPagination(page, amount);
 
@@ -25,7 +30,10 @@ async function getDeviceList(query: IDatabaseDeviceListQuery): Promise<IDeviceLi
   }
 
   if (filter.id) {
-    knexQuery.whereIn("device.id", (Array.isArray(filter.id) ? filter.id : [filter.id]) as string[]);
+    knexQuery.whereIn(
+      "device.id",
+      (Array.isArray(filter.id) ? filter.id : [filter.id]) as string[],
+    );
   }
   if (filter.name) {
     knexQuery.where("device.name", "like", replaceFilterWildCards(filter.name));

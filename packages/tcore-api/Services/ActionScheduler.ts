@@ -1,5 +1,5 @@
-import { DateTime } from "luxon";
 import cronParser from "cron-parser";
+import { DateTime } from "luxon";
 import { parseRelativeDate } from "../Helpers/Time.ts";
 import { getActionList, triggerAction } from "./Action.ts";
 
@@ -24,13 +24,20 @@ interface IScheduleTrigger {
  * Gets the `last_triggered` of the action.
  */
 function getLastRunTime(item: IIntervalTrigger | IScheduleTrigger): Date {
-  return new Date(item.last_triggered || item.updated_at || DateTime.utc().minus({ minute: 1 }).toJSDate());
+  return new Date(
+    item.last_triggered ||
+      item.updated_at ||
+      DateTime.utc().minus({ minute: 1 }).toJSDate(),
+  );
 }
 
 /**
  * Retrieves an object with all intervals and schedule actions.
  */
-async function getActionsToRun(): Promise<{ intervals: IIntervalTrigger[]; schedules: IScheduleTrigger[] }> {
+async function getActionsToRun(): Promise<{
+  intervals: IIntervalTrigger[];
+  schedules: IScheduleTrigger[];
+}> {
   const actions = await getActionList({
     filter: { active: true },
     fields: ["trigger", "updated_at", "last_triggered", "type"],
@@ -132,4 +139,8 @@ function stopActionScheduleTimer() {
   }
 }
 
-export { triggerActionScheduleCheck, stopActionScheduleTimer, startActionScheduleTimer };
+export {
+  triggerActionScheduleCheck,
+  stopActionScheduleTimer,
+  startActionScheduleTimer,
+};

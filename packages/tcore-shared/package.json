@@ -4,6 +4,5 @@
   "private": true,
   "main": "./src/index.ts",
   "type": "module",
-  "dependencies": {
-  }
+  "dependencies": {}
 }

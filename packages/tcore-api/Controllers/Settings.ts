@@ -1,9 +1,14 @@
 import { type ISettings, zSettingsEdit } from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
-import { checkMainDatabaseModuleHook } from "../Services/Plugins.ts";
-import { doFactoryReset, getMainSettings, setMainSettings, setMasterPassword } from "../Services/Settings.ts";
 import { encryptAccountPassword } from "../Services/Account/AccountPassword.ts";
+import { checkMainDatabaseModuleHook } from "../Services/Plugins.ts";
+import {
+  doFactoryReset,
+  getMainSettings,
+  setMainSettings,
+  setMasterPassword,
+} from "../Services/Settings.ts";
 import APIController, { type ISetupController, warm } from "./APIController.ts";
 
 const zPassword = z.object({
@@ -34,7 +39,11 @@ class EditSettings extends APIController<ISettings, void, void> {
 /**
  * Sets the master password.
  */
-class SetMasterPassword extends APIController<z.infer<typeof zPassword>, void, void> {
+class SetMasterPassword extends APIController<
+  z.infer<typeof zPassword>,
+  void,
+  void
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "any", resource: "anonymous" }],
     zBodyParser: zPassword,

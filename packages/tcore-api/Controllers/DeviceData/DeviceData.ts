@@ -1,6 +1,9 @@
+import {
+  type IDeviceDataQuery,
+  zDeviceDataQuery,
+} from "@tago-io/tcore-sdk/types";
 import type { Application } from "express";
 import { z } from "zod";
-import { type IDeviceDataQuery, zDeviceDataQuery } from "@tago-io/tcore-sdk/types";
 import {
   addDeviceDataByDevice,
   deleteDeviceData,
@@ -9,8 +12,14 @@ import {
   getDeviceData,
   getDeviceDataAmount,
 } from "../../Services/DeviceData/DeviceData.ts";
-import { emitToLiveInspector, getLiveInspectorID } from "../../Services/LiveInspector.ts";
-import APIController, { type ISetupController, warm } from "../APIController.ts";
+import {
+  emitToLiveInspector,
+  getLiveInspectorID,
+} from "../../Services/LiveInspector.ts";
+import APIController, {
+  type ISetupController,
+  warm,
+} from "../APIController.ts";
 
 /**
  * Configuration for ID in the URL.
@@ -38,7 +47,9 @@ class AddData extends APIController<any, void, void> {
     ];
     emitToLiveInspector(device, inspectorMsg, liveInspectorID);
 
-    const result = await addDeviceDataByDevice(device, this.bodyParams, { liveInspectorID });
+    const result = await addDeviceDataByDevice(device, this.bodyParams, {
+      liveInspectorID,
+    });
     this.body = result;
     this.successStatus = 202;
   }
@@ -79,7 +90,11 @@ class GetDataByToken extends APIController<void, IDeviceDataQuery, void> {
 /**
  * Edits device data by device id.
  */
-class EditDataByDeviceID extends APIController<any, void, z.infer<typeof zURLParamsID>> {
+class EditDataByDeviceID extends APIController<
+  any,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zBodyParser: z.any(),
@@ -95,7 +110,11 @@ class EditDataByDeviceID extends APIController<any, void, z.infer<typeof zURLPar
 /**
  * Delete device data by id.
  */
-class DeleteDataByDeviceID extends APIController<void, IDeviceDataQuery, z.infer<typeof zURLParamsID>> {
+class DeleteDataByDeviceID extends APIController<
+  void,
+  IDeviceDataQuery,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zQueryStringParser: zDeviceDataQuery,
@@ -103,7 +122,10 @@ class DeleteDataByDeviceID extends APIController<void, IDeviceDataQuery, z.infer
   };
 
   async main() {
-    const result = await deleteDeviceData(this.urlParams.id, this.queryStringParams);
+    const result = await deleteDeviceData(
+      this.urlParams.id,
+      this.queryStringParams,
+    );
     this.body = result;
   }
 }
@@ -111,7 +133,11 @@ class DeleteDataByDeviceID extends APIController<void, IDeviceDataQuery, z.infer
 /**
  * Gets the device data by the device id.
  */
-class GetDataByID extends APIController<void, IDeviceDataQuery, z.infer<typeof zURLParamsID>> {
+class GetDataByID extends APIController<
+  void,
+  IDeviceDataQuery,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zQueryStringParser: zDeviceDataQuery,
@@ -119,7 +145,10 @@ class GetDataByID extends APIController<void, IDeviceDataQuery, z.infer<typeof z
   };
 
   async main() {
-    const result = await getDeviceData(this.urlParams.id, this.queryStringParams);
+    const result = await getDeviceData(
+      this.urlParams.id,
+      this.queryStringParams,
+    );
     this.body = result;
   }
 }
@@ -127,7 +156,11 @@ class GetDataByID extends APIController<void, IDeviceDataQuery, z.infer<typeof z
 /**
  * Deletes variables of a device.
  */
-class EmptyDevice extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class EmptyDevice extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "write", resource: "account" }],
     zURLParamsParser: zURLParamsID,
@@ -142,7 +175,11 @@ class EmptyDevice extends APIController<void, void, z.infer<typeof zURLParamsID>
 /**
  * Retrieves the data amount of a device.
  */
-class GetDataAmount extends APIController<void, void, z.infer<typeof zURLParamsID>> {
+class GetDataAmount extends APIController<
+  void,
+  void,
+  z.infer<typeof zURLParamsID>
+> {
   setup: ISetupController = {
     allowTokens: [{ permission: "read", resource: "account" }],
     zURLParamsParser: zURLParamsID,

@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 import type { IModuleSetup, TModuleState } from "@tago-io/tcore-sdk/types";
 import { flattenConfigFields } from "@tago-io/tcore-shared";
-import { io } from "../../Socket/SocketServer.ts";
-import { getPluginSettings } from "../../Services/Settings.ts";
-import type Plugin from "../Plugin/Plugin.ts";
 import { checkMainDatabaseModuleHook } from "../../Services/Plugins.ts";
+import { getPluginSettings } from "../../Services/Settings.ts";
+import { io } from "../../Socket/SocketServer.ts";
+import type Plugin from "../Plugin/Plugin.ts";
 
 /**
  * Class that manages a single module of a plugin.
@@ -16,7 +16,10 @@ class Module {
   public name: string;
   public state: TModuleState;
 
-  constructor(public plugin: Plugin, public setup: IModuleSetup) {
+  constructor(
+    public plugin: Plugin,
+    public setup: IModuleSetup,
+  ) {
     this.name = setup.name;
     this.id = setup.id;
     this.state = "idle";
@@ -30,7 +33,11 @@ class Module {
     if (this.state !== "started") {
       throw new Error(`Module "${this.name}" is not running`);
     }
-    const result = await this.plugin.worker.invoke(this.setup.id, method, ...args);
+    const result = await this.plugin.worker.invoke(
+      this.setup.id,
+      method,
+      ...args,
+    );
     return result;
   }
 
@@ -133,7 +140,9 @@ class Module {
     const values = moduleSettings?.values || {};
 
     const conf = this.setup.configs || [];
-    const defs = conf?.filter((x) => "defaultValue" in x && x.defaultValue !== "");
+    const defs = conf?.filter(
+      (x) => "defaultValue" in x && x.defaultValue !== "",
+    );
     const flat = flattenConfigFields(defs);
     const defsObject = {};
 

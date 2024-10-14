@@ -15,13 +15,9 @@
     "noImplicitAny": false,
     "skipLibCheck": true,
     "declaration": true,
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": true
   },
-  "exclude": [
-    "node_module",
-    "jest.config.js",
-    ".eslintrc.js"
-  ],
+  "exclude": ["node_module", "jest.config.js", ".eslintrc.js"],
   "include": ["packages/**/*"],
   "ts-node": {
     "transpileOnly": true

@@ -1,5 +1,9 @@
-import { IDeviceApplyDataRetentionQuery, TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
+import type {
+  IDeviceApplyDataRetentionQuery,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
 
 /**
  * Applies data retention for a device by deleting all old data.
@@ -7,7 +11,7 @@ import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
 async function applyDeviceDataRetention(
   deviceID: TGenericID,
   type: TDeviceType,
-  query: IDeviceApplyDataRetentionQuery
+  query: IDeviceApplyDataRetentionQuery,
 ): Promise<void> {
   const timestampEnd = new Date(query.date).getTime();
   const timestampStart = new Date("2001-01-01").getTime();

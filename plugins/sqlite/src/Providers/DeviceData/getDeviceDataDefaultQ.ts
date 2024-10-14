@@ -1,5 +1,10 @@
-import { IDeviceData, IDatabaseGetDeviceDataQuery, TGenericID, TDeviceType } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
+import type {
+  IDatabaseGetDeviceDataQuery,
+  IDeviceData,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
 
 /**
  * Retrieves data from a device using the default query.
@@ -7,12 +12,26 @@ import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
 async function getDeviceDataDefaultQ(
   deviceID: TGenericID,
   type: TDeviceType,
-  query: IDatabaseGetDeviceDataQuery
+  query: IDatabaseGetDeviceDataQuery,
 ): Promise<IDeviceData[]> {
   const client = await getDeviceConnection(deviceID, type);
-  const { variables, qty, start_date, end_date, values, skip, ordination, groups, ids } = query;
+  const {
+    variables,
+    qty,
+    start_date,
+    end_date,
+    values,
+    skip,
+    ordination,
+    groups,
+    ids,
+  } = query;
 
-  const knexQuery = client.select("*").orderBy("time", ordination).limit(qty).from("data");
+  const knexQuery = client
+    .select("*")
+    .orderBy("time", ordination)
+    .limit(qty)
+    .from("data");
 
   if (skip > 0) {
     knexQuery.offset(skip);

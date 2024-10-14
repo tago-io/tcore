@@ -1,4 +1,9 @@
-import type { IDevice, ILiveInspectorMessageCreate, TGenericID, TLiveInspectorConnectionID } from "@tago-io/tcore-sdk/types";
+import type {
+  IDevice,
+  ILiveInspectorMessageCreate,
+  TGenericID,
+  TLiveInspectorConnectionID,
+} from "@tago-io/tcore-sdk/types";
 import { DateTime } from "luxon";
 import { nanoid } from "nanoid";
 import { plugins } from "../Plugins/Host.ts";
@@ -9,7 +14,11 @@ import { getDeviceInfo } from "./Device.ts";
  */
 export function canLiveInspectorBeActivated(device: IDevice): boolean {
   const { inspected_at } = device;
-  if (inspected_at && DateTime.fromJSDate(new Date(inspected_at)) >= DateTime.utc().minus({ minute: 1 })) {
+  if (
+    inspected_at &&
+    DateTime.fromJSDate(new Date(inspected_at)) >=
+      DateTime.utc().minus({ minute: 1 })
+  ) {
     return true;
   }
   return false;
@@ -19,7 +28,9 @@ export function canLiveInspectorBeActivated(device: IDevice): boolean {
  * Gets the live inspector connection ID based on the time when the device was last inspected.
  * If the last inspection date was too long ago, a `null` connection id will be returned.
  */
-export function getLiveInspectorID(device: IDevice): TLiveInspectorConnectionID {
+export function getLiveInspectorID(
+  device: IDevice,
+): TLiveInspectorConnectionID {
   return canLiveInspectorBeActivated(device) ? nanoid(10) : null;
 }
 
@@ -29,7 +40,7 @@ export function getLiveInspectorID(device: IDevice): TLiveInspectorConnectionID 
 export const emitToLiveInspector = async (
   device: IDevice,
   msg: ILiveInspectorMessageCreate | ILiveInspectorMessageCreate[],
-  liveInspectorID?: TLiveInspectorConnectionID
+  liveInspectorID?: TLiveInspectorConnectionID,
 ) => {
   const connectionID = liveInspectorID || getLiveInspectorID(device);
   if (!connectionID) {
@@ -39,7 +50,8 @@ export const emitToLiveInspector = async (
 
   const data = [msg].flat().map((x, i) => ({
     connection_id: connectionID,
-    content: typeof x.content === "object" ? JSON.stringify(x.content) : x.content,
+    content:
+      typeof x.content === "object" ? JSON.stringify(x.content) : x.content,
     device_id: device.id,
     timestamp: new Date(Date.now() + i),
     title: x.title,
@@ -56,12 +68,14 @@ export async function emitToLiveInspectorViaPlugin(
   pluginID: TGenericID,
   deviceID: TGenericID,
   msg: ILiveInspectorMessageCreate | ILiveInspectorMessageCreate[],
-  liveInspectorID?: TLiveInspectorConnectionID
+  liveInspectorID?: TLiveInspectorConnectionID,
 ) {
   const device = await getDeviceInfo(deviceID);
   const pluginName = plugins.get(pluginID)?.tcoreName;
   if (pluginName && canLiveInspectorBeActivated(device)) {
-    const data = [msg].flat().map((x) => ({ ...x, title: `[Plugin ${pluginName}] ${x.title}` }));
+    const data = [msg]
+      .flat()
+      .map((x) => ({ ...x, title: `[Plugin ${pluginName}] ${x.title}` }));
     emitToLiveInspector(device, data, liveInspectorID);
   }
 }

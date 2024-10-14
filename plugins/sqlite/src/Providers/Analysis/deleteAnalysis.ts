@@ -1,5 +1,5 @@
-import { TGenericID } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Deletes an analysis.

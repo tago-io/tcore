@@ -1,28 +1,49 @@
-import path from "node:path";
 import fs from "node:fs";
 import os from "node:os";
-import type { IPluginSettings, IPluginSettingsModule, ISettings } from "@tago-io/tcore-sdk/types";
-import { flattenConfigFields, getSystemName, getSystemSlug } from "@tago-io/tcore-shared";
-import { log } from "../index.ts";
-import { plugins, sortPluginFoldersByPriority, startPluginAndHandleErrors } from "../Plugins/Host.ts";
-import { loadYml, saveYml } from "../Helpers/Yaml.ts";
+import path from "node:path";
+import type {
+  IPluginSettings,
+  IPluginSettingsModule,
+  ISettings,
+} from "@tago-io/tcore-sdk/types";
+import {
+  flattenConfigFields,
+  getSystemName,
+  getSystemSlug,
+} from "@tago-io/tcore-shared";
 import { rmdir } from "../Helpers/Files.ts";
+import { loadYml, saveYml } from "../Helpers/Yaml.ts";
+import {
+  plugins,
+  sortPluginFoldersByPriority,
+  startPluginAndHandleErrors,
+} from "../Plugins/Host.ts";
+import { log } from "../index.ts";
 import { compareAccountPasswordHash } from "./Account/AccountPassword.ts";
+import {
+  decryptPluginConfigPassword,
+  encryptPluginConfigPassword,
+} from "./Plugin/PluginPassword.ts";
 import { startPluginModule } from "./Plugins.ts";
-import { decryptPluginConfigPassword, encryptPluginConfigPassword } from "./Plugin/PluginPassword.ts";
 
 /**
  * Folder name to save the settings.
  */
-const folderName = os.platform() === "win32" ? getSystemName() : `.${getSystemSlug()}`;
+const folderName =
+  os.platform() === "win32" ? getSystemName() : `.${getSystemSlug()}`;
 
 /**
  * Checks if the master password is correct.
  * @returns {boolean} True for correct, false for incorrect.
  */
-export async function checkMasterPassword(masterPassword: string): Promise<boolean> {
+export async function checkMasterPassword(
+  masterPassword: string,
+): Promise<boolean> {
   const settings = await getMainSettings();
-  const matches = await compareAccountPasswordHash(masterPassword, settings.master_password || "");
+  const matches = await compareAccountPasswordHash(
+    masterPassword,
+    settings.master_password || "",
+  );
   return matches;
 }
 
@@ -31,7 +52,8 @@ export async function checkMasterPassword(masterPassword: string): Promise<boole
  * where the application data, settings, and plugins will be saved.
  */
 export function getDirpath() {
-  const dirpath = process.env.TCORE_DIRPATH || path.resolve(os.homedir(), folderName);
+  const dirpath =
+    process.env.TCORE_DIRPATH || path.resolve(os.homedir(), folderName);
   return dirpath;
 }
 
@@ -48,7 +70,9 @@ export async function getMainSettingsFolder(): Promise<string> {
 /**
  * Retrieves the settings folder of a plugin.
  */
-export async function getPluginSettingsFolder(pluginID: string): Promise<string> {
+export async function getPluginSettingsFolder(
+  pluginID: string,
+): Promise<string> {
   const dirpath = getDirpath();
   const folder = path.resolve(dirpath, "PluginFiles", pluginID || "");
   await fs.promises.mkdir(folder, { recursive: true });
@@ -62,9 +86,12 @@ export async function getMainSettings(): Promise<ISettings> {
   const folder = await getMainSettingsFolder();
   const data = await loadYml(path.join(folder, `${getSystemSlug()}.yml`));
 
-  const filesystem_plugin = process.env.TCORE_FILESYSTEM_PLUGIN || data.filesystem_plugin || "";
-  const database_plugin = process.env.TCORE_DATABASE_PLUGIN || data.database_plugin || "";
-  const queue_plugin = process.env.TCORE_QUEUE_PLUGIN || data.queue_plugin || "";
+  const filesystem_plugin =
+    process.env.TCORE_FILESYSTEM_PLUGIN || data.filesystem_plugin || "";
+  const database_plugin =
+    process.env.TCORE_DATABASE_PLUGIN || data.database_plugin || "";
+  const queue_plugin =
+    process.env.TCORE_QUEUE_PLUGIN || data.queue_plugin || "";
   const settings_folder = process.env.TCORE_SETTINGS_FOLDER || folder;
   const port = process.env.TCORE_PORT || data.port || "8888";
   const master_password = data.master_password || "";
@@ -111,7 +138,9 @@ export async function doFactoryReset(): Promise<void> {
       continue;
     }
 
-    const plugin = [...plugins.values()].find((x) => x.folder === path.join(defaultPluginFolder, folder));
+    const plugin = [...plugins.values()].find(
+      (x) => x.folder === path.join(defaultPluginFolder, folder),
+    );
     if (plugin) {
       stoppedPlugins.push(plugin.folder);
       await plugin.stop(true, 3000).catch(() => null);
@@ -123,7 +152,9 @@ export async function doFactoryReset(): Promise<void> {
 
   // 2. we delete the main configuration
   await rmdir(path.join(dirPath, "PluginFiles")).catch(() => null);
-  await fs.promises.unlink(path.join(dirPath, `${getSystemSlug()}.yml`)).catch(() => null);
+  await fs.promises
+    .unlink(path.join(dirPath, `${getSystemSlug()}.yml`))
+    .catch(() => null);
 
   // 4. we restart the plugins
   const sorted = await sortPluginFoldersByPriority(stoppedPlugins);
@@ -145,7 +176,9 @@ export async function setMainSettings(data: ISettings): Promise<void> {
 /**
  * Sets the master password.
  */
-export async function setMasterPassword(encryptedPassword: string): Promise<void> {
+export async function setMasterPassword(
+  encryptedPassword: string,
+): Promise<void> {
   const settings = await getMainSettings();
   settings.master_password = encryptedPassword;
   await setMainSettings(settings);

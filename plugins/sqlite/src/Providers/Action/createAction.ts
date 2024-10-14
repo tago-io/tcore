@@ -1,5 +1,5 @@
-import { IDatabaseCreateActionData } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { IDatabaseCreateActionData } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Creates a new action.

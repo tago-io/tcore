@@ -1,4 +1,4 @@
-import { Knex } from "knex";
+import type { Knex } from "knex";
 
 /**
  * Bumps up to version 0.0.1 of tcore.
@@ -19,6 +19,9 @@ export async function up(knex: Knex) {
       table.timestamp("created_at");
       table.timestamp("updated_at");
       table.timestamp("inspected_at");
+      table.timestamp("last_retention");
+      table.string("chunk_period");
+      table.integer("chunk_retention");
     });
   }
 
@@ -71,6 +74,7 @@ export async function up(knex: Knex) {
       table.timestamp("created_at");
       table.timestamp("updated_at");
       table.text("type");
+      table.boolean("lock");
     });
   }
 

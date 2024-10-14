@@ -32,7 +32,12 @@ test("sets properties correctly", () => {
   expect(plugin.description).toEqual("Description of plugin2");
   expect(plugin.id).toEqual("27eea77f2d965a9a9d91db45b35d2aa9");
   expect(plugin.packageName).toEqual("@tago-io/mock-plugin-2");
-  expect(plugin.package.tcore.permissions).toEqual(["device", "action", "analysis", "device-data"]);
+  expect(plugin.package.tcore.permissions).toEqual([
+    "device",
+    "action",
+    "analysis",
+    "device-data",
+  ]);
   expect(plugin.types).toEqual(["service"]);
   expect(plugin.tcoreName).toEqual("Plugin 2");
   expect(plugin.version).toEqual("0.0.1");

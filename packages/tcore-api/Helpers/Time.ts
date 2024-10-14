@@ -26,7 +26,11 @@ function fixDurationMoment(duration: string) {
   return durationLabelsStandard[duration] || duration;
 }
 
-function parseRelativeDate(expireTime: string | undefined, operation: "plus" | "minus", fromDate = new Date()) {
+function parseRelativeDate(
+  expireTime: string | undefined,
+  operation: "plus" | "minus",
+  fromDate = new Date(),
+) {
   if (!expireTime) {
     return;
   }
@@ -45,9 +49,13 @@ function parseRelativeDate(expireTime: string | undefined, operation: "plus" | "
   let time: DateTime;
 
   if (operation === "minus") {
-    time = DateTime.fromJSDate(new Date(fromDate)).minus({ [fixDurationMoment(splitted[2])]: Number(splitted[1]) });
+    time = DateTime.fromJSDate(new Date(fromDate)).minus({
+      [fixDurationMoment(splitted[2])]: Number(splitted[1]),
+    });
   } else {
-    time = DateTime.fromJSDate(new Date(fromDate)).plus({ [fixDurationMoment(splitted[2])]: Number(splitted[1]) });
+    time = DateTime.fromJSDate(new Date(fromDate)).plus({
+      [fixDurationMoment(splitted[2])]: Number(splitted[1]),
+    });
   }
 
   if (!time.isValid) {

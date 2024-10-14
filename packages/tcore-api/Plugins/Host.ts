@@ -1,6 +1,6 @@
 import fs from "node:fs";
-import { listPluginFolders } from "../Services/Plugins.ts";
 import { oraLog, oraLogError } from "../Helpers/log.ts";
+import { listPluginFolders } from "../Services/Plugins.ts";
 import { getMainSettings, getPluginSettings } from "../Services/Settings.ts";
 import Plugin from "./Plugin/Plugin.ts";
 import { generatePluginID } from "./PluginID.ts";
@@ -44,7 +44,9 @@ export async function startPlugin(folder: string) {
  * Sorts all folders based on their priority:
  * First the main database plugin then the other plugins.
  */
-export async function sortPluginFoldersByPriority(folders: string[]): Promise<string[]> {
+export async function sortPluginFoldersByPriority(
+  folders: string[],
+): Promise<string[]> {
   const settings = await getMainSettings();
   const dbModuleID = String(settings.database_plugin).split(":")?.[0];
   const plugins: { [key: string]: string[] } = {
@@ -61,7 +63,8 @@ export async function sortPluginFoldersByPriority(folders: string[]): Promise<st
 
     const id = generatePluginID(pkg.name);
     const isHighest = pkg?.tcore?.priority === "highest";
-    const isDatabase = dbModuleID === id || pkg?.tcore?.types?.includes("database");
+    const isDatabase =
+      dbModuleID === id || pkg?.tcore?.types?.includes("database");
 
     if (isHighest) {
       // plugin has request highest priority to start
@@ -98,7 +101,8 @@ export async function startPluginAndHandleErrors(folder: string) {
     if (errors.length === 1 && errors[0].error) {
       // only one module threw an error, show a single line of error
       throw new Error(errors[0].error);
-    }if (errors.length > 1) {
+    }
+    if (errors.length > 1) {
       // multiple modules threw errors, show multiline of errors, one for
       // each module that threw an error
       const msgs = errors.map((x) => `  - ${x.name}: ${x.error}`);

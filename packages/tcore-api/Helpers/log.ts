@@ -1,12 +1,12 @@
-import chalk from "chalk";
-import ora from "ora";
 import { getSystemName } from "@tago-io/tcore-shared";
 import boxen from "boxen";
-import { getMainSettings } from "../Services/Settings.ts";
-import { plugins } from "../Plugins/Host.ts";
-import { io } from "../Socket/SocketServer.ts";
-import { getLocalIPs } from "../Services/Hardware.ts";
+import chalk from "chalk";
+import ora from "ora";
 import pkg from "../../../package.json" with { type: "json" };
+import { plugins } from "../Plugins/Host.ts";
+import { getLocalIPs } from "../Services/Hardware.ts";
+import { getMainSettings } from "../Services/Settings.ts";
+import { io } from "../Socket/SocketServer.ts";
 
 /**
  * Contains a history of all logs in the application and in the plugins.
@@ -99,7 +99,11 @@ export async function logSystemStart(port?: number | string | null) {
   const settings = await getMainSettings();
   const realPort = port || settings.port;
 
-  const lines = [`${systemName} v${systemVers} is ready!`, "", `- Local:             http://localhost:${realPort}`];
+  const lines = [
+    `${systemName} v${systemVers} is ready!`,
+    "",
+    `- Local:             http://localhost:${realPort}`,
+  ];
 
   const netAddresses = getLocalIPs();
   if (netAddresses[0]) {

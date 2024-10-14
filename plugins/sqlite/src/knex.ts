@@ -1,12 +1,14 @@
-import path from "path";
-import knex, { Knex } from "knex";
-import Dialect from "knex/lib/dialects/sqlite3";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+const dirname_ = dirname(fileURLToPath(import.meta.url));
+
+import knex, { type Knex } from "knex";
 
 let knexClient: Knex;
 
 const migrationConfig: Knex.MigratorConfig = {
   tableName: "migrations",
-  directory: path.join(__dirname, "..", "build", "Migrations"),
+  directory: join(dirname_, "Migrations"),
   // Fixes the error: The migration directory is corrupt, the following files are missing:
   disableMigrationsListValidation: true,
 };
@@ -18,7 +20,7 @@ export async function setupKnex(data: any) {
   const filename = data.file;
 
   knexClient = knex({
-    client: Dialect,
+    client: "sqlite3",
     connection: { filename },
     useNullAsDefault: true,
   });

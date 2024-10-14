@@ -32,7 +32,10 @@ export async function runAnalysis(id: string, data: any): Promise<void> {
   const settings = await getMainSettings();
 
   try {
-    const filePath = await invokeFilesystemFunction("resolveFile", analysis.file_path);
+    const filePath = await invokeFilesystemFunction(
+      "resolveFile",
+      analysis.file_path,
+    );
 
     if (!analysis.active) {
       const message = `The analysis is deactivated and can't run. To run the analysis activate it.`;

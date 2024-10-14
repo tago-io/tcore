@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { io } from "../Socket/SocketServer.ts";
 import { deactivatePlugin } from "../Services/Plugins.ts";
+import { io } from "../Socket/SocketServer.ts";
 /**
  * Uninstalls a plugin.
  */

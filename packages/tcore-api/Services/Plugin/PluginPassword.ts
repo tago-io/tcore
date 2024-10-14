@@ -1,4 +1,9 @@
-import { randomBytes, createHash, createCipheriv, createDecipheriv } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHash,
+  randomBytes,
+} from "node:crypto";
 
 /**
  * Secret to the password hash.
@@ -7,7 +12,10 @@ const SECRET = "TCore";
 /**
  * 32 digit secret to the password hash.
  */
-const SECRET_KEY = createHash("sha256").update(String(SECRET)).digest("base64").substring(0, 32);
+const SECRET_KEY = createHash("sha256")
+  .update(String(SECRET))
+  .digest("base64")
+  .substring(0, 32);
 
 /**
  * Encrypts a password to be stored.
@@ -15,7 +23,8 @@ const SECRET_KEY = createHash("sha256").update(String(SECRET)).digest("base64").
 function encryptPluginConfigPassword(password: string) {
   const iv = randomBytes(16).toString("hex").slice(0, 16);
   const cipher = createCipheriv("aes256", SECRET_KEY, iv);
-  const encrypted = cipher.update(password, "utf8", "hex") + cipher.final("hex");
+  const encrypted =
+    cipher.update(password, "utf8", "hex") + cipher.final("hex");
   return `${iv}.${encrypted}`;
 }
 

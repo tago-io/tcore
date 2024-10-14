@@ -1,8 +1,7 @@
-import path from "path";
-import { TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
-import knex, { Knex } from "knex";
+import path from "node:path";
 import { helpers } from "@tago-io/tcore-sdk";
-import Dialect from "knex/lib/dialects/sqlite3";
+import type { TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
+import knex, { type Knex } from "knex";
 
 /**
  * Map of all device connections.
@@ -12,7 +11,10 @@ const connections = new Map<string, Knex>();
 /**
  * Retrieves or creates a connection with a device database.
  */
-export async function getDeviceConnection(id: TGenericID, type: TDeviceType): Promise<Knex> {
+export async function getDeviceConnection(
+  id: TGenericID,
+  type: TDeviceType,
+): Promise<Knex> {
   if (!connections.has(id)) {
     await createDeviceConnection(id, type);
   }
@@ -23,7 +25,9 @@ export async function getDeviceConnection(id: TGenericID, type: TDeviceType): Pr
  * Destroys a device connection.
  */
 export async function destroyDeviceConnection(id: TGenericID) {
-  await helpers.deleteFileOrFolder(path.join("devices", `${id}.db`)).catch(() => false);
+  await helpers
+    .deleteFileOrFolder(path.join("devices", `${id}.db`))
+    .catch(() => false);
   await connections.get(id)?.destroy();
   connections.delete(id);
 }
@@ -32,7 +36,10 @@ export async function destroyDeviceConnection(id: TGenericID) {
  * Creates a new connection. This will check if the file exists and
  * create the structure if it doesn't.
  */
-export async function createDeviceConnection(id: TGenericID, type: TDeviceType) {
+export async function createDeviceConnection(
+  id: TGenericID,
+  type: TDeviceType,
+) {
   // creates the devices folder in case it doesn't exist:
   await helpers.createFolder("devices");
 
@@ -40,7 +47,7 @@ export async function createDeviceConnection(id: TGenericID, type: TDeviceType) 
   const filename = await helpers.getFileURI(path.join("devices", `${id}.db`));
 
   const connection = knex({
-    client: Dialect,
+    client: "sqlite3",
     connection: { filename },
     useNullAsDefault: true,
   });
@@ -75,7 +82,10 @@ export async function createDeviceConnection(id: TGenericID, type: TDeviceType) 
     });
   }
 
-  if (type === "mutable" && !(await connection.schema.hasColumn("data", "updated_at"))) {
+  if (
+    type === "mutable" &&
+    !(await connection.schema.hasColumn("data", "updated_at"))
+  ) {
     // < 0.3.3 versions that were created without the `updated_at`
     await connection.schema.table("data", (table) => {
       table.timestamp("updated_at");
@@ -83,7 +93,10 @@ export async function createDeviceConnection(id: TGenericID, type: TDeviceType) 
     });
   }
 
-  if (type === "immutable" && !(await connection.schema.hasColumn("data", "chunk_timestamp_start"))) {
+  if (
+    type === "immutable" &&
+    !(await connection.schema.hasColumn("data", "chunk_timestamp_start"))
+  ) {
     // < 0.6.0 versions that were created without the `chunk_timestamp` fields
     await connection.schema.table("data", (table) => {
       table.timestamp("chunk_timestamp_start");

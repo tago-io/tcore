@@ -1,5 +1,5 @@
-import fs from "node:fs/promises";
 import type { WriteFileOptions } from "node:fs";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { getPluginSettingsFolder } from "./Settings.ts";
 
@@ -11,7 +11,7 @@ export async function writeFile(
   pluginID: string,
   filename: string,
   data: string,
-  options?: WriteFileOptions
+  options?: WriteFileOptions,
 ): Promise<void> {
   const root = await getPluginSettingsFolder(pluginID);
   const fullPath = path.join(root, filename);
@@ -22,7 +22,10 @@ export async function writeFile(
  * Creates a new sub-folder in the plugins settings folder.
  * This function will recursively create each folder in the path until the last one.
  */
-export async function createFolder(pluginID: string, folderPath: string): Promise<void> {
+export async function createFolder(
+  pluginID: string,
+  folderPath: string,
+): Promise<void> {
   const root = await getPluginSettingsFolder(pluginID);
   const fullPath = path.join(root, folderPath);
   await fs.mkdir(fullPath, { recursive: true });
@@ -31,7 +34,10 @@ export async function createFolder(pluginID: string, folderPath: string): Promis
 /**
  * Deletes a file or folder.
  */
-export async function deleteFileOrFolder(pluginID: string, folderPath: string): Promise<void> {
+export async function deleteFileOrFolder(
+  pluginID: string,
+  folderPath: string,
+): Promise<void> {
   const root = await getPluginSettingsFolder(pluginID);
   const fullPath = path.join(root, folderPath);
   await fs.unlink(fullPath);
@@ -40,7 +46,11 @@ export async function deleteFileOrFolder(pluginID: string, folderPath: string): 
 /**
  * Reads the entire contents of a file.
  */
-export async function readFile(pluginID: string, filename: string, options?: any): Promise<string> {
+export async function readFile(
+  pluginID: string,
+  filename: string,
+  options?: any,
+): Promise<string> {
   const root = await getPluginSettingsFolder(pluginID);
   const fullPath = path.join(root, filename);
   const response = await fs.readFile(fullPath, options);
@@ -50,7 +60,10 @@ export async function readFile(pluginID: string, filename: string, options?: any
 /**
  * Checks if a file exists. Returns `true` if it does, `false` if it doesn't.
  */
-export async function doesFileOrFolderExist(pluginID: string, filename: string): Promise<boolean> {
+export async function doesFileOrFolderExist(
+  pluginID: string,
+  filename: string,
+): Promise<boolean> {
   const root = await getPluginSettingsFolder(pluginID);
   const fullPath = path.join(root, filename);
   return await fs
@@ -62,7 +75,10 @@ export async function doesFileOrFolderExist(pluginID: string, filename: string):
 /**
  * Gets the full path of a file via its filename.
  */
-export async function getFileURI(pluginID: string, filename: string): Promise<string> {
+export async function getFileURI(
+  pluginID: string,
+  filename: string,
+): Promise<string> {
   const root = await getPluginSettingsFolder(pluginID);
   const fullPath = path.join(root, filename);
   return fullPath;

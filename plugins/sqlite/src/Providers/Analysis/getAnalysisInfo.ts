@@ -1,11 +1,18 @@
-import { IAnalysis, TGenericID } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { IAnalysis, TGenericID } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves all the information of an analysis.
  */
-async function getAnalysisInfo(analysisID: TGenericID): Promise<IAnalysis | null> {
-  const response = await knexClient.select().select("*").from("analysis").where("id", analysisID).first();
+async function getAnalysisInfo(
+  analysisID: TGenericID,
+): Promise<IAnalysis | null> {
+  const response = await knexClient
+    .select()
+    .select("*")
+    .from("analysis")
+    .where("id", analysisID)
+    .first();
 
   if (response) {
     response.active = Boolean(response.active);
