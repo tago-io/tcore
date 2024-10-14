@@ -1,0 +1,35 @@
+{
+  "name": "@tago-io/tcore-plugin-network-chirpstack",
+  "version": "0.7.0",
+  "private": false,
+  "main": "./src/index.ts",
+  "type": "module",
+  "engines": {
+    "tcore": ">= 0.7.0 < 1.0.0"
+  },
+  "files": [
+    "assets/**/*"
+  ],
+  "tcore": {
+    "name": "Chirpstack LoRaWAN",
+    "short_description": "Adds support for Chirpstack LoRaWAN",
+    "full_description": "./README.md",
+    "icon": "./assets/icon.png",
+    "cluster": true,
+    "types": [
+      "service",
+      "encoder",
+      "action-type"
+    ],
+    "permissions": [
+      "device",
+      "action",
+      "device-data"
+    ]
+  },
+  "dependencies": {
+    "body-parser": "2.0.1"
+  },
+  "devDependencies": {
+  }
+}

@@ -1,7 +1,7 @@
 import { core } from "@tago-io/tcore-sdk";
-import { IDeviceData } from "@tago-io/tcore-sdk/build/Types";
-import { IConfigParam } from "../types";
-import downlinkService, { IDownlinkParams } from "./downlink";
+import type { IDeviceData } from "@tago-io/tcore-sdk/build/Types";
+import type { IConfigParam } from "../types.ts";
+import downlinkService, { type IDownlinkParams } from "./downlink.ts";
 
 class ResMockup {
   _status = 200;

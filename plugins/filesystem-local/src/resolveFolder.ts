@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
-import os from "os";
+import path from "node:path";
+import fs from "node:fs";
+import os from "node:os";
 import si from "systeminformation";
-import { IPluginFilesystemItem } from "@tago-io/tcore-sdk/types";
+import type { IPluginFilesystemItem } from "@tago-io/tcore-sdk/types";
 
 /**
  * Checks if a file path is directory or not.

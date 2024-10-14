@@ -66,6 +66,7 @@ export async function createDeviceConnection(
       table.timestamp("created_at");
       table.timestamp("chunk_timestamp_start");
       table.timestamp("chunk_timestamp_end");
+      table.string("serie", 100);
 
       if (type === "mutable") {
         // added for version 0.3.3
