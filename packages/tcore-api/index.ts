@@ -7,7 +7,6 @@ import {
   uninstallPluginByFolder,
 } from "./Plugins/Uninstall.ts";
 import { startServer } from "./main.ts";
-export * from "./Helpers/Tar/Tar.ts";
 export * from "./Helpers/Zip.ts";
 export * from "./Services/Plugins.ts";
 export * from "./Services/Settings.ts";

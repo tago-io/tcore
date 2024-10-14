@@ -11,8 +11,15 @@
     "short_description": "Integrates the SQLite Database with TagoCore",
     "full_description": "./README.md",
     "icon": "./assets/icon.png",
-    "types": ["database"],
-    "permissions": ["action", "analysis", "device-data", "device"],
+    "types": [
+      "database"
+    ],
+    "permissions": [
+      "action",
+      "analysis",
+      "device-data",
+      "device"
+    ],
     "publisher": {
       "name": "TagoIO",
       "domain": "tago.io"
@@ -22,7 +29,6 @@
     "migrate": "knex migrate:make --client=sqlite3 --migrations-directory=src/Migrations"
   },
   "dependencies": {
-    "@tago-io/tcore-sdk": "0.7.2",
     "knex": "3.1.0",
     "sqlite3": "5.1.7"
   },
