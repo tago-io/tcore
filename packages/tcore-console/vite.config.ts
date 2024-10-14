@@ -4,11 +4,8 @@ import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import svgr from "vite-plugin-svgr";
 
-import pkg from "../../package.json" with { type: "json" };
-
 const filename = fileURLToPath(import.meta.url);
-const buildPath = join(dirname(filename), "./build");
-const version = pkg.version;
+const buildPath = join(dirname(filename), "../../build");
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -27,6 +24,6 @@ export default defineConfig({
   build: {
     minify: true,
     sourcemap: false,
-    outDir: `${buildPath}/tcore-v${version}`,
+    outDir: `${buildPath}/console`,
   },
 });

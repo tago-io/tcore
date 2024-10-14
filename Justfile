@@ -9,4 +9,4 @@ linter:
   @npx @biomejs/biome check
 
 build-console:
- @node {{NODE_PARAMS}} packages/tcore-console/esbuild/build.ts
+  @cd packages/tcore-console && npm run build
