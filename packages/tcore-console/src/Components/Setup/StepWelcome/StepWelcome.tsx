@@ -10,7 +10,9 @@ function StepWelcome(props: any) {
   const { onNext } = props;
 
   return (
-    <SetupForm buttons={[{}, { label: "Next", onClick: onNext, type: EButton.primary }]}>
+    <SetupForm
+      buttons={[{}, { label: "Next", onClick: onNext, type: EButton.primary }]}
+    >
       <Style.Content>
         <h2>Welcome to</h2>
         <Logo />

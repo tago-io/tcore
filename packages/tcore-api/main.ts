@@ -38,11 +38,11 @@ import { setupSocketServer } from "./Socket/SocketServer.ts";
 const app = express();
 const httpServer = createServer(app);
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const dirname_ = dirname(__filename);
 
 const consolePath = path.join(
-  __dirname,
-  "../tcore-console/build",
+  dirname_,
+  "../../build/console",
 );
 
 /**

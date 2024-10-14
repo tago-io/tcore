@@ -5,8 +5,9 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "rm -rf ./build; node esbuild/build.js",
-    "watch": "rm -rf ./build; node esbuild/build.js --watch"
+    "dev": "vite",
+    "watch": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "@antv/g2": "4.1.23",
@@ -49,8 +50,11 @@
     "@types/semver": "7.3.9",
     "@types/styled-components": "5.1.11",
     "@types/tinycolor2": "1.4.3",
+    "@vitejs/plugin-react-swc": "3.7.1",
     "esbuild": "0.24.0",
     "esbuild-jest": "0.5.0",
-    "jest-transform-stub": "2.0.0"
+    "jest-transform-stub": "2.0.0",
+    "vite": "5.4.9",
+    "vite-plugin-svgr": "4.2.0"
   }
 }
