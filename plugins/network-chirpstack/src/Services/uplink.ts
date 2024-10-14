@@ -1,8 +1,7 @@
 import { core } from "@tago-io/tcore-sdk";
-import { Request, Response } from "express";
-import { IDevice } from "@tago-io/tcore-sdk/build/Types";
-import { IConfigParam } from "../types";
-import sendResponse from "../lib/sendResponse";
+import type { Request, Response } from "express";
+import type { IConfigParam } from "../types.ts";
+import sendResponse from "../lib/sendResponse.ts";
 
 interface IChirpstackPayload {
   applicationID: string;
@@ -10,8 +9,8 @@ interface IChirpstackPayload {
   deviceName: string;
   devEUI: string;
   devAddr: string;
-  rxInfo: {}[];
-  txInfo: {};
+  rxInfo: any[];
+  txInfo: any;
   adr: boolean;
   dr: number;
   fCnt: number;
@@ -19,7 +18,7 @@ interface IChirpstackPayload {
   data?: string;
   payload?: string;
   objectJSON: string;
-  tags: {};
+  tags: any;
   margin: number;
   externalPowerSource: boolean;
   batteryLevelUnavailable: boolean;
@@ -100,4 +99,5 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
 }
 
 export default uplinkService;
-export { getDevice, IChirpstackPayload };
+export { getDevice };
+export type { IChirpstackPayload };

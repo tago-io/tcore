@@ -1,4 +1,4 @@
-import toTagoFormat, { IDeviceDataLatLng } from "../lib/toTagoFormat";
+import toTagoFormat, { type IDeviceDataLatLng } from "../lib/toTagoFormat.ts";
 
 interface IRXInfo {
   time: string;
