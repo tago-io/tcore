@@ -1,8 +1,3 @@
-// we do this workaround to make sure the API always points to the right place,
-// regardless in which URL the application is running.
-const { location } = window;
-process.env.TAGOIO_API = `${location.protocol}//${location.hostname}:${location.port}`;
-
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
