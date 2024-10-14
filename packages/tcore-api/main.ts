@@ -42,7 +42,8 @@ const __dirname = dirname(__filename);
 
 const consolePath = path.join(
   __dirname,
-  "../tcore-console/build",
+  //  FIXME:(klaus) build path with js
+  "../tcore-console/build/tcore-v0.7.0.js",
 );
 
 /**
