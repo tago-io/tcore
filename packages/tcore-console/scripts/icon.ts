@@ -1,6 +1,6 @@
 import fs from "fs";
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
 const __filename = fileURLToPath(import.meta.url);
 const dirname_ = dirname(__filename);
@@ -32,7 +32,7 @@ const template = [
     .filter((x) => !x.startsWith(".")) // can't start with a dot
     .map(
       (x) =>
-        `  "${x.replace(".svg", "")}": require("../../../assets/icons/${x}"),`,
+        `  "${x.replace(".svg", "")}": lazy(() => ("../../../assets/icons/${x}")),`,
     ) // map the output to be an enum field
     .join("\n"),
   "}",
