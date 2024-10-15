@@ -86,7 +86,7 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
 
   core.emitToLiveInspector(device.id, {
     title: "Uplink HTTP Request",
-    content: `HOST: ${req.host}`,
+    content: `HOST: ${req.hostname}`,
   });
 
   await core.addDeviceData(device.id, data).catch((e) => {
