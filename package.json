@@ -1,9 +1,9 @@
 {
-  "name": "@tago-io/tcore",
+  "name": "@tago-io/tagocore",
   "version": "0.7.0",
-  "author": "Tago LLC",
-  "description": "TCore by TagoIO",
-  "license": "MIT",
+  "author": "TagoIO Inc.",
+  "description": "TagoCore by TagoIO",
+  "license": "Apache-2.0",
   "private": true,
   "bin": "packages/tcore-cli/build/index.js",
   "engines": {
