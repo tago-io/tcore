@@ -17,6 +17,8 @@ build-console:
   @cd packages/console && npm run build
 
 
+########################### INFRA
+
 # The process.env is not working on Vite Build
 # This is a workaround to make it work
 file_path := "./node_modules/@tago-io/sdk/out/regions.js"
