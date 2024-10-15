@@ -57,8 +57,8 @@ The network server, LoraWAN Chirpstack, sends the device EUI as an identifier fo
 
 To ensure the integration correctly identifies the device, you must add a tag for each of your devices in TagoCore, as follows:
 
-Tag key: serial
-Tag value: copy the Device EUI into the value of the tag.
+* **Tag key**: serial
+* **Tag value**: copy the Device EUI into the value of the tag.
 
 For TagoCore to interpret the payload sent by Chirpstack, you need to go to the device and select the Encoder Stack as Chirpstack LoRaWAN.
 
