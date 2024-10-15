@@ -4,10 +4,6 @@
   "private": true,
   "main": "./src/index.ts",
   "type": "module",
-  "files": [
-    "assets/**/*",
-    "build/**/*"
-  ],
   "tcore": {
     "name": "Local Disk Filesystem",
     "types": ["filesystem"],

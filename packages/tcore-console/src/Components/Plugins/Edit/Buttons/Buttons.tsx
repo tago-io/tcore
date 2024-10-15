@@ -42,13 +42,6 @@ function Buttons(props: IButtonsProps) {
   }, []);
 
   /**
-   * Closes the uninstall modal.
-   */
-  const deactivateModalUninstall = useCallback(() => {
-    setModalUninstall(false);
-  }, []);
-
-  /**
    */
   const enable = useCallback(() => {
     onEnable();
@@ -85,21 +78,6 @@ function Buttons(props: IButtonsProps) {
             <span>Disable</span>
           </Button>
         ))}
-
-      {data.allow_uninstall && (
-        <Button addIconMargin type={EButton.danger_outline} onClick={activateModalUninstall}>
-          <Icon icon={EIcon["trash-alt"]} />
-          <span>Uninstall</span>
-        </Button>
-      )}
-
-      {modalUninstall && (
-        <ModalUninstallPlugin
-          redirectTo="/"
-          onClose={deactivateModalUninstall}
-          onConfirm={onUninstall}
-        />
-      )}
     </Style.Container>
   );
 }

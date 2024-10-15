@@ -65,7 +65,6 @@ function SettingsTab(props: ISettingsTab) {
     onStartModule,
     onStopModule,
     onChangeValues,
-    onUninstall,
   } = props;
 
   /**
@@ -169,7 +168,6 @@ function SettingsTab(props: ISettingsTab) {
               data={data}
               onDisable={onDisable}
               onEnable={onEnable}
-              onUninstall={onUninstall}
             />
           </div>
         </div>

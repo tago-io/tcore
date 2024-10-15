@@ -7,9 +7,6 @@
   "engines": {
     "tcore": ">= 0.7.0 <= 1.0.0"
   },
-  "files": [
-    "build/**"
-  ],
   "tcore": {
     "name": "Freezer Simulator",
     "short_description": "Ice cream freezer that simulates internal temperature, door and compressor status",
