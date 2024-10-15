@@ -64,7 +64,7 @@ For TagoCore to interpret the payload sent by Chirpstack, you need to go to the 
 
 ---
 # Action type: Send downlink to the device
-This integration also add a new action which you can use the send downlink to the device. Such as select as type of the action when setting up new actions.
+This integration also needs you to add a new action which you can use the send downlink to the device. Such as select as type of the action when setting up new actions.
 
 If using an Action trigger of Variable, you can enter dynamically setup the device and payload:
 
