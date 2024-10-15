@@ -34,7 +34,7 @@ const deviceDB = {} as IDatabaseConnection;
 
 const migrationConfig: Knex.MigratorConfig = {
   tableName: "migrations",
-  directory: path.join(dirname__, "Migrations"),
+  directory: path.join(dirname__, "..", "Migrations"),
   // ! FIX Error: The migration directory is corrupt, the following files are missing:
   disableMigrationsListValidation: true,
 };
@@ -226,15 +226,11 @@ async function destroyKnex(this: DatabaseModule) {
 async function testDatabaseConnection() {
   try {
     console.info("Establishing database connection");
-    console.log("iniciou teste");
+
     await mainDB?.read?.raw("SELECT 1");
-    console.log("passou read main");
     await mainDB?.write?.raw("SELECT 1");
-    console.log("passou write main");
     await deviceDB?.read?.raw("SELECT 1");
-    console.log("passou read device");
     await deviceDB?.write?.raw("SELECT 1");
-    console.log("passou write device");
 
     console.info("Connected to database");
   } catch (e: any) {
