@@ -2,8 +2,11 @@ export TZ := "UTC"
 TS_LOADER := " --import @swc-node/register/esm-register"
 NODE_PARAMS := "--no-warnings " + TS_LOADER
 
-run package file="main.ts" *node_args="":
-  @node {{NODE_PARAMS}} {{node_args}} packages/{{package}}/{{file}}
+_default:
+  @just --list
+
+server *node_args="":
+  @node {{NODE_PARAMS}} {{node_args}} packages/server/main.ts --start
 
 linter:
   @npx @biomejs/biome check
@@ -11,8 +14,7 @@ linter:
 build-console:
   just _pre-build
   @rm -rf build/console
-  @cd packages/tcore-console && npm run build
-
+  @cd packages/console && npm run build
 
 
 # The process.env is not working on Vite Build

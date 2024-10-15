@@ -193,7 +193,7 @@ export async function startServer() {
   process.on("SIGINT", () => shutdown(httpServer));
 }
 
-const watchMode = process.argv.join(" ").includes("tcore-api/main.ts");
+const watchMode = process.argv.join(" ").includes("server/main.ts");
 if (watchMode) {
   startServer();
 }
