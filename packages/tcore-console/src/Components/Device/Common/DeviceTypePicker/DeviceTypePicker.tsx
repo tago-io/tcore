@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { useTheme } from "styled-components";
-import getDeviceTypeName from "../../../../Helpers/getDeviceTypeName";
-import Icon from "../../../Icon/Icon";
+import getDeviceTypeName from "../../../../Helpers/getDeviceTypeName.ts";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import OptionsPicker from "../../../OptionsPicker/OptionsPicker";
+import OptionsPicker from "../../../OptionsPicker/OptionsPicker.tsx";
 import * as Style from "./DeviceTypePicker.style";
 
 /**

@@ -1,14 +1,14 @@
-import { IModuleSetup, IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
+import type { IModuleSetup, IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
 import { useTheme } from "styled-components";
-import FormDivision from "../../../FormDivision/FormDivision";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Markdown from "../../../Markdown/Markdown";
-import Buttons from "../Buttons/Buttons";
-import EmptyMessage from "../../../EmptyMessage/EmptyMessage";
-import MainInformation from "../../Common/MainInformation/MainInformation";
-import ModuleSetup from "../../Common/ModuleSetup/ModuleSetup";
-import { Button, Icon } from "../../../..";
-import Status from "../../Common/Status/Status";
+import Markdown from "../../../Markdown/Markdown.tsx";
+import Buttons from "../Buttons/Buttons.tsx";
+import EmptyMessage from "../../../EmptyMessage/EmptyMessage.tsx";
+import MainInformation from "../../Common/MainInformation/MainInformation.tsx";
+import ModuleSetup from "../../Common/ModuleSetup/ModuleSetup.tsx";
+import { Button, Icon } from "../../../../index.ts";
+import Status from "../../Common/Status/Status.tsx";
 import * as Style from "./SettingsTab.style";
 
 /**
@@ -65,7 +65,6 @@ function SettingsTab(props: ISettingsTab) {
     onStartModule,
     onStopModule,
     onChangeValues,
-    onUninstall,
   } = props;
 
   /**
@@ -169,7 +168,6 @@ function SettingsTab(props: ISettingsTab) {
               data={data}
               onDisable={onDisable}
               onEnable={onEnable}
-              onUninstall={onUninstall}
             />
           </div>
         </div>

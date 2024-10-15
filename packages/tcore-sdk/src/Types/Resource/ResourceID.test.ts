@@ -1,4 +1,4 @@
-import { generateResourceID, validateResourceID } from "./ResourceID";
+import { generateResourceID, validateResourceID } from "./ResourceID.ts";
 
 describe("Test generateResourceID", () => {
   test("Generate resource id", () => {

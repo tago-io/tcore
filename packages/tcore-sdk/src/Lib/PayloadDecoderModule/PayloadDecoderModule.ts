@@ -1,5 +1,5 @@
-import { IModuleSetupWithoutType } from "../../Types";
-import TCoreModule from "../TCoreModule/TCoreModule";
+import type { IModuleSetupWithoutType } from "../../Types.ts";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows data to be decoded after it is retrieved from a bucket.

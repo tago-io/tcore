@@ -1,12 +1,12 @@
 import { useTheme } from "styled-components";
-import { IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
 import { EIcon } from "../../Icon/Icon.types";
-import ListPage from "../../ListPage/ListPage";
-import RelativeDate from "../../RelativeDate/RelativeDate";
-import Capitalize from "../../Capitalize/Capitalize";
-import getDeviceList from "../../../Requests/getDeviceList";
-import getDeviceTypeName from "../../../Helpers/getDeviceTypeName";
-import ButtonDataAmount from "./ButtonDataAmount/ButtonDataAmount";
+import ListPage from "../../ListPage/ListPage.tsx";
+import RelativeDate from "../../RelativeDate/RelativeDate.tsx";
+import Capitalize from "../../Capitalize/Capitalize.tsx";
+import getDeviceList from "../../../Requests/getDeviceList.ts";
+import getDeviceTypeName from "../../../Helpers/getDeviceTypeName.ts";
+import ButtonDataAmount from "./ButtonDataAmount/ButtonDataAmount.tsx";
 
 /**
  * The bucket list page.

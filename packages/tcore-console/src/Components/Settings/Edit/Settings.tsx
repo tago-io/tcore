@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from "react";
 import { useTheme } from "styled-components";
-import { ISettings, ISettingsMetadata, zSettings } from "@tago-io/tcore-sdk/types";
+import { type ISettings, type ISettingsMetadata, zSettings } from "@tago-io/tcore-sdk/types";
 import cloneDeep from "lodash.clonedeep";
-import EditPage from "../../EditPage/EditPage";
+import EditPage from "../../EditPage/EditPage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import buildZodError from "../../../Validation/buildZodError";
-import ModalChanges from "../Common/ModalChanges/ModalChanges";
-import editSettings from "../../../Requests/editSettings";
-import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab";
+import buildZodError from "../../../Validation/buildZodError.ts";
+import ModalChanges from "../Common/ModalChanges/ModalChanges.tsx";
+import editSettings from "../../../Requests/editSettings.ts";
+import GeneralInformationTab from "./GeneralInformationTab/GeneralInformationTab.tsx";
 
 /**
  * The device edit page.

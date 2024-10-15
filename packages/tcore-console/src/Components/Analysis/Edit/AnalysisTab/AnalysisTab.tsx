@@ -1,19 +1,19 @@
-import { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
+import type { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
 import { memo, useCallback, useEffect, useState } from "react";
-import downloadFile from "../../../../Helpers/download";
-import getDateTimeObject from "../../../../Helpers/getDateTimeObject";
-import Button from "../../../Button/Button";
+import downloadFile from "../../../../Helpers/download.ts";
+import getDateTimeObject from "../../../../Helpers/getDateTimeObject.ts";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import Console from "../../../Console/Console";
-import FlexRow from "../../../FlexRow/FlexRow";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Tooltip from "../../../Tooltip/Tooltip";
-import Icon from "../../../Icon/Icon";
+import Console from "../../../Console/Console.tsx";
+import FlexRow from "../../../FlexRow/FlexRow.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Tooltip from "../../../Tooltip/Tooltip.tsx";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import ProgramFieldset from "../../../ProgramFieldset/ProgramFieldset";
-import AutomateTip from "../../Common/AutomateTip/AutomateTip";
-import ConsoleOptions from "../../Common/ConsoleOptions/ConsoleOptions";
+import Input from "../../../Input/Input.tsx";
+import ProgramFieldset from "../../../ProgramFieldset/ProgramFieldset.tsx";
+import AutomateTip from "../../Common/AutomateTip/AutomateTip.tsx";
+import ConsoleOptions from "../../Common/ConsoleOptions/ConsoleOptions.tsx";
 import * as Style from "./AnalysisTab.style";
 
 /**

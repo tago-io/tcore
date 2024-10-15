@@ -1,4 +1,4 @@
-import { INetworkDeviceParameter, TGenericID } from "./index";
+import type { INetworkDeviceParameter, TGenericID } from "./index.ts";
 
 export interface IConnectorCreate {
   name?: string;

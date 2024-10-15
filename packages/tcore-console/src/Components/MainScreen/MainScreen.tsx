@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useState } from "react";
-import Navbar from "../Navbar/Navbar";
-import Sidebar from "../Sidebar/Sidebar";
+import { type ReactNode, useCallback, useState } from "react";
+import Navbar from "../Navbar/Navbar.tsx";
+import Sidebar from "../Sidebar/Sidebar.tsx";
 import * as Style from "./MainScreen.style";
 
 /**

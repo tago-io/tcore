@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect, ReactNode, useRef } from "react";
-import { ITag, ISummary } from "@tago-io/tcore-sdk/types";
+import { useState, useCallback, useEffect, type ReactNode, useRef } from "react";
+import type { ITag, ISummary } from "@tago-io/tcore-sdk/types";
 import { EIcon } from "../Icon/Icon.types";
-import InnerNav from "../InnerNav/InnerNav";
-import PaginatedTable from "../PaginatedTable/PaginatedTable";
-import { IColumn } from "../PaginatedTable/PaginatedTable.types";
-import setDocumentTitle from "../../Helpers/setDocumentTitle";
-import useApiRequest from "../../Helpers/useApiRequest";
+import InnerNav from "../InnerNav/InnerNav.tsx";
+import PaginatedTable from "../PaginatedTable/PaginatedTable.tsx";
+import type { IColumn } from "../PaginatedTable/PaginatedTable.types";
+import setDocumentTitle from "../../Helpers/setDocumentTitle.ts";
+import useApiRequest from "../../Helpers/useApiRequest.ts";
 import * as Style from "./ListPage.style";
 
 /**

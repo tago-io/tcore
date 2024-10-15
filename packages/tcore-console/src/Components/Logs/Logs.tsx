@@ -1,17 +1,17 @@
-import { ILog, IPluginLogChannel } from "@tago-io/tcore-sdk/types";
+import type { ILog, IPluginLogChannel } from "@tago-io/tcore-sdk/types";
 import { useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import qs from "qs";
-import setDocumentTitle from "../../Helpers/setDocumentTitle";
-import useApiRequest from "../../Helpers/useApiRequest";
-import Console from "../Console/Console";
-import EmptyMessage from "../EmptyMessage/EmptyMessage";
-import FormGroup from "../FormGroup/FormGroup";
+import setDocumentTitle from "../../Helpers/setDocumentTitle.ts";
+import useApiRequest from "../../Helpers/useApiRequest.ts";
+import Console from "../Console/Console.tsx";
+import EmptyMessage from "../EmptyMessage/EmptyMessage.tsx";
+import FormGroup from "../FormGroup/FormGroup.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import InnerNav from "../InnerNav/InnerNav";
-import Select, { ISelectOption } from "../Select/Select";
-import Loading from "../Loading/Loading";
-import { getSocket } from "../../System/Socket";
+import InnerNav from "../InnerNav/InnerNav.tsx";
+import Select, { type ISelectOption } from "../Select/Select.tsx";
+import Loading from "../Loading/Loading.tsx";
+import { getSocket } from "../../System/Socket.ts";
 import * as Style from "./Logs.style";
 
 /**
@@ -89,11 +89,10 @@ function Logs() {
     return (logs || []).filter((x) => {
       if (selectedType === "all") {
         return x;
-      } else if (selectedType === "verbose") {
+      } if (selectedType === "verbose") {
         return (x as any).type === "log";
-      } else {
-        return (x as any).type === "error";
       }
+      return (x as any).type === "error";
     });
   };
 

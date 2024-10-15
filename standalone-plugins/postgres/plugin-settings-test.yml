@@ -1,0 +1,13 @@
+disabled: false
+modules:
+  - id: PostgreSQL
+    values:
+      main_connection: single
+      main_read_host: db
+      main_read_port: 5432
+      main_database: test
+      device_database: test
+      main_user: root
+      main_password: root
+      main_min_pool: 1
+      main_max_pool: 10

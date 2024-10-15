@@ -1,13 +1,13 @@
-import { IAction, IPluginModuleListItem } from "@tago-io/tcore-sdk/types";
-import { Input } from "../../../..";
-import FormGroup from "../../../FormGroup/FormGroup";
+import type { IAction, IPluginModuleListItem } from "@tago-io/tcore-sdk/types";
+import { Input } from "../../../../index.ts";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import PluginConfigFields from "../../../Plugins/Common/PluginConfigFields/PluginConfigFields";
-import ActionFields from "../../Common/ActionFields/ActionFields";
-import ConditionTrigger from "../ConditionTrigger/ConditionTrigger";
-import ScheduleTrigger from "../ScheduleTrigger/ScheduleTrigger";
-import MessageTriggerNotFound from "../ScheduleTrigger/MessageTriggerNotFound/MessageTriggerNotFound";
-import { IConditionData, IScheduleData } from "../../Action.interface";
+import PluginConfigFields from "../../../Plugins/Common/PluginConfigFields/PluginConfigFields.tsx";
+import ActionFields from "../../Common/ActionFields/ActionFields.tsx";
+import ConditionTrigger from "../ConditionTrigger/ConditionTrigger.tsx";
+import ScheduleTrigger from "../ScheduleTrigger/ScheduleTrigger.tsx";
+import MessageTriggerNotFound from "../ScheduleTrigger/MessageTriggerNotFound/MessageTriggerNotFound.tsx";
+import type { IConditionData, IScheduleData } from "../../Action.interface";
 import * as Style from "./ActionTab.style";
 
 /**
@@ -52,7 +52,7 @@ function ActionTab(props: IActionTab) {
     if (data.type.includes(":") && !customTrigger) {
       const triggerName = data.type.split(":")[1];
       return <MessageTriggerNotFound isPlugin triggerName={triggerName} />;
-    } else if (customTrigger) {
+    }if (customTrigger) {
       return (
         <PluginConfigFields
           data={customTrigger?.setup?.option?.configs || []}
@@ -61,7 +61,7 @@ function ActionTab(props: IActionTab) {
           values={pluginTriggerData}
         />
       );
-    } else if (data.type === "interval" || data.type === "schedule") {
+    }if (data.type === "interval" || data.type === "schedule") {
       return (
         <ScheduleTrigger
           errors={errors}
@@ -69,7 +69,7 @@ function ActionTab(props: IActionTab) {
           scheduleData={scheduleData}
         />
       );
-    } else if (data.type === "condition") {
+    }if (data.type === "condition") {
       return (
         <ConditionTrigger
           conditionData={props.conditionData}
@@ -77,9 +77,8 @@ function ActionTab(props: IActionTab) {
           onChangeConditionData={props.onChangeConditionData}
         />
       );
-    } else {
-      return <MessageTriggerNotFound triggerName={data.type} />;
     }
+      return <MessageTriggerNotFound triggerName={data.type} />;
   };
 
   /**

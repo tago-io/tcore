@@ -1,16 +1,16 @@
 import { useTheme } from "styled-components";
 import { useState } from "react";
-import { IAction, IPluginModuleList } from "@tago-io/tcore-sdk/types";
-import BooleanStatus from "../../BooleanStatus/BooleanStatus";
-import Button from "../../Button/Button";
+import type { IAction, IPluginModuleList } from "@tago-io/tcore-sdk/types";
+import BooleanStatus from "../../BooleanStatus/BooleanStatus.tsx";
+import Button from "../../Button/Button.tsx";
 import { EButton } from "../../Button/Button.types";
-import Icon from "../../Icon/Icon";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import ListPage from "../../ListPage/ListPage";
-import RelativeDate from "../../RelativeDate/RelativeDate";
-import ModalAddAction from "../Common/ModalAddAction/ModalAddAction";
-import useApiRequest from "../../../Helpers/useApiRequest";
-import getActionList from "../../../Requests/getActionList";
+import ListPage from "../../ListPage/ListPage.tsx";
+import RelativeDate from "../../RelativeDate/RelativeDate.tsx";
+import ModalAddAction from "../Common/ModalAddAction/ModalAddAction.tsx";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import getActionList from "../../../Requests/getActionList.ts";
 import * as Style from "./ActionList.style";
 
 /**
@@ -47,13 +47,12 @@ function ActionList() {
         EIcon["puzzle-piece"],
         type?.setup?.name || "Unknown"
       );
-    } else if (item.type === "condition") {
+    }if (item.type === "condition") {
       return renderIcon(theme.bucket, theme.bucket, EIcon.database, "Variable");
-    } else if (item.type === "interval" || item.type === "schedule") {
+    }if (item.type === "interval" || item.type === "schedule") {
       return renderIcon(theme.action, theme.action, EIcon.clock, "Schedule");
-    } else {
-      return "Unknown";
     }
+      return "Unknown";
   };
 
   /**
@@ -64,15 +63,14 @@ function ActionList() {
     if (isCustom) {
       const type = types?.find((x) => `${x.pluginID}:${x.setup.id}` === item.action?.type);
       return type?.setup?.name || "Unknown";
-    } else if (item.action?.type === "script") {
+    }if (item.action?.type === "script") {
       return "Run Analysis";
-    } else if (item.action?.type === "post") {
+    }if (item.action?.type === "post") {
       return "Post data to endpoint using HTTP";
-    } else if (item.action?.type === "tagoio") {
+    }if (item.action?.type === "tagoio") {
       return "Insert data into TagoIO";
-    } else {
-      return "Unknown";
     }
+      return "Unknown";
   };
 
   /**
@@ -81,9 +79,8 @@ function ActionList() {
   const renderLock = (item: IAction) => {
     if (item.lock) {
       return renderIcon(theme.buttonDanger, "", EIcon.lock, "Locked");
-    } else {
-      return renderIcon("green", "", EIcon["lock-open"], "Unlocked");
     }
+      return renderIcon("green", "", EIcon["lock-open"], "Unlocked");
   };
 
   return (

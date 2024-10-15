@@ -1,4 +1,4 @@
-import { ITag } from "@tago-io/tcore-sdk/types";
+import type { ITag } from "@tago-io/tcore-sdk/types";
 
 /**
  * Normalizes the tags array to return a consistent output free of small errors.

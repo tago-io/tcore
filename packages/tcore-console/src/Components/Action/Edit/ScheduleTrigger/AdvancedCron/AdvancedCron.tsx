@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
-import { EIcon, FormGroup } from "../../../../..";
-import { IScheduleData } from "../../../Action.interface";
-import { spreadCronToScheduleData } from "../../Logic/spreadCronToScheduleData";
+import { EIcon, FormGroup } from "../../../../../index.ts";
+import type { IScheduleData } from "../../../Action.interface";
+import { spreadCronToScheduleData } from "../../Logic/spreadCronToScheduleData.ts";
 import * as Style from "./AdvancedCron.style";
 
 /**

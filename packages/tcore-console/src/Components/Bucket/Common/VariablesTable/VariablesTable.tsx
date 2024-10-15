@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouteMatch } from "react-router";
-import { IDeviceData, IDevice } from "@tago-io/tcore-sdk/types";
-import RelativeDate from "../../../RelativeDate/RelativeDate";
-import CopyButton from "../../../CopyButton/CopyButton";
-import TooltipText from "../../../TooltipText/TooltipText";
-import Checkbox from "../../../Checkbox/Checkbox";
+import type { IDeviceData, IDevice } from "@tago-io/tcore-sdk/types";
+import RelativeDate from "../../../RelativeDate/RelativeDate.tsx";
+import CopyButton from "../../../CopyButton/CopyButton.tsx";
+import TooltipText from "../../../TooltipText/TooltipText.tsx";
+import Checkbox from "../../../Checkbox/Checkbox.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import { IFilter } from "../../../PaginatedTable/PaginatedTable.types";
-import PaginatedTable from "../../../PaginatedTable/PaginatedTable";
-import getDeviceData from "../../../../Requests/getDeviceData";
-import ModalListConfiguration from "../../../ModalListConfiguration/ModalListConfiguration";
-import getDateTimeObject from "../../../../Helpers/getDateTimeObject";
-import { getLocalStorageAsJSON } from "../../../../Helpers/localStorage";
-import { Icon } from "../../../..";
-import copyToClipboard from "../../../../Helpers/copyToClipboard";
-import ModalEditValue from "../../Edit/ModalEditValue/ModalEditValue";
-import ModalEditGroup from "../../Edit/ModalEditGroup/ModalEditGroup";
-import ModalEditMetadata from "../../Edit/ModalEditMetadata/ModalEditMetadata";
-import ModalEditLocation from "../../Edit/ModalEditLocation/ModalEditLocation";
+import type { IFilter } from "../../../PaginatedTable/PaginatedTable.types";
+import PaginatedTable from "../../../PaginatedTable/PaginatedTable.tsx";
+import getDeviceData from "../../../../Requests/getDeviceData.ts";
+import ModalListConfiguration from "../../../ModalListConfiguration/ModalListConfiguration.tsx";
+import getDateTimeObject from "../../../../Helpers/getDateTimeObject.ts";
+import { getLocalStorageAsJSON } from "../../../../Helpers/localStorage.ts";
+import { Icon } from "../../../../index.ts";
+import copyToClipboard from "../../../../Helpers/copyToClipboard.ts";
+import ModalEditValue from "../../Edit/ModalEditValue/ModalEditValue.tsx";
+import ModalEditGroup from "../../Edit/ModalEditGroup/ModalEditGroup.tsx";
+import ModalEditMetadata from "../../Edit/ModalEditMetadata/ModalEditMetadata.tsx";
+import ModalEditLocation from "../../Edit/ModalEditLocation/ModalEditLocation.tsx";
 import * as Style from "./VariablesTable.style";
 
 /**
@@ -241,9 +241,8 @@ function VariablesTable(props: IVariablesTableProps) {
   const renderTime = (item: IDeviceData) => {
     if (!dateFormat || dateFormat === "relative") {
       return <RelativeDate value={item.time} />;
-    } else {
-      return getDateTimeObject(item.time)?.toFormat(dateFormat);
     }
+      return getDateTimeObject(item.time)?.toFormat(dateFormat);
   };
 
   /**

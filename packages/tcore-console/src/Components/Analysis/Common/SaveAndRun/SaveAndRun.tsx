@@ -1,5 +1,5 @@
 import { memo } from "react";
-import Button from "../../../Button/Button";
+import Button from "../../../Button/Button.tsx";
 import * as Style from "./SaveAndRun.style";
 
 /**

@@ -1,12 +1,12 @@
 import {
-  IDeviceDataCreate,
-  IDeviceDataCreateLocation,
-  IDeviceDataLocationCoordinates,
-  IDeviceDataQuery,
+  type IDeviceDataCreate,
+  type IDeviceDataCreateLocation,
+  type IDeviceDataLocationCoordinates,
+  type IDeviceDataQuery,
   validateResourceID,
   zDeviceDataQuery,
-} from "..";
-import { IDeviceData, zDeviceData, zDeviceDataCreate } from "./DeviceData.types";
+} from "../index.ts";
+import { type IDeviceData, zDeviceData, zDeviceDataCreate } from "./DeviceData.types.ts";
 
 describe("zDeviceData", () => {
   const data: IDeviceData = {
@@ -18,21 +18,21 @@ describe("zDeviceData", () => {
 
   test("requires ID property", () => {
     const copy: IDeviceData = { ...data };
-    delete (copy as any).id;
+    (copy as any).id = undefined;
     const fn = () => zDeviceData.parse(copy);
     expect(fn).toThrow();
   });
 
   test("requires time property", () => {
     const copy: any = { ...data };
-    delete copy.time;
+    copy.time = undefined;
     const fn = () => zDeviceData.parse(copy);
     expect(fn).toThrow();
   });
 
   test("requires variable property", () => {
     const copy: IDeviceData = { ...data };
-    delete (copy as any).variable;
+    (copy as any).variable = undefined;
     const fn = () => zDeviceData.parse(copy);
     expect(fn).toThrow();
   });

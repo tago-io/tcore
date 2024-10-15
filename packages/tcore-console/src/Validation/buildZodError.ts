@@ -1,4 +1,4 @@
-import { ZodIssueBase } from "zod";
+import type { ZodIssueBase } from "zod";
 
 function buildZodError(errors: ZodIssueBase[]) {
   const e: any = {};

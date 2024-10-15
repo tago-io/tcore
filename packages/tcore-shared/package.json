@@ -2,13 +2,7 @@
   "name": "@tago-io/tcore-shared",
   "version": "0.7.0",
   "private": true,
-  "main": "./build/index.js",
-  "scripts": {
-    "tsc:watch": "npm run watch",
-    "watch": "tsc --watch --preserveWatchOutput",
-    "build": "rm -rf ./build; tsc"
-  },
-  "dependencies": {
-    "@tago-io/tcore-sdk": "*"
-  }
+  "main": "./src/index.ts",
+  "type": "module",
+  "dependencies": {}
 }

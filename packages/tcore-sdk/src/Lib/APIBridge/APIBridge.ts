@@ -1,6 +1,6 @@
-import { parentPort } from "worker_threads";
+import { parentPort } from "node:worker_threads";
 import { nanoid } from "nanoid";
-import { IPluginMessage } from "../../Types";
+import type { IPluginMessage } from "../../Types.ts";
 
 /**
  * A single callback waiting to be triggered from one of the API responses.

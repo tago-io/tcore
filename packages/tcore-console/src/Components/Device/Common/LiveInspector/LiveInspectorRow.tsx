@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
-import Icon from "../../../Icon/Icon";
-import getDateTimeObject from "../../../../Helpers/getDateTimeObject";
+import Icon from "../../../Icon/Icon.tsx";
+import getDateTimeObject from "../../../../Helpers/getDateTimeObject.ts";
 import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./LiveInspector.style";
 

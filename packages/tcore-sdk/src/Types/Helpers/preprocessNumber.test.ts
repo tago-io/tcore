@@ -1,4 +1,4 @@
-import preprocessNumber from "./preprocessNumber";
+import preprocessNumber from "./preprocessNumber.ts";
 
 describe("preprocessNumber", () => {
   test("process string param", () => {

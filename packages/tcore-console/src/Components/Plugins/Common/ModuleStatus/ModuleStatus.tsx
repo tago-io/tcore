@@ -1,9 +1,9 @@
-import { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
+import type { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
-import { EIcon, Icon } from "../../../..";
-import Button from "../../../Button/Button";
-import Capitalize from "../../../Capitalize/Capitalize";
+import { EIcon, Icon } from "../../../../index.ts";
+import Button from "../../../Button/Button.tsx";
+import Capitalize from "../../../Capitalize/Capitalize.tsx";
 import * as Style from "./ModuleStatus.style";
 
 /**

@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { EIcon, Icon } from "../../../..";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type EIcon, Icon } from "../../../../index.ts";
 import * as Style from "./Status.style";
 
 /**
@@ -48,7 +48,7 @@ function Status(props: IStatusProps) {
       }, 350);
 
       return () => clearTimeout(timeout.current);
-    } else if (runAgain.current) {
+    }if (runAgain.current) {
       runAgain.current = false;
       setRunningAnimation(true);
     }
@@ -61,7 +61,7 @@ function Status(props: IStatusProps) {
         {icon && <Icon icon={icon} size={iconSize} color={iconColor} />}
         <div>
           {title && <h2>{title}</h2>}
-          <span className={`value ${animation}`}>{text || <>&nbsp;</>}</span>
+          <span className={`value ${animation}`}>{text || "&nbsp;"}</span>
         </div>
       </div>
 

@@ -1,20 +1,19 @@
-import { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
+import type { ISettings, ISettingsMetadata } from "@tago-io/tcore-sdk/types";
 import { getSystemName } from "@tago-io/tcore-shared";
 import { observer } from "mobx-react";
 import { useState } from "react";
-import { Button, EButton, Icon } from "../../../..";
-import useApiRequest from "../../../../Helpers/useApiRequest";
-import store from "../../../../System/Store";
-import Col from "../../../Col/Col";
-import FileSelect from "../../../FileSelect/FileSelect";
-import FormDivision from "../../../FormDivision/FormDivision";
-import FormGroup from "../../../FormGroup/FormGroup";
+import { Button, EButton, Icon } from "../../../../index.ts";
+import useApiRequest from "../../../../Helpers/useApiRequest.ts";
+import store from "../../../../System/Store.ts";
+import Col from "../../../Col/Col.tsx";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import ModalFactoryReset from "../../../Plugins/Common/ModalFactoryReset/ModalFactoryReset";
-import ModalMasterPassword from "../../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import Row from "../../../Row/Row";
-import Select, { ISelectOption } from "../../../Select/Select";
+import Input from "../../../Input/Input.tsx";
+import ModalFactoryReset from "../../../Plugins/Common/ModalFactoryReset/ModalFactoryReset.tsx";
+import ModalMasterPassword from "../../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import Row from "../../../Row/Row.tsx";
+import Select, { type ISelectOption } from "../../../Select/Select.tsx";
 import * as Style from "./GeneralInformationTab.style";
 
 /**
@@ -136,24 +135,6 @@ function GeneralInformationTab(props: IGeneralInformationTabProps) {
 
         <Col size="6">
           <FormDivision icon={EIcon["puzzle-piece"]} title="Plugin Settings" />
-
-          <FormGroup
-            tooltip="The location in the server's filesystem where the plugin folder will reside."
-            icon={EIcon.folder}
-            label="Plugins folder"
-          >
-            <FileSelect
-              error={errors?.plugin_folder}
-              modalMessage={`Select a folder to be used as the plugins folder of ${getSystemName()}.`}
-              onChange={(e) => props.onChange("plugin_folder", e)}
-              onlyFolders
-              placeholder="e.g. /users/tcore-plugins"
-              value={data.plugin_folder}
-              disabled={metadata?.plugin_folder_disabled}
-              useLocalFs
-            />
-          </FormGroup>
-
           <FormGroup
             tooltip={`The plugin that will be used as the main database for ${getSystemName()}.`}
             icon={EIcon.database}

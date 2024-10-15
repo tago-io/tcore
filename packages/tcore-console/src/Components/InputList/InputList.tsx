@@ -1,7 +1,7 @@
-import Accordion from "../Accordion/Accordion";
-import { EIcon } from "../Icon/Icon.types";
-import Input from "../Input/Input";
-import RowManipulator from "../RowManipulator/RowManipulator";
+import Accordion from "../Accordion/Accordion.tsx";
+import type { EIcon } from "../Icon/Icon.types";
+import Input from "../Input/Input.tsx";
+import RowManipulator from "../RowManipulator/RowManipulator.tsx";
 
 /**
  * Props.

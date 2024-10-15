@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "../System/Store";
+import store from "../System/Store.ts";
 
 /**
  */

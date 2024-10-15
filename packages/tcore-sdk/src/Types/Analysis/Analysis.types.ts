@@ -7,12 +7,12 @@ import {
   zTagsAutoGen,
   zQuery,
   zObjectIDAutoGen,
-} from "../Common/Common.types";
-import { zTags } from "../Tag/Tag.types";
-import { zLog } from "../Log/Log.types";
-import preprocessBoolean from "../Helpers/preprocessBoolean";
-import preprocessObject from "../Helpers/preprocessObject";
-import createQueryOrderBy from "../Helpers/createQueryOrderBy";
+} from "../Common/Common.types.ts";
+import { zTags } from "../Tag/Tag.types.ts";
+import { zLog } from "../Log/Log.types.ts";
+import preprocessBoolean from "../Helpers/preprocessBoolean.ts";
+import preprocessObject from "../Helpers/preprocessObject.ts";
+import createQueryOrderBy from "../Helpers/createQueryOrderBy.ts";
 
 export interface IAnalysisVariable {
   key: string;

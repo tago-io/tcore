@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { AnalysisCreateInfo } from "@tago-io/sdk/out/modules/Account/analysis.types";
-import { IAnalysisCreate, TGenericID } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { AnalysisCreateInfo } from "@tago-io/sdk/out/modules/Account/analysis.types";
+import type { IAnalysisCreate, TGenericID } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.ts";
 
 /**
  */

@@ -1,6 +1,6 @@
-import { IDeviceDataQuery } from "@tago-io/tcore-sdk/types";
+import type { IDeviceDataQuery } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
-import store from "../System/Store";
+import store from "../System/Store.ts";
 
 /**
  * Deletes data from a device.

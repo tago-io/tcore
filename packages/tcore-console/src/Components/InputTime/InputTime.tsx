@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { useRef, useState, useEffect } from "react";
-import Select from "../Select/Select";
+import Select from "../Select/Select.tsx";
 import * as Style from "./InputTime.style";
 
 interface IInputTime {

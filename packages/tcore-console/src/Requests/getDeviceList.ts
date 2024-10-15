@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { DeviceQuery } from "@tago-io/sdk/out/modules/Account/devices.types";
-import { IDevice } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { DeviceQuery } from "@tago-io/sdk/out/modules/Account/devices.types";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.ts";
 
 /**
  * Retrieves a list of devices.

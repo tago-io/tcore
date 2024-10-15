@@ -1,8 +1,8 @@
-import { IAction } from "@tago-io/tcore-sdk/types";
+import type { IAction } from "@tago-io/tcore-sdk/types";
 import cloneDeep from "lodash.clonedeep";
 import { DateTime } from "luxon";
-import { IConditionData, IScheduleData, TScheduleDataIntervalUnit } from "../../Action.interface";
-import { spreadCronToScheduleData } from "./spreadCronToScheduleData";
+import type { IConditionData, IScheduleData, TScheduleDataIntervalUnit } from "../../Action.interface";
+import { spreadCronToScheduleData } from "./spreadCronToScheduleData.ts";
 
 interface IResult {
   scheduleData: IScheduleData;

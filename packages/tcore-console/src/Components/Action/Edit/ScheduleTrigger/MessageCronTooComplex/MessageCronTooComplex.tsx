@@ -1,5 +1,5 @@
-import { EIcon, Icon } from "../../../../..";
-import EmptyMessage from "../../../../EmptyMessage/EmptyMessage";
+import { EIcon, Icon } from "../../../../../index.ts";
+import EmptyMessage from "../../../../EmptyMessage/EmptyMessage.tsx";
 import * as Style from "./MessageCronTooComplex.style";
 
 /**

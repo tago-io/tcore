@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { z } from "zod";
-import { zIcon } from "../Common/Icon.types";
+import { zIcon } from "../Common/Icon.types.ts";
 
 /**
  * Validation for a combo of PluginID and ModuleID, such as:

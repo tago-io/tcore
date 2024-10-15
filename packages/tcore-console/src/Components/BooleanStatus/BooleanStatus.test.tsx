@@ -1,5 +1,5 @@
-import { render, screen } from "../../../utils/test-utils";
-import BooleanStatus from "./BooleanStatus";
+import { render, screen } from "../../../utils/test-utils.ts";
+import BooleanStatus from "./BooleanStatus.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<BooleanStatus />);

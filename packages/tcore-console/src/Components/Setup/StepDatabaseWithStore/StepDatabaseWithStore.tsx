@@ -1,7 +1,7 @@
-import { IPluginList } from "@tago-io/tcore-sdk/types";
+import type { IPluginList } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { useCallback, useEffect, useState } from "react";
-import { PLUGIN_STORE_PLUGIN_ID, SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
+import { SQLITE_PLUGIN_ID } from "@tago-io/tcore-shared";
 import {
   Button,
   EButton,
@@ -13,15 +13,15 @@ import {
   Publisher,
   Tooltip,
   useApiRequest,
-} from "../../..";
-import selectPluginFile from "../../../Helpers/selectPluginFile";
-import getPluginStoreInstallURLs from "../../../Requests/getPluginStoreInstallURLs";
-import store from "../../../System/Store";
-import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL";
-import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
-import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
-import SetupForm from "../SetupForm/SetupForm";
+} from "../../../index.ts";
+import selectPluginFile from "../../../Helpers/selectPluginFile.ts";
+import getPluginStoreInstallURLs from "../../../Requests/getPluginStoreInstallURLs.ts";
+import store from "../../../System/Store.ts";
+import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL.tsx";
+import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin.tsx";
+import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
 import * as Style from "./StepDatabaseWithStore.style";
 
 /**
@@ -42,17 +42,10 @@ function StepDatabaseWithStore(props: any) {
     skip: !store.masterPassword,
   });
   const { data: platform } = useApiRequest<string>("/hardware/platform");
-  const { data: storeList } = useApiRequest<any[]>(
-    `/plugin/${PLUGIN_STORE_PLUGIN_ID}/get-database-list/call`,
-    {
-      method: "post",
-      skip: !store.masterPassword,
-    }
-  );
 
   const installedListFiltered = installedList?.filter((x) => !x.error) || [];
 
-  const loading = !installedListFiltered || !storeList;
+  const loading = !installedListFiltered; // || !storeList;
 
   /**
    * Opens the file selector modal.
@@ -176,33 +169,17 @@ function StepDatabaseWithStore(props: any) {
       });
     }
 
-    for (const plugin of storeList) {
-      const item = result.find((x) => x.id === plugin.id);
-      if (item) {
-        item.publisher = plugin.publisher;
-      } else if (!item) {
-        result.push({
-          description: plugin.short_description,
-          id: plugin.id,
-          logoURL: plugin.logo_url,
-          name: plugin.name,
-          publisher: plugin.publisher,
-          version: plugin.version,
-        });
-      }
-    }
-
     result.sort((a, b) => {
       if (a.id === SQLITE_PLUGIN_ID && b.id !== SQLITE_PLUGIN_ID) {
         // priority for sqlite plugin
         return -1;
-      } else if (a.id !== SQLITE_PLUGIN_ID && b.id === SQLITE_PLUGIN_ID) {
+      } if (a.id !== SQLITE_PLUGIN_ID && b.id === SQLITE_PLUGIN_ID) {
         // priority for sqlite plugin
         return 1;
-      } else if (a.publisher?.domain === "tago.io" && b.publisher?.domain !== "tago.io") {
+      } if (a.publisher?.domain === "tago.io" && b.publisher?.domain !== "tago.io") {
         // then, all TagoIO plugins
         return -1;
-      } else if (a.publisher?.domain !== "tago.io" && b.publisher?.domain === "tago.io") {
+      } if (a.publisher?.domain !== "tago.io" && b.publisher?.domain === "tago.io") {
         // then, all TagoIO plugins
         return 1;
       }
@@ -246,11 +223,11 @@ function StepDatabaseWithStore(props: any) {
   /**
    */
   useEffect(() => {
-    if (storeList && installedList) {
+    if (installedList) {
       filterPlugins();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [installedList, filter, storeList]);
+  }, [installedList, filter]);
 
   return (
     <>

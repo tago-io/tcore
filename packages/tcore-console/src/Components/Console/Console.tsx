@@ -1,8 +1,8 @@
-import { ILog } from "@tago-io/tcore-sdk/types";
+import type { ILog } from "@tago-io/tcore-sdk/types";
 import { memo, useEffect, useRef } from "react";
-import getDateTimeObject from "../../Helpers/getDateTimeObject";
-import EmptyMessage from "../EmptyMessage/EmptyMessage";
-import { EIcon } from "../Icon/Icon.types";
+import getDateTimeObject from "../../Helpers/getDateTimeObject.ts";
+import EmptyMessage from "../EmptyMessage/EmptyMessage.tsx";
+import type { EIcon } from "../Icon/Icon.types";
 import * as Style from "./Console.style";
 
 /**

@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { DeviceInfo } from "@tago-io/sdk/out/modules/Account/devices.types";
-import { IDeviceEdit, TGenericID } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { DeviceInfo } from "@tago-io/sdk/out/modules/Account/devices.types";
+import type { IDeviceEdit, TGenericID } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.ts";
 
 /**
  */

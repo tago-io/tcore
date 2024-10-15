@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import FormControlStyles from "../Styles/FormControlStyles";
+import FormControlStyles from "../Styles/FormControlStyles.ts";
 
 /**
  * Main input style.

@@ -1,6 +1,6 @@
-import { TGenericID } from "@tago-io/tcore-sdk/types";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
 import axios from "axios";
-import store from "../System/Store";
+import store from "../System/Store.ts";
 
 /**
  */

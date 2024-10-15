@@ -1,6 +1,6 @@
-import { IPluginConfigField } from "@tago-io/tcore-sdk/types";
-import findConfigField from "./findConfigField";
-import isNumber from "./isNumber";
+import type { IPluginConfigField } from "@tago-io/tcore-sdk/types";
+import findConfigField from "./findConfigField.ts";
+import isNumber from "./isNumber.ts";
 
 /**
  */
@@ -29,17 +29,17 @@ function isConfigFieldVisible(
     }
 
     const fieldValue = values[data.field];
-    const fieldValueParsed = isNumber(fieldValue) ? parseFloat(fieldValue) : String(fieldValue);
+    const fieldValueParsed = isNumber(fieldValue) ? Number.parseFloat(fieldValue) : String(fieldValue);
     const fieldValueArray = [fieldValue].flat();
 
-    const valueCondition = isNumber(value) ? parseFloat(value) : String(value);
-    const valueConditionTwo = isNumber(valueTwo) ? parseFloat(valueTwo) : String(valueTwo);
+    const valueCondition = isNumber(value) ? Number.parseFloat(value) : String(value);
+    const valueConditionTwo = isNumber(valueTwo) ? Number.parseFloat(valueTwo) : String(valueTwo);
 
     if (condition === "<" && fieldValueParsed < valueCondition) {
       return true;
-    } else if (condition === ">" && fieldValueParsed > valueCondition) {
+    }if (condition === ">" && fieldValueParsed > valueCondition) {
       return true;
-    } else if (condition === "=") {
+    }if (condition === "=") {
       if (field.type === "string-list") {
         return fieldValueArray.some((x) => x === valueCondition);
       }

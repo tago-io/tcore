@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { fonts } from "../../theme";
+import { fonts } from "../../theme.ts";
 import { ESwitchSize } from "./Switch.types";
 
 /**
@@ -64,7 +64,7 @@ export const Slider = styled.span<{ selected: boolean }>`
   text-align: center;
   position: absolute;
   top: 3px;
-  left: ${(props) => (props.selected ? `calc(100% - 33% - 3px)` : "3px")};
+  left: ${(props) => (props.selected ? "calc(100% - 33% - 3px)" : "3px")};
   right: 0;
   bottom: 0;
   background-color: white;

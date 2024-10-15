@@ -1,4 +1,4 @@
-import { refineOrderBy } from "./refineOrderBy";
+import { refineOrderBy } from "./refineOrderBy.ts";
 
 describe("refineOrderBy", () => {
   test("assure correct validation", () => {

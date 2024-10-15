@@ -1,6 +1,6 @@
-import { IAnalysis } from "@tago-io/tcore-sdk/types";
-import AnalysisPicker from "../../../Analysis/Common/AnalysisPicker/AnalysisPicker";
-import RowManipulator from "../../../RowManipulator/RowManipulator";
+import type { IAnalysis } from "@tago-io/tcore-sdk/types";
+import AnalysisPicker from "../../../Analysis/Common/AnalysisPicker/AnalysisPicker.tsx";
+import RowManipulator from "../../../RowManipulator/RowManipulator.tsx";
 
 /**
  * Single item in the list.

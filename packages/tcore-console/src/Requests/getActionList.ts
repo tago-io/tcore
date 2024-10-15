@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { ActionQuery } from "@tago-io/sdk/out/modules/Account/actions.types";
-import { IAction, IActionListQuery } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { ActionQuery } from "@tago-io/sdk/out/modules/Account/actions.types";
+import type { IAction, IActionListQuery } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.ts";
 
 /**
  * Retrieves a list of actions.

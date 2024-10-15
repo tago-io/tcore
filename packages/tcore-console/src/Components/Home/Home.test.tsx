@@ -1,8 +1,8 @@
 jest.setMock("./RequestChart/RequestChart.tsx", "div");
 
 import { getSystemName } from "@tago-io/tcore-shared";
-import { render, screen } from "../../../utils/test-utils";
-import Home from "./Home";
+import { render, screen } from "../../../utils/test-utils.ts";
+import Home from "./Home.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Home />);

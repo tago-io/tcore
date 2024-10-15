@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { zSummary } from "./Summary.types";
+import type { ZodError } from "zod";
+import { zSummary } from "./Summary.types.ts";
 
 describe("zSummary", () => {
   test("parses simple object", () => {
@@ -12,7 +12,7 @@ describe("zSummary", () => {
     expect(parsed.device).toEqual(1);
   });
 
-  test("assure correct types", () => {
+  test("assure correct types.ts", () => {
     const data = {
       device: " ",
       analysis: " ",

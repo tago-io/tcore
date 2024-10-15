@@ -1,13 +1,13 @@
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
-import { Button, EButton, EIcon, Icon } from "../../..";
-import selectPluginFile from "../../../Helpers/selectPluginFile";
-import store from "../../../System/Store";
-import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL";
-import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
-import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
-import SetupForm from "../SetupForm/SetupForm";
+import { Button, EButton, EIcon, Icon } from "../../../index.ts";
+import selectPluginFile from "../../../Helpers/selectPluginFile.ts";
+import store from "../../../System/Store.ts";
+import ModalDownloadFromURL from "../../Plugins/Common/ModalDownloadFromURL/ModalDownloadFromURL.tsx";
+import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin.tsx";
+import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
 import * as Style from "./StepDatabaseNoStore.style";
 
 /**

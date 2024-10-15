@@ -1,4 +1,4 @@
-import core from "./Core";
+import core from "./Core.ts";
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -126,11 +126,11 @@ test("getDeviceDataAmount", async () => {
   expect(fn).toHaveBeenCalledWith("getDeviceDataAmount", "61261ef1f87480ff318b7bcb");
 });
 
-test("getActionTypes", async () => {
+test("getActiontypes.ts", async () => {
   const fn = jest.spyOn(core as any, "invokeApiMethod").mockResolvedValue([]);
   const response = await core.getActionTypes();
   expect(response).toEqual([]);
-  expect(fn).toHaveBeenCalledWith("getActionTypes");
+  expect(fn).toHaveBeenCalledWith("getActiontypes.ts");
 });
 
 test("getActionList works without query", async () => {

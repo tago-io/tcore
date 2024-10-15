@@ -1,6 +1,6 @@
-import { render, screen } from "../../../utils/test-utils";
+import { render, screen } from "../../../utils/test-utils.ts";
 import { EIcon } from "../Icon/Icon.types";
-import FormDivision from "./FormDivision";
+import FormDivision from "./FormDivision.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<FormDivision />);

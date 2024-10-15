@@ -1,5 +1,5 @@
-import { render, screen } from "../../../utils/test-utils";
-import Icon from "./Icon";
+import { render, screen } from "../../../utils/test-utils.ts";
+import Icon from "./Icon.tsx";
 import { EIcon } from "./Icon.types";
 
 test("renders without crashing", () => {

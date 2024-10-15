@@ -1,6 +1,6 @@
 import { observer } from "mobx-react";
-import { ReactNode } from "react";
-import { Button, Footer, Loading } from "../../..";
+import type { ReactNode } from "react";
+import { Button, Footer, Loading } from "../../../index.ts";
 import * as Style from "./SetupForm.style";
 
 /**

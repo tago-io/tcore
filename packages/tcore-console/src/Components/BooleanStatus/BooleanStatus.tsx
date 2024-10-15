@@ -1,4 +1,4 @@
-import Icon from "../Icon/Icon";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
 
 /**

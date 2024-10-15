@@ -1,14 +1,14 @@
-import { ILog } from "@tago-io/tcore-sdk/types";
+import type { ILog } from "@tago-io/tcore-sdk/types";
 import { observer } from "mobx-react";
 import { memo, useCallback, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { useTheme } from "styled-components";
-import installPlugin from "../../../../Requests/installPlugin";
-import { getSocket } from "../../../../System/Socket";
-import store from "../../../../System/Store";
-import Console from "../../../Console/Console";
+import installPlugin from "../../../../Requests/installPlugin.ts";
+import { getSocket } from "../../../../System/Socket.ts";
+import store from "../../../../System/Store.ts";
+import Console from "../../../Console/Console.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Modal from "../../../Modal/Modal";
+import Modal from "../../../Modal/Modal.tsx";
 import * as Style from "./ModalInstallPlugin.style";
 
 /**

@@ -1,79 +1,70 @@
-import { useCallback, useState } from "react";
-import Button from "../../Button/Button";
-import ModalInstallPlugin from "../../Plugins/Common/ModalInstallPlugin/ModalInstallPlugin";
-import Icon from "../../Icon/Icon";
+import { useCallback, useMemo, useState } from "react";
+import { getSystemName } from "@tago-io/tcore-shared";
+import axios from "axios";
+import type { ISettings } from "@tago-io/tcore-sdk/types";
+import Button from "../../Button/Button.tsx";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Tooltip from "../../Tooltip/Tooltip";
-import ModalUploadPlugin from "../../Plugins/Common/ModalUploadPlugin/ModalUploadPlugin";
-import selectPluginFile from "../../../Helpers/selectPluginFile";
+import Tooltip from "../../Tooltip/Tooltip.tsx";
+import useApiRequest from "../../../Helpers/useApiRequest.ts";
+import store from "../../../System/Store.ts";
+import { getLocalStorage } from "../../../Helpers/localStorage.ts";
+import ModalFileSelect from "../../ModalFileSelect/ModalFileSelect.tsx";
 import * as Style from "./InstalLocalPluginButton.style";
-
 /**
  * This component handles the installation of a plugin.
  */
 function InstallLocalPluginButton() {
-  const [modalUpload, setModalUpload] = useState(false);
-  const [modalInstall, setModalInstall] = useState(false);
-  const [file, setFile] = useState<File>();
-  const [filePath, setFilePath] = useState("");
+  const [modalSelectFolder, setModalSelectFolder] = useState(false);
+  const { data: settings } = useApiRequest<ISettings>("/mainsettings");
+  const token = getLocalStorage("token", "") as string;
+  const masterPassword = store.masterPassword;
+  const headers = useMemo(() => ({ token, masterPassword }), [token, masterPassword]);
 
   /**
-   * Opens the file selector modal.
+   * Opens the folder selector modal.
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const activateModalFile = useCallback(() => {
-    selectPluginFile((f) => {
-      setFile(f);
-      setModalUpload(true);
-    });
+  const activateModalFolder = useCallback(() => {
+    setModalSelectFolder(true);
   }, []);
 
   /**
-   * Closes the file selector modal.
+   * Close the folder selector modal.
    */
-  const deactivateModalFile = useCallback(() => {
-    setModalUpload(false);
+  const deactivateModalFolder = useCallback(() => {
+    setModalSelectFolder(false);
   }, []);
 
   /**
-   * Opens the install modal.
+   * Add plugin folder to the property custom_plugins.
    */
-  const activateModalInstall = useCallback((path: string) => {
-    setFilePath(path);
-    setModalInstall(true);
-  }, []);
-
-  /**
-   * Closes the install modal.
-   */
-  const deactivateModalInstall = useCallback(() => {
-    setModalInstall(false);
-    window.location.reload();
-  }, []);
+  const addFolder = useCallback(
+    (folder) => {
+      axios.post("/plugin/addexternalplugin", { folder }, { headers });
+    },
+    [headers]
+  );
 
   return (
     <>
       <Style.Container>
         <Tooltip text="Install local plugin">
-          <Button onClick={activateModalFile}>
+          <Button onClick={activateModalFolder}>
             <Icon icon={EIcon["puzzle-piece"]} size="15px" />
           </Button>
         </Tooltip>
       </Style.Container>
 
-      {modalUpload && (
-        <ModalUploadPlugin
-          file={file as File}
-          onClose={deactivateModalFile}
-          onUpload={activateModalInstall}
-        />
-      )}
-
-      {modalInstall && (
-        <ModalInstallPlugin
-          pluginName={file?.name}
-          source={filePath}
-          onClose={deactivateModalInstall}
+      {modalSelectFolder && (
+        <ModalFileSelect
+          accept={""}
+          onlyFolders={true}
+          defaultFilePath={settings?.settings_folder}
+          message={`Select a folder of your plugin of ${getSystemName()}.`}
+          onClose={deactivateModalFolder}
+          onConfirm={addFolder}
+          useLocalFs={true}
+          title="Select a folder"
         />
       )}
     </>

@@ -1,8 +1,8 @@
-import { IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
 import { useState } from "react";
-import { formatDataAmount } from "../../../../Helpers/formatDataAmount";
-import getDeviceDataAmount from "../../../../Requests/getDeviceDataAmount";
-import Icon from "../../../Icon/Icon";
+import { formatDataAmount } from "../../../../Helpers/formatDataAmount.ts";
+import getDeviceDataAmount from "../../../../Requests/getDeviceDataAmount.ts";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
 import * as Style from "./ButtonDataAmount.style";
 

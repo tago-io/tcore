@@ -1,15 +1,15 @@
-import { IDevice, IDeviceToken } from "@tago-io/tcore-sdk/types";
+import type { IDevice, IDeviceToken } from "@tago-io/tcore-sdk/types";
 import { useCallback, useEffect, useState, memo } from "react";
-import copyToClipboard from "../../../../Helpers/copyToClipboard";
-import Button from "../../../Button/Button";
+import copyToClipboard from "../../../../Helpers/copyToClipboard.ts";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import CopyButton from "../../../CopyButton/CopyButton";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Icon from "../../../Icon/Icon";
+import CopyButton from "../../../CopyButton/CopyButton.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import SimpleTable from "../../../SimpleTable/SimpleTable";
-import Tooltip from "../../../Tooltip/Tooltip";
+import Input from "../../../Input/Input.tsx";
+import SimpleTable from "../../../SimpleTable/SimpleTable.tsx";
+import Tooltip from "../../../Tooltip/Tooltip.tsx";
 import * as Style from "./TokenTable.style";
 
 /**

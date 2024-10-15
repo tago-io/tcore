@@ -1,4 +1,4 @@
-import TCoreModule from "../TCoreModule/TCoreModule";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows data to be encoded before it is inserted into a bucket.

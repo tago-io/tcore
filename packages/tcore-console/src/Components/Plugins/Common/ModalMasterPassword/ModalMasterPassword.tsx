@@ -1,11 +1,11 @@
 import axios from "axios";
-import { KeyboardEvent, MouseEvent, useCallback, useState } from "react";
-import { EIcon } from "../../../..";
-import { promiseDelay } from "../../../../Helpers/promiseDelay";
-import store from "../../../../System/Store";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
+import { type KeyboardEvent, type MouseEvent, useCallback, useState } from "react";
+import { EIcon } from "../../../../index.ts";
+import { promiseDelay } from "../../../../Helpers/promiseDelay.ts";
+import store from "../../../../System/Store.ts";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 
 /**
  * Props.

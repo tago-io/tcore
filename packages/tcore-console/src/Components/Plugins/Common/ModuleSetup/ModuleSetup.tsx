@@ -1,12 +1,12 @@
-import { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
+import type { IPlugin, IPluginModule } from "@tago-io/tcore-sdk/types";
 import { useCallback, useState } from "react";
-import Accordion from "../../../Accordion/Accordion";
+import Accordion from "../../../Accordion/Accordion.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import PluginConfigFields from "../PluginConfigFields/PluginConfigFields";
-import ModuleStatus from "../ModuleStatus/ModuleStatus";
-import { getLocalStorageAsBoolean, setLocalStorage } from "../../../../Helpers/localStorage";
-import { FormGroup } from "../../../..";
-import Status from "../Status/Status";
+import PluginConfigFields from "../PluginConfigFields/PluginConfigFields.tsx";
+import ModuleStatus from "../ModuleStatus/ModuleStatus.tsx";
+import { getLocalStorageAsBoolean, setLocalStorage } from "../../../../Helpers/localStorage.ts";
+import { FormGroup } from "../../../../index.ts";
+import Status from "../Status/Status.tsx";
 import * as Style from "./ModuleSetup.style";
 
 /**

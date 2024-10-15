@@ -9,9 +9,9 @@ function getDateTimeObject(value?: Date | string | number | null): DateTime | nu
   }
   if (value instanceof Date) {
     return DateTime.fromJSDate(value);
-  } else if (typeof value === "string") {
+  }if (typeof value === "string") {
     return DateTime.fromISO(value);
-  } else if (typeof value === "number") {
+  }if (typeof value === "number") {
     return DateTime.fromMillis(value);
   }
   return null;

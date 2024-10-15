@@ -1,12 +1,12 @@
-import { IDevice } from "@tago-io/tcore-sdk/types";
-import Col from "../../../Col/Col";
-import FormDivision from "../../../FormDivision/FormDivision";
-import FormGroup from "../../../FormGroup/FormGroup";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
+import Col from "../../../Col/Col.tsx";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Row from "../../../Row/Row";
-import DataRetention from "../../Common/DataRetention/DataRetention";
-import ResourceLinkField from "../../../ResourceLinkField/ResourceLinkField";
+import Input from "../../../Input/Input.tsx";
+import Row from "../../../Row/Row.tsx";
+import DataRetention from "../../Common/DataRetention/DataRetention.tsx";
+import ResourceLinkField from "../../../ResourceLinkField/ResourceLinkField.tsx";
 
 /**
  * Props.

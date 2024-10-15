@@ -1,7 +1,7 @@
 import { Account } from "@tago-io/sdk";
-import { AnalysisQuery } from "@tago-io/sdk/out/modules/Account/analysis.types";
-import { IAnalysis } from "@tago-io/tcore-sdk/types";
-import store from "../System/Store";
+import type { AnalysisQuery } from "@tago-io/sdk/out/modules/Account/analysis.types";
+import type { IAnalysis } from "@tago-io/tcore-sdk/types";
+import store from "../System/Store.ts";
 
 /**
  * Retrieves a list of analyses.

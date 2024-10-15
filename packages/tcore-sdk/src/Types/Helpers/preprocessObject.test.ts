@@ -1,4 +1,4 @@
-import preprocessObject from "./preprocessObject";
+import preprocessObject from "./preprocessObject.ts";
 
 describe("preprocessObject", () => {
   test("process simple object", () => {

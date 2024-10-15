@@ -1,5 +1,5 @@
-import { z } from "zod";
-import {
+import type { z } from "zod";
+import type {
   ILog,
   IStatisticCreate,
   zActionCreate,
@@ -21,7 +21,7 @@ import {
   zAccountTokenCreate,
   zAccountCreate,
   zAccountListQuery,
-} from "..";
+} from "../index.ts";
 
 /**
  * Data parameter of the `addDeviceData` function.

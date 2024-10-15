@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { fonts } from "../../../../../theme";
+import { fonts } from "../../../../../theme.ts";
 import * as InputStyle from "../../../../Input/Input.style";
 
 const CronFieldsContainer = styled.div`

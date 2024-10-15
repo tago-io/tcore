@@ -8,7 +8,7 @@ const nanoid = customAlphabet(hexAlphabet, 20);
  * The ID will be unique and can be used to identify a resource uniquely.
  */
 export function generateResourceID(): string {
-  if (typeof Buffer === undefined || typeof Buffer === "undefined") {
+  if (typeof Buffer === "undefined" || typeof Buffer === "undefined") {
     // to work in browser environments
     return "";
   }
@@ -25,7 +25,7 @@ export function generateResourceID(): string {
 export function validateResourceID(id?: string): boolean {
   const idSafe = String(id);
 
-  if (idSafe.length != 24) {
+  if (idSafe.length !== 24) {
     return false;
   }
 

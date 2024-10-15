@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTheme } from "styled-components";
 import { useLocation } from "react-router";
-import { IPluginListItem } from "@tago-io/tcore-sdk/types";
-import disablePlugin from "../../../Requests/disablePlugin";
-import enablePlugin from "../../../Requests/enablePlugin";
-import Icon from "../../Icon/Icon";
+import type { IPluginListItem } from "@tago-io/tcore-sdk/types";
+import disablePlugin from "../../../Requests/disablePlugin.ts";
+import enablePlugin from "../../../Requests/enablePlugin.ts";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import PluginImage from "../../PluginImage/PluginImage";
-import { ModalUninstallPlugin } from "../../..";
-import uninstallPlugin from "../../../Requests/uninstallPlugin";
+import PluginImage from "../../PluginImage/PluginImage.tsx";
+import { ModalUninstallPlugin } from "../../../index.ts";
+import uninstallPlugin from "../../../Requests/uninstallPlugin.ts";
 import * as Style from "./PluginButton.style";
 
 /**
@@ -122,13 +122,6 @@ function PluginButton(props: IPluginButtonProps) {
               <span>Disable Plugin</span>
             </div>
           ))}
-
-        {item.allow_uninstall && (
-          <div className="item" onClick={() => setModalUninstall(true)}>
-            <Icon icon={EIcon["trash-alt"]} />
-            <span>Uninstall Plugin</span>
-          </div>
-        )}
       </Style.Dropdown>
 
       {modalUninstall && (

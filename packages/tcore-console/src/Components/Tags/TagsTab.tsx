@@ -1,7 +1,7 @@
-import { ITag } from "@tago-io/tcore-sdk/types";
-import FormDivision from "../FormDivision/FormDivision";
+import type { ITag } from "@tago-io/tcore-sdk/types";
+import FormDivision from "../FormDivision/FormDivision.tsx";
 import { EIcon } from "../Icon/Icon.types";
-import Tags from "./Tags";
+import Tags from "./Tags.tsx";
 
 /**
  * Props.

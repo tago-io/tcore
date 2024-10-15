@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  tcore:
+    platform: linux/x86_64
+    build: .
+    ports:
+      - "8888:8888"
+    container_name: tcore

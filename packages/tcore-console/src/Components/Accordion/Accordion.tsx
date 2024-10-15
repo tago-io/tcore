@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import Icon from "../Icon/Icon";
+import type { ReactNode } from "react";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
 import * as Style from "./Accordion.style";
 
@@ -110,7 +110,7 @@ function Accordion(props: IAccordion) {
       </Style.TitleBar>
 
       {open && (
-        <div className="content" onClick={(e) => e.stopPropagation()}>
+        <div className="content" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
           {children}
         </div>
       )}

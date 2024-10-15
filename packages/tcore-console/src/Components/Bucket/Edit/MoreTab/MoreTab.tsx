@@ -1,16 +1,16 @@
-import { IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
 import { useCallback, useState } from "react";
-import Col from "../../../Col/Col";
-import FormDivision from "../../../FormDivision/FormDivision";
-import FormGroup from "../../../FormGroup/FormGroup";
+import Col from "../../../Col/Col.tsx";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import Button from "../../../Button/Button";
-import RelativeDate from "../../../RelativeDate/RelativeDate";
-import Row from "../../../Row/Row";
-import { EButton, Icon } from "../../../..";
-import ModalEmptyDevice from "../../Common/ModalEmptyDevice/ModalEmptyDevice";
-import { formatDataAmount } from "../../../../Helpers/formatDataAmount";
+import Input from "../../../Input/Input.tsx";
+import Button from "../../../Button/Button.tsx";
+import RelativeDate from "../../../RelativeDate/RelativeDate.tsx";
+import Row from "../../../Row/Row.tsx";
+import { EButton, Icon } from "../../../../index.ts";
+import ModalEmptyDevice from "../../Common/ModalEmptyDevice/ModalEmptyDevice.tsx";
+import { formatDataAmount } from "../../../../Helpers/formatDataAmount.ts";
 
 /**
  * Props.

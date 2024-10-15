@@ -1,7 +1,7 @@
 import { useTheme } from "styled-components";
-import Icon from "../../../Icon/Icon";
+import Icon from "../../../Icon/Icon.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Link from "../../../Link/Link";
+import Link from "../../../Link/Link.tsx";
 import * as Style from "./Resources.style";
 
 /**

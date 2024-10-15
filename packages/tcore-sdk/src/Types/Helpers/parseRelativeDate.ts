@@ -6,9 +6,8 @@ export function convertDateToISO(date: Date | string, timezone?: string) {
   const rawDate = DateTime.fromJSDate(new Date(date));
   if (timezone) {
     return rawDate.setZone(timezone, { keepLocalTime: true }).toISO() || rawDate.toISO() || DateTime.utc().toISO();
-  } else {
-    return rawDate.setZone("UTC", { keepLocalTime: true }).toISO() || DateTime.utc().toISO();
   }
+    return rawDate.setZone("UTC", { keepLocalTime: true }).toISO() || DateTime.utc().toISO();
 }
 
 /**

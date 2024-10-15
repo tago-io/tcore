@@ -1,4 +1,4 @@
-import {
+import type {
   IAction,
   IActionCreate,
   IActionEdit,
@@ -29,8 +29,8 @@ import {
   TGenericToken,
   ILiveInspectorMessageCreate,
   TLiveInspectorConnectionID,
-} from "../../Types";
-import APIBridge from "../APIBridge/APIBridge";
+} from "../../Types.ts";
+import APIBridge from "../APIBridge/APIBridge.ts";
 
 /**
  * Class to manage communication between a plugin and the API.
@@ -113,7 +113,7 @@ class Core extends APIBridge {
   /**
    * Gets all the parameters of a device.
    */
-  public async getDeviceParamList(deviceID: TGenericID, sentStatus?: Boolean): Promise<IDeviceParameter[]> {
+  public async getDeviceParamList(deviceID: TGenericID, sentStatus?: boolean): Promise<IDeviceParameter[]> {
     const response = await this.invokeApiMethod("getDeviceParamList", deviceID, sentStatus);
     return response;
   }
@@ -145,7 +145,7 @@ class Core extends APIBridge {
    * Retrieves a list of all action options.
    */
   public async getActionTypes(): Promise<IActionOption[]> {
-    const response = await this.invokeApiMethod("getActionTypes");
+    const response = await this.invokeApiMethod("getActiontypes.ts");
     return response;
   }
 

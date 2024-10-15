@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "../../../utils/test-utils";
-import Switch from "./Switch";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
+import Switch from "./Switch.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Switch />);

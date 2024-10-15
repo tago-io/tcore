@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { Tooltip } from "../..";
-import Icon from "../Icon/Icon";
+import { Tooltip } from "../../index.ts";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
 import { getPageList } from "./Pagination.logic";
 import * as Style from "./Pagination.style";
@@ -76,13 +76,12 @@ function Pagination(props: IPaginationProps) {
     const selected = page === value;
     if (typeof value === "string") {
       return <Style.PaginationSeparator key={`separator-${index}`}>...</Style.PaginationSeparator>;
-    } else {
+    }
       return (
         <Style.Button key={value} onClick={() => onChange(value)} selected={selected}>
           {value}
         </Style.Button>
       );
-    }
   };
 
   /**

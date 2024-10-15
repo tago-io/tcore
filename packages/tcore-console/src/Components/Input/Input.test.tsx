@@ -1,6 +1,6 @@
 import { createRef } from "react";
-import { fireEvent, render, screen } from "../../../utils/test-utils";
-import Input from "./Input";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
+import Input from "./Input.tsx";
 
 test("renders without crashing", async () => {
   const fn = () => render(<Input />);

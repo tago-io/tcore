@@ -1,10 +1,10 @@
 import { getSystemName } from "@tago-io/tcore-shared";
 import axios from "axios";
-import { KeyboardEvent, useRef, useState, useCallback } from "react";
-import { EButton, EIcon, FormGroup, Icon } from "../../..";
-import ErrorMessage from "../../ErrorMessage/ErrorMessage";
-import InputPassword from "../../InputPassword/InputPassword";
-import SetupForm from "../SetupForm/SetupForm";
+import { type KeyboardEvent, useRef, useState, useCallback } from "react";
+import { EButton, EIcon, FormGroup, Icon } from "../../../index.ts";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage.tsx";
+import InputPassword from "../../InputPassword/InputPassword.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
 import * as Style from "./StepMasterPassword.style";
 
 /**

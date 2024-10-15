@@ -1,5 +1,5 @@
-import { IActionTypeModuleSetup, TGenericID } from "../../Types";
-import TCoreModule from "../TCoreModule/TCoreModule";
+import type { IActionTypeModuleSetup, TGenericID } from "../../Types.ts";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows the creation of a new Action type.

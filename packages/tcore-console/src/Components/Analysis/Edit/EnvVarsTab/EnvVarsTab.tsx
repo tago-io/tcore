@@ -1,8 +1,8 @@
-import { IAnalysis, IAnalysisVariable } from "@tago-io/tcore-sdk/types";
-import FormDivision from "../../../FormDivision/FormDivision";
+import type { IAnalysis, IAnalysisVariable } from "@tago-io/tcore-sdk/types";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import Input from "../../../Input/Input";
-import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable";
+import Input from "../../../Input/Input.tsx";
+import RowManipulatorTable from "../../../RowManipulatorTable/RowManipulatorTable.tsx";
 
 /**
  * Props.

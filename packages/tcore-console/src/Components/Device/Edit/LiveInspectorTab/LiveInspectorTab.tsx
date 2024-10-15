@@ -1,7 +1,7 @@
-import { IDevice } from "@tago-io/tcore-sdk/types";
-import FormDivision from "../../../FormDivision/FormDivision";
+import type { IDevice } from "@tago-io/tcore-sdk/types";
+import FormDivision from "../../../FormDivision/FormDivision.tsx";
 import { EIcon } from "../../../Icon/Icon.types";
-import LiveInspector from "../../Common/LiveInspector/LiveInspector";
+import LiveInspector from "../../Common/LiveInspector/LiveInspector.tsx";
 
 /**
  * Props.

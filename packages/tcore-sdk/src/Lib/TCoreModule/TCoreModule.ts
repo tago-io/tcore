@@ -1,12 +1,12 @@
-import { parentPort } from "worker_threads";
-import {
+import { parentPort } from "node:worker_threads";
+import type {
   IModuleMessageOptions,
   IModuleSetupWithoutType,
   IPluginMessage,
   TModuleMessageType,
   TPluginType,
-} from "../../Types";
-import APIBridge from "../APIBridge/APIBridge";
+} from "../../Types.ts";
+import APIBridge from "../APIBridge/APIBridge.ts";
 
 const moduleIDs = new Map<string, boolean>();
 

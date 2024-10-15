@@ -1,10 +1,10 @@
 import { getSystemName } from "@tago-io/tcore-shared";
 import axios from "axios";
-import { useEffect, MouseEvent, useCallback, useState } from "react";
-import { setLocalStorage } from "../../../../Helpers/localStorage";
-import store from "../../../../System/Store";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Modal from "../../../Modal/Modal";
+import { useEffect, type MouseEvent, useCallback, useState } from "react";
+import { setLocalStorage } from "../../../../Helpers/localStorage.ts";
+import store from "../../../../System/Store.ts";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 import * as Style from "./ModalFactoryReset.style";
 
 /**

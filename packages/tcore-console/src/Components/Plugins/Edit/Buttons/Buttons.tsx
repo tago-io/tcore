@@ -1,12 +1,12 @@
-import { IPlugin } from "@tago-io/tcore-sdk/types";
+import type { IPlugin } from "@tago-io/tcore-sdk/types";
 import { useCallback, useState } from "react";
-import { Link } from "../../../..";
-import Button from "../../../Button/Button";
+import { Link } from "../../../../index.ts";
+import Button from "../../../Button/Button.tsx";
 import { EButton } from "../../../Button/Button.types";
-import Icon from "../../../Icon/Icon";
+import Icon from "../../../Icon/Icon.tsx";
 // import Tooltip from "../../../Tooltip/Tooltip";
 import { EIcon } from "../../../Icon/Icon.types";
-import ModalUninstallPlugin from "../../Common/ModalUninstallPlugin/ModalUninstallPlugin";
+import ModalUninstallPlugin from "../../Common/ModalUninstallPlugin/ModalUninstallPlugin.tsx";
 import * as Style from "./Buttons.style";
 
 /**
@@ -39,13 +39,6 @@ function Buttons(props: IButtonsProps) {
    */
   const activateModalUninstall = useCallback(() => {
     setModalUninstall(true);
-  }, []);
-
-  /**
-   * Closes the uninstall modal.
-   */
-  const deactivateModalUninstall = useCallback(() => {
-    setModalUninstall(false);
   }, []);
 
   /**
@@ -85,21 +78,6 @@ function Buttons(props: IButtonsProps) {
             <span>Disable</span>
           </Button>
         ))}
-
-      {data.allow_uninstall && (
-        <Button addIconMargin type={EButton.danger_outline} onClick={activateModalUninstall}>
-          <Icon icon={EIcon["trash-alt"]} />
-          <span>Uninstall</span>
-        </Button>
-      )}
-
-      {modalUninstall && (
-        <ModalUninstallPlugin
-          redirectTo="/"
-          onClose={deactivateModalUninstall}
-          onConfirm={onUninstall}
-        />
-      )}
     </Style.Container>
   );
 }

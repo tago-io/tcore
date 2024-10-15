@@ -1,6 +1,6 @@
-import { ReactNode, useEffect } from "react";
-import Button from "../Button/Button";
-import Icon from "../Icon/Icon";
+import { type ReactNode, useEffect } from "react";
+import Button from "../Button/Button.tsx";
+import Icon from "../Icon/Icon.tsx";
 import { EIcon } from "../Icon/Icon.types";
 import * as Style from "./RowManipulator.style";
 

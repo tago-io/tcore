@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "../../../utils/test-utils";
-import Tags from "./Tags";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
+import Tags from "./Tags.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Tags data={[]} onChange={jest.fn()} />);

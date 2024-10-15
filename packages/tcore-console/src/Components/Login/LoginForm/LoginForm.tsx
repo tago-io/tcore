@@ -1,7 +1,7 @@
-import { useRef, KeyboardEvent, useCallback } from "react";
-import { Button, EIcon, FormGroup, Input } from "../../..";
-import ErrorMessage from "../../ErrorMessage/ErrorMessage";
-import InputPassword from "../../InputPassword/InputPassword";
+import { useRef, type KeyboardEvent, useCallback } from "react";
+import { Button, EIcon, FormGroup, Input } from "../../../index.ts";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage.tsx";
+import InputPassword from "../../InputPassword/InputPassword.tsx";
 import * as Style from "./LoginForm.style";
 
 /**

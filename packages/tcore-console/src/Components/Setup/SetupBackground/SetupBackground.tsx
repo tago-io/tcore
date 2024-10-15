@@ -1,4 +1,4 @@
-import { EIcon, Icon } from "../../..";
+import { EIcon, Icon } from "../../../index.ts";
 import * as Style from "./SetupBackground.style";
 
 /**

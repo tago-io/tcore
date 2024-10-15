@@ -1,8 +1,8 @@
-import { IOSInfo } from "@tago-io/tcore-sdk/types";
+import type { IOSInfo } from "@tago-io/tcore-sdk/types";
 import { memo } from "react";
-import Icon from "../../Icon/Icon";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Loading from "../../Loading/Loading";
+import Loading from "../../Loading/Loading.tsx";
 import * as Style from "./OperatingSystem.style";
 
 /**
@@ -30,7 +30,7 @@ function OperatingSystem(props: IOperatingSystemProps) {
   const getHardwareIcon = () => {
     if (os.hardware === "raspberry-pi") {
       return EIcon["raspberry-pi"];
-    } else if (os.hardware === "rock-pi") {
+    }if (os.hardware === "rock-pi") {
       return EIcon["rock-pi"];
     }
   };
@@ -41,13 +41,12 @@ function OperatingSystem(props: IOperatingSystemProps) {
   const getIcon = () => {
     if (os.code === "windows") {
       return EIcon.windows;
-    } else if (os.code === "linux") {
+    }if (os.code === "linux") {
       return EIcon.linux;
-    } else if (os.code === "mac") {
+    }if (os.code === "mac") {
       return EIcon.apple;
-    } else {
-      return null;
     }
+      return null;
   };
 
   const osIcon = getIcon();

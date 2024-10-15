@@ -1,8 +1,8 @@
 /* eslint-disable id-denylist */
-import Input from "../Input/Input";
-import RowManipulator from "../RowManipulator/RowManipulator";
-import Select from "../Select/Select";
-import Tooltip from "../Tooltip/Tooltip";
+import Input from "../Input/Input.tsx";
+import RowManipulator from "../RowManipulator/RowManipulator.tsx";
+import Select from "../Select/Select.tsx";
+import Tooltip from "../Tooltip/Tooltip.tsx";
 import * as Style from "./VariableCondition.style";
 
 /**

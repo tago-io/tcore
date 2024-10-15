@@ -1,42 +1,39 @@
-// we do this workaround to make sure the API always points to the right place,
-// regardless in which URL the application is running.
-const { location } = window;
-process.env.TAGOIO_API = `${location.protocol}//${location.hostname}:${location.port}`;
-
 import ReactDOM from "react-dom";
 import { ThemeProvider } from "styled-components";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { runInAction } from "mobx";
 import { useEffect, useState } from "react";
-import { IPluginList } from "@tago-io/tcore-sdk/types";
+import type { IPluginList } from "@tago-io/tcore-sdk/types";
 import { useHistory } from "react-router";
 import { observer } from "mobx-react";
 import imgFavicon from "../assets/images/favicon.png";
-import { lightTheme } from "./theme";
-import MainScreen from "./Components/MainScreen/MainScreen";
-import GlobalStyles from "./Components/Styles/GlobalStyles";
-import DeviceList from "./Components/Device/List/DeviceList";
-import BucketList from "./Components/Bucket/List/BucketList";
-import ActionList from "./Components/Action/List/ActionList";
-import AnalysisList from "./Components/Analysis/List/AnalysisList";
-import Settings from "./Components/Settings/Edit/Settings";
-import Home from "./Components/Home/Home";
-import Logs from "./Components/Logs/Logs";
-import DeviceEdit from "./Components/Device/Edit/DeviceEdit";
-import BucketEdit from "./Components/Bucket/Edit/BucketEdit";
-import ActionEdit from "./Components/Action/Edit/ActionEdit";
-import AnalysisEdit from "./Components/Analysis/Edit/AnalysisEdit";
-import PluginEdit from "./Components/Plugins/Edit/PluginEdit";
-import useApiRequest from "./Helpers/useApiRequest";
-import store from "./System/Store";
-import PageIFrame from "./Components/PageIframe/PageIFrame";
-import Login from "./Components/Login/Login";
-import { getLocalStorage, setLocalStorage } from "./Helpers/localStorage";
-import getAccountByToken from "./Requests/getAccountByToken";
-import Setup from "./Components/Setup/Setup";
-import StepDatabaseError from "./Components/Setup/StepDatabaseError/StepDatabaseError";
-import { startSocket } from "./System/Socket";
+import { lightTheme } from "./theme.ts";
+import MainScreen from "./Components/MainScreen/MainScreen.tsx";
+import GlobalStyles from "./Components/Styles/GlobalStyles.ts";
+import DeviceList from "./Components/Device/List/DeviceList.tsx";
+import BucketList from "./Components/Bucket/List/BucketList.tsx";
+import ActionList from "./Components/Action/List/ActionList.tsx";
+import AnalysisList from "./Components/Analysis/List/AnalysisList.tsx";
+import Settings from "./Components/Settings/Edit/Settings.tsx";
+import Home from "./Components/Home/Home.tsx";
+import Logs from "./Components/Logs/Logs.tsx";
+import DeviceEdit from "./Components/Device/Edit/DeviceEdit.tsx";
+import BucketEdit from "./Components/Bucket/Edit/BucketEdit.tsx";
+import ActionEdit from "./Components/Action/Edit/ActionEdit.tsx";
+import AnalysisEdit from "./Components/Analysis/Edit/AnalysisEdit.tsx";
+import PluginEdit from "./Components/Plugins/Edit/PluginEdit.tsx";
+import useApiRequest from "./Helpers/useApiRequest.ts";
+import store from "./System/Store.ts";
+import PageIFrame from "./Components/PageIframe/PageIFrame.tsx";
+import Login from "./Components/Login/Login.tsx";
+import { getLocalStorage, setLocalStorage } from "./Helpers/localStorage.ts";
+import getAccountByToken from "./Requests/getAccountByToken.ts";
+import Setup from "./Components/Setup/Setup.tsx";
+import StepDatabaseError from "./Components/Setup/StepDatabaseError/StepDatabaseError.tsx";
+import { startSocket } from "./System/Socket.ts";
+import PluginStore from "./Components/Store/List/PluginStore.tsx";
+import PluginDetails from "./Components/Store/Details/PluginDetails.tsx";
 
 /**
  * Main component of the application.
@@ -179,6 +176,8 @@ function MainScreenWrapper() {
         <Route exact path="/console/logs" component={Logs} />
         <Route exact path="/console/plugin/:id" component={PluginEdit} />
         <Route exact path="/console/settings" component={Settings} />
+        <Route exact path="/console/pluginstore" component={PluginStore} />
+        <Route exact path="/console/pluginstore/detail/:id" component={PluginDetails} />
 
         {pageModules?.map((module) => (
           <Route

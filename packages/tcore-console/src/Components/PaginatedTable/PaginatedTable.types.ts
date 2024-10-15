@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { EIcon } from "../Icon/Icon.types";
+import type { ReactNode } from "react";
+import type { EIcon } from "../Icon/Icon.types";
 
 /**
  * A single column in a paginated table.

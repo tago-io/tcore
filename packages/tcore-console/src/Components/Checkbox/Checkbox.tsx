@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, ReactNode } from "react";
+import { type ChangeEvent, memo, type ReactNode } from "react";
 import * as Style from "./Checkbox.style";
 
 interface ICheckboxProps {

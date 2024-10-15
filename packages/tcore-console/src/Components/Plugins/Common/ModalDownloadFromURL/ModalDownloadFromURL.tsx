@@ -1,9 +1,9 @@
-import { KeyboardEvent, MouseEvent, useCallback, useState } from "react";
+import { type KeyboardEvent, type MouseEvent, useCallback, useState } from "react";
 import { z } from "zod";
-import { EIcon } from "../../../..";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
+import { EIcon } from "../../../../index.ts";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 
 /**
  * Props.

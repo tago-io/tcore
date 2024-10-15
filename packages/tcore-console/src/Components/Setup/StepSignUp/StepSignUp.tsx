@@ -1,12 +1,12 @@
 import axios from "axios";
 import { observer } from "mobx-react";
 import { useCallback, useEffect, useState } from "react";
-import { EButton, EIcon, FormGroup, Input } from "../../..";
-import store from "../../../System/Store";
-import ErrorMessage from "../../ErrorMessage/ErrorMessage";
-import InputPassword from "../../InputPassword/InputPassword";
-import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import SetupForm from "../SetupForm/SetupForm";
+import { EButton, EIcon, FormGroup, Input } from "../../../index.ts";
+import store from "../../../System/Store.ts";
+import ErrorMessage from "../../ErrorMessage/ErrorMessage.tsx";
+import InputPassword from "../../InputPassword/InputPassword.tsx";
+import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
 import * as Style from "./StepSignUp.style";
 
 /**

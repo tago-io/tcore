@@ -1,5 +1,5 @@
-import { IPluginFilesystemItem, IModuleSetupWithoutType } from "../../Types";
-import TCoreModule from "../TCoreModule/TCoreModule";
+import type { IPluginFilesystemItem, IModuleSetupWithoutType } from "../../Types.ts";
+import TCoreModule from "../TCoreModule/TCoreModule.ts";
 
 /**
  * This module allows the creation of a new filesystem.

@@ -1,8 +1,8 @@
-import { IAnalysis, TGenericID } from "@tago-io/tcore-sdk/types";
+import type { IAnalysis, TGenericID } from "@tago-io/tcore-sdk/types";
 import { useCallback } from "react";
-import getAnalysisInfo from "../../../../Requests/getAnalysisInfo";
-import getAnalysisList from "../../../../Requests/getAnalysisList";
-import OptionsPicker from "../../../OptionsPicker/OptionsPicker";
+import getAnalysisInfo from "../../../../Requests/getAnalysisInfo.ts";
+import getAnalysisList from "../../../../Requests/getAnalysisList.ts";
+import OptionsPicker from "../../../OptionsPicker/OptionsPicker.tsx";
 
 /**
  * Props.

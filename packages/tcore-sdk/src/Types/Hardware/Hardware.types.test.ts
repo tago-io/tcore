@@ -1,5 +1,5 @@
-import { ZodError } from "zod";
-import { zOSInfo, zNetworkInfo, zComputerUsage } from "./Hardware.types";
+import type { ZodError } from "zod";
+import { zOSInfo, zNetworkInfo, zComputerUsage } from "./Hardware.types.ts";
 
 describe("zOSInfo", () => {
   test("parses simple object", () => {
@@ -69,7 +69,7 @@ describe("zNetworkInfo", () => {
     }
   });
 
-  test("assure correct field types", () => {
+  test("assure correct field types.ts", () => {
     const data = {
       name: "name",
       ip: 0,

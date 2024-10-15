@@ -1,14 +1,14 @@
-import { generateResourceID, validateResourceID } from "../../Shared/ResourceID";
+import { generateResourceID, validateResourceID } from "../../Shared/ResourceID.ts";
 import {
-  IDeviceEdit,
-  IDeviceCreate,
+  type IDeviceEdit,
+  type IDeviceCreate,
   zDeviceEdit,
   zDeviceCreate,
-  IDeviceListQuery,
+  type IDeviceListQuery,
   zDeviceListQuery,
   zDeviceParameter,
-  IDeviceParameter,
-} from "./Device.types";
+  type IDeviceParameter,
+} from "./Device.types.ts";
 
 describe("zDeviceParameter", () => {
   test("parses simple object", () => {

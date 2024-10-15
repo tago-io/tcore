@@ -1,5 +1,5 @@
-import { render, screen } from "../../../utils/test-utils";
-import Select from "./Select";
+import { render, screen } from "../../../utils/test-utils.ts";
+import Select from "./Select.tsx";
 
 describe("Select", () => {
   it("renders without crashing", async () => {

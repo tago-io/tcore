@@ -1,4 +1,4 @@
-import preprocessBoolean from "./preprocessBoolean";
+import preprocessBoolean from "./preprocessBoolean.ts";
 
 describe("preprocessBoolean", () => {
   test("process standard boolean", () => {

@@ -1,15 +1,15 @@
-import { IAnalysis } from "@tago-io/tcore-sdk/types";
+import type { IAnalysis } from "@tago-io/tcore-sdk/types";
 import { useState } from "react";
 import { useTheme } from "styled-components";
-import getAnalysisList from "../../../Requests/getAnalysisList";
-import BooleanStatus from "../../BooleanStatus/BooleanStatus";
-import Button from "../../Button/Button";
+import getAnalysisList from "../../../Requests/getAnalysisList.ts";
+import BooleanStatus from "../../BooleanStatus/BooleanStatus.tsx";
+import Button from "../../Button/Button.tsx";
 import { EButton } from "../../Button/Button.types";
-import Icon from "../../Icon/Icon";
+import Icon from "../../Icon/Icon.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import ListPage from "../../ListPage/ListPage";
-import RelativeDate from "../../RelativeDate/RelativeDate";
-import ModalAddAnalysis from "../Common/ModalAddAnalysis/ModalAddAnalysis";
+import ListPage from "../../ListPage/ListPage.tsx";
+import RelativeDate from "../../RelativeDate/RelativeDate.tsx";
+import ModalAddAnalysis from "../Common/ModalAddAnalysis/ModalAddAnalysis.tsx";
 
 /**
  * The device edit page.

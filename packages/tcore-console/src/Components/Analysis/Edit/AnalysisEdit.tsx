@@ -1,24 +1,24 @@
-import { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
+import type { IAnalysis, ILog } from "@tago-io/tcore-sdk/types";
 import cloneDeep from "lodash.clonedeep";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouteMatch } from "react-router";
 import { useTheme } from "styled-components";
 import { observer } from "mobx-react";
-import normalizeTags from "../../../Helpers/normalizeTags";
-import EditPage from "../../EditPage/EditPage";
+import normalizeTags from "../../../Helpers/normalizeTags.ts";
+import EditPage from "../../EditPage/EditPage.tsx";
 import { EIcon } from "../../Icon/Icon.types";
-import Switch from "../../Switch/Switch";
-import SaveAndRun from "../Common/SaveAndRun/SaveAndRun";
-import TagsTab from "../../Tags/TagsTab";
-import deleteAnalysis from "../../../Requests/deleteAnalysis";
-import editAnalysis from "../../../Requests/editAnalysis";
-import runAnalysis from "../../../Requests/runAnalysis";
-import store from "../../../System/Store";
-import { getSocket } from "../../../System/Socket";
-import deleteAnalysisLogs from "../../../Requests/deleteAnalysisLogs";
-import AnalysisTab from "./AnalysisTab/AnalysisTab";
-import EnvVarsTab from "./EnvVarsTab/EnvVarsTab";
-import MoreTab from "./MoreTab/MoreTab";
+import Switch from "../../Switch/Switch.tsx";
+import SaveAndRun from "../Common/SaveAndRun/SaveAndRun.tsx";
+import TagsTab from "../../Tags/TagsTab.tsx";
+import deleteAnalysis from "../../../Requests/deleteAnalysis.ts";
+import editAnalysis from "../../../Requests/editAnalysis.ts";
+import runAnalysis from "../../../Requests/runAnalysis.ts";
+import store from "../../../System/Store.ts";
+import { getSocket } from "../../../System/Socket.ts";
+import deleteAnalysisLogs from "../../../Requests/deleteAnalysisLogs.ts";
+import AnalysisTab from "./AnalysisTab/AnalysisTab.tsx";
+import EnvVarsTab from "./EnvVarsTab/EnvVarsTab.tsx";
+import MoreTab from "./MoreTab/MoreTab.tsx";
 
 /**
  * The analysis' edit page.
@@ -231,9 +231,9 @@ function AnalysisEdit() {
       setLogs((x) => [params, ...x]);
     }
 
-    getSocket().on(`analysis::console`, onLog);
+    getSocket().on("analysis::console", onLog);
     return () => {
-      getSocket().off(`analysis::console`, onLog);
+      getSocket().off("analysis::console", onLog);
     };
   });
 

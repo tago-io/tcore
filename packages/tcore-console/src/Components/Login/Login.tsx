@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useEffect, useCallback, useState } from "react";
 import { useHistory } from "react-router";
-import setDocumentTitle from "../../Helpers/setDocumentTitle";
-import { setLocalStorage } from "../../Helpers/localStorage";
-import getAccountByToken from "../../Requests/getAccountByToken";
-import store from "../../System/Store";
-import SetupBackground from "../Setup/SetupBackground/SetupBackground";
+import setDocumentTitle from "../../Helpers/setDocumentTitle.ts";
+import { setLocalStorage } from "../../Helpers/localStorage.ts";
+import getAccountByToken from "../../Requests/getAccountByToken.ts";
+import store from "../../System/Store.ts";
+import SetupBackground from "../Setup/SetupBackground/SetupBackground.tsx";
 import * as Style from "./Login.style";
-import Form from "./LoginForm/LoginForm";
-import Welcome from "./Welcome/Welcome";
+import Form from "./LoginForm/LoginForm.tsx";
+import Welcome from "./Welcome/Welcome.tsx";
 
 /**
  * Main login component (form + background).

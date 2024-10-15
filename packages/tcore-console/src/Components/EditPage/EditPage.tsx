@@ -1,16 +1,16 @@
-import { ReactNode, useEffect, useState, useRef } from "react";
+import { type ReactNode, useEffect, useState, useRef } from "react";
 import { useHistory, useRouteMatch } from "react-router";
 import cloneDeep from "lodash.clonedeep";
-import setDocumentTitle from "../../Helpers/setDocumentTitle";
-import useApiRequest from "../../Helpers/useApiRequest";
-import Button from "../Button/Button";
+import setDocumentTitle from "../../Helpers/setDocumentTitle.ts";
+import useApiRequest from "../../Helpers/useApiRequest.ts";
+import Button from "../Button/Button.tsx";
 import { EButton } from "../Button/Button.types";
-import Footer from "../Footer/Footer";
-import { EIcon } from "../Icon/Icon.types";
-import Loading from "../Loading/Loading";
-import InnerNav from "../InnerNav/InnerNav";
-import Tabs from "../Tabs/Tabs";
-import { ITab } from "../Tabs/Tabs.types";
+import Footer from "../Footer/Footer.tsx";
+import type { EIcon } from "../Icon/Icon.types";
+import Loading from "../Loading/Loading.tsx";
+import InnerNav from "../InnerNav/InnerNav.tsx";
+import Tabs from "../Tabs/Tabs.tsx";
+import type { ITab } from "../Tabs/Tabs.types";
 import * as Style from "./EditPage.style";
 
 /**

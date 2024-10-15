@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from "styled-components";
-import { fonts } from "../../theme";
+import { fonts } from "../../theme.ts";
 
 const fadeIn = keyframes`
   from { opacity: 0 };

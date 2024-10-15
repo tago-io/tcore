@@ -1,4 +1,4 @@
-import { ITab } from "./Tabs.types";
+import type { ITab } from "./Tabs.types";
 import * as Style from "./Tabs.style";
 
 /**

@@ -1,6 +1,6 @@
 import { darken } from "polished";
 import styled from "styled-components";
-import { fonts } from "../../theme";
+import { fonts } from "../../theme.ts";
 
 /**
  * Container of the item.

@@ -1,6 +1,6 @@
-import { IDevice, TGenericID } from "@tago-io/tcore-sdk/types";
+import type { IDevice, TGenericID } from "@tago-io/tcore-sdk/types";
 import { Account } from "@tago-io/sdk";
-import store from "../System/Store";
+import store from "../System/Store.ts";
 
 /**
  * Retrieves all information of a single device.

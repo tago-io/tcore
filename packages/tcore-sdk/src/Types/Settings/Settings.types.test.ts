@@ -1,18 +1,18 @@
-import { ZodError } from "zod";
-import { zSettings, zSettingsEdit, zSettingsMetadata } from "./Settings.types";
+import type { ZodError } from "zod";
+import { zSettings, zSettingsEdit, zSettingsMetadata } from "./Settings.types.ts";
 
 describe("zSettings", () => {
   test("parses simple object", () => {
     const data = {
-      plugin_folder: "string",
+      custom_plugins: ["string"],
     };
     const parsed = zSettings.parse(data);
-    expect(parsed.plugin_folder).toEqual("string");
+    expect(parsed.custom_plugins).toEqual(["string"]);
   });
 
   test("check default values for optional fields", () => {
     const data = {
-      plugin_folder: "string",
+      custom_plugins: ["string"],
     };
     const parsed = zSettings.parse(data);
     //expect(parsed.plugin_auto_update_check_time).toEqual(null);
@@ -26,7 +26,7 @@ describe("zSettingsEdit", () => {
   test("parses simple object", () => {
     const data = {};
     const parsed = zSettingsEdit.parse(data);
-    expect(parsed.plugin_folder).toBeUndefined();
+    expect(parsed.custom_plugins).toBeUndefined();
   });
 });
 

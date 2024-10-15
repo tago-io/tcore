@@ -1,5 +1,5 @@
-import { render, screen } from "../../../utils/test-utils";
-import Link from "./Link";
+import { render, screen } from "../../../utils/test-utils.ts";
+import Link from "./Link.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Link href="#" />);

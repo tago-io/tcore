@@ -1,12 +1,12 @@
 import { z } from "zod";
-import { generateResourceID } from "../../Shared/ResourceID";
-import { IPluginConfigField, zPluginModuleIDCombo } from "../Plugin/Plugin.types";
-import { zQuery, zName, zObjectID, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types";
-import { zTags } from "../Tag/Tag.types";
-import preprocessBoolean from "../Helpers/preprocessBoolean";
-import preprocessObject from "../Helpers/preprocessObject";
-import removeNullValues from "../Helpers/removeNullValues";
-import createQueryOrderBy from "../Helpers/createQueryOrderBy";
+import { generateResourceID } from "../../Shared/ResourceID.ts";
+import { type IPluginConfigField, zPluginModuleIDCombo } from "../Plugin/Plugin.types.ts";
+import { zQuery, zName, zObjectID, zActiveAutoGen, zTagsAutoGen } from "../Common/Common.types.ts";
+import { zTags } from "../Tag/Tag.types.ts";
+import preprocessBoolean from "../Helpers/preprocessBoolean.ts";
+import preprocessObject from "../Helpers/preprocessObject.ts";
+import removeNullValues from "../Helpers/removeNullValues.ts";
+import createQueryOrderBy from "../Helpers/createQueryOrderBy.ts";
 
 /**
  * Validation for a "script" action type.
@@ -45,11 +45,11 @@ export const zActionTypePluginModule = z.object({ type: zPluginModuleIDCombo }).
 const zActionType = z.any().transform((x) => {
   if (x?.type === "script") {
     return zActionTypeScript.parse(x);
-  } else if (x?.type === "post") {
+  }if (x?.type === "post") {
     return zActionTypePost.parse(x);
-  } else if (x?.type === "tagoio") {
+  }if (x?.type === "tagoio") {
     return zActionTypeTagoIO.parse(x);
-  } else if (x) {
+  }if (x) {
     return zActionTypePluginModule.parse(x);
   }
 });

@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "noImplicitAny": true,
-    "declaration": true
+    "declaration": true,
+    "allowImportingTsExtensions": true,
+    "target": "ESNext",
+    "module": "ESNext"
   },
   "include": [
     "types/styled.d.ts",

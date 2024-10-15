@@ -1,4 +1,4 @@
-import APIBridge from "../APIBridge/APIBridge";
+import APIBridge from "../APIBridge/APIBridge.ts";
 
 /**
  * Class to manage data storage of your plugin.

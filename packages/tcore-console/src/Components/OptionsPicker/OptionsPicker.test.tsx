@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from "../../../utils/test-utils";
-import OptionsPicker from "./OptionsPicker";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
+import OptionsPicker from "./OptionsPicker.tsx";
 
 const defaultProps = {
   onGetOptions: jest.fn().mockImplementation(() => []),

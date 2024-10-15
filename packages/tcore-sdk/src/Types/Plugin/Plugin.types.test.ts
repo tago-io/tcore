@@ -1,4 +1,4 @@
-import { ZodError } from "zod";
+import type { ZodError } from "zod";
 import {
   zPluginModuleIDCombo,
   zPluginType,
@@ -15,7 +15,7 @@ import {
   zModuleMessageOptions,
   zPluginModuleListItem,
   zPluginModuleList,
-} from "./Plugin.types";
+} from "./Plugin.types.ts";
 
 describe("zPluginModuleIDCombo", () => {
   test("valid id", () => {

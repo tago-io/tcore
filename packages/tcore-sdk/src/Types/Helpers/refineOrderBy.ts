@@ -1,4 +1,4 @@
-import { parseSafe } from "./parseSafe";
+import { parseSafe } from "./parseSafe.ts";
 /**
  * Refines (validates) the order by field of a query.
  */

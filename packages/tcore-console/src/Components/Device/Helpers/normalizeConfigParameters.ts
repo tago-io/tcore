@@ -1,4 +1,4 @@
-import { IDeviceParameter } from "@tago-io/tcore-sdk/types";
+import type { IDeviceParameter } from "@tago-io/tcore-sdk/types";
 
 /**
  * Normalizes the configuration parameters array to return a consistent
@@ -16,7 +16,7 @@ function normalizeConfigParameters(params?: IDeviceParameter[]) {
   }
 
   const normalized = params.map((x) => ({
-    sent: x.sent ? true : false,
+    sent: !!x.sent,
     key: x.key,
     value: x.value,
   }));

@@ -1,12 +1,11 @@
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
 import { PLUGIN_STORE_PLUGIN_ID } from "@tago-io/tcore-shared";
-import { EIcon, EmptyMessage, Loading, useApiRequest } from "../../..";
-import store from "../../../System/Store";
-import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword";
-import SetupForm from "../SetupForm/SetupForm";
-import StepDatabaseNoStore from "../StepDatabaseNoStore/StepDatabaseNoStore";
-import StepDatabaseWithStore from "../StepDatabaseWithStore/StepDatabaseWithStore";
+import { EIcon, EmptyMessage, Loading, useApiRequest } from "../../../index.ts";
+import store from "../../../System/Store.ts";
+import ModalMasterPassword from "../../Plugins/Common/ModalMasterPassword/ModalMasterPassword.tsx";
+import SetupForm from "../SetupForm/SetupForm.tsx";
+import StepDatabaseWithStore from "../StepDatabaseWithStore/StepDatabaseWithStore.tsx";
 
 /**
  * Wrapper of the database step to figure out which screen to show:
@@ -50,7 +49,7 @@ function StepDatabaseWrapper(props: any) {
           )}
         </SetupForm>
       ) : error ? (
-        <StepDatabaseNoStore onBack={onBack} onNext={onNext} />
+        <StepDatabaseWithStore onBack={onBack} onNext={onNext} />
       ) : (
         <StepDatabaseWithStore onBack={onBack} onNext={onNext} />
       )}

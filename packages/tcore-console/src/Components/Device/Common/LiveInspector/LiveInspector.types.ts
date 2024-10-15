@@ -1,4 +1,4 @@
-import { ILiveInspectorMessage } from "@tago-io/tcore-sdk/types";
+import type { ILiveInspectorMessage } from "@tago-io/tcore-sdk/types";
 
 export interface IInspectorData {
   enabled: boolean;

@@ -1,6 +1,6 @@
-import { fireEvent, render, screen } from "../../../utils/test-utils";
+import { fireEvent, render, screen } from "../../../utils/test-utils.ts";
 import { EIcon } from "../Icon/Icon.types";
-import Accordion from "./Accordion";
+import Accordion from "./Accordion.tsx";
 
 test("renders without crashing", () => {
   const fn = () => render(<Accordion />);

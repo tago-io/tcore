@@ -1,9 +1,9 @@
 import { useTheme } from "styled-components";
-import { IPluginModuleList } from "@tago-io/tcore-sdk/types";
+import type { IPluginModuleList } from "@tago-io/tcore-sdk/types";
 import { EIcon } from "../../../Icon/Icon.types";
-import IconRadio from "../../../IconRadio/IconRadio";
-import Icon from "../../../Icon/Icon";
-import useApiRequest from "../../../../Helpers/useApiRequest";
+import IconRadio from "../../../IconRadio/IconRadio.tsx";
+import Icon from "../../../Icon/Icon.tsx";
+import useApiRequest from "../../../../Helpers/useApiRequest.ts";
 
 /**
  * Props.

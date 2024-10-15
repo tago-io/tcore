@@ -42,4 +42,9 @@ export const Container = styled.i<{
     `}
 `;
 
+export const IconFallback = styled.div<{ size: string }>`
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
+`;
+
 export default Container;

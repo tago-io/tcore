@@ -1,7 +1,7 @@
-import { UIEvent, useRef } from "react";
-import EmptyMessage from "../EmptyMessage/EmptyMessage";
-import { EIcon } from "../Icon/Icon.types";
-import { ISimpleTableColumn } from "./SimpleTable.types";
+import { type UIEvent, useRef } from "react";
+import EmptyMessage from "../EmptyMessage/EmptyMessage.tsx";
+import type { EIcon } from "../Icon/Icon.types";
+import type { ISimpleTableColumn } from "./SimpleTable.types";
 import * as Style from "./SimpleTable.style";
 
 /**
@@ -98,7 +98,7 @@ function SimpleTable<T>(props: ISimpleTableProps<T>) {
           {props.columns.map((column) => renderRowCell(item, column, rowIndex))}
         </Style.LinkRow>
       );
-    } else {
+    }
       return (
         <Style.DivRow
           key={rowIndex}
@@ -108,7 +108,6 @@ function SimpleTable<T>(props: ISimpleTableProps<T>) {
           {props.columns.map((column) => renderRowCell(item, column, rowIndex))}
         </Style.DivRow>
       );
-    }
   };
 
   /**

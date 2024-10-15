@@ -1,7 +1,7 @@
 import { useState } from "react";
-import FormGroup from "../../../FormGroup/FormGroup";
-import Input from "../../../Input/Input";
-import Modal from "../../../Modal/Modal";
+import FormGroup from "../../../FormGroup/FormGroup.tsx";
+import Input from "../../../Input/Input.tsx";
+import Modal from "../../../Modal/Modal.tsx";
 
 /**
  * Props.
