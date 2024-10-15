@@ -2,9 +2,6 @@
   "name": "@tago-io/tcore-plugin-sqlite",
   "version": "0.7.0",
   "main": "src/index.ts",
-  "engines": {
-    "tcore": ">= 0.7.0 < 0.8.0"
-  },
   "type": "module",
   "tcore": {
     "name": "SQLite",

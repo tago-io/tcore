@@ -4,9 +4,6 @@
   "private": false,
   "main": "./src/index.ts",
   "type": "module",
-  "engines": {
-    "tcore": ">= 0.7.0 < 1.0.0"
-  },
   "tcore": {
     "name": "Chirpstack LoRaWAN",
     "short_description": "Adds support for Chirpstack LoRaWAN",
