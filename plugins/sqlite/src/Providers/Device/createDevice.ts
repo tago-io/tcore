@@ -1,6 +1,6 @@
-import { IDatabaseCreateDeviceData } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
-import { knexClient } from "../../knex";
+import type { IDatabaseCreateDeviceData } from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Creates a new device.

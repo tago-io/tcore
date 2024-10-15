@@ -1,6 +1,6 @@
-import { TGenericID } from "@tago-io/tcore-sdk/types";
-import { destroyDeviceConnection } from "../../Helpers/DeviceDatabase";
-import { knexClient } from "../../knex";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
+import { destroyDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Deletes a device.

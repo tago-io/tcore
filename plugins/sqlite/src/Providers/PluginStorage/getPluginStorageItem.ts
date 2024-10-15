@@ -1,12 +1,20 @@
-import { getPluginConnection } from "../../Helpers/PluginConnection";
+import { getPluginConnection } from "../../Helpers/PluginConnection.ts";
 
 /**
  * Retrieves a storage item of a plugin.
  */
-async function getPluginStorageItem(pluginID: string, key: string): Promise<any | undefined> {
+async function getPluginStorageItem(
+  pluginID: string,
+  key: string,
+): Promise<any | undefined> {
   const connection = await getPluginConnection(pluginID);
 
-  const response = await connection.select("*").from("storage").where("key", key).limit(1).first();
+  const response = await connection
+    .select("*")
+    .from("storage")
+    .where("key", key)
+    .limit(1)
+    .first();
 
   if (response) {
     switch (response.type) {

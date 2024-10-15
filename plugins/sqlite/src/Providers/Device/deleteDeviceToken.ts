@@ -1,5 +1,5 @@
-import { TGenericToken } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { TGenericToken } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Deletes a device's token.

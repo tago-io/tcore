@@ -1,5 +1,9 @@
-import { IDatabaseGetDeviceDataQuery, TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
+import type {
+  IDatabaseGetDeviceDataQuery,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
 
 /**
  * Retrieves the sum of all items in a device.
@@ -7,13 +11,13 @@ import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
 async function getDeviceDataSum(
   deviceID: TGenericID,
   type: TDeviceType,
-  query: IDatabaseGetDeviceDataQuery
+  query: IDatabaseGetDeviceDataQuery,
 ): Promise<number> {
   const client = await getDeviceConnection(deviceID, type);
   const { variables, start_date, end_date, values, groups, ids } = query;
 
   const knexQuery = client
-    .select(client.raw(`SUM(value) as sum`))
+    .select(client.raw("SUM(value) as sum"))
     .count("id")
     .timeout(10000)
     .from("data")

@@ -1,5 +1,5 @@
-import { ISummary } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { ISummary } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves the summary information.

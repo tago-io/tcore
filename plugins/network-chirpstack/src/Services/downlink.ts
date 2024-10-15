@@ -1,9 +1,9 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { Request, Response } from "express";
+import axios, { type AxiosRequestConfig } from "axios";
+import type { Request, Response } from "express";
 import { core } from "@tago-io/tcore-sdk";
-import sendResponse from "../lib/sendResponse";
-import { IConfigParam } from "../types";
-import { getDevice } from "./uplink";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
+import { getDevice } from "./uplink.ts";
 
 interface IDownlinkBuild {
   token: string;
@@ -102,4 +102,4 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
 }
 
 export default downlinkService;
-export { IClassAConfig, IDownlinkParams };
+export type { IClassAConfig, IDownlinkParams };

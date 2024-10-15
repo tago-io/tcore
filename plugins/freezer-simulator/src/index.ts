@@ -1,5 +1,5 @@
 import { ServiceModule } from "@tago-io/tcore-sdk";
-import { startSendingData, stopSendingData } from "./data";
+import { startSendingData, stopSendingData } from "./data.ts";
 
 /**
  * Configuration values for this service.

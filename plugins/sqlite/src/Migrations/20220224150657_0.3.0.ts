@@ -1,11 +1,13 @@
-import { Knex } from "knex";
+import type { Knex } from "knex";
 
 /**
  * Bumps up to version 0.3.0.
  */
 export async function up(knex: Knex) {
   if (await knex.schema.hasColumn("device", "bucket")) {
-    await knex.schema.alterTable("device", (table) => table.dropColumn("bucket"));
+    await knex.schema.alterTable("device", (table) =>
+      table.dropColumn("bucket"),
+    );
   }
 
   if (!(await knex.schema.hasColumn("device", "encoder_stack"))) {
@@ -17,7 +19,9 @@ export async function up(knex: Knex) {
   }
 
   if (!(await knex.schema.hasColumn("device", "data_retention"))) {
-    await knex.schema.table("device", (table) => table.string("data_retention", 30));
+    await knex.schema.table("device", (table) =>
+      table.string("data_retention", 30),
+    );
   }
 
   if (await knex.schema.hasTable("bucket")) {
@@ -42,7 +46,9 @@ export async function down(knex: Knex) {
   }
 
   if (await knex.schema.hasColumn("device", "encoder_stack")) {
-    await knex.schema.alterTable("device", (table) => table.dropColumn("encoder_stack"));
+    await knex.schema.alterTable("device", (table) =>
+      table.dropColumn("encoder_stack"),
+    );
   }
 
   if (!(await knex.schema.hasTable("bucket"))) {

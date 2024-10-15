@@ -9,7 +9,7 @@ interface IQueryPagination {
  * @param {number} page The page of the query.
  * @param {amount} amount The amount of rows to be retrieved.
  */
-function applyQueryPagination(page: number = -1, amount: number = 20): IQueryPagination {
+function applyQueryPagination(page = -1, amount = 20): IQueryPagination {
   const amount_n = Number(amount) || 20;
   let pageNumber = Number(page) || -1;
   pageNumber = pageNumber < 0 ? 1 : pageNumber;

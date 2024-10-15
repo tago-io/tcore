@@ -1,12 +1,16 @@
-import { IDatabaseGetDeviceDataQuery, TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
+import type {
+  IDatabaseGetDeviceDataQuery,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
 
 /**
  */
 async function getDeviceDataCount(
   deviceID: TGenericID,
   type: TDeviceType,
-  query: IDatabaseGetDeviceDataQuery
+  query: IDatabaseGetDeviceDataQuery,
 ): Promise<number> {
   const client = await getDeviceConnection(deviceID, type);
   const { variables, start_date, end_date, values, groups, ids } = query;

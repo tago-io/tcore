@@ -1,4 +1,4 @@
-import { getPluginConnection } from "../../Helpers/PluginConnection";
+import { getPluginConnection } from "../../Helpers/PluginConnection.ts";
 
 /**
  * Retrieves all storage items of a plugin.

@@ -1,7 +1,7 @@
-const asterisks = new RegExp("\\*", "g");
-const underlines = new RegExp("\\_", "g");
-const percents = new RegExp("\\%", "g");
-const duplePercents = new RegExp("\\%\\%", "g");
+const asterisks = /\*/g;
+const underlines = /\_/g;
+const percents = /\%/g;
+const duplePercents = /\%\%/g;
 
 /**
  * Replaces the filter wildcards into a format understood by SQLite.

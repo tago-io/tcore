@@ -1,4 +1,4 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
 
 interface IDeviceDataLatLng extends Omit<IDeviceDataCreate, "location"> {
   location?: { lat: number; lng: number };
@@ -44,4 +44,4 @@ function toTagoFormat(objectItem: IToTagoObject, group?: string, prefix = "") {
 }
 
 export default toTagoFormat;
-export { IToTagoObject, IDeviceDataLatLng };
+export type { IToTagoObject, IDeviceDataLatLng };

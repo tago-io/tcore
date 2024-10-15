@@ -1,13 +1,13 @@
-import { Server } from "http";
+import type { Server } from "node:http";
 import { ActionTypeModule, PayloadEncoderModule, ServiceModule } from "@tago-io/tcore-sdk";
 import bodyParser from "body-parser";
-import express, { Express } from "express";
-import sendResponse from "./lib/sendResponse";
-import downlinkService from "./Services/downlink";
-import downlinkAction from "./Services/downlinkAction";
-import parser from "./Services/parser";
-import uplinkService from "./Services/uplink";
-import { IConfigParam } from "./types";
+import express, { type Express } from "express";
+import sendResponse from "./lib/sendResponse.ts";
+import downlinkService from "./Services/downlink.ts";
+import downlinkAction from "./Services/downlinkAction.ts";
+import parser from "./Services/parser.ts";
+import uplinkService from "./Services/uplink.ts";
+import type { IConfigParam } from "./types.ts";
 
 const NetworkService = new ServiceModule({
   id: "network-chirpstack",

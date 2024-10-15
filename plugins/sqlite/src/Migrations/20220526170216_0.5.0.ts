@@ -1,4 +1,4 @@
-import { Knex } from "knex";
+import type { Knex } from "knex";
 
 /**
  * Bumps up to version 0.5.0.
@@ -23,7 +23,11 @@ export async function up(knex: Knex) {
       table.string("permission", 40);
       table.timestamp("created_at");
 
-      table.foreign("account_id").references("id").inTable("account").onDelete("CASCADE");
+      table
+        .foreign("account_id")
+        .references("id")
+        .inTable("account")
+        .onDelete("CASCADE");
     });
   }
 }

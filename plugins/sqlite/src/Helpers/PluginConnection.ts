@@ -1,8 +1,7 @@
-import path from "path";
-import { TGenericID } from "@tago-io/tcore-sdk/types";
-import knex, { Knex } from "knex";
+import path from "node:path";
 import { helpers } from "@tago-io/tcore-sdk";
-import Dialect from "knex/lib/dialects/sqlite3";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
+import knex, { type Knex } from "knex";
 
 /**
  * Map of all plugins connections.
@@ -31,7 +30,7 @@ async function createPluginConnection(id: TGenericID) {
   const filename = await helpers.getFileURI(path.join("plugins", `${id}.db`));
 
   const connection = knex({
-    client: Dialect,
+    client: "sqlite3",
     connection: { filename },
     useNullAsDefault: true,
   });

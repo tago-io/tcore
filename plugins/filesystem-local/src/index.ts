@@ -1,6 +1,6 @@
 import { FileSystemModule } from "@tago-io/tcore-sdk";
-import { resolveFile } from "./resolveFile";
-import { resolveFolder } from "./resolveFolder";
+import { resolveFile } from "./resolveFile.ts";
+import { resolveFolder } from "./resolveFolder.ts";
 
 /**
  * Filesystem module.

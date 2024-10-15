@@ -1,4 +1,4 @@
-import { knexClient } from "../../knex";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Creates a new account.

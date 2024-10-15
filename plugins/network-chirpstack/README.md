@@ -53,16 +53,18 @@ Fill the fields accordingly:
 
 ---
 # Setting up the Device on TagoCore
-The network server LoraWAN Chirpstack sends the device EUI as an identification of which device is sending data.
+The network server, LoraWAN Chirpstack, sends the device EUI as an identifier for the device transmitting data.
 
-In order for the integration to properly identify the device, you must add a tag of each one of your devices in the TagoCore, as follow:
+To ensure the integration correctly identifies the device, you must add a tag for each of your devices in TagoCore, as follows:
 
 * **Tag key**: serial
-* **Tag value**: copy the Device EUI in the value of the tag.
+* **Tag value**: copy the Device EUI into the value of the tag.
+
+For TagoCore to interpret the payload sent by Chirpstack, you need to go to the device and select the Encoder Stack as Chirpstack LoRaWAN.
 
 ---
 # Action type: Send downlink to the device
-This integration also add a new action which you can use the send downlink to the device. Such as select as type of the action when setting up new actions.
+This integration also needs you to add a new action which you can use the send downlink to the device. Such as select as type of the action when setting up new actions.
 
 If using an Action trigger of Variable, you can enter dynamically setup the device and payload:
 

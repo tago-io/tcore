@@ -1,18 +1,22 @@
-import { IDatabaseGetDeviceDataQuery, TDeviceType, TGenericID } from "@tago-io/tcore-sdk/types";
-import { getDeviceConnection } from "../../Helpers/DeviceDatabase";
+import type {
+  IDatabaseGetDeviceDataQuery,
+  TDeviceType,
+  TGenericID,
+} from "@tago-io/tcore-sdk/types";
+import { getDeviceConnection } from "../../Helpers/DeviceDatabase.ts";
 
 /**
  */
 async function getDeviceDataAvg(
   deviceID: TGenericID,
   type: TDeviceType,
-  params: IDatabaseGetDeviceDataQuery
+  params: IDatabaseGetDeviceDataQuery,
 ): Promise<number> {
   const client = await getDeviceConnection(deviceID, type);
   const { variables, start_date, end_date, values, groups, ids } = params;
 
   const knexQuery = client
-    .select(client.raw(`AVG(value) as avg`))
+    .select(client.raw("AVG(value) as avg"))
     .count("id")
     .timeout(10000)
     .from("data")

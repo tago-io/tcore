@@ -1,10 +1,12 @@
-import { IAnalysisLogList, TGenericID } from "@tago-io/tcore-sdk/types";
-import { knexClient } from "../../knex";
+import type { IAnalysisLogList, TGenericID } from "@tago-io/tcore-sdk/types";
+import { knexClient } from "../../knex.ts";
 
 /**
  * Retrieves a list of an analysis' logs.
  */
-async function getAnalysisLogs(analysisID: TGenericID): Promise<IAnalysisLogList> {
+async function getAnalysisLogs(
+  analysisID: TGenericID,
+): Promise<IAnalysisLogList> {
   const response = await knexClient
     .select("*")
     .from("analysis_log")

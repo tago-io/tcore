@@ -1,8 +1,13 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import csv from "csv-parser";
-import { IDeviceDataCreate, IDevice } from "@tago-io/tcore-sdk/types";
+import type { IDeviceDataCreate, IDevice } from "@tago-io/tcore-sdk/types";
 import { core } from "@tago-io/tcore-sdk";
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
+const __filename = fileURLToPath(import.meta.url);
+const dirname__ = dirname(__filename);
 
 /**
  * Simulated data inside the .csv file.
@@ -26,7 +31,7 @@ let csvData: ICsvData[] = [];
 async function loadCsvData() {
   return new Promise((resolve) => {
     csvData = [];
-    const filePath = path.join(__dirname, "../assets/data.csv");
+    const filePath = path.join(dirname__, "../assets/data.csv");
 
     // read file csv
     fs.createReadStream(filePath)
