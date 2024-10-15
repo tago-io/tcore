@@ -9,6 +9,8 @@ COPY . .
 # Set environment variables
 ENV JUST_VERSION=1.36.0
 
+# RUN node just_bin.mjs ${JUST_VERSION} && exit 1
+
 # Install distro libs, download and install 'just', and clean up in a single RUN statement
 RUN apt update && \
     apt install -y curl netcat-openbsd && \
