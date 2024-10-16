@@ -1,5 +1,5 @@
-import channelRegex from "../Utils/channelRegex";
-import Connection from "./connections";
+import channelRegex from "../Utils/channelRegex.ts";
+import type Connection from "./connections.ts";
 
 interface Scope {
   topic: string;
@@ -19,12 +19,17 @@ function digestMessages(connection: Connection, channel: string, scope: Scope) {
 
   for (const client of connections) {
     // ? disconnect by device id or token
-    if (drop_connection === client.device.id || (client.token && client.token === drop_connection)) {
+    if (
+      drop_connection === client.device.id ||
+      (client.token && client.token === drop_connection)
+    ) {
       client.connack({ returnCode: 5 });
       return client.destroy();
     }
 
-    const scopeMQTT: Omit<Scope, "drop_connection" | "payload"> & { payload: Buffer | string } = {
+    const scopeMQTT: Omit<Scope, "drop_connection" | "payload"> & {
+      payload: Buffer | string;
+    } = {
       topic,
       payload,
       qos,

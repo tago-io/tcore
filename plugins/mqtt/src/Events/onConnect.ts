@@ -1,9 +1,9 @@
-import { helpers, core } from "@tago-io/tcore-sdk";
+import { core, helpers } from "@tago-io/tcore-sdk";
+import type mqttCon from "mqtt-connection";
+import type { IConnectPacket } from "mqtt-packet";
 import ms from "ms";
-import mqttCon from "mqtt-connection";
-import { IConnectPacket } from "mqtt-packet";
-import mqttChannel from "../Services/mqttChannel";
-import Connection from "../Services/connections";
+import type Connection from "../Services/connections.ts";
+import mqttChannel from "../Services/mqttChannel.ts";
 
 interface IConfigParam {
   port: number;
@@ -40,7 +40,9 @@ async function clientIDMethod(client_id: string) {
   if (!device_list || !device_list.length) {
     throw "Authorization Denied: Client ID doesn't match any tag";
   }
-  const device = device_list.find((x) => x.tags.find((tag) => tag.value === client_id));
+  const device = device_list.find((x) =>
+    x.tags.find((tag) => tag.value === client_id),
+  );
 
   if (!device) {
     throw "Authorization Denied: Client ID doesn't match any tag";
@@ -67,7 +69,7 @@ async function onConnect(
   connection: Connection,
   client: ITagoIOClient,
   packet: IConnectPacket,
-  configParams: IConfigParam
+  configParams: IConfigParam,
 ) {
   const keepalive = ms(`${packet.keepalive} sec`) || ms("1 min"); // ? DEFAULT SHOULD BE 1 MIN!!
   stream.setTimeout(keepalive * 2);
@@ -76,13 +78,14 @@ async function onConnect(
     throw "Missing username/password credentials";
   }
 
-  let deviceResult;
+  let deviceResult: any;
   const password = packet.password?.toString();
 
   if (configParams.connection_method === "client_id") {
     if (configParams.username.toLowerCase() !== packet.username.toLowerCase()) {
       throw "Invalid username/password credentials";
-    } else if (configParams.password !== password) {
+    }
+    if (configParams.password !== password) {
       throw "Invalid username/password credentials";
     }
     deviceResult = await clientIDMethod(packet.clientId);
@@ -103,7 +106,8 @@ async function onConnect(
   client.channel = mqttChannel(client.device.id);
 
   const payload_list = await core.getDeviceParamList(deviceResult.id);
-  client.payload_type = payload_list.find((param) => param.key === "payload_type")?.value || "auto";
+  client.payload_type =
+    payload_list.find((param) => param.key === "payload_type")?.value || "auto";
 
   connection.addConnection(client.channel, client);
 
@@ -121,5 +125,5 @@ async function onConnect(
   // executeAction(client.profile_id, 'device', 'mqtt_connect', actionObj, client.device.id);
 }
 
-export { IConfigParam, ITagoIOClient };
+export type { IConfigParam, ITagoIOClient };
 export default onConnect;

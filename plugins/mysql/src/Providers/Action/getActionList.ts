@@ -55,13 +55,13 @@ async function getActionList(
       item.tags = JSON.parse(JSON.stringify(item.tags));
     }
     if (item.action) {
-      item.action = JSON.parse(item.action);
+      item.action = JSON.parse(JSON.stringify(item.action));
     }
     if (item.trigger) {
-      item.trigger = JSON.parse(item.trigger);
+      item.trigger = JSON.parse(JSON.stringify(item.trigger));
     }
     if (item.device_info) {
-      item.device_info = JSON.parse(item.device_info);
+      item.device_info = JSON.parse(JSON.stringify(item.device_info));
     }
     if (item.last_triggered) {
       item.last_triggered = new Date(item.last_triggered);

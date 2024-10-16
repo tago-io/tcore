@@ -1,18 +1,24 @@
-import net from "net";
-import { helpers, ServiceModule, core, ActionTypeModule, ActionTriggerModule } from "@tago-io/tcore-sdk";
+import net from "node:net";
+import {
+  ActionTriggerModule,
+  ActionTypeModule,
+  ServiceModule,
+  core,
+  helpers,
+} from "@tago-io/tcore-sdk";
+import queue from "async/queue.js";
 import mqttCon from "mqtt-connection";
-import queue from "async/queue";
 import ms from "ms";
-import onConnect, { IConfigParam } from "./Events/onConnect";
-import onDisconnect from "./Events/onDisconnect";
-import onSubscribe from "./Events/onSubscribe";
-import onUnsubscribe from "./Events/onUnsubscribe";
-import onPublish from "./Events/onPublish";
-import Connection from "./Services/connections";
-import digestMessages from "./Services/digestMessages";
+import onConnect, { type IConfigParam } from "./Events/onConnect.ts";
+import onDisconnect from "./Events/onDisconnect.ts";
+import onPublish from "./Events/onPublish.ts";
+import onSubscribe from "./Events/onSubscribe.ts";
+import onUnsubscribe from "./Events/onUnsubscribe.ts";
+import Connection from "./Services/connections.ts";
+import digestMessages from "./Services/digestMessages.ts";
 import { delQOSMessage } from "./Services/mqtt.qos";
-import mqttChannel from "./Services/mqttChannel";
 import { retainMQTT } from "./Services/mqtt.retained";
+import mqttChannel from "./Services/mqttChannel.ts";
 
 const connection = new Connection();
 
@@ -34,7 +40,8 @@ const MQTTActionByVariable = new ActionTypeModule({
       {
         name: "Quality of Service",
         field: "qos",
-        tooltip: "Specify the quality of service that will be used in the requests",
+        tooltip:
+          "Specify the quality of service that will be used in the requests",
         options: [
           { label: "QoS 0", value: "qos-0" },
           { label: "QoS 1", value: "qos-1" },
@@ -64,21 +71,35 @@ const MQTTActionByVariable = new ActionTypeModule({
 
 MQTTActionByVariable.onCall = async (action_id, action_settings, data_list) => {
   const action = await core.getActionInfo(action_id);
-  const variables = action.trigger.conditions.map((condition) => condition.variable);
+  const variables = action.trigger.conditions.map(
+    (condition) => condition.variable,
+  );
 
   const data = data_list.find((data) => variables?.includes?.(data?.variable));
   if (!data?.origin) {
-    return console.error(`Action MQTT Publish doesn't support triggers that is not by Variable`);
-  } else if (!action_settings.uplink_topic) {
-    return console.error(`Action MQTT ignored, because uplink topic was not defined`);
-  } else if (!action_settings.device_id) {
-    return console.error(`Action MQTT ignored, because device id was not defined`);
+    return console.error(
+      `Action MQTT Publish doesn't support triggers that is not by Variable`,
+    );
+  }
+  if (!action_settings.uplink_topic) {
+    return console.error(
+      "Action MQTT ignored, because uplink topic was not defined",
+    );
+  }
+  if (!action_settings.device_id) {
+    return console.error(
+      "Action MQTT ignored, because device id was not defined",
+    );
   }
 
   const deviceInfo = await core.getDeviceInfo(data?.origin);
-  const targetDevice = await core.getDeviceInfo(action_settings.device_id).catch(() => null);
+  const targetDevice = await core
+    .getDeviceInfo(action_settings.device_id)
+    .catch(() => null);
   if (!targetDevice) {
-    return console.error(`Device ID is invalid or doesn't exist: ${action_settings.device_id}`);
+    return console.error(
+      `Device ID is invalid or doesn't exist: ${action_settings.device_id}`,
+    );
   }
 
   const channel = mqttChannel(deviceInfo?.id);
@@ -128,7 +149,7 @@ const MQTTStoreToBucket = new ActionTypeModule({
 });
 
 MQTTStoreToBucket.onCall = async (action_id, value, data) => {
-  let dataTriggered;
+  let dataTriggered: any;
   try {
     dataTriggered = JSON.parse(data.payload);
     if (Array.isArray(dataTriggered)) {
@@ -138,7 +159,10 @@ MQTTStoreToBucket.onCall = async (action_id, value, data) => {
         }
       }
     } else if (dataTriggered) {
-      dataTriggered.metadata = { ...dataTriggered.metadata, mqtt_topic: data.topic };
+      dataTriggered.metadata = {
+        ...dataTriggered.metadata,
+        mqtt_topic: data.topic,
+      };
     }
   } catch (e) {
     // ignore
@@ -165,7 +189,8 @@ new ActionTriggerModule({
     name: "MQTT Trigger",
     configs: [
       {
-        description: "if data arrives in one of these topics, the Action will be triggered.",
+        description:
+          "if data arrives in one of these topics, the Action will be triggered.",
         field: "topic",
         icon: "hashtag",
         name: "Topic",
@@ -190,7 +215,10 @@ const MQTTService = new ServiceModule({
       icon: "cog",
       options: [
         { label: "Connect using device-token", value: "device_token" },
-        { label: "Connect using username, password and Client ID", value: "client_id" },
+        {
+          label: "Connect using username, password and Client ID",
+          value: "client_id",
+        },
         // { label: "Use certificate", value: "certificate" },
       ],
     },
@@ -258,34 +286,46 @@ function initConnection(stream, configParams: IConfigParam) {
   const client = mqttCon(stream);
 
   client.on("connect", (packet) => {
-    onConnect(stream, connection, client, packet, configParams).catch((error) => {
-      if (packet) {
-        const password = `-hidden-${String(packet.password).slice(-5)}`;
-        const objDebug = {
-          error,
-          clientId: String(packet.clientId || ""),
-          username: String(packet.username || ""),
-          password: packet.password ? password : "",
-        };
-        const hash = JSON.stringify(objDebug);
+    onConnect(stream, connection, client, packet, configParams).catch(
+      (error) => {
+        if (packet) {
+          const password = `-hidden-${String(packet.password).slice(-5)}`;
+          const objDebug = {
+            error,
+            clientId: String(packet.clientId || ""),
+            username: String(packet.username || ""),
+            password: packet.password ? password : "",
+          };
+          const hash = JSON.stringify(objDebug);
 
-        if (!requestDenied.has(hash)) {
-          requestDenied.add(hash);
+          if (!requestDenied.has(hash)) {
+            requestDenied.add(hash);
+          }
         }
-      }
 
-      client.connack({ returnCode: 5, reasonCode: 134 });
-      client.destroy();
-    });
+        client.connack({ returnCode: 5, reasonCode: 134 });
+        client.destroy();
+      },
+    );
   });
 
-  client.on("disconnect", () => onDisconnect(connection, client, "disconnect").catch(debug));
-  client.on("close", () => onDisconnect(connection, client, "close").catch(debug));
-  client.on("error", () => onDisconnect(connection, client, "error").catch(debug));
+  client.on("disconnect", () =>
+    onDisconnect(connection, client, "disconnect").catch(debug),
+  );
+  client.on("close", () =>
+    onDisconnect(connection, client, "close").catch(debug),
+  );
+  client.on("error", () =>
+    onDisconnect(connection, client, "error").catch(debug),
+  );
 
-  client.on("publish", (packet) => onPublish(connection, client, packet).catch(debug));
+  client.on("publish", (packet) =>
+    onPublish(connection, client, packet).catch(debug),
+  );
   client.on("subscribe", (packet) => onSubscribe(client, packet).catch(debug));
-  client.on("unsubscribe", (packet) => onUnsubscribe(client, packet).catch(debug));
+  client.on("unsubscribe", (packet) =>
+    onUnsubscribe(client, packet).catch(debug),
+  );
 
   client.on("pingreq", () => {
     try {
@@ -347,7 +387,7 @@ MQTTService.onLoad = async (configParams: IConfigParam) => {
     throw new Error("You must select a connection method");
   }
 
-  if (configParams.connection_method == "client_id") {
+  if (configParams.connection_method === "client_id") {
     if (!configParams.username) {
       throw new Error("You must enter a username");
     }

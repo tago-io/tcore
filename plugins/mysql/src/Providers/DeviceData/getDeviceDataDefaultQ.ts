@@ -79,10 +79,10 @@ async function getDeviceDataDefaultQ(
     item.time = new Date(item.time);
 
     if (item.metadata) {
-      item.metadata = JSON.parse(item.metadata as string);
+      item.metadata = JSON.parse(JSON.stringify(item.metadata));
     }
     if (item.location) {
-      item.location = JSON.parse(item.location as unknown as string);
+      item.location = JSON.parse(JSON.stringify(item.location));
     }
 
     if (item.type === "number") {

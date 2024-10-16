@@ -13,9 +13,8 @@ async function retainMQTT(model: IRetainMQTT) {
 
   if (database === null) {
     return Promise.reject("Invalid device");
-  } else {
-    return pluginStorage.set(`${database.id}_retain_${model.topic}`, model);
   }
+  return pluginStorage.set(`${database.id}_retain_${model.topic}`, model);
 }
 
 async function getRetainedMQTT(device: string, topic: string) {
@@ -23,9 +22,8 @@ async function getRetainedMQTT(device: string, topic: string) {
 
   if (database === null) {
     return Promise.reject("Invalid device");
-  } else {
-    return pluginStorage.get(`${database.id}_retain_${topic}`);
   }
+  return pluginStorage.get(`${database.id}_retain_${topic}`);
 }
 
-export { retainMQTT, getRetainedMQTT, IRetainMQTT };
+export { retainMQTT, getRetainedMQTT, type IRetainMQTT };

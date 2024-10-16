@@ -1,21 +1,21 @@
-function channelRegex(topic: string = "", ignoreHash: boolean = false) {
-  let topicRegex;
-  let topicMatch;
+function channelRegex(topic = "", ignoreHash = false) {
+  let topicRegex: any;
+  let topicMatch: any;
 
   topic = topic.trim();
-  topic = topic.replace(new RegExp(" ", "g"), "");
+  topic = topic.replace(/ /g, "");
 
   if (topic.endsWith("/#") && !ignoreHash) {
     topicMatch = topic.replace("/#", "/(?:.*)");
   }
 
-  topicMatch = (topicMatch || topic).replace(new RegExp("\\+", "g"), "[^/]+");
+  topicMatch = (topicMatch || topic).replace(/\+/g, "[^/]+");
   topicMatch = `^${topicMatch}$`;
 
   try {
     topicRegex = new RegExp(topicMatch);
   } catch (error) {
-    topicRegex = new RegExp("invalid_topic");
+    topicRegex = /invalid_topic/;
   }
 
   return topicRegex;
