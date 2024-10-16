@@ -1,4 +1,11 @@
-# TagoCore - Open Source
+<br/>
+<p align="center">
+  <img src="https://assets.tago.io/tagoio/tagoio.png" width="200px" alt="TagoIO"></img>
+</p>
+
+# TagoCore
+
+> TagoCore is a free, fast, and open-source IoT platform for edge computing
 
 ## The Repository
 
