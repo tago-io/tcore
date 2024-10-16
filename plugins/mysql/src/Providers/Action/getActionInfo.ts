@@ -16,7 +16,7 @@ async function getActionInfo(actionID: TGenericID): Promise<IAction | null> {
     response.active = Boolean(response.active);
     response.lock = Boolean(response.lock);
     response.created_at = new Date(response.created_at);
-    response.tags = JSON.parse(response.tags);
+    response.tags = JSON.parse(JSON.stringify(response.tags));
 
     if (response.action) {
       response.action = JSON.parse(response.action);

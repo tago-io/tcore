@@ -15,7 +15,7 @@ async function getDeviceInfo(deviceID: TGenericID): Promise<IDevice | null> {
   if (response) {
     response.active = Boolean(response.active);
     response.created_at = new Date(response.created_at);
-    response.tags = JSON.parse(response.tags);
+    response.tags = JSON.parse(JSON.stringify(response.tags));
 
     if (response.last_input) {
       response.last_input = new Date(response.last_input);

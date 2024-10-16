@@ -52,7 +52,7 @@ async function getActionList(
       item.lock = Boolean(item.lock);
     }
     if (item.tags) {
-      item.tags = JSON.parse(item.tags);
+      item.tags = JSON.parse(JSON.stringify(item.tags));
     }
     if (item.action) {
       item.action = JSON.parse(item.action);

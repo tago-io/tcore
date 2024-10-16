@@ -58,7 +58,7 @@ async function getDeviceList(
       item.active = Boolean(item.active);
     }
     if (item.tags) {
-      item.tags = JSON.parse(item.tags);
+      item.tags = JSON.parse(JSON.stringify(item.tags));
     }
     if (item.encoder_stack) {
       item.encoder_stack = JSON.parse(item.encoder_stack);

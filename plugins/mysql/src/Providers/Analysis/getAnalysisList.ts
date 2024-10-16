@@ -59,7 +59,7 @@ async function getAnalysisList(
       item.active = Boolean(item.active);
     }
     if (item.tags) {
-      item.tags = JSON.parse(item.tags);
+      item.tags = JSON.parse(JSON.stringify(item.tags));
     }
     if (item.variables) {
       item.variables = JSON.parse(item.variables);

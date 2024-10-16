@@ -9,7 +9,7 @@ async function getTagKeys(type: TDatabaseGetTagKeysType): Promise<string[]> {
   const keys: string[] = [];
 
   for (const item of response) {
-    const tags = JSON.parse(item.tags) as ITag[];
+    const tags = JSON.parse(JSON.stringify(item.tags)) as ITag[];
     for (const tag of tags) {
       if (!keys.includes(tag.key)) {
         keys.push(tag.key);

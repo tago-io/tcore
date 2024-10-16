@@ -17,7 +17,7 @@ async function getAnalysisInfo(
   if (response) {
     response.active = Boolean(response.active);
     response.created_at = new Date(response.created_at);
-    response.tags = JSON.parse(response.tags);
+    response.tags = JSON.parse(JSON.stringify(response.tags));
 
     if (response.variables) {
       response.variables = JSON.parse(response.variables);

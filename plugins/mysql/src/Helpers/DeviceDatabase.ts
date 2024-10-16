@@ -32,6 +32,7 @@ export async function getDeviceConnection(id: TGenericID, type: TDeviceType) {
       table.index(["time"]);
       table.index(["group"]);
       table.index(["created_at"]);
+      table.string("serie", 100);
     });
   }
 

@@ -20,7 +20,7 @@ const deviceDB = {} as IDatabaseConnection;
 
 const migrationConfig: Knex.MigratorConfig = {
   tableName: "migrations",
-  directory: path.join(dirname__, "Migrations"),
+  directory: path.join(dirname__, "..", "Migrations"),
   // ! FIX Error: The migration directory is corrupt, the following files are missing:
   disableMigrationsListValidation: true,
 };
@@ -34,7 +34,7 @@ function createConnection(
   options?: IConnectionOptions,
 ): Knex {
   return knex({
-    client: "mysql",
+    client: "mysql2",
     connection: {
       charset: "utf8",
       timezone: "utc",
