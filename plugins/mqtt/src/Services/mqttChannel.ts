@@ -1,4 +1,4 @@
-import { TGenericID } from "@tago-io/tcore-sdk/types";
+import type { TGenericID } from "@tago-io/tcore-sdk/types";
 
 export default function mqttChannel(deviceID: TGenericID) {
   if (!deviceID) {

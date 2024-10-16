@@ -1,4 +1,4 @@
-import { ITagoIOClient } from "../Events/onConnect";
+import type { ITagoIOClient } from "../Events/onConnect.ts";
 
 class Connection {
   private connections: { [key: string]: ITagoIOClient[] } = {};
@@ -16,7 +16,9 @@ class Connection {
 
   public delConnection(channel: string, connID: string) {
     if (this.connections[channel]) {
-      this.connections[channel] = this.connections[channel].filter((x) => x.connID !== connID);
+      this.connections[channel] = this.connections[channel].filter(
+        (x) => x.connID !== connID,
+      );
 
       if (!this.connections[channel].length) {
         delete this.connections[channel];
@@ -35,7 +37,7 @@ class Connection {
   public async restart() {
     const clients: ITagoIOClient[] = Object.keys(this.connections).reduce(
       (f, c) => f.concat(this.connections[c]),
-      [] as ITagoIOClient[]
+      [] as ITagoIOClient[],
     );
     for (const client of clients) {
       client.destroy();
