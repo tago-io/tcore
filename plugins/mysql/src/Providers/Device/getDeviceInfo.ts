@@ -33,7 +33,7 @@ async function getDeviceInfo(deviceID: TGenericID): Promise<IDevice | null> {
       response.created_at = new Date(response.created_at);
     }
     if (response.encoder_stack) {
-      response.encoder_stack = JSON.parse(response.encoder_stack);
+      response.encoder_stack = JSON.parse(JSON.stringify(response.encoder_stack));
     }
   }
 
