@@ -9,7 +9,8 @@
     "full_description": "./README.md",
     "icon": "./assets/icon.png",
     "types": [
-      "database"
+      "database",
+      "sqlite"
     ],
     "permissions": [
       "action",
