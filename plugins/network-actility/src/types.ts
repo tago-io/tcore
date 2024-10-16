@@ -4,4 +4,4 @@ interface IConfigParam {
   tunnel_key: string;
 }
 
-export { IConfigParam };
+export type { IConfigParam };

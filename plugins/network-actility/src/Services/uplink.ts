@@ -1,9 +1,8 @@
 import { core, helpers } from "@tago-io/tcore-sdk";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import loraPacket from "lora-packet";
-import { IDevice } from "@tago-io/tcore-sdk/build/Types";
-import { IConfigParam } from "../types";
-import sendResponse from "../lib/sendResponse";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
 
 interface IPayloadParamsActility {
   DevEUI_uplink: {
@@ -36,7 +35,13 @@ interface IPayloadParamsActility {
  * @returns {string} decoded payload
  */
 // eslint-disable-next-line camelcase
-function decodePayload({ payload_hex, DevAddr, FCntUp, FPort, AppSKey }: IPayloadParamsActility["DevEUI_uplink"]) {
+function decodePayload({
+  payload_hex,
+  DevAddr,
+  FCntUp,
+  FPort,
+  AppSKey,
+}: IPayloadParamsActility["DevEUI_uplink"]) {
   const packetFields = {
     DevAddr: Buffer.from(DevAddr, "hex"),
     FCnt: FCntUp,
@@ -66,7 +71,9 @@ async function getDevice(devEui: string) {
   if (!deviceList || !deviceList.length) {
     throw "Authorization Denied: Device EUI doesn't match any serial tag";
   }
-  const device = deviceList.find((x) => x.tags.find((tag) => tag.key === "serial" && tag.value === devEui));
+  const device = deviceList.find((x) =>
+    x.tags.find((tag) => tag.key === "serial" && tag.value === devEui),
+  );
   if (!device) {
     throw "Authorization Denied: Device EUI doesn't match any serial tag";
   }
@@ -82,16 +89,25 @@ async function getDevice(devEui: string) {
  * @param res - express res param
  * @returns {void}
  */
-async function uplinkService(config: IConfigParam, req: Request, res: Response) {
-  const authorization = req.headers["Authorization"] || req.headers["authorization"];
+async function uplinkService(
+  config: IConfigParam,
+  req: Request,
+  res: Response,
+) {
+  const authorization = req.headers.Authorization || req.headers.authorization;
   if (!authorization || authorization !== config.authorization_code) {
-    console.error(`[Network Server] Request refused, authentication is invalid: ${authorization}`);
-    return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+    console.error(
+      `[Network Server] Request refused, authentication is invalid: ${authorization}`,
+    );
+    return sendResponse(res, {
+      body: "Invalid authorization header",
+      status: 401,
+    });
   }
 
   const data: IPayloadParamsActility = req.body;
   if (!data.DevEUI_uplink) {
-    console.error(`[Network Server] Request refused, body is invalid`);
+    console.error("[Network Server] Request refused, body is invalid");
     return sendResponse(res, { body: "Invalid body received", status: 401 });
   }
 
@@ -101,7 +117,10 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
   });
 
   if (!device) {
-    return sendResponse(res, { body: { message: `Device not found: ${devEui}` }, status: 400 });
+    return sendResponse(res, {
+      body: { message: `Device not found: ${devEui}` },
+      status: 400,
+    });
   }
 
   core.emitToLiveInspector(device.id, {
@@ -117,12 +136,21 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
     let deviceParams = await core.getDeviceParamList(device.id);
 
     const defaultParamSettings = (key: string) => {
-      const index = deviceParams.push({ key, value: "", id: helpers.generateResourceID(), sent: false });
+      const index = deviceParams.push({
+        key,
+        value: "",
+        id: helpers.generateResourceID(),
+        sent: false,
+      });
       return deviceParams[index - 1];
     };
 
-    const asIDParam = deviceParams.find((param) => param.key === "as_id") || defaultParamSettings("as_id");
-    const fctdnParam = deviceParams.find((param) => param.key === "fctdn") || defaultParamSettings("fctdn");
+    const asIDParam =
+      deviceParams.find((param) => param.key === "as_id") ||
+      defaultParamSettings("as_id");
+    const fctdnParam =
+      deviceParams.find((param) => param.key === "fctdn") ||
+      defaultParamSettings("fctdn");
 
     if (data.DevEUI_uplink.AS_ID) {
       asIDParam.value = String(data.DevEUI_uplink.AS_ID);
@@ -131,7 +159,10 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
     if (data.DevEUI_uplink.FCntDn) {
       fctdnParam.value = String(data.DevEUI_uplink.FCntDn);
     }
-    deviceParams = deviceParams.map((param) => ({ ...param, sent: !!param.sent }));
+    deviceParams = deviceParams.map((param) => ({
+      ...param,
+      sent: !!param.sent,
+    }));
     core.setDeviceParams(device.id, deviceParams);
   }
 
@@ -147,4 +178,4 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
 }
 
 export default uplinkService;
-export { getDevice, IPayloadParamsActility };
+export { getDevice, type IPayloadParamsActility };

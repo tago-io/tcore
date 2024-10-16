@@ -22,7 +22,6 @@
     ]
   },
   "dependencies": {
-    "body-parser": "2.0.1"
   },
   "devDependencies": {
   }

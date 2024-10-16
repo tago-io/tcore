@@ -1,5 +1,5 @@
-import { IDeviceDataLatLng } from "../lib/toTagoFormat";
-import actilityParser from "../Services/parser";
+import actilityParser from "../Services/parser.ts";
+import type { IDeviceDataLatLng } from "../lib/toTagoFormat.ts";
 
 describe("Decoder unit test", () => {
   test("Actility Result", async () => {
@@ -10,7 +10,8 @@ describe("Decoder unit test", () => {
       FCntUp: 13643,
       MType: 4,
       FCntDn: 11028,
-      payload_hex: "a978e807c0070800626a2003e80307000400de010ffd401c5f8254020209696f676f75e9",
+      payload_hex:
+        "a978e807c0070800626a2003e80307000400de010ffd401c5f8254020209696f676f75e9",
       mic_hex: "d9a3bc9a",
       Lrcid: "0000020F",
       LrrRSSI: -113,
@@ -24,7 +25,17 @@ describe("Decoder unit test", () => {
       Late: 0,
       LrrLAT: 45.504021,
       LrrLON: 19.527136,
-      Lrrs: { Lrr: [{ Lrrid: "00003EE3", Chain: 0, LrrRSSI: -113, LrrSNR: 3, LrrESP: -114.764351 }] },
+      Lrrs: {
+        Lrr: [
+          {
+            Lrrid: "00003EE3",
+            Chain: 0,
+            LrrRSSI: -113,
+            LrrSNR: 3,
+            LrrESP: -114.764351,
+          },
+        ],
+      },
       DevLocTime: "2022-03-16T15:22:26.359+01:00",
       DevLAT: 45.504021,
       DevLON: 19.527136,
@@ -60,7 +71,9 @@ describe("Decoder unit test", () => {
     const rssi = payload.find((item) => item.variable === "lrrrssi");
     const snr = payload.find((item) => item.variable === "lrrsnr");
     expect(payloadRaw?.value).toBeTruthy();
-    expect(payloadRaw?.value).toBe("a978e807c0070800626a2003e80307000400de010ffd401c5f8254020209696f676f75e9");
+    expect(payloadRaw?.value).toBe(
+      "a978e807c0070800626a2003e80307000400de010ffd401c5f8254020209696f676f75e9",
+    );
     expect(fport?.value).toBeTruthy();
     expect(fport?.value).toBe(22);
     expect(rssi?.value).toBeTruthy();

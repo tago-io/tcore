@@ -1,11 +1,11 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { core } from "@tago-io/tcore-sdk";
-import axios, { AxiosRequestConfig } from "axios";
-import { Request, Response } from "express";
+import axios, { type AxiosRequestConfig } from "axios";
+import type { Request, Response } from "express";
 import { DateTime } from "luxon";
-import sendResponse from "../lib/sendResponse";
-import { IConfigParam } from "../types";
-import { getDevice } from "./uplink";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
+import { getDevice } from "./uplink.ts";
 
 interface IDownlinkBuild {
   url: string;
@@ -56,24 +56,40 @@ interface IClassAConfig {
  * @param classAConfig - optinal parameter sent by Actlity for class A devices
  * @returns {void}
  */
-async function downlinkService(config: IConfigParam, req: Request, res: Response, classAConfig: IClassAConfig = {}) {
-  const authorization = req.headers["Authorization"] || req.headers["authorization"];
+async function downlinkService(
+  config: IConfigParam,
+  req: Request,
+  res: Response,
+  classAConfig: IClassAConfig = {},
+) {
+  const authorization = req.headers.Authorization || req.headers.authorization;
   if (!authorization || authorization !== config.authorization_code) {
-    console.error(`[Network Server] Request refused, authentication is invalid: ${authorization}`);
-    return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+    console.error(
+      `[Network Server] Request refused, authentication is invalid: ${authorization}`,
+    );
+    return sendResponse(res, {
+      body: "Invalid authorization header",
+      status: 401,
+    });
   }
 
   const body = <IDownlinkParams>req.body;
 
   const device = await getDevice(body.device);
   if (!body.device) {
-    return sendResponse(res, { body: "Missing device paramater with device eui as value", status: 400 });
+    return sendResponse(res, {
+      body: "Missing device paramater with device eui as value",
+      status: 400,
+    });
   }
   if (!body.port) {
     return sendResponse(res, { body: "Missing port paramater", status: 400 });
   }
   if (!body.payload) {
-    return sendResponse(res, { body: "Missing payload paramater with hexadecimal value", status: 400 });
+    return sendResponse(res, {
+      body: "Missing payload paramater with hexadecimal value",
+      status: 400,
+    });
   }
 
   if (!classAConfig?.fcntdn || !classAConfig?.as_id) {
@@ -83,7 +99,10 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
     const fctdnParam = deviceParams.find((param) => param.key === "fctdn");
 
     if (!asIDParam || !fctdnParam) {
-      return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+      return sendResponse(res, {
+        body: "Invalid authorization header",
+        status: 401,
+      });
     }
 
     classAConfig.fcntdn = Number(fctdnParam.value as string);
@@ -91,7 +110,10 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
   }
 
   const deveui = String(device).toUpperCase();
-  const time = DateTime.utc().setZone("America/Sao_Paulo").plus({ seconds: 5 }).toFormat("YYYY-MM-DDTHH:mm:ss.SZ");
+  const time = DateTime.utc()
+    .setZone("America/Sao_Paulo")
+    .plus({ seconds: 5 })
+    .toFormat("YYYY-MM-DDTHH:mm:ss.SZ");
   const tokenString = `DevEUI=${deveui}&FPort=${body.port}&FCntDn=${classAConfig.fcntdn}&Payload=${
     body.payload
   }&AS_ID=${classAConfig.as_id}&Time=${time}${config.tunnel_key.toLowerCase()}`;
@@ -117,12 +139,18 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
 
   await sendDownlink(downlinkBuild)
     .then(() => {
-      return sendResponse(res, { body: { status: true, message: "Downlink successfully sent" }, status: 201 });
+      return sendResponse(res, {
+        body: { status: true, message: "Downlink successfully sent" },
+        status: 201,
+      });
     })
     .catch((e) => {
-      return sendResponse(res, { body: JSON.stringify(e.response.data), status: e.response.status });
+      return sendResponse(res, {
+        body: JSON.stringify(e.response.data),
+        status: e.response.status,
+      });
     });
 }
 
 export default downlinkService;
-export { IClassAConfig, IDownlinkParams };
+export type { IClassAConfig, IDownlinkParams };
