@@ -62,7 +62,7 @@ async function getAnalysisList(
       item.tags = JSON.parse(JSON.stringify(item.tags));
     }
     if (item.variables) {
-      item.variables = JSON.parse(item.variables);
+      item.variables = JSON.parse(JSON.stringify(item.variables));
     }
     if (item.last_run) {
       item.last_run = new Date(item.last_run);

@@ -20,7 +20,7 @@ async function getAnalysisInfo(
     response.tags = JSON.parse(JSON.stringify(response.tags));
 
     if (response.variables) {
-      response.variables = JSON.parse(response.variables);
+      response.variables = JSON.parse(JSON.stringify(response.variables));
     }
     if (response.last_run) {
       response.last_run = new Date(response.last_run);
