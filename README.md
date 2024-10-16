@@ -21,6 +21,11 @@ This repository is where we (TagoIO Inc.) develop the [TagoCore](https://tagocor
 
 TagoCore is distributed as a Docker image, which you can access on [Docker Hub](https://hub.docker.com/r/tagoio/tagocore).
 
+## Related Projects
+
+* [TagoCore Website](https://github.com/tago-io/tagocore-website) - Official website for TagoCore.
+* [TagoCore Documentation](https://github.com/tago-io/tagocore-docs) - Comprehensive documentation for TagoCore, including setup guides and API references.
+
 ## Contributing
 
 There are many ways to participate in this project, including:
