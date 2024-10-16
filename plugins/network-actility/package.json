@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "crypto": "1.0.1",
-    "crypto-es": "2.1.0",
     "lora-packet": "0.9.2"
   },
   "devDependencies": {}
