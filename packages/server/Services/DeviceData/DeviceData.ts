@@ -148,7 +148,6 @@ export const applyPayloadEncoder = async (
       }
 
       const module = plugin.modules.get(moduleID);
-
       if (!module) {
         emitToLiveInspector(
           device,
@@ -302,7 +301,6 @@ export const addDeviceDataByDevice = async (
   }
 
   await validateMutableDataAmount(device);
-
   let items: any = data;
   items = await applyPayloadEncoder(device, items, options);
   items = await runPayloadParser(device, items, options);

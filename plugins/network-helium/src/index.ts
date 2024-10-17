@@ -1,13 +1,17 @@
-import { Server } from "http";
-import { ActionTypeModule, PayloadEncoderModule, ServiceModule } from "@tago-io/tcore-sdk";
+import type { Server } from "node:http";
+import {
+  ActionTypeModule,
+  PayloadEncoderModule,
+  ServiceModule,
+} from "@tago-io/tcore-sdk";
 import bodyParser from "body-parser";
-import express, { Express } from "express";
-import sendResponse from "./lib/sendResponse";
-import downlinkService from "./Services/downlink";
-import downlinkAction from "./Services/downlinkAction";
-import parser from "./Services/parser";
-import uplinkService from "./Services/uplink";
-import { IConfigParam } from "./types";
+import express, { type Express } from "express";
+import downlinkService from "./Services/downlink.ts";
+import downlinkAction from "./Services/downlinkAction.ts";
+import parser from "./Services/parser.ts";
+import uplinkService from "./Services/uplink.ts";
+import sendResponse from "./lib/sendResponse.ts";
+import type { IConfigParam } from "./types.ts";
 
 const NetworkService = new ServiceModule({
   id: "network-helium",
@@ -63,7 +67,8 @@ const action = new ActionTypeModule({
         name: "Payload (HEX)",
         field: "payload",
         type: "string",
-        tooltip: "Enter the payload in hexadecimal. You can use keyword $VALUE$ to send to same device of the trigger.",
+        tooltip:
+          "Enter the payload in hexadecimal. You can use keyword $VALUE$ to send to same device of the trigger.",
         required: true,
         defaultValue: "$VALUE$",
       },
@@ -88,7 +93,8 @@ const action = new ActionTypeModule({
 });
 
 let pluginConfig: IConfigParam | undefined;
-action.onCall = (...params) => downlinkAction(pluginConfig as IConfigParam, ...params);
+action.onCall = (...params) =>
+  downlinkAction(pluginConfig as IConfigParam, ...params);
 
 let app: Express | undefined;
 let server: Server | undefined;
@@ -101,7 +107,8 @@ NetworkService.onLoad = async (configParams: IConfigParam) => {
   pluginConfig = configParams;
   if (!pluginConfig.port) {
     throw "Port not specified";
-  } else if (!pluginConfig.authorization_code) {
+  }
+  if (!pluginConfig.authorization_code) {
     throw "Authorization code not specified";
   }
 
@@ -131,11 +138,21 @@ NetworkService.onLoad = async (configParams: IConfigParam) => {
 
   await startServer();
 
-  app.get("/", (req, res) => sendResponse(res, { body: { status: true, message: "Running" }, status: 200 }));
+  app.get("/", (req, res) =>
+    sendResponse(res, {
+      body: { status: true, message: "Running" },
+      status: 200,
+    }),
+  );
   app.post("/uplink", (req, res) => uplinkService(configParams, req, res));
   app.post("/downlink", (req, res) => downlinkService(configParams, req, res));
   // app.post("/error", (req, res) => res.send(""));
-  app.get("/status", (req, res) => sendResponse(res, { body: { status: true, message: "Running" }, status: 200 }));
+  app.get("/status", (req, res) =>
+    sendResponse(res, {
+      body: { status: true, message: "Running" },
+      status: 200,
+    }),
+  );
 
   app.use((req, res) => {
     res.redirect("/");
