@@ -122,7 +122,8 @@ class Module {
    * Invokes the onCall function of the module.
    */
   public async invokeOnCall(...args: any[]) {
-    return await this.invoke("onCall", ...args);
+    const result = await this.invoke("onCall", ...args);
+    return result;
   }
 
   /**
