@@ -123,6 +123,7 @@ class Worker extends EventEmitter {
     }
     this.emit("uncaughtException", ex);
     this.plugin.error = ex?.message || String(ex);
+    log(`plugin:${this.plugin.id}`, ex.stack || ex.message || String(ex));
     this.plugin.stop(true);
   }
 

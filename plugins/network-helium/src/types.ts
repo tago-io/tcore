@@ -3,4 +3,4 @@ interface IConfigParam {
   authorization_code: string;
 }
 
-export { IConfigParam };
+export type { IConfigParam };
