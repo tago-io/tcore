@@ -101,6 +101,7 @@ function setupConnections(config: Config) {
     port: config.main_read_port,
     user: config.main_user,
     password: config.main_password,
+    timezone: "local",
   };
 
   const mainOptions: IConnectionOptions = {

@@ -61,7 +61,7 @@ async function getDeviceList(
       item.tags = JSON.parse(JSON.stringify(item.tags));
     }
     if (item.encoder_stack) {
-      item.encoder_stack = JSON.parse(JSON.stringify(item.encoder_stack));
+      item.encoder_stack = JSON.parse(item.encoder_stack);
     }
     if (item.last_input) {
       item.last_input = new Date(item.last_input);
