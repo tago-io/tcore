@@ -1,4 +1,4 @@
-import { Response } from "express";
+import type { Response } from "express";
 
 /**
  * Resolve response for AWS Lambda Proxy
@@ -10,7 +10,10 @@ import { Response } from "express";
  */
 function sendResponse(
   res: Response,
-  response: { body: string | { [key: string]: string | number | boolean }; status?: number }
+  response: {
+    body: string | { [key: string]: string | number | boolean };
+    status?: number;
+  },
 ) {
   // ? If a throw command is executed without wrapper
   if (typeof response === "string") {

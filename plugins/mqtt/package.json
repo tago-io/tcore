@@ -13,11 +13,8 @@
     "permissions": ["device", "action", "device-data"]
   },
   "dependencies": {
-    "async": "3.2.6",
     "mqtt-connection": "4.1.0"
   },
   "devDependencies": {
-    "@types/async": "3.2.24",
-    "@types/ms": "0.7.34"
   }
 }
