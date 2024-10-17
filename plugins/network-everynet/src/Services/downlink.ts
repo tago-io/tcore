@@ -1,9 +1,9 @@
 import { core, helpers } from "@tago-io/tcore-sdk";
-import axios, { AxiosRequestConfig } from "axios";
-import { Request, Response } from "express";
-import sendResponse from "../lib/sendResponse";
-import { IConfigParam } from "../types";
-import { getDevice } from "./uplink";
+import axios, { type AxiosRequestConfig } from "axios";
+import type { Request, Response } from "express";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
+import { getDevice } from "./uplink.ts";
 
 interface IDownlinkParams {
   device: string;
@@ -21,16 +21,28 @@ interface IDownlinkParams {
  * @param deviceID - device ID
  * @returns {void}
  */
-async function setDeviceDownlinkParams(body: IDownlinkParams, deviceID: string) {
+async function setDeviceDownlinkParams(
+  body: IDownlinkParams,
+  deviceID: string,
+) {
   const deviceParams = await core.getDeviceParamList(deviceID);
 
   const defaultParamSettings = (key) => {
-    const index = deviceParams.push({ key, value: "", id: helpers.generateResourceID() });
+    const index = deviceParams.push({
+      key,
+      value: "",
+      id: helpers.generateResourceID(),
+    });
     return deviceParams[index - 1];
   };
-  const downlinkParam = deviceParams.find((x) => x.key === "downlink") || defaultParamSettings("downlink");
-  const fportParam = deviceParams.find((x) => x.key === "port") || defaultParamSettings("port");
-  const confirmedParam = deviceParams.find((x) => x.key === "confirmed") || defaultParamSettings("confirmed");
+  const downlinkParam =
+    deviceParams.find((x) => x.key === "downlink") ||
+    defaultParamSettings("downlink");
+  const fportParam =
+    deviceParams.find((x) => x.key === "port") || defaultParamSettings("port");
+  const confirmedParam =
+    deviceParams.find((x) => x.key === "confirmed") ||
+    defaultParamSettings("confirmed");
 
   downlinkParam.value = String(body.payload);
   fportParam.value = String(body.port);
@@ -47,22 +59,37 @@ async function setDeviceDownlinkParams(body: IDownlinkParams, deviceID: string) 
  * @param res - request response
  * @returns {void}
  */
-async function downlinkService(config: IConfigParam, req: Request, res: Response) {
-  const authorization = req.headers["Authorization"] || req.headers["authorization"];
+async function downlinkService(
+  config: IConfigParam,
+  req: Request,
+  res: Response,
+) {
+  const authorization = req.headers.Authorization || req.headers.authorization;
   if (!authorization || authorization !== config.authorization_code) {
-    console.error(`[Network Server] Request refused, authentication is invalid: ${authorization}`);
-    return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+    console.error(
+      `[Network Server] Request refused, authentication is invalid: ${authorization}`,
+    );
+    return sendResponse(res, {
+      body: "Invalid authorization header",
+      status: 401,
+    });
   }
 
   const body = <IDownlinkParams>req.body;
   if (!body.device) {
-    return sendResponse(res, { body: "Missing device paramater with device eui as value", status: 400 });
+    return sendResponse(res, {
+      body: "Missing device paramater with device eui as value",
+      status: 400,
+    });
   }
   if (!body.port) {
     return sendResponse(res, { body: "Missing port paramater", status: 400 });
   }
   if (!body.payload) {
-    return sendResponse(res, { body: "Missing payload paramater with hexadecimal value", status: 400 });
+    return sendResponse(res, {
+      body: "Missing payload paramater with hexadecimal value",
+      status: 400,
+    });
   }
 
   const device = await getDevice(body.device);
@@ -98,11 +125,15 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
     .catch((error) => {
       // console.error(`Downlink error: ${params.device} - ${params.authorization}: ${JSON.stringify(error.message)}`);
       return sendResponse(res, {
-        body: { everynet_error: error.response.data, url, message: "downlink_claim error" },
+        body: {
+          everynet_error: error.response.data,
+          url,
+          message: "downlink_claim error",
+        },
         status: error.response.status,
       });
     });
 }
 
 export default downlinkService;
-export { IDownlinkParams };
+export type { IDownlinkParams };

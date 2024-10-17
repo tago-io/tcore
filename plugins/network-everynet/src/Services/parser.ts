@@ -1,6 +1,9 @@
-import inspectFormat from "../lib/inspectFormat";
-import toTagoFormat, { IDeviceDataLatLng, IToTagoObject } from "../lib/toTagoFormat";
-import { IEverynetObject } from "./IEverynetObject";
+import inspectFormat from "../lib/inspectFormat.ts";
+import toTagoFormat, {
+  type IDeviceDataLatLng,
+  type IToTagoObject,
+} from "../lib/toTagoFormat.ts";
+import type { IEverynetObject } from "./IEverynetObject.ts";
 
 /**
  * In the solutions params is where usually latitude and longitude for your antenna signal comes from.
@@ -9,11 +12,17 @@ import { IEverynetObject } from "./IEverynetObject";
  * @param {string | number} serie - serie for the variables
  * @returns {IDeviceDataLatLng[]} data to be stored
  */
-function transformSolutionParam(solutions: IEverynetObject["params"]["solutions"], serie: string) {
+function transformSolutionParam(
+  solutions: IEverynetObject["params"]["solutions"],
+  serie: string,
+) {
   let toTago: IDeviceDataLatLng[] = [];
   for (const s of solutions) {
     let fixedJSON: IToTagoObject = {};
-    fixedJSON.gw_location = { value: `${s.lat}, ${s.lng}`, location: { lat: s.lat, lng: s.lng } };
+    fixedJSON.gw_location = {
+      value: `${s.lat}, ${s.lng}`,
+      location: { lat: s.lat, lng: s.lng },
+    };
     // delete s.lat;
     // delete s.lng;
 
@@ -45,27 +54,32 @@ export default async function parser(payload: any) {
 
   // Get a unique serie for the incoming data.
   if (payload.params.solutions) {
-    toTago = toTago.concat(transformSolutionParam(payload.params.solutions, serie));
-    delete payload.params.solutions;
+    toTago = toTago.concat(
+      transformSolutionParam(payload.params.solutions, serie),
+    );
+    payload.params.solutions = undefined;
   }
 
   if (payload.meta) {
     toTago = toTago.concat(toTagoFormat(payload.meta, serie));
-    delete payload.meta;
+    payload.meta = undefined;
   }
 
   if (payload.params.radio) {
     toTago = toTago.concat(inspectFormat(payload.params.radio, serie));
-    delete payload.params.radio;
+    payload.params.radio = undefined;
   }
 
   if (payload.params) {
     if (payload.params.payload) {
-      payload.params.payload = Buffer.from(payload.params.payload, "base64").toString("hex");
+      payload.params.payload = Buffer.from(
+        payload.params.payload,
+        "base64",
+      ).toString("hex");
     }
 
     toTago = toTago.concat(inspectFormat(payload.params, serie));
-    delete payload.params;
+    payload.params = undefined;
   }
 
   return toTago;

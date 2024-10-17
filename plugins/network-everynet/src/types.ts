@@ -5,4 +5,4 @@ interface IConfigParam {
   region: string;
 }
 
-export { IConfigParam };
+export type { IConfigParam };

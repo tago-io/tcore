@@ -35,4 +35,4 @@ interface IEverynetObject {
   params: IParams;
 }
 
-export { IEverynetObject };
+export type { IEverynetObject };
