@@ -5,4 +5,4 @@ interface IConfigParam {
   url_path: string;
 }
 
-export { IConfigParam };
+export type { IConfigParam };

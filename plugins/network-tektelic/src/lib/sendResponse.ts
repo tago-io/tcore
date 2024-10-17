@@ -1,4 +1,4 @@
-import { Response } from "express";
+import type { Response } from "express";
 
 /**
  * Resolve response for AWS Lambda Proxy
@@ -9,7 +9,10 @@ import { Response } from "express";
  * @param response.status - status of the response
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sendResponse(res: Response, response: { body: string | { [key: string]: any }; status?: number }) {
+function sendResponse(
+  res: Response,
+  response: { body: string | { [key: string]: any }; status?: number },
+) {
   // ? If a throw command is executed without wrapper
   if (typeof response === "string") {
     response = { body: response };

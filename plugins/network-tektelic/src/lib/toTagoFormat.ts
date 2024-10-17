@@ -1,4 +1,4 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
 
 interface IDeviceDataLatLng extends Omit<IDeviceDataCreate, "location"> {
   location?: { lat: number; lng: number };
@@ -7,7 +7,8 @@ interface IToTagoObject {
   [key: string]: string | number | boolean | IToTagoObject;
 }
 
-const fixVariable = (variable: string) => variable.replace(/ /g, "_").toLowerCase();
+const fixVariable = (variable: string) =>
+  variable.replace(/ /g, "_").toLowerCase();
 /**
  * Transforms an object to a TagoIO data array object
  *
@@ -25,12 +26,14 @@ function toTagoFormat(objectItem: IToTagoObject, group?: string, prefix = "") {
   for (const key in objectItemCopy) {
     if (typeof objectItem[key] === "object") {
       result.push({
-        variable: fixVariable(objectItemCopy[key]["variable"] || `${prefix}${key}`),
-        value: objectItemCopy[key]["value"],
-        group: objectItemCopy[key]["serie"] || group,
-        metadata: objectItemCopy[key]["metadata"],
-        location: objectItemCopy[key]["location"],
-        unit: objectItemCopy[key]["unit"],
+        variable: fixVariable(
+          objectItemCopy[key].variable || `${prefix}${key}`,
+        ),
+        value: objectItemCopy[key].value,
+        group: objectItemCopy[key].serie || group,
+        metadata: objectItemCopy[key].metadata,
+        location: objectItemCopy[key].location,
+        unit: objectItemCopy[key].unit,
       });
     } else {
       result.push({
@@ -45,4 +48,4 @@ function toTagoFormat(objectItem: IToTagoObject, group?: string, prefix = "") {
 }
 
 export default toTagoFormat;
-export { IToTagoObject, IDeviceDataLatLng };
+export type { IToTagoObject, IDeviceDataLatLng };
