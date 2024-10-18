@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from "axios";
-import { IConfigParam } from "../types";
+import axios, { type AxiosRequestConfig } from "axios";
+import type { IConfigParam } from "../types.ts";
 
 interface IActionSettings {
   endpoint: string;
@@ -13,9 +13,16 @@ interface IActionSettings {
  * @param data - device data from the action
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function nodeREDAction(pluginConfig: IConfigParam, actionID: string, actionSettings: IActionSettings, data: any) {
+async function nodeREDAction(
+  pluginConfig: IConfigParam,
+  actionID: string,
+  actionSettings: IActionSettings,
+  data: any,
+) {
   if (!actionSettings.endpoint) {
-    console.error(`[ERROR - Action ${actionID}] Endpoint as not been provided for the action`);
+    console.error(
+      `[ERROR - Action ${actionID}] Endpoint as not been provided for the action`,
+    );
     return;
   }
 
@@ -30,7 +37,7 @@ async function nodeREDAction(pluginConfig: IConfigParam, actionID: string, actio
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await axios(axiosRequest).catch((error) => {
     console.error(
-      `[ERROR - Action ${actionID}] Invalid request to ${actionSettings.endpoint} with status ${error.status}: ${error.response}`
+      `[ERROR - Action ${actionID}] Invalid request to ${actionSettings.endpoint} with status ${error.status}: ${error.response}`,
     );
   });
 }

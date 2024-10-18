@@ -1,6 +1,6 @@
 import { ActionTypeModule, ServiceModule } from "@tago-io/tcore-sdk";
-import nodeREDAction from "./Services/nodeREDAction";
-import { IConfigParam } from "./types";
+import nodeREDAction from "./Services/nodeREDAction.ts";
+import type { IConfigParam } from "./types.ts";
 
 const NetworkService = new ServiceModule({
   id: "network-nodered",
@@ -34,7 +34,8 @@ const NetworkService = new ServiceModule({
       type: "password",
       required: false,
       placeholder: "enter a password from Node-RED",
-      defaultValue: "$2a$08$zZWtXTja0fB1pzD4sHCMyOCMYz2Z6dNbM6tl8sJogENOMcxWV9DN.",
+      defaultValue:
+        "$2a$08$zZWtXTja0fB1pzD4sHCMyOCMYz2Z6dNbM6tl8sJogENOMcxWV9DN.",
     },
   ],
 });
@@ -61,7 +62,8 @@ const action = new ActionTypeModule({
 });
 
 let pluginConfig: IConfigParam | undefined;
-action.onCall = (...params) => nodeREDAction(pluginConfig as IConfigParam, ...params);
+action.onCall = (...params) =>
+  nodeREDAction(pluginConfig as IConfigParam, ...params);
 
 NetworkService.onLoad = async (configParams: IConfigParam) => {
   pluginConfig = configParams;
