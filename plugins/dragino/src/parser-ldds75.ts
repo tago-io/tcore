@@ -1,5 +1,5 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
-import { toTagoFormat } from "./lib/to-tago-format";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
+import { toTagoFormat } from "./lib/to-tago-format.ts";
 
 /**
  * @param bytes
@@ -28,13 +28,18 @@ function Decoder(bytes: Buffer) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLDDS75(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLDDS75(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
 
   const payloadRaw = payload.find(
-    (x) => x.variable === "payload" || x.variable === "payload_raw" || x.variable === "data"
+    (x) =>
+      x.variable === "payload" ||
+      x.variable === "payload_raw" ||
+      x.variable === "data",
   );
   if (payloadRaw) {
     // Get a unique serie for the incoming data.
@@ -47,7 +52,10 @@ export default async function parserLDDS75(payload: IDeviceDataCreate[]): Promis
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       // Catch any error in the parse code and send to parse_error variable.
-      varsToTago = varsToTago.concat({ variable: "parse_error", value: e.message || e });
+      varsToTago = varsToTago.concat({
+        variable: "parse_error",
+        value: e.message || e,
+      });
     }
 
     payload = payload.concat(varsToTago);

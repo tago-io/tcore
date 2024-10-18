@@ -1,4 +1,4 @@
-import parserLWL02 from "../parser-lwl02";
+import parserLWL02 from "../parser-lwl02.ts";
 
 describe("Dragino LWL-02", () => {
   test("Success", async () => {
@@ -10,10 +10,16 @@ describe("Dragino LWL-02", () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const batV: any = payload.find((item) => item.variable === "bat_v");
     const mod = payload.find((item) => item.variable === "mod");
-    const waterLeakStatus = payload.find((item) => item.variable === "water_leak_status");
-    const waterLeakTimes = payload.find((item) => item.variable === "water_leak_times");
+    const waterLeakStatus = payload.find(
+      (item) => item.variable === "water_leak_status",
+    );
+    const waterLeakTimes = payload.find(
+      (item) => item.variable === "water_leak_times",
+    );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lastWaterLeakDuration: any = payload.find((item) => item.variable === "last_water_leak_duration");
+    const lastWaterLeakDuration: any = payload.find(
+      (item) => item.variable === "last_water_leak_duration",
+    );
     const payloadRaw = payload.find((item) => item.variable === "payload");
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("4BE20200000800000100");

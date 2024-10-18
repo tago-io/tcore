@@ -1,4 +1,4 @@
-import parserLTC2 from "../parser-ltc2";
+import parserLTC2 from "../parser-ltc2.ts";
 
 describe("Dragino LTC2", () => {
   test("Success", async () => {
@@ -10,9 +10,15 @@ describe("Dragino LTC2", () => {
     const payloadRaw = payload.find((item) => item.variable === "payload");
     const ext = payload.find((item) => item.variable === "Ext");
     const batV = payload.find((item) => item.variable === "BatV");
-    const tempChannel1 = payload.find((item) => item.variable === "Temp_Channel1");
-    const tempChannel2 = payload.find((item) => item.variable === "Temp_Channel2");
-    const sysTimestamp = payload.find((item) => item.variable === "Systimestamp");
+    const tempChannel1 = payload.find(
+      (item) => item.variable === "Temp_Channel1",
+    );
+    const tempChannel2 = payload.find(
+      (item) => item.variable === "Temp_Channel2",
+    );
+    const sysTimestamp = payload.find(
+      (item) => item.variable === "Systimestamp",
+    );
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("0CE9011422EC2D6073E83B");
     expect(ext?.value).toBe(3.042);

@@ -1,4 +1,4 @@
-import parserLAQ4 from "../parser-laq4";
+import parserLAQ4 from "../parser-laq4.ts";
 
 describe("Dragino LAQ4", () => {
   test("Success", async () => {
@@ -20,7 +20,9 @@ describe("Dragino LAQ4", () => {
     const payloadRaw = payload.find((item) => item.variable === "payload");
     const batV = payload.find((item) => item.variable === "Bat_V");
     const workMode = payload.find((item) => item.variable === "Work_mode");
-    const alarmStatus = payload.find((item) => item.variable === "Alarm_status");
+    const alarmStatus = payload.find(
+      (item) => item.variable === "Alarm_status",
+    );
     const tvocPPB = payload.find((item) => item.variable === "TVOC_ppb");
     const co2PPM = payload.find((item) => item.variable === "CO2_ppm");
     const tempCSHT = payload.find((item) => item.variable === "TempC_SHT");

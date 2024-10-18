@@ -1,4 +1,4 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
 
 /**
  * @param bytes
@@ -45,13 +45,18 @@ function Decoder(bytes: Buffer) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLSNPK01(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLSNPK01(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
 
   const payloadRaw = payload.find(
-    (x) => x.variable === "payload_raw" || x.variable === "payload" || x.variable === "data"
+    (x) =>
+      x.variable === "payload_raw" ||
+      x.variable === "payload" ||
+      x.variable === "data",
   );
 
   if (payloadRaw) {

@@ -1,5 +1,5 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
-import { toTagoFormat } from "./lib/to-tago-format";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
+import { toTagoFormat } from "./lib/to-tago-format.ts";
 
 /**
  * Decode the payload.
@@ -20,7 +20,8 @@ function Decoder(bytes: Buffer) {
 
   if (mod === 1) {
     const DOOR_OPEN_TIMES = (bytes[3] << 16) | (bytes[4] << 8) | bytes[5];
-    const LAST_DOOR_OPEN_DURATION = (bytes[6] << 16) | (bytes[7] << 8) | bytes[8]; // units:min
+    const LAST_DOOR_OPEN_DURATION =
+      (bytes[6] << 16) | (bytes[7] << 8) | bytes[8]; // units:min
     return {
       BAT_V: bat,
       MOD: mod,
@@ -31,7 +32,8 @@ function Decoder(bytes: Buffer) {
   }
   if (mod === 2) {
     const WATER_LEAK_TIMES = (bytes[3] << 16) | (bytes[4] << 8) | bytes[5];
-    const LAST_WATER_LEAK_DURATION = (bytes[6] << 16) | (bytes[7] << 8) | bytes[8]; // units:min
+    const LAST_WATER_LEAK_DURATION =
+      (bytes[6] << 16) | (bytes[7] << 8) | bytes[8]; // units:min
     return {
       BAT_V: bat,
       MOD: mod,
@@ -53,11 +55,15 @@ function Decoder(bytes: Buffer) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLWL01(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLWL01(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
-  const payloadRaw = payload.find((x) => x.variable === "payload" || x.variable === "data");
+  const payloadRaw = payload.find(
+    (x) => x.variable === "payload" || x.variable === "data",
+  );
 
   if (payloadRaw) {
     // Get a unique serie for the incoming data.
@@ -70,7 +76,10 @@ export default async function parserLWL01(payload: IDeviceDataCreate[]): Promise
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       // Catch any error in the parse code and send to parse_error variable.
-      varsToTago = varsToTago.concat({ variable: "parse_error", value: e.message || e });
+      varsToTago = varsToTago.concat({
+        variable: "parse_error",
+        value: e.message || e,
+      });
     }
 
     payload = payload.concat(varsToTago);

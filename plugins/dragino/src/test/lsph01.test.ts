@@ -1,4 +1,4 @@
-import parserLSPH01 from "../parser-lsph01";
+import parserLSPH01 from "../parser-lsph01.ts";
 
 describe("Dragino LSPH01", () => {
   test("Success", async () => {
@@ -9,11 +9,17 @@ describe("Dragino LSPH01", () => {
 
     const payloadRaw = payload.find((item) => item.variable === "payload");
     const batV = payload.find((item) => item.variable === "bat_v");
-    const tempcDS18B20 = payload.find((item) => item.variable === "tempc_ds18b20");
+    const tempcDS18B20 = payload.find(
+      (item) => item.variable === "tempc_ds18b20",
+    );
     const ph1Soil = payload.find((item) => item.variable === "ph1_soil");
     const tempSoil = payload.find((item) => item.variable === "temp_soil");
-    const interruptFlag = payload.find((item) => item.variable === "interrupt_flag");
-    const messageType = payload.find((item) => item.variable === "message_type");
+    const interruptFlag = payload.find(
+      (item) => item.variable === "interrupt_flag",
+    );
+    const messageType = payload.find(
+      (item) => item.variable === "message_type",
+    );
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("0D250000003E0100000000");
     expect(batV?.value).toBe(3.042);

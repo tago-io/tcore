@@ -1,12 +1,12 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
-import { toTagoFormat, IToTagoObject } from "./lib/to-tago-format";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
+import { type IToTagoObject, toTagoFormat } from "./lib/to-tago-format.ts";
 
 /**
  * @param cNum
  * @returns {cTime}
  */
 function getzf(cNum: string) {
-  if (parseInt(cNum) < 10) cNum = `0${cNum}`;
+  if (Number.parseInt(cNum) < 10) cNum = `0${cNum}`;
 
   return cNum;
 }
@@ -17,9 +17,9 @@ function getzf(cNum: string) {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getMyDate(str: string | number | any) {
-  let cDate;
-  if (str > 9999999999) cDate = new Date(parseInt(str));
-  else cDate = new Date(parseInt(str) * 1000);
+  let cDate: any;
+  if (str > 9999999999) cDate = new Date(Number.parseInt(str));
+  else cDate = new Date(Number.parseInt(str) * 1000);
 
   const cYear = cDate.getFullYear();
   const cMonth = cDate.getMonth() + 1;
@@ -28,7 +28,7 @@ function getMyDate(str: string | number | any) {
   const cMin = cDate.getMinutes();
   const cSen = cDate.getSeconds();
   const cTime = `${cYear}-${getzf(String(cMonth))}-${getzf(String(cDay))} ${getzf(String(cHour))}:${getzf(
-    String(cMin)
+    String(cMin),
   )}:${getzf(String(cSen))}`;
 
   return cTime;
@@ -42,10 +42,23 @@ function getMyDate(str: string | number | any) {
 function datalog(i: number, bytes: Buffer) {
   const aa = bytes[0 + i] & 0x02 ? "TRUE" : "FALSE";
   const bb = bytes[0 + i] & 0x01 ? "OPEN" : "CLOSE";
-  const cc = ((bytes[1 + i] << 16) | (bytes[2 + i] << 8) | bytes[3 + i]).toString(10);
-  const dd = ((bytes[4 + i] << 16) | (bytes[5 + i] << 8) | bytes[6 + i]).toString(10);
+  const cc = (
+    (bytes[1 + i] << 16) |
+    (bytes[2 + i] << 8) |
+    bytes[3 + i]
+  ).toString(10);
+  const dd = (
+    (bytes[4 + i] << 16) |
+    (bytes[5 + i] << 8) |
+    bytes[6 + i]
+  ).toString(10);
   const ee = getMyDate(
-    ((bytes[7 + i] << 24) | (bytes[8 + i] << 16) | (bytes[9 + i] << 8) | bytes[10 + i]).toString(10)
+    (
+      (bytes[7 + i] << 24) |
+      (bytes[8 + i] << 16) |
+      (bytes[9 + i] << 8) |
+      bytes[10 + i]
+    ).toString(10),
   );
   let string = `[${aa},${bb},${cc},${dd},${ee}]`;
   string = string.concat(",");
@@ -64,7 +77,14 @@ function Decoder(bytes: Buffer, port: number) {
     const doorOpenStatus = bytes[0] & 0x01 ? "OPEN" : "CLOSE";
     const openTimes = (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
     const openDuration = (bytes[4] << 16) | (bytes[5] << 8) | bytes[6];
-    const dataTime = getMyDate(((bytes[7] << 24) | (bytes[8] << 16) | (bytes[9] << 8) | bytes[10]).toString(10));
+    const dataTime = getMyDate(
+      (
+        (bytes[7] << 24) |
+        (bytes[8] << 16) |
+        (bytes[9] << 8) |
+        bytes[10]
+      ).toString(10),
+    );
 
     if (bytes.length === 11) {
       return {
@@ -76,10 +96,10 @@ function Decoder(bytes: Buffer, port: number) {
       };
     }
   } else if (port === 0x03) {
-    let dataSum;
+    let dataSum: any;
     for (let i = 0; i < bytes.length; i += 11) {
       const data = datalog(i, bytes);
-      if (i === parseInt("0")) {
+      if (i === Number.parseInt("0")) {
         dataSum = data;
       } else {
         dataSum += data;
@@ -101,9 +121,9 @@ function Decoder(bytes: Buffer, port: number) {
       KEEP_TIME: keepTime,
     };
   } else if (port === 0x05) {
-    let subBand;
-    let freqBand;
-    let sensor;
+    let subBand: any;
+    let freqBand: any;
+    let sensor: any;
     if (bytes[0] === 0x0a) {
       sensor = "LDS03A";
     }
@@ -145,15 +165,22 @@ function Decoder(bytes: Buffer, port: number) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLDS03A(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLDS03A(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
 
   const payloadRaw = payload.find(
-    (x) => x.variable === "payload_raw" || x.variable === "payload" || x.variable === "data"
+    (x) =>
+      x.variable === "payload_raw" ||
+      x.variable === "payload" ||
+      x.variable === "data",
   );
-  const port = payload.find((x) => x.variable === "port" || x.variable === "fport")?.value;
+  const port = payload.find(
+    (x) => x.variable === "port" || x.variable === "fport",
+  )?.value;
 
   if (payloadRaw) {
     try {
@@ -161,7 +188,9 @@ export default async function parserLDS03A(payload: IDeviceDataCreate[]): Promis
       const buffer = Buffer.from(String(payloadRaw.value), "hex");
       const serie = new Date().getTime();
       const payloadAux = Decoder(buffer, Number(port));
-      payload = payload.concat(toTagoFormat(payloadAux as IToTagoObject).map((x) => ({ ...x, serie })));
+      payload = payload.concat(
+        toTagoFormat(payloadAux as IToTagoObject).map((x) => ({ ...x, serie })),
+      );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       // Print the error to the Live Inspector.

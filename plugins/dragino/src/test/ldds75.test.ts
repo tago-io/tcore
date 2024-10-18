@@ -1,4 +1,4 @@
-import parserLDDS75 from "../parser-ldds75";
+import parserLDDS75 from "../parser-ldds75.ts";
 
 describe("Dragino LDDS75", () => {
   test("Success", async () => {

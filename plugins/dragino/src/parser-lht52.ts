@@ -1,5 +1,5 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
-import { toTagoFormat, IToTagoObject } from "./lib/to-tago-format";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
+import { type IToTagoObject, toTagoFormat } from "./lib/to-tago-format.ts";
 
 /**
  * @param byte
@@ -22,23 +22,30 @@ function Decoder(bytes: Buffer, port: number) {
   if (port === 2) {
     port;
     if (bytes.length === 11) {
-      decode.TempC_SHT = parseFloat(((((bytes[0] << 24) >> 16) | bytes[1]) / 100).toFixed(2));
-      decode.Hum_SHT = parseFloat(((((bytes[2] << 24) >> 16) | bytes[3]) / 10).toFixed(1));
-      decode.TempC_DS = parseFloat(((((bytes[4] << 24) >> 16) | bytes[5]) / 100).toFixed(2));
+      decode.TempC_SHT = Number.parseFloat(
+        ((((bytes[0] << 24) >> 16) | bytes[1]) / 100).toFixed(2),
+      );
+      decode.Hum_SHT = Number.parseFloat(
+        ((((bytes[2] << 24) >> 16) | bytes[3]) / 10).toFixed(1),
+      );
+      decode.TempC_DS = Number.parseFloat(
+        ((((bytes[4] << 24) >> 16) | bytes[5]) / 100).toFixed(2),
+      );
 
       decode.Ext = bytes[6];
-      decode.Systimestamp = (bytes[7] << 24) | (bytes[8] << 16) | (bytes[9] << 8) | bytes[10];
-
-      return decode;
-    } else {
-      decode.Status = "RPL data or sensor reset";
+      decode.Systimestamp =
+        (bytes[7] << 24) | (bytes[8] << 16) | (bytes[9] << 8) | bytes[10];
 
       return decode;
     }
+    decode.Status = "RPL data or sensor reset";
+
+    return decode;
   }
 
   if (port === 3) {
-    decode.Status = "Data retrieved, your need to parse it by the application server";
+    decode.Status =
+      "Data retrieved, your need to parse it by the application server";
 
     return decode;
   }
@@ -74,12 +81,18 @@ function Decoder(bytes: Buffer, port: number) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLHT52(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLHT52(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
-  const payloadRaw = payload.find((x) => x.variable === "payload" || x.variable === "data");
-  const port = payload.find((x) => x.variable === "port" || x.variable === "fport")?.value;
+  const payloadRaw = payload.find(
+    (x) => x.variable === "payload" || x.variable === "data",
+  );
+  const port = payload.find(
+    (x) => x.variable === "port" || x.variable === "fport",
+  )?.value;
 
   if (payloadRaw) {
     try {
@@ -87,7 +100,9 @@ export default async function parserLHT52(payload: IDeviceDataCreate[]): Promise
       const buffer = Buffer.from(String(payloadRaw.value), "hex");
       const group = String(new Date().getTime());
       const payloadAux = Decoder(buffer, Number(port));
-      payload = payload.concat(toTagoFormat(payloadAux as IToTagoObject).map((x) => ({ ...x, group })));
+      payload = payload.concat(
+        toTagoFormat(payloadAux as IToTagoObject).map((x) => ({ ...x, group })),
+      );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       // Print the error to the Live Inspector.

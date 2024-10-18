@@ -9,20 +9,14 @@
     "short_description": "Adds support for LoRaWAN Dragino sensor encoders",
     "full_description": "./README.md",
     "icon": "./assets/icon.png",
-    "types": [
-      "encoder"
-    ],
-    "permissions": [
-      "device-data"
-    ]
+    "types": ["encoder"],
+    "permissions": ["device-data"]
   },
   "jest": {
     "preset": "ts-jest"
   },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-  },
-  "dependencies": {
-  }
+  "devDependencies": {},
+  "dependencies": {}
 }

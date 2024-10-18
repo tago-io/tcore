@@ -1,4 +1,4 @@
-import parserLWL01 from "../parser-lwl01";
+import parserLWL01 from "../parser-lwl01.ts";
 
 describe("Dragino LWL-01", () => {
   test("Success", async () => {
@@ -47,8 +47,12 @@ describe("Dragino LWL-01", () => {
     const payloadRaw = payload.find((item) => item.variable === "payload");
     const battery = payload.find((item) => item.variable === "bat_v");
     const mod = payload.find((item) => item.variable === "mod");
-    const waterLeak = payload.find((item) => item.variable === "water_leak_status");
-    const waterLeakTimes = payload.find((item) => item.variable === "water_leak_times");
+    const waterLeak = payload.find(
+      (item) => item.variable === "water_leak_status",
+    );
+    const waterLeakTimes = payload.find(
+      (item) => item.variable === "water_leak_times",
+    );
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("4Be202000008000001");
     expect(battery?.value).toBe(3.042);

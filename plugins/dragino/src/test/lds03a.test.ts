@@ -1,4 +1,4 @@
-import parserLDS03A from "../parser-lds03a";
+import parserLDS03A from "../parser-lds03a.ts";
 
 describe("Dragino LDS03A", () => {
   test("Success", async () => {
@@ -9,9 +9,13 @@ describe("Dragino LDS03A", () => {
     expect(Array.isArray(payload)).toBe(true);
 
     const payloadRaw = payload.find((item) => item.variable === "payload");
-    const openStatus = payload.find((item) => item.variable === "door_open_status");
+    const openStatus = payload.find(
+      (item) => item.variable === "door_open_status",
+    );
     const openTimes = payload.find((item) => item.variable === "open_times");
-    const openDuration = payload.find((item) => item.variable === "open_duration");
+    const openDuration = payload.find(
+      (item) => item.variable === "open_duration",
+    );
     const alarm = payload.find((item) => item.variable === "alarm");
     const dataTime = payload.find((item) => item.variable === "data_time");
     expect(payloadRaw?.value).toBeTruthy();

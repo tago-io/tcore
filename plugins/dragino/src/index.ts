@@ -1,17 +1,17 @@
 import { PayloadEncoderModule } from "@tago-io/tcore-sdk";
-import parserLWL01 from "./parser-lwl01";
-import parserLHT52 from "./parser-lht52";
-import parserLHT65 from "./parser-lht65";
-import parserLDS03A from "./parser-lds03a";
-import parserLGT92 from "./parser-lgt92";
-import parserLDDS75 from "./parser-ldds75";
-import parserLSN50V2 from "./parser-lsn50v2d22";
-import parserLTC2 from "./parser-ltc2";
-import parserLAQ4 from "./parser-laq4";
-import parserLWL02 from "./parser-lwl02";
-import parserLDS02 from "./parser-lds02";
-import parserLSPH01 from "./parser-lsph01";
-import parserLSNPK01 from "./parser-lsnpk01";
+import parserLAQ4 from "./parser-laq4.ts";
+import parserLDDS75 from "./parser-ldds75.ts";
+import parserLDS02 from "./parser-lds02.ts";
+import parserLDS03A from "./parser-lds03a.ts";
+import parserLGT92 from "./parser-lgt92.ts";
+import parserLHT52 from "./parser-lht52.ts";
+import parserLHT65 from "./parser-lht65.ts";
+import parserLSN50V2 from "./parser-lsn50v2d22.ts";
+import parserLSNPK01 from "./parser-lsnpk01.ts";
+import parserLSPH01 from "./parser-lsph01.ts";
+import parserLTC2 from "./parser-ltc2.ts";
+import parserLWL01 from "./parser-lwl01.ts";
+import parserLWL02 from "./parser-lwl02.ts";
 
 const encoderLWL01 = new PayloadEncoderModule({
   id: "network-actility-dragino-lwl01",

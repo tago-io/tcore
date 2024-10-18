@@ -1,5 +1,5 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
-import { toTagoFormat } from "./lib/to-tago-format";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
+import { toTagoFormat } from "./lib/to-tago-format.ts";
 
 /**
  * @param bytes
@@ -9,9 +9,13 @@ function Decoder16(bytes: Buffer) {
   // Decode an uplink message from a buffer
   // (array) of bytes to an object of fields.
 
-  const latitude = ((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]) / 1000000; //gps latitude,units: °
+  const latitude =
+    ((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]) /
+    1000000; //gps latitude,units: °
 
-  const longitude = ((bytes[4] << 24) | (bytes[5] << 16) | (bytes[6] << 8) | bytes[7]) / 1000000; //gps longitude,units: °
+  const longitude =
+    ((bytes[4] << 24) | (bytes[5] << 16) | (bytes[6] << 8) | bytes[7]) /
+    1000000; //gps longitude,units: °
 
   const alarm = bytes[8] & 0x40 ? "TRUE" : "FALSE"; //Alarm status
 
@@ -67,8 +71,8 @@ function Decoder16(bytes: Buffer) {
       value: `${decoded.lat},${decoded.lng}`,
       location: { lat: decoded.lat, lng: decoded.lng },
     };
-    delete decoded.lat;
-    delete decoded.lng;
+    decoded.lat = undefined;
+    decoded.lng = undefined;
   }
 
   return decoded;
@@ -85,9 +89,13 @@ function Decoder15(bytes: Buffer) {
     // info and GPS feature will be disabled and the location field
     // will be filled with 0x0FFFFFFF, 0x0FFFFFFF.
 
-    lat: ((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]) / 1000000,
+    lat:
+      ((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]) /
+      1000000,
 
-    lng: ((bytes[4] << 24) | (bytes[5] << 16) | (bytes[6] << 8) | bytes[7]) / 1000000,
+    lng:
+      ((bytes[4] << 24) | (bytes[5] << 16) | (bytes[6] << 8) | bytes[7]) /
+      1000000,
 
     // Alarm status: boolean
     alarm_status: (bytes[8] & 0x40) > 0,
@@ -126,8 +134,8 @@ function Decoder15(bytes: Buffer) {
     value: `${data.lat},${data.lng}`,
     location: { lng: data.lng, lat: data.lat },
   };
-  delete data.lng;
-  delete data.lat;
+  data.lng = undefined;
+  data.lat = undefined;
 
   return data;
 }
@@ -168,7 +176,7 @@ function Decoder14(bytes: Buffer | number[]) {
   if (bytes[3] & 0x80) {
     value2 |= 0xffffff000000;
   }
-  if (value == 0x0fffff && value2 == 0x0fffff) {
+  if (value === 0x0fffff && value2 === 0x0fffff) {
     // gps disabled (low battery)
   } else if (value === 0 && value2 === 0) {
     // gps no position yet
@@ -186,7 +194,9 @@ function Decoder14(bytes: Buffer | number[]) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLGT92(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLGT92(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
@@ -194,7 +204,10 @@ export default async function parserLGT92(payload: IDeviceDataCreate[]): Promise
   const payloadRaw = payload.find(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (x: any) =>
-      x.variable === "payload" || x.variable === "payload_raw" || x.variable === "data" || x.variable === "frm_payload"
+      x.variable === "payload" ||
+      x.variable === "payload_raw" ||
+      x.variable === "data" ||
+      x.variable === "frm_payload",
   );
 
   const device = { params: [{ key: "firmware_version", value: "1.6" }] };
@@ -208,7 +221,9 @@ export default async function parserLGT92(payload: IDeviceDataCreate[]): Promise
     // Parse the payload from your sensor to function parsePayload
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const firmwareVersion = device.params.find((param: any) => param.key === "firmware_version");
+      const firmwareVersion = device.params.find(
+        (param: any) => param.key === "firmware_version",
+      );
 
       let decoded = {};
       if (firmwareVersion?.value === "1.4") {
@@ -231,7 +246,11 @@ export default async function parserLGT92(payload: IDeviceDataCreate[]): Promise
 
     if (payload.find((x) => x.variable === "frm_payload")) {
       payload = payload.filter((x) => {
-        if ((x.location && String(x?.value).includes("undefined")) || x.value === undefined || x.value === null) {
+        if (
+          (x.location && String(x?.value).includes("undefined")) ||
+          x.value === undefined ||
+          x.value === null
+        ) {
           return false;
         }
         return true;
@@ -241,7 +260,11 @@ export default async function parserLGT92(payload: IDeviceDataCreate[]): Promise
         keys.push(payload[key].variable);
       }
       varsToTago = varsToTago.filter((y) => {
-        if (keys.includes(y.variable) || y.value === undefined || y.value === null) {
+        if (
+          keys.includes(y.variable) ||
+          y.value === undefined ||
+          y.value === null
+        ) {
           return false;
         }
         return true;
@@ -267,7 +290,11 @@ export default async function parserLGT92(payload: IDeviceDataCreate[]): Promise
 
   payload = payload.filter((item) => {
     if (item.location) {
-      if ("lat" in item.location && item.location.lat === 0 && item.location.lng === 0) {
+      if (
+        "lat" in item.location &&
+        item.location.lat === 0 &&
+        item.location.lng === 0
+      ) {
         console.error("Variable Location is ignored");
         return false;
       }

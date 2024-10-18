@@ -1,4 +1,4 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
 
 /**
  * @param bytes
@@ -22,7 +22,8 @@ function Decoder(bytes: Buffer) {
   value = (bytes[6] << 8) | bytes[7];
   let tempSoil = 0 as unknown as string;
   if ((value & 0x8000) >> 15 === 0) tempSoil = (value / 10).toFixed(2);
-  else if ((value & 0x8000) >> 15 === 1) tempSoil = ((value - 0xffff) / 10).toFixed(2);
+  else if ((value & 0x8000) >> 15 === 1)
+    tempSoil = ((value - 0xffff) / 10).toFixed(2);
 
   const iFlag = bytes[8];
   const mesType = bytes[10];
@@ -42,13 +43,18 @@ function Decoder(bytes: Buffer) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLSPH01(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLSPH01(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
 
   const payloadRaw = payload.find(
-    (x) => x.variable === "payload_raw" || x.variable === "payload" || x.variable === "data"
+    (x) =>
+      x.variable === "payload_raw" ||
+      x.variable === "payload" ||
+      x.variable === "data",
   );
 
   if (payloadRaw) {

@@ -1,4 +1,4 @@
-import parserLDS02 from "../parser-lds02";
+import parserLDS02 from "../parser-lds02.ts";
 
 describe("Dragino LDS02", () => {
   test("Success", async () => {
@@ -11,9 +11,15 @@ describe("Dragino LDS02", () => {
     const payloadRaw = payload.find((item) => item.variable === "payload");
     const batV = payload.find((item) => item.variable === "bat_v");
     const mod = payload.find((item) => item.variable === "mod");
-    const doorOpenStatus = payload.find((item) => item.variable === "door_open_status");
-    const doorOpenTimes = payload.find((item) => item.variable === "door_open_times");
-    const lastDoorOpenDuration = payload.find((item) => item.variable === "last_door_open_duration");
+    const doorOpenStatus = payload.find(
+      (item) => item.variable === "door_open_status",
+    );
+    const doorOpenTimes = payload.find(
+      (item) => item.variable === "door_open_times",
+    );
+    const lastDoorOpenDuration = payload.find(
+      (item) => item.variable === "last_door_open_duration",
+    );
     const alarm = payload.find((item) => item.variable === "alarm");
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("0D250000003E0100000000");

@@ -1,4 +1,4 @@
-import parserLGT92 from "../parser-lgt92";
+import parserLGT92 from "../parser-lgt92.ts";
 
 describe("Dragino LGT92", () => {
   test("Success", async () => {

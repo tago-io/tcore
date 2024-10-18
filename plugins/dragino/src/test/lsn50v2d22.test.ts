@@ -1,4 +1,4 @@
-import parserLSN50V2 from "../parser-lsn50v2d22";
+import parserLSN50V2 from "../parser-lsn50v2d22.ts";
 
 describe("Dragino LSN50V2-D22", () => {
   test("Success", async () => {
@@ -20,8 +20,12 @@ describe("Dragino LSN50V2-D22", () => {
     const adcCH0V = payload.find((item) => item.variable === "ADC_CH0V");
     const adcCH1V = payload.find((item) => item.variable === "ADC_CH1V");
     const adcCH4V = payload.find((item) => item.variable === "ADC_CH4V");
-    const digitalIstatus = payload.find((item) => item.variable === "Digital_ISatus");
-    const extiTrigger = payload.find((item) => item.variable === "EXTI_Trigger");
+    const digitalIstatus = payload.find(
+      (item) => item.variable === "Digital_ISatus",
+    );
+    const extiTrigger = payload.find(
+      (item) => item.variable === "EXTI_Trigger",
+    );
     const doorStatus = payload.find((item) => item.variable === "Door_status");
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("0CF10111011300FFFFFFFF");

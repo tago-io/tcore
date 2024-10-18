@@ -1,5 +1,5 @@
-import { IDeviceDataCreate } from "@tago-io/tcore-sdk/build/Types";
-import { toTagoFormat, IToTagoObject } from "./lib/to-tago-format";
+import type { IDeviceDataCreate } from "@tago-io/tcore-sdk/Types";
+import { type IToTagoObject, toTagoFormat } from "./lib/to-tago-format.ts";
 
 /**
  * @param bytes
@@ -21,7 +21,11 @@ function Decoder(bytes: Buffer) {
       { variable: "mod", value: mod },
       { variable: "water_leak_status", value: waterLeakStatus },
       { variable: "water_leak_times", value: leakTimes },
-      { variable: "last_water_leak_duration", value: leakDuration, unit: "min" },
+      {
+        variable: "last_water_leak_duration",
+        value: leakDuration,
+        unit: "min",
+      },
     ];
   }
 }
@@ -32,13 +36,18 @@ function Decoder(bytes: Buffer) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataCreate[]} data to be stored
  */
-export default async function parserLWL02(payload: IDeviceDataCreate[]): Promise<IDeviceDataCreate[]> {
+export default async function parserLWL02(
+  payload: IDeviceDataCreate[],
+): Promise<IDeviceDataCreate[]> {
   if (!Array.isArray(payload)) {
     payload = [payload];
   }
 
   const payloadRaw = payload.find(
-    (x) => x.variable === "payload_raw" || x.variable === "payload" || x.variable === "data"
+    (x) =>
+      x.variable === "payload_raw" ||
+      x.variable === "payload" ||
+      x.variable === "data",
   );
 
   if (payloadRaw) {
@@ -47,7 +56,9 @@ export default async function parserLWL02(payload: IDeviceDataCreate[]): Promise
       const buffer = Buffer.from(String(payloadRaw.value), "hex");
       const serie = new Date().getTime();
       const payloadAux = Decoder(buffer);
-      payload = payload.concat(toTagoFormat(payloadAux as unknown as IToTagoObject)).map((x) => ({ ...x, serie }));
+      payload = payload
+        .concat(toTagoFormat(payloadAux as unknown as IToTagoObject))
+        .map((x) => ({ ...x, serie }));
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       // Print the error to the Live Inspector.

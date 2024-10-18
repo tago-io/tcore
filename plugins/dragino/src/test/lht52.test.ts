@@ -1,4 +1,4 @@
-import parserLHT52 from "../parser-lht52";
+import parserLHT52 from "../parser-lht52.ts";
 
 describe("Dragino LHT52", () => {
   test("Success", async () => {
@@ -21,7 +21,9 @@ describe("Dragino LHT52", () => {
     const humSHT = payload.find((item) => item.variable === "Hum_SHT");
     const tempCDS = payload.find((item) => item.variable === "TempC_DS");
     const ext = payload.find((item) => item.variable === "Ext");
-    const sysTimestamp = payload.find((item) => item.variable === "Systimestamp");
+    const sysTimestamp = payload.find(
+      (item) => item.variable === "Systimestamp",
+    );
     expect(payloadRaw?.value).toBeTruthy();
     expect(payloadRaw?.value).toBe("08CD02207FFF0161CD4EDD");
     expect(tempCSHT?.value).toBe(3.042);

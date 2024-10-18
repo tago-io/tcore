@@ -1,4 +1,4 @@
-import parserLHT65 from "../parser-lht65";
+import parserLHT65 from "../parser-lht65.ts";
 
 describe("Dragino LHT65", () => {
   test("Success", async () => {
