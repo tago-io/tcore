@@ -1,5 +1,5 @@
 import { ServiceModule } from "@tago-io/tcore-sdk";
-import { startIntervals, stopIntervals } from "./data";
+import { startIntervals, stopIntervals } from "./data.ts";
 
 /**
  * Configuration values for this service.
@@ -58,7 +58,8 @@ const serviceModule = new ServiceModule<IConfigValues>({
           name: "Send data to a Domo DataSet",
           field: "enable_send_data",
           type: "boolean",
-          tooltip: "Data will be acquired from a Device and inserted into a Domo DataSet",
+          tooltip:
+            "Data will be acquired from a Device and inserted into a Domo DataSet",
         },
         {
           field: "send_data_type",
@@ -130,12 +131,14 @@ const serviceModule = new ServiceModule<IConfigValues>({
           name: "Receive data from a Domo DataSet",
           field: "enable_receive_data",
           type: "boolean",
-          tooltip: "Data will be acquired from a Domo DataSet and inserted into a Device",
+          tooltip:
+            "Data will be acquired from a Domo DataSet and inserted into a Device",
         },
         {
           name: "DataSet ID",
           field: "receive_dataset_id",
-          tooltip: "ID from the Domo DataSet that this plugin will be acquiring data from",
+          tooltip:
+            "ID from the Domo DataSet that this plugin will be acquiring data from",
           icon: "list",
           type: "string",
           required: true,
@@ -173,7 +176,10 @@ const serviceModule = new ServiceModule<IConfigValues>({
  */
 serviceModule.onLoad = async (values) => {
   if (!values.client_id || !values.client_secret) {
-    serviceModule.showMessage("info", "Please insert a valid Client ID and Client Secret");
+    serviceModule.showMessage(
+      "info",
+      "Please insert a valid Client ID and Client Secret",
+    );
     return;
   }
 
