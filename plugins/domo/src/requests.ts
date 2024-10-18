@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "./data";
+import { getAccessToken } from "./data.ts";
 
 /**
  * GET https://api.domo.com/oatuh/token.
@@ -7,7 +7,9 @@ import { getAccessToken } from "./data";
  * The access token here should be passed to every other request.
  */
 export async function authenticate(clientID: string, clientSecret: string) {
-  const authorization = Buffer.from(`${clientID}:${clientSecret}`).toString("base64");
+  const authorization = Buffer.from(`${clientID}:${clientSecret}`).toString(
+    "base64",
+  );
 
   const response = await axios({
     method: "GET",
@@ -30,7 +32,7 @@ export async function authenticate(clientID: string, clientSecret: string) {
  */
 export async function createDataSet(): Promise<string> {
   const response = await axios({
-    url: `https://api.domo.com/v1/datasets`,
+    url: "https://api.domo.com/v1/datasets",
     method: "POST",
     data: {
       name: "TagoCore",

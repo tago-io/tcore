@@ -1,8 +1,8 @@
-import { core, pluginStorage } from "@tago-io/tcore-sdk";
 import { parseString } from "@fast-csv/parse";
-import { IDeviceData } from "@tago-io/tcore-sdk/build/Types";
-import * as requests from "./requests";
-import { getConfigValues } from "./index";
+import { core, pluginStorage } from "@tago-io/tcore-sdk";
+import type { IDeviceData } from "@tago-io/tcore-sdk/Types";
+import { getConfigValues } from "./index.ts";
+import * as requests from "./requests.ts";
 
 /**
  * Pulls data from a domo dataset and inserts data into a device.
@@ -15,7 +15,9 @@ export async function receiveData() {
 
   const deviceID = getConfigValues().receive_device_id;
   const datasetID = getConfigValues().receive_dataset_id;
-  const datasetInfo = await requests.getDataSetInfo(datasetID).catch(() => null);
+  const datasetInfo = await requests
+    .getDataSetInfo(datasetID)
+    .catch(() => null);
   if (!datasetInfo) {
     throw new Error("Invalid receiving DataSet ID");
   }
@@ -28,7 +30,9 @@ export async function receiveData() {
   const newDataPoints = await parseCSV(datasetCSV);
 
   if (newDataPoints.length > 0) {
-    const maxTime = Math.max(...newDataPoints.map((item) => item.time.getTime()));
+    const maxTime = Math.max(
+      ...newDataPoints.map((item) => item.time.getTime()),
+    );
     await core.addDeviceData(deviceID, newDataPoints);
     await pluginStorage.set("last-receive-timestamp", maxTime);
     console.log(`Received ${newDataPoints.length} data point(s) from Domo`);
@@ -41,7 +45,8 @@ export async function receiveData() {
  * Parses the csv in the parameter and returns a device data array structure.
  */
 async function parseCSV(csv: string): Promise<IDeviceData[]> {
-  const lastReceiveTimestamp = (await pluginStorage.get("last-receive-timestamp")) || 0;
+  const lastReceiveTimestamp =
+    (await pluginStorage.get("last-receive-timestamp")) || 0;
   const newDataPoints: IDeviceData[] = [];
 
   return await new Promise((resolve) => {

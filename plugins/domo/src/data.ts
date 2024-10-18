@@ -1,8 +1,8 @@
 import { pluginStorage } from "@tago-io/tcore-sdk";
-import * as requests from "./requests";
-import { receiveData } from "./receive-data";
-import { sendData } from "./send-data";
-import { getConfigValues, serviceModule } from "./index";
+import { getConfigValues, serviceModule } from "./index.ts";
+import { receiveData } from "./receive-data.ts";
+import * as requests from "./requests.ts";
+import { sendData } from "./send-data.ts";
 
 /**
  * Maximum time a domo access token is valid.
@@ -29,8 +29,10 @@ export function getAccessToken() {
  */
 async function checkValidityAccessToken() {
   const emptyToken = !accessToken;
-  const tokenEmitTimestamp = (await pluginStorage.get("access-token-timestamp")) || 0;
-  const outdatedToken = Date.now() - tokenEmitTimestamp >= ACCESS_TOKEN_EXPIRATION_MS;
+  const tokenEmitTimestamp =
+    (await pluginStorage.get("access-token-timestamp")) || 0;
+  const outdatedToken =
+    Date.now() - tokenEmitTimestamp >= ACCESS_TOKEN_EXPIRATION_MS;
 
   if (emptyToken || outdatedToken) {
     const clientID = getConfigValues().client_id;
@@ -48,7 +50,10 @@ async function checkValidityAccessToken() {
  */
 async function doInterval() {
   try {
-    if (!getConfigValues().enable_send_data && !getConfigValues().enable_receive_data) {
+    if (
+      !getConfigValues().enable_send_data &&
+      !getConfigValues().enable_receive_data
+    ) {
       return;
     }
 
@@ -60,19 +65,21 @@ async function doInterval() {
 
     serviceModule.showMessage(
       "info",
-      `Last synchronization: ${new Date().toLocaleString()} (${sentData} sent, ${recvData} received)`
+      `Last synchronization: ${new Date().toLocaleString()} (${sentData} sent, ${recvData} received)`,
     );
   } catch (ex: any) {
     if (ex?.request && !ex?.response) {
       // did not receive response from domo server, meaning we couldn't reach it
       // we must ignore and try again in the future
-      const message = "Could not reach Domo during synchronization. Maybe you're offline.";
+      const message =
+        "Could not reach Domo during synchronization. Maybe you're offline.";
       serviceModule.showMessage("error", message);
       console.error(message);
       return;
     }
 
-    const error = ex?.response?.data?.statusReason || ex?.message || ex?.toString?.();
+    const error =
+      ex?.response?.data?.statusReason || ex?.message || ex?.toString?.();
     const message = `Error during synchronization: ${error}`;
     serviceModule.showMessage("error", message);
     console.error(message);
