@@ -26,17 +26,19 @@ export default async function parser(payload: any) {
     payload.payloadMetaData.gatewayMetaDataList[0].id = undefined;
     payload.payloadMetaData.gatewayMetaDataList[0].name = undefined;
     payload.payloadMetaData.gatewayMetaDataList[0].gtw_id =
-      payload.payloadMetaData.gatewayMetaDataList[0].mac;
+    payload.payloadMetaData.gatewayMetaDataList[0].mac;
     payload.payloadMetaData.gatewayMetaDataList[0].mac = undefined;
+
     payload.payloadMetaData.gatewayMetaDataList[0].gtw = {
       altitude: payload.payloadMetaData.gatewayMetaDataList[0].altitude,
       latitude: payload.payloadMetaData.gatewayMetaDataList[0].latitude,
       longitude: payload.payloadMetaData.gatewayMetaDataList[0].longitude,
     };
+
     payload.payloadMetaData.gatewayMetaDataList[0].altitude = undefined;
     payload.payloadMetaData.gatewayMetaDataList[0].latitude = undefined;
     payload.payloadMetaData.gatewayMetaDataList[0].longitude = undefined;
-    // console.log(JSON.stringify(payload, null, 4));
+
     toTago = toTago.concat(
       inspectFormat(payload.payloadMetaData.gatewayMetaDataList[0], serie),
     );
@@ -69,7 +71,7 @@ export default async function parser(payload: any) {
     toTago = toTago.concat(toTagoFormat(payload.payload, serie));
   }
   toTago = toTago.filter(
-    (x) => !x.location || (x.location.lat !== 0 && x.location.lng !== 0),
+    (x) => !x.location || (x.location && x.location.lat !== 0 && x.location.lng !== 0 && !Number.isNaN(x.location.lat) && !Number.isNaN(x.location.lng)),
   );
 
   return toTago;
