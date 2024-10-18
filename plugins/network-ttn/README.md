@@ -51,6 +51,8 @@ In order for the integration to properly identify the device, you must add a tag
 * **Tag key**: serial
 * **Tag value**: copy the Device EUI in the value of the tag.
 
+For TagoCore to interpret the payload sent by TTN/TTI, you need to go to the device and select the Encoder Stack as TTN/TTI LoRaWAN.
+
 ---
 # Action type: Send downlink to the device
 This integration also add a new action which you can use the send downlink to the device. Such as select as type of the action when setting up new actions.

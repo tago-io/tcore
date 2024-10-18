@@ -1,5 +1,5 @@
-import inspectFormat, { IInspectObject } from "../lib/inspectFormat";
-import toTagoFormat, { IDeviceDataLatLng } from "../lib/toTagoFormat";
+import inspectFormat, { type IInspectObject } from "../lib/inspectFormat.ts";
+import toTagoFormat, { type IDeviceDataLatLng } from "../lib/toTagoFormat.ts";
 
 /**
  * Decode data from TTN
@@ -40,25 +40,31 @@ export default async function ttnParser(payload: any) {
     toTago.payload = Buffer.from(payload.frm_payload, "base64").toString("hex");
   }
 
-  if (payload.rx_metadata && payload.rx_metadata.length) {
+  if (payload.rx_metadata?.length) {
     const rxMetadata = payload.rx_metadata[0];
     toTago.gateway_eui = rxMetadata.gateway_ids.eui;
     toTago.rssi = rxMetadata.rssi;
     toTago.snr = rxMetadata.snr;
-    if (rxMetadata.location && rxMetadata.location.latitude && rxMetadata.location.longitude) {
+    if (rxMetadata.location?.latitude && rxMetadata.location.longitude) {
       const lat = rxMetadata.location.latitude;
       const lng = rxMetadata.location.longitude;
-      toTago.gateway_location = { value: `${lat},${lng}`, location: { lat, lng } };
+      toTago.gateway_location = {
+        value: `${lat},${lng}`,
+        location: { lat, lng },
+      };
     }
 
-    delete payload.rx_metadata;
+    payload.rx_metadata = undefined;
   }
 
   let decoded: IDeviceDataLatLng[] = [];
   if (payload.decoded_payload && Object.keys(payload.decoded_payload).length) {
     decoded = inspectFormat(payload.decoded_payload, serie);
-    toTago = { ...toTago, frm_payload: Buffer.from(payload.frm_payload, "base64").toString("hex") };
-    delete toTago.payload;
+    toTago = {
+      ...toTago,
+      frm_payload: Buffer.from(payload.frm_payload, "base64").toString("hex"),
+    };
+    toTago.payload = undefined;
   }
 
   if (payload.settings) {
@@ -66,7 +72,9 @@ export default async function ttnParser(payload: any) {
   }
 
   decoded = decoded.concat(toTagoFormat(toTago, serie));
-  decoded = decoded.filter((x) => !x.location || (x.location.lat !== 0 && x.location.lng !== 0));
+  decoded = decoded.filter(
+    (x) => !x.location || (x.location.lat !== 0 && x.location.lng !== 0),
+  );
 
   return decoded;
 }

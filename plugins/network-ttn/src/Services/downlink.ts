@@ -1,9 +1,9 @@
 import { core } from "@tago-io/tcore-sdk";
-import axios, { AxiosRequestConfig } from "axios";
-import { Request, Response } from "express";
-import sendResponse from "../lib/sendResponse";
-import { IConfigParam } from "../types";
-import { getDevice } from "./uplink";
+import axios, { type AxiosRequestConfig } from "axios";
+import type { Request, Response } from "express";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
+import { getDevice } from "./uplink.ts";
 
 interface IDownlinkBuild {
   downlinKey: string;
@@ -23,13 +23,26 @@ interface IDownlinkBuild {
  * @param body.url  - network server url
  * @param body.confirmed  - confirmed true/false
  */
-async function sendDownlink({ downlinKey, port, payload, url, confirmed }: IDownlinkBuild) {
+async function sendDownlink({
+  downlinKey,
+  port,
+  payload,
+  url,
+  confirmed,
+}: IDownlinkBuild) {
   const options: AxiosRequestConfig = {
     url,
     method: "POST",
     headers: { Authorization: `Bearer ${downlinKey}` },
     data: {
-      downlinks: [{ frm_payload: payload, f_port: port || 1, priority: "NORMAL", confirmed: confirmed || false }],
+      downlinks: [
+        {
+          frm_payload: payload,
+          f_port: port || 1,
+          priority: "NORMAL",
+          confirmed: confirmed || false,
+        },
+      ],
     },
   };
 
@@ -56,11 +69,21 @@ interface IClassAConfig {
  * @param classAConfig - optinal parameter sent by TTN for class A devices
  * @returns {any} void
  */
-async function downlinkService(config: IConfigParam, req: Request, res: Response, classAConfig?: IClassAConfig) {
-  const authorization = req.headers["Authorization"] || req.headers["authorization"];
+async function downlinkService(
+  config: IConfigParam,
+  req: Request,
+  res: Response,
+  classAConfig?: IClassAConfig,
+) {
+  const authorization = req.headers.Authorization || req.headers.authorization;
   if (!authorization || authorization !== config.authorization_code) {
-    console.error(`[Network Server] Request refused, authentication is invalid: ${authorization}`);
-    return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+    console.error(
+      `[Network Server] Request refused, authentication is invalid: ${authorization}`,
+    );
+    return sendResponse(res, {
+      body: "Invalid authorization header",
+      status: 401,
+    });
   }
 
   const body = <IDownlinkParams>req.body;
@@ -75,10 +98,16 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
     const keyParam = deviceParams.find((param) => param.key === "downlink_key");
 
     if (!keyParam || !urlParam) {
-      return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+      return sendResponse(res, {
+        body: "Invalid authorization header",
+        status: 401,
+      });
     }
 
-    classAConfig = { downlink_key: keyParam.value as string, url: urlParam.value as string };
+    classAConfig = {
+      downlink_key: keyParam.value as string,
+      url: urlParam.value as string,
+    };
   }
 
   const downlinkBuild: IDownlinkBuild = {
@@ -96,12 +125,18 @@ async function downlinkService(config: IConfigParam, req: Request, res: Response
 
   return sendDownlink(downlinkBuild)
     .then(() => {
-      return sendResponse(res, { body: { status: true, message: "Downlink successfully sent" }, status: 201 });
+      return sendResponse(res, {
+        body: { status: true, message: "Downlink successfully sent" },
+        status: 201,
+      });
     })
     .catch((e) => {
-      return sendResponse(res, { body: JSON.stringify(e.response.data), status: e.response.status });
+      return sendResponse(res, {
+        body: JSON.stringify(e.response.data),
+        status: e.response.status,
+      });
     });
 }
 
 export default downlinkService;
-export { IClassAConfig, IDownlinkParams };
+export type { IClassAConfig, IDownlinkParams };

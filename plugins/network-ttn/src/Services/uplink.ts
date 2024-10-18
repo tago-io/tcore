@@ -1,8 +1,7 @@
 import { core, helpers } from "@tago-io/tcore-sdk";
-import { Request, Response } from "express";
-import { IDevice } from "@tago-io/tcore-sdk/build/Types";
-import { IConfigParam } from "../types";
-import sendResponse from "../lib/sendResponse";
+import type { Request, Response } from "express";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
 
 interface IPayloadParamsTTI {
   //TTI
@@ -37,7 +36,9 @@ async function getDevice(devEui: string) {
   if (!deviceList || !deviceList.length) {
     throw "Authorization Denied: Device EUI doesn't match any serial tag";
   }
-  const device = deviceList.find((x) => x.tags.find((tag) => tag.key === "serial" && tag.value === devEui));
+  const device = deviceList.find((x) =>
+    x.tags.find((tag) => tag.key === "serial" && tag.value === devEui),
+  );
   if (!device) {
     throw "Authorization Denied: Device EUI doesn't match any serial tag";
   }
@@ -53,16 +54,25 @@ async function getDevice(devEui: string) {
  * @param res - express res param
  * @returns {void}
  */
-async function uplinkService(config: IConfigParam, req: Request, res: Response) {
-  const authorization = req.headers["Authorization"] || req.headers["authorization"];
+async function uplinkService(
+  config: IConfigParam,
+  req: Request,
+  res: Response,
+) {
+  const authorization = req.headers.Authorization || req.headers.authorization;
   if (!authorization || authorization !== config.authorization_code) {
-    console.error(`[Network Server] Request refused, authentication is invalid: ${authorization}`);
-    return sendResponse(res, { body: "Invalid authorization header", status: 401 });
+    console.error(
+      `[Network Server] Request refused, authentication is invalid: ${authorization}`,
+    );
+    return sendResponse(res, {
+      body: "Invalid authorization header",
+      status: 401,
+    });
   }
 
   const data: IPayloadParamsTTI = req.body;
   if (!data.end_device_ids) {
-    console.error(`[Network Server] Request refused, body is invalid`);
+    console.error("[Network Server] Request refused, body is invalid");
     return sendResponse(res, { body: "Invalid body received", status: 401 });
   }
 
@@ -77,11 +87,13 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
 
   core.emitToLiveInspector(device.id, {
     title: "Uplink HTTP Request",
-    content: `HOST: ${req.host}`,
+    content: `HOST: ${req.hostname}`,
   });
 
-  const downlinkKey = (req.headers["X-Downlink-Apikey"] || req.headers["x-downlink-apikey"]) as string | undefined;
-  const downlinkUrl = (req.headers["X-Downlink-Push"] || req.headers["x-downlink-push"]) as string | undefined;
+  const downlinkKey = (req.headers["X-Downlink-Apikey"] ||
+    req.headers["x-downlink-apikey"]) as string | undefined;
+  const downlinkUrl = (req.headers["X-Downlink-Push"] ||
+    req.headers["x-downlink-push"]) as string | undefined;
   if (downlinkKey || downlinkUrl) {
     const deviceParams = await core.getDeviceParamList(device.id);
 
@@ -90,8 +102,12 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
       return deviceParams[deviceParams.length - 1];
     };
 
-    const urlParam = deviceParams.find((param) => param.key === "downlink_url") || defaultParamSettings("downlink_url");
-    const keyParam = deviceParams.find((param) => param.key === "downlink_key") || defaultParamSettings("downlink_key");
+    const urlParam =
+      deviceParams.find((param) => param.key === "downlink_url") ||
+      defaultParamSettings("downlink_url");
+    const keyParam =
+      deviceParams.find((param) => param.key === "downlink_key") ||
+      defaultParamSettings("downlink_key");
 
     if (downlinkUrl) {
       urlParam.value = String(downlinkUrl);
