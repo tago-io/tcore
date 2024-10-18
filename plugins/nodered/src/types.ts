@@ -4,4 +4,4 @@ interface IConfigParam {
   password: string;
 }
 
-export { IConfigParam };
+export type { IConfigParam };
