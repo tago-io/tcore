@@ -1,5 +1,5 @@
-import { IDeviceData } from "@tago-io/tcore-sdk/build/Types";
-import toTagoFormat, { IDeviceDataLatLng } from "../lib/toTagoFormat";
+import type { IDeviceData } from "@tago-io/tcore-sdk/types";
+import toTagoFormat, { type IDeviceDataLatLng } from "../lib/toTagoFormat.ts";
 
 /**
  * Parse the dc parameter of the payload
@@ -42,35 +42,62 @@ interface IHotspots {
  * @param serie - serie for grouped data
  * @returns {IDeviceDataLatLng} data parsed
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseHotspots(data: IHotspots[], serie: string) {
   const result: IDeviceDataLatLng[] = [];
 
   for (let i = 0; i < data.length; ++i) {
     // channel
-    result.push({ variable: `hotspot_${i}_channel`, value: data[i].channel, serie });
+    result.push({
+      variable: `hotspot_${i}_channel`,
+      value: data[i].channel,
+      serie,
+    });
     // frequency
-    result.push({ variable: `hotspot_${i}_frequency`, value: data[i].frequency, serie });
+    result.push({
+      variable: `hotspot_${i}_frequency`,
+      value: data[i].frequency,
+      serie,
+    });
     // id
     result.push({ variable: `hotspot_${i}_id`, value: data[i].id, serie });
     // lat/long
-    if (!isNaN(data[i].lat) && !isNaN(data[i].long)) {
-      result.push({ variable: `hotspot_${i}_location`, location: { lat: data[i].lat, lng: data[i].long }, serie });
+    if (!Number.isNaN(data[i].lat) && !Number.isNaN(data[i].long)) {
+      result.push({
+        variable: `hotspot_${i}_location`,
+        location: { lat: data[i].lat, lng: data[i].long },
+        serie,
+      });
     }
     // name
     result.push({ variable: `hotspot_${i}_name`, value: data[i].name, serie });
     // reported_at
-    result.push({ variable: `hotspot_${i}_reported_at`, value: data[i].reported_at, serie });
+    result.push({
+      variable: `hotspot_${i}_reported_at`,
+      value: data[i].reported_at,
+      serie,
+    });
     // rssi
     result.push({ variable: `hotspot_${i}_rssi`, value: data[i].rssi, serie });
     // snr
     result.push({ variable: `hotspot_${i}_snr`, value: data[i].snr, serie });
     // spreading
-    result.push({ variable: `hotspot_${i}_spreading`, value: data[i].spreading, serie });
+    result.push({
+      variable: `hotspot_${i}_spreading`,
+      value: data[i].spreading,
+      serie,
+    });
     // status
-    result.push({ variable: `hotspot_${i}_status`, value: data[i].status, serie });
+    result.push({
+      variable: `hotspot_${i}_status`,
+      value: data[i].status,
+      serie,
+    });
     // hold_time
-    result.push({ variable: `hotspot_${i}_hold_time`, value: data[i].hold_time, serie });
+    result.push({
+      variable: `hotspot_${i}_hold_time`,
+      value: data[i].hold_time,
+      serie,
+    });
   }
 
   return result;
@@ -83,7 +110,6 @@ function parseHotspots(data: IHotspots[], serie: string) {
  * @param serie - serie for grouped data
  * @returns {IDeviceDataLatLng} data parsed
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseDecodedData(decoded: any, serie: string) {
   if (decoded.payload) {
     decoded = decoded.payload;
@@ -93,12 +119,15 @@ function parseDecodedData(decoded: any, serie: string) {
   const lng = decoded.longitude || decoded.lng;
   const alt = decoded.altitude;
   if (lat && lng && lat !== 0 && lng !== 0) {
-    decoded.location = { value: `${lat},${lng}`, location: { lat: Number(lat), lng: Number(lng) } };
+    decoded.location = {
+      value: `${lat},${lng}`,
+      location: { lat: Number(lat), lng: Number(lng) },
+    };
     if (alt) decoded.location.metadata = { altitude: alt };
-    delete decoded.latitude;
-    delete decoded.longitude;
-    delete decoded.lat;
-    delete decoded.lng;
+    decoded.latitude = undefined;
+    decoded.longitude = undefined;
+    decoded.lat = undefined;
+    decoded.lng = undefined;
   }
   return toTagoFormat(decoded, serie);
 }
@@ -109,7 +138,6 @@ function parseDecodedData(decoded: any, serie: string) {
  * @param payload - any payload sent by the device
  * @returns {IDeviceDataLatLng} data parsed
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function parser(payload: any) {
   if (Array.isArray(payload)) {
     return payload;
@@ -127,36 +155,37 @@ export default async function parser(payload: any) {
     toTago = toTago.concat({
       variable: "metadata",
       metadata: payload.metadata,
+      value: "metadata",
       serie,
     });
-    delete payload.metadata;
+    payload.metadata = undefined;
   }
-
   // base64 variables
   if (payload.payload) {
     payload.payload = Buffer.from(payload.payload, "base64").toString("hex");
   }
-
   // base64 variables
   if (payload.decoded) {
     toTago = toTago.concat(parseDecodedData(payload.decoded.payload, serie));
-    delete payload.decoded;
+    payload.decoded = undefined;
   }
-
   // Parse DC
   if (payload.dc) {
     toTago = toTago.concat(parseDC(payload.dc, serie));
-    delete payload.dc;
+    payload.dc = undefined;
   }
+
   // Parse hotsposts
   if (payload.hotspots) {
     toTago = toTago.concat(parseHotspots(payload.hotspots, serie));
-    delete payload.hotspots;
+    payload.hotspots = undefined;
   }
 
   payload = toTago;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  payload = payload.filter((x: any) => !x.location || (x.location.lat !== 0 && x.location.lng !== 0));
+  payload = payload.filter(
+    (x: any) => !x.location || (x.location.lat !== 0 && x.location.lng !== 0),
+  );
 
   return payload as IDeviceData[];
 }

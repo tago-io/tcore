@@ -1,8 +1,7 @@
 import { core, helpers } from "@tago-io/tcore-sdk";
-import { Request, Response } from "express";
-import { IDevice } from "@tago-io/tcore-sdk/build/Types";
-import { IConfigParam } from "../types";
-import sendResponse from "../lib/sendResponse";
+import type { Request, Response } from "express";
+import sendResponse from "../lib/sendResponse.ts";
+import type { IConfigParam } from "../types.ts";
 
 interface IHeliumPayload {
   app_eui: string;
@@ -38,7 +37,9 @@ async function getDevice(devEui: string) {
   if (!deviceList || !deviceList.length) {
     throw "Authorization Denied: Device EUI doesn't match any serial tag";
   }
-  const device = deviceList.find((x) => x.tags.find((tag) => tag.key === "serial" && tag.value === devEui));
+  const device = deviceList.find((x) =>
+    x.tags.find((tag) => tag.key === "serial" && tag.value === devEui),
+  );
   if (!device) {
     throw "Authorization Denied: Device EUI doesn't match any serial tag";
   }
@@ -54,11 +55,16 @@ async function getDevice(devEui: string) {
  * @param res - express res param
  * @returns {void} no reponse
  */
-async function uplinkService(config: IConfigParam, req: Request, res: Response) {
-  const authorization = req.headers["Authorization"] || req.headers["authorization"];
-  console.log(req.headers);
+async function uplinkService(
+  config: IConfigParam,
+  req: Request,
+  res: Response,
+) {
+  const authorization = req.headers.Authorization || req.headers.authorization;
   if (!authorization || authorization !== config.authorization_code) {
-    console.error(`[Network Server] Request refused, authentication is invalid: ${authorization}`);
+    console.error(
+      `[Network Server] Request refused, authentication is invalid: ${authorization}`,
+    );
     sendResponse(res, { body: "Invalid authorization header", status: 401 });
     return;
   }
@@ -76,16 +82,18 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
 
   core.emitToLiveInspector(device.id, {
     title: "Uplink HTTP Request",
-    content: `HOST: ${req.host}`,
+    content: `HOST: ${req.hostname}`,
   });
 
   if (data.downlink_string || data.downlink_url) {
     const deviceParams = await core.getDeviceParamList(device.id);
-    const downlinkString = deviceParams.find((param) => param.key === "downlink_string");
+    const downlinkString = deviceParams.find(
+      (param) => param.key === "downlink_string",
+    );
     if (!downlinkString) {
       deviceParams.push({
         key: "downlink_string",
-        value: data.downlink_string as string,
+        value: data.downlink_string as string || data.downlink_url as string,
         sent: false,
         id: helpers.generateResourceID(),
       });
@@ -106,4 +114,4 @@ async function uplinkService(config: IConfigParam, req: Request, res: Response) 
 }
 
 export default uplinkService;
-export { getDevice, IHeliumPayload };
+export { getDevice, type IHeliumPayload };
